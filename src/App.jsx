@@ -2,8 +2,7 @@ import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import NavbarRoutesConfig from "./assets/NavabarRouteConfig";
 import Navbar from "./components/Navbar";
-import { Provider } from "react-redux";
-import { store } from "./redux/store";
+
 
 // Define routes using createBrowserRouter
 const router = createBrowserRouter([
@@ -25,11 +24,7 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return (
-    <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
