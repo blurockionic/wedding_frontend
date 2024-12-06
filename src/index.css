@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+:root {
+  /* Base Colors */
+  --color-dusty-rose: #DCAE96;
+  --color-dusty-rose-light: #E8C8B2;
+  --color-dusty-rose-dark: #B89079;
+
+  --color-sage-green: #B2AC88;
+  --color-sage-green-light: #CBC7A4;
+  --color-sage-green-dark: #918B6B;
+
+  --color-champagne: #F7E7CE;
+  --color-champagne-light: #FFF2DF;
+  --color-champagne-dark: #DBCAB2;
+
+  --color-ivory: #FFFFF0;
+  --color-ivory-light: #FFFFFF;
+  --color-ivory-dark: #E6E6D9;
+
+  --color-blush-pink: #F4C2C2;
+  --color-blush-pink-light: #FAD4D4;
+  --color-blush-pink-dark: #DA9E9E;
+}
+
+[data-theme="dark"] {
+ 
+  --color-dusty-rose: #9C6A5F;
+  --color-dusty-rose-light: #AD8074;
+  --color-dusty-rose-dark: #7F5145;
+
+  --color-sage-green: #6D745D;
+  --color-sage-green-light: #878C76;
+  --color-sage-green-dark: #565C48;
+
+  --color-champagne: #B59F8A;
+  --color-champagne-light: #C5B19C;
+  --color-champagne-dark: #8F7F6F;
+
+  --color-ivory: #EAE9E1;
+  --color-ivory-light: #F4F3ED;
+  --color-ivory-dark: #CBCABF;
+
+  --color-blush-pink: #C18686;
+  --color-blush-pink-light: #D19A9A;
+  --color-blush-pink-dark: #995C5C;
+}
+
+
+@layer components {
+  .btn {
+    @apply px-4 py-2 font-semibold rounded-md text-white;
+  }
+  .btn-primary {
+    @apply bg-primary hover:bg-secondary;
+  }
+}
