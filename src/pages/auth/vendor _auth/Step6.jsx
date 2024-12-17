@@ -5,7 +5,7 @@ const Step6 = () => {
   const { getValues } = useFormContext();
 
   const formData = getValues();
-  console.log(formData);
+
 
   const renderServices = () => {
     if (formData.service_type) {
