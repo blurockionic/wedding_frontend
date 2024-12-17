@@ -19,7 +19,7 @@ export default function About() {
   }, []);
 
   return (
-    <div className="container overflow-hidden mx-auto relative pt-20 p-8">
+    <div className="container overflow-hidden mx-auto relative pt-20  md:p-8">
       {/* Background Flower Image */}
       <img
         src="/about flower.png"

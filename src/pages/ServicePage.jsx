@@ -8,6 +8,9 @@ function ServicesPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for mobile sidebar
   const { data, isLoading, error } = useGetServicesQuery(filters);
 
+
+  
+
   const handleFilterChange = (data) => {
     setFilters(data);
     // Automatically close sidebar on smaller screens after applying filters
@@ -34,7 +37,7 @@ function ServicesPage() {
   }, []);
 
   return (
-    <div className="flex flex-col md:flex-row p-2 h-screen">
+    <div className="flex flex-col md:flex-row p-2 h-screen relative">
       {/* Toggle buttons for mobile */}
       {!isSidebarOpen && (
         <button
@@ -70,7 +73,8 @@ function ServicesPage() {
           </div>
         ) : error ? (
           <div className="flex items-center justify-center h-full">
-            <p className="text-red-600">Error fetching services</p>
+            <p>{error?.data?.message}</p>
+          
           </div>
         ) : (
           <ServiceList services={data?.services || []} />

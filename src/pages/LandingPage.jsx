@@ -15,7 +15,6 @@ export default function LandingPage() {
       <LazySection id="/" Component={Home} />
       <LazySection id="about" Component={About} />
       <LazySection id="gallery" Component={WeddingEvent} />
-      <LazySection id="service" Component={ServicesPage} />
       <LazySection id="contact" Component={Contact} />
       <LazySection id="footer" Component={Footer} />
     </div>

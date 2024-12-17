@@ -5,12 +5,14 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import useAuthRedirect from "../../hooks/useAuthRedirect";
 import { useState } from "react";
+import { useLoginMutation } from "../../redux/apiSlice.auth";
 
 export default function Login() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  const [ loginMutation] = useLoginMutation(); 
 
-  useAuthRedirect("/");
+  useAuthRedirect("/",true);
 
   // Initialize react-hook-form
   const {
@@ -24,26 +26,9 @@ export default function Login() {
     setLoading(true);
     try {
       const { email, password } = data;
-      const response = await fetch("http://localhost:4000/api/v1/users/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const result = await response.json();
-      console.log(result);
       
-
-      if (!response.ok) {
-        toast.error(result.message || result.errors[0].message|| "Login failed. Please try again.", {
-          position: "top-right",
-          autoClose: 5000,
-          theme: "light",
-        });
-        return;
-      }
+      // Use RTK Query mutation
+      const result = await loginMutation({ email, password }).unwrap();
 
       if (result.user) {
         dispatch(login({ user: result }));
@@ -55,7 +40,7 @@ export default function Login() {
         });
       }
     } catch (error) {
-      toast.error(error.message || "An unexpected error occurred.", {
+      toast.error(error.data?.message || "An unexpected error occurred.", {
         position: "top-right",
         autoClose: 5000,
         theme: "light",

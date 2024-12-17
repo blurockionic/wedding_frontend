@@ -2,27 +2,39 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { serviceTypes } from "../assets/NavabarRouteConfig";  // Assuming your serviceTypes are imported here
 
-
 function Sidebar({ onFilterChange }) {
   const { register, handleSubmit, reset } = useForm();
 
   // Function to handle filter submission
   const handleFilterChange = (data) => {
-    // Pass the data to the parent (onFilterChange) for validation and processing
-    onFilterChange(data);
+    // Format data into query string parameters
+    const filters = {};
+
+    if (data.location) filters.location = data.location;  // Changed this from 'vendor_name' to 'location'
+    if (data.service_type) filters.service_type = data.service_type;
+    
+    if (data.minPrice) filters.minPrice = `>=${data.minPrice}`;
+    if (data.maxPrice) filters.maxPrice = `<=${data.maxPrice}`;
+    
+    if (data.rating) filters.rating = data.rating;
+    if (data.sort_by) filters.sort_by = data.sort_by;
+    if (data.sort_order) filters.sort_order = data.sort_order;
+
+    // Pass the formatted filters to the parent for validation and processing
+    onFilterChange(filters);
   };
 
   return (
-    <div className="w-full  h-screen bg-ivory-dark p-4">
-      <h2 className="text-lg font-bold mb-4">Filters</h2>
+    <div className="w-full h-screen bg-ivory-dark p-4">
+      <h2 className="text-lg bg-slate-300 py-3 border-2 border-dashed uppercase border-green-500 font-bold text-center mb-4">Filters</h2>
       <form onSubmit={handleSubmit(handleFilterChange)} className="space-y-4">
-        {/* Vendor Name Filter */}
+        {/* Location Filter */}
         <div>
-          <label className="block text-gray-700 mb-1">Vendor Name</label>
+          <label className="block text-gray-700 mb-1">Location</label>
           <input
             type="text"
-            {...register("vendor_name")}
-            placeholder="Vendor Name"
+            {...register("location")}
+            placeholder="Location"
             className="w-full p-2 border rounded"
           />
         </div>

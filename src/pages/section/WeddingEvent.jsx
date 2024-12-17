@@ -12,7 +12,7 @@ function WeddingEvent() {
   }, []);
 
   return (
-    <div className="bg-[#F8E8D8] p-10 flex relative">
+    <div className="bg-[#F8E8D8] px-2 md:p-10 flex relative flex-col sm:flex-row">
       <div className="relative p-5 mx-auto justify-center md:w-1/3">
         {/* Outer Box with the Red Box */}
         <div className="absolute top-0 bottom-10 left-10 right-0 border-4 border-[#CF7745]"></div>
@@ -33,7 +33,7 @@ function WeddingEvent() {
       </div>
 
       {/* Content Section */}
-      <div className="relative mx-auto px-4 md:w-1/2">
+      <div className="relative pt-4 md:pt-0 mx-auto px-4 md:w-1/2">
         <div>
           <img
             src="/Bouquet.png"
@@ -42,13 +42,13 @@ function WeddingEvent() {
             data-aos="fade-up"
             data-aos-delay="400"
           />
-          <h1 className="text-5xl leading-[50px] font-bold text-start mb-8 capitalize" data-aos="fade-down">
+          <h1 className="text-2xl md:text-5xl leading-[50px] font-bold text-start mb-8 capitalize" data-aos="fade-down">
             We're Dedicated to Join <br />
             Your Journey for the Best <br /> Wedding Event
           </h1>
 
           {/* Stats Section */}
-          <div className="flex justify-start items-center relative z-50 py-10 text-center gap-8 text-dustyRose-light-60">
+          <div className="flex  justify-start flex-wrap  items-center relative z-50 py-10 text-center  gap-4 md:gap-8 text-dustyRose-light-60">
             {[
               { title: "350+", desc: "Wedding Events", animate: "fade-right" },
               { title: "150+", desc: "Decorations", animate: "fade-up" },
@@ -77,7 +77,7 @@ function WeddingEvent() {
       <img
         src="/about flower.png"
         alt="Flower Decoration"
-        className="absolute rotate-40 z-20 h-2/3 right-0 bottom-10"
+        className="absolute hidden md:block rotate-40 z-20 h-2/3 right-0 bottom-10"
         data-aos="fade-left"
         data-aos-delay="700"
       />
