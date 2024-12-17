@@ -5,6 +5,37 @@
 html {
   scroll-behavior: smooth;
 }
+
+.customShadow{
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+@font-face {
+  font-family: outfit;
+  src: url(/public/Outfit-VariableFont_wght.ttf);
+}
+@font-face {
+  font-family: montserrat;
+  src: url(/public/Montserrat-VariableFont_wght.ttf);
+}
+@font-face {
+  font-family: pd;
+  src: url(/public/PlayfairDisplay-VariableFont_wght.ttf);
+}
+
+.pd{
+  font-family: pd;
+}
+
+.outfit{
+  font-family: outfit;
+}
+
+.montserrat{
+  font-family: montserrat;
+}
+
+
 :root {
   /* Base Colors */
   --color-dusty-rose: #DCAE96;
@@ -27,28 +58,27 @@ html {
   --color-blush-pink-light: #FAD4D4;
   --color-blush-pink-dark: #DA9E9E;
 }
-
 [data-theme="dark"] {
- 
-  --color-dusty-rose: #9C6A5F;
-  --color-dusty-rose-light: #AD8074;
-  --color-dusty-rose-dark: #7F5145;
+  /* Adjusted Dark Mode Colors */
+  --color-dusty-rose: #8B5E5A; /* Muted earthy rose */
+  --color-dusty-rose-light: #9C746E; /* Slightly softer */
+  --color-dusty-rose-dark: #6F4542; /* Deeper shade */
 
-  --color-sage-green: #6D745D;
-  --color-sage-green-light: #878C76;
-  --color-sage-green-dark: #565C48;
+  --color-sage-green: #5F6451; /* Muted dark green */
+  --color-sage-green-light: #747A63; /* Softer accent */
+  --color-sage-green-dark: #484D3E; /* Deep forest green */
 
-  --color-champagne: #B59F8A;
-  --color-champagne-light: #C5B19C;
-  --color-champagne-dark: #8F7F6F;
+  --color-champagne: #A89678; /* Warm golden beige */
+  --color-champagne-light: #B8A689; /* Softer warm shade */
+  --color-champagne-dark: #7F6E55; /* Rich warm brown */
 
-  --color-ivory: #EAE9E1;
-  --color-ivory-light: #F4F3ED;
-  --color-ivory-dark: #CBCABF;
+  --color-ivory: #D6D5CC; /* Muted off-white */
+  --color-ivory-light: #E4E3DC; /* Soft light beige */
+  --color-ivory-dark: #B1B0A5; /* Subtle neutral gray */
 
-  --color-blush-pink: #C18686;
-  --color-blush-pink-light: #D19A9A;
-  --color-blush-pink-dark: #995C5C;
+  --color-blush-pink: #B37676; /* Soft muted pink */
+  --color-blush-pink-light: #C28C8C; /* Slightly brighter */
+  --color-blush-pink-dark: #8A5050; /* Deep rosewood */
 }
 
 
