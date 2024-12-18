@@ -3,18 +3,24 @@ import { useDispatch } from "react-redux";
 import { login } from "../../redux/authSlice";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import useAuthRedirect from "../../hooks/useAuthRedirect";
 import { useState } from "react";
+import useAuthRedirect from "../../hooks/useAuthRedirect";
 import { useLoginMutation } from "../../redux/apiSlice.auth";
+import loginImage from "../../../public/login/login.jpg";
+import CustomButton from "../../components/global/button/CustomButton";
+import CustomText from "../../components/global/text/CustomText";
+import { FaEye, FaEyeSlash, FaGoogle, FaLock } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
+import { GoEye, GoEyeClosed, GoLock, GoMail } from "react-icons/go";
 
 export default function Login() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-  const [ loginMutation] = useLoginMutation(); 
+  const [loginMutation] = useLoginMutation();
+  const [isShowPassWord, setIsShowPassword] = useState(false);
 
   useAuthRedirect("/",true);
 
-  // Initialize react-hook-form
   const {
     register,
     handleSubmit,
@@ -26,8 +32,6 @@ export default function Login() {
     setLoading(true);
     try {
       const { email, password } = data;
-      
-      // Use RTK Query mutation
       const result = await loginMutation({ email, password }).unwrap();
 
       if (result.user) {
@@ -59,75 +63,103 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-ivory">
-      <div className="flex items-center justify-center space-x-10 w-full max-w-4xl">
-        <div className="hidden relative md:block">
-          <div className="absolute bg-slate-600/70"></div>
+    <div className="min-h-screen flex items-center justify-center bg-white px-4">
+      <div className="flex items-center justify-center space-x-10">
+        {/* Image Section */}
+        <div className="hidden md:block w-3/4">
           <img
-            src="/login.png"
-            width={350}
-            className="h-full object-cover"
+            src={loginImage}
+            className="h-[600px] w-full object-cover object-center rounded-lg"
             alt="Login Illustration"
           />
         </div>
-        <div className="sm:bg-white bg-transparent sm:shadow-md rounded-lg sm:px-8 px-4 py-10 w-full max-w-md space-y-6">
-          <h2 className="text-3xl font-bold text-black">Welcome Back</h2>
-          <p className="text-sm text-gray-600">
-            Enter your credentials to access your account
-          </p>
 
-          <form onSubmit={handleSubmit(handleLogin)} className="space-y-6">
+        {/* Form Section */}
+        <div className="h-[600px] sm:bg-white bg-transparent sm:shadow-md rounded-lg sm:px-8 px-4 py-10 w-full space-y-6">
+          <CustomText
+            variant="heading"
+            className="text-3xl font-bold text-black"
+          >
+            Welcome to Wedd
+          </CustomText>
+          <CustomText variant="paragraph" className="text-sm text-gray-600">
+            Enter your credentials to access your account
+          </CustomText>
+
+          <form onSubmit={handleSubmit(handleLogin)} className="space-y-4">
             {/* Email Input */}
             <div className="my-4">
-              <label
+              <CustomText
+                variant="label"
                 className="block text-sageGreen-dark text-sm font-bold mb-2"
-                htmlFor="email"
               >
                 Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                {...register("email", {
-                  required: "Email is required",
-                  pattern: {
-                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                    message: "Invalid email address",
-                  },
-                })}
-                className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-dustyRose-light"
-                placeholder="Enter your email"
-              />
-              {errors.email && (
-                <p className="text-red-500 text-xs">{errors.email.message}</p>
-              )}
+              </CustomText>
+              <div className="relative gap-3">
+                <span className="absolute left-3 top-3 cursor-pointer ">
+                  <GoMail size={19} className="text-gray-500" />
+                </span>
+                <input
+                  type="email"
+                  id="email"
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                      message: "Invalid email address",
+                    },
+                  })}
+                  placeholder="Enter your email"
+                  className="w-full px-10 py-2  border border-gray-300 rounded-md"
+                />
+                {errors.email && (
+                  <CustomText variant="error" className="text-red-500 text-xs">
+                    {errors.email.message}
+                  </CustomText>
+                )}
+              </div>
             </div>
 
             {/* Password Input */}
             <div className="mb-6">
-              <label
+              <CustomText
+                variant="label"
                 className="block text-sageGreen-dark text-sm font-bold mb-2"
-                htmlFor="password"
               >
                 Password
-              </label>
-              <input
-                type="password"
-                id="password"
-                {...register("password", {
-                  required: "Password is required",
-                  minLength: {
-                    value: 6,
-                    message: "Password must be at least 6 characters",
-                  },
-                })}
-                className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-dustyRose-light"
-                placeholder="Enter your password"
-              />
+              </CustomText>
+              <div className="relative gap-3">
+                <span className="absolute left-3 top-3 cursor-pointer ">
+                  <GoLock size={19} className="text-gray-500" />
+                </span>
+                <input
+                  type={isShowPassWord ? "text" : "password"}
+                  id="password"
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 6,
+                      message: "Password must be at least 6 characters",
+                    },
+                  })}
+                  placeholder="Enter your password"
+                  className="w-full  px-10 py-2 border border-gray-300 rounded-md"
+                />
+                <span
+                  className="absolute right-3 top-3 cursor-pointer"
+                  onClick={() => setIsShowPassword(!isShowPassWord)}
+                >
+                  {isShowPassWord ? (
+                    <GoEye size={20} className="text-gray-500" />
+                  ) : (
+                    <GoEyeClosed size={20} className="text-gray-500" />
+                  )}
+                </span>
+              </div>
               {errors.password && (
-                <p className="text-red-500 text-xs">
+                <CustomText variant="error" className="text-red-500 text-xs">
                   {errors.password.message}
-                </p>
+                </CustomText>
               )}
             </div>
 
@@ -143,25 +175,18 @@ export default function Login() {
               </label>
               <Link
                 to={"/forgotPassword"}
-                className="font-bold text-sm text-sageGreen-dark hover:text-sageGreen-light"
+                className="font-bold text-sm text-sageGreen-light hover:text-sageGreen-dark"
               >
                 Forgot Password?
               </Link>
             </div>
 
-            {/* Login and Google Login Buttons */}
-            <div className="flex items-center justify-between space-x-4">
-              <button
-                type="button"
-                onClick={handleGoogleLogin}
-                className="flex items-center justify-center bg-white text-sageGreen-dark border-2 border-sageGreen-dark py-2 px-4 rounded font-bold hover:bg-sageGreen-light hover:text-white transition w-1/2"
-              >
-                <span className="md:block hidden">Login with </span> Google
-              </button>
+            {/* Login Buttons */}
+            <div className="flex flex-col items-center justify-center w-full">
               <button
                 type="submit"
                 disabled={loading || !isValid}
-                className={`w-1/2 ${
+                className={`w-full ${
                   loading ? "bg-gray-300" : "bg-dustyRose-dark"
                 } disabled:cursor-not-allowed cursor-pointer disabled:bg-dustyRose-light border-2 border-dustyRose-dark hover:bg-dustyRose text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-dustyRose-light transition`}
               >
@@ -193,20 +218,34 @@ export default function Login() {
                   <span>Login</span>
                 )}
               </button>
+
+              <div className="mt-4 flex items-center justify-between w-full gap-x-5">
+                <div className="h-[1px] px-3 w-full bg-gray-300"></div>
+                <span>or</span>
+                <div className="h-[1px] px-3 w-full bg-gray-300"></div>
+              </div>
+
+              <CustomButton
+                type="button"
+                text="Login with Google"
+                onClick={handleGoogleLogin}
+                leftIcon={<FaGoogle size={20} className="text-red-500" />}
+                className="w-full mt-4 bg-white text-red-600 border-2 border-sageGreen-dark hover:bg-sageGreen-light hover:text-white"
+              />
             </div>
           </form>
 
           {/* Sign Up Link */}
           <div className="mt-6 text-center">
-            <p className="text-sm">
-              Don't have an account?{" "}
+            <CustomText variant="paragraph" className="text-sm">
+              Don’t have an account?{" "}
               <Link
                 to="/signup"
                 className="font-bold text-dustyRose-dark hover:underline"
               >
                 Sign Up
               </Link>
-            </p>
+            </CustomText>
           </div>
         </div>
       </div>
