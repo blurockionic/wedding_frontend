@@ -43,13 +43,14 @@ const navigate = useNavigate()
 
   const handleSubmit = async (data) => {
     try {
-      console.log(data);
+      console.log("Data submitted: ", data);
       
       // Call the vendorSignup mutation function
       const vendorData = await vendorSignup(data).unwrap();
       console.log("Vendor registration successful: ", vendorData);
-      toast.success(vendorData?.message )
-      navigate('/vendorLogin',{replace:true});
+      toast.success(vendorData?.message);
+  
+      // navigate('/vendorLogin',{replace:true});
 
       // Reset form state
       methods.reset();

@@ -3,7 +3,12 @@ import { useFormContext } from "react-hook-form";
 import { Country, State, City } from "country-state-city";
 
 const Step3 = () => {
-  const { register, formState: { errors }, setValue, watch } = useFormContext();
+  const {
+    register,
+    formState: { errors },
+    setValue,
+    watch,
+  } = useFormContext();
   const [states, setStates] = React.useState([]);
   const [cities, setCities] = React.useState([]);
   const [selectedStateCode, setSelectedStateCode] = React.useState("");
@@ -27,28 +32,25 @@ const Step3 = () => {
   // Watch selected fields
   const state = watch("state");
 
-
-
   // Handle city selection and set address data into React Hook Form
   const handleCityChange = (e) => {
-    const selectedCityName = e.target.value;
-    const selectedCity = cities.find((c) => c.name === selectedCityName);
-
+    const selectedCityName = e.target.value.toLowerCase(); 
+    const selectedCity = cities.find((c) => c.name.toLowerCase() === selectedCityName);
+  
     if (selectedCity) {
-      // Set address data as a JSON object inside the form using setValue
-      setValue("address", {
-        country: "India",  // You can make this dynamic based on the country selection
-        state,
-        city: selectedCity.name,
-        latitude: selectedCity.latitude,
-        longitude: selectedCity.longitude,
-      });
+      setValue("country", "india"); 
+      setValue("city", selectedCity.name.toLowerCase())
+      setValue("latitude", String(selectedCity.latitude || "").toLowerCase());
+      setValue("longitude", String(selectedCity.longitude || "").toLowerCase()); 
+      setValue("state", String(state).toLowerCase()); 
     }
   };
 
   return (
     <div className="bg-white p-6 rounded-lg">
-      <h2 className="text-2xl font-semibold mb-6 text-gray-800">Business Details</h2>
+      <h2 className="text-2xl font-semibold mb-6 text-gray-800">
+        Business Details
+      </h2>
 
       {/* State Selection */}
       <div className="mb-6">
@@ -67,7 +69,9 @@ const Step3 = () => {
           ))}
         </select>
         {errors.state && (
-          <span className="text-red-500 text-sm mt-1">{errors.state.message}</span>
+          <span className="text-red-500 text-sm mt-1">
+            {errors.state.message}
+          </span>
         )}
       </div>
 
@@ -88,7 +92,9 @@ const Step3 = () => {
           ))}
         </select>
         {errors.city && (
-          <span className="text-red-500 text-sm mt-1">{errors.city.message}</span>
+          <span className="text-red-500 text-sm mt-1">
+            {errors.city.message}
+          </span>
         )}
       </div>
 
