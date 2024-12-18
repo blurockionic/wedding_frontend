@@ -6,6 +6,9 @@ import Step3 from "./Step3";
 import Step4 from "./Step4";
 import Step5 from "./Step5";
 import Step6 from "./Step6";
+import { useVendorSignupMutation } from "../../../redux/vendorSlice";
+import {  useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function VendorRegistration() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -21,13 +24,15 @@ function VendorRegistration() {
       description: "",
       license_number: "",
       service_type: [],
-      location: "",
-      map_location: "",
       social_networks: { facebook: "", instagram: "" },
       logo_url: {},
     },
     mode: "onBlur",
   });
+const navigate = useNavigate()
+
+  const [vendorSignup, { isLoading, isError, error }] =
+    useVendorSignupMutation();
 
   const nextStep = async () => {
     const isValid = await methods.trigger();
@@ -36,9 +41,22 @@ function VendorRegistration() {
 
   const prevStep = () => setCurrentStep((prev) => prev - 1);
 
-  const handleSubmit = (data) => {
-    console.log("Final Form Data: ", data);
-    // Submit form data to API
+  const handleSubmit = async (data) => {
+    try {
+      console.log(data);
+      
+      // Call the vendorSignup mutation function
+      const vendorData = await vendorSignup(data).unwrap();
+      console.log("Vendor registration successful: ", vendorData);
+      toast.success(vendorData?.message )
+      navigate('/vendorLogin',{replace:true});
+
+      // Reset form state
+      methods.reset();
+      setCurrentStep(1);
+    } catch (error) {
+      console.error("Vendor registration failed: ", error);
+    }
   };
 
   return (
@@ -52,8 +70,7 @@ function VendorRegistration() {
             <p className="text-gray-600">Step {currentStep} of 6</p>
           </div>
 
-          
-          <div className="relative w-full my-2  h-2 bg-gray-200 rounded">
+          <div className="relative w-full my-2 h-2 bg-gray-200 rounded">
             <div
               className="absolute h-2 bg-green-500 rounded"
               style={{
@@ -73,6 +90,19 @@ function VendorRegistration() {
             <Step6 onSubmit={methods.handleSubmit(handleSubmit)} />
           )}
 
+          {/* Error and Loading State */}
+          {isLoading && (
+            <div className="mt-4 text-center text-green-500">
+              <p>Submitting...</p>
+            </div>
+          )}
+          {isError && error?.data?.errors && (
+            <div className="mt-4 text-center text-red-500">
+              {error?.data?.errors.map((err, index) => (
+                <p key={index}>{err.message}</p>
+              ))}
+            </div>
+          )}
           {/* Navigation Buttons */}
           <div className="flex justify-between mt-6">
             {currentStep > 1 && (
