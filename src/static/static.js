@@ -1,4 +1,9 @@
-export const sectorTypes = ["Wedding Venue", "Wedding Vendor", "Bride", "Groom"];
+export const sectorTypes = [
+  "Wedding Venue",
+  "Wedding Vendor",
+  "Bride",
+  "Groom",
+];
 
 export const weddingVenues = [
   "Wedding Lawns Farmhouse",
@@ -39,3 +44,13 @@ export const brides = [
   "Makeup Salon",
 ];
 export const grooms = ["Sherwani", "Men's Grooming", "Men's Accessories"];
+
+export const links = [
+  { label: "Dashboard", href: "analytics", icon: MdOutlineAnalytics },
+  { label: "Profile", href: "profile", icon: TbUserSquare },
+  { label: "Settings", href: "settings", icon: IoSettingsOutline },
+];
+
+import { MdOutlineAnalytics } from "react-icons/md";
+import { TbUserSquare } from "react-icons/tb";
+import { IoSettingsOutline } from "react-icons/io5";
