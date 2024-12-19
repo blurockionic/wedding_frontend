@@ -47,10 +47,14 @@ export const grooms = ["Sherwani", "Men's Grooming", "Men's Accessories"];
 
 export const links = [
   { label: "Dashboard", href: "analytics", icon: MdOutlineAnalytics },
-  { label: "Profile", href: "profile", icon: TbUserSquare },
-  { label: "Settings", href: "settings", icon: IoSettingsOutline },
+  { label: "Services", href: "services", icon:  MdDesignServices },
+  { label: "Bookings/Inquiries", href: "bookings", icon: IoBookmarksOutline },
+
+
 ];
 
-import { MdOutlineAnalytics } from "react-icons/md";
+import { MdDesignServices, MdOutlineAnalytics, MdRoomService } from "react-icons/md";
 import { TbUserSquare } from "react-icons/tb";
-import { IoSettingsOutline } from "react-icons/io5";
+import { IoBookmarksOutline, IoSettingsOutline } from "react-icons/io5";import { FaServicestack } from "react-icons/fa";
+import { FcServices } from "react-icons/fc";
+

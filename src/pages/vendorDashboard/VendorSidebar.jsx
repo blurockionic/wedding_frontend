@@ -1,11 +1,9 @@
-import  {  useState } from "react";
+import { useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
+import { links } from "../../static/static";
 
-
-
-
-const VendorSidebar = ({ links,  footer }) => {
+const VendorSidebar = ({ footer }) => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(location.pathname);
@@ -38,7 +36,7 @@ const VendorSidebar = ({ links,  footer }) => {
 
       {/* Sidebar */}
       <div
-        className={`my-2 lg:my-2 lg:mx-2 fixed h-[98vh] rounded-md inset-y-0 left-0 z-50 flex flex-col bg-gradient-to-b from-blue-700 via-blue-800 to-blue-900 text-gray-100 shadow-lg transform ${
+        className={`my-2 lg:my-2 lg:mx-2 fixed h-[98vh] rounded-md inset-y-0 left-0 z-50 flex flex-col bg-gradient-to-br from-slate-500 via-slate-700 to-slate-900 text-gray-100 shadow-lg transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0 lg:static lg:shadow-none transition-transform duration-300 ease-in-out`}
         style={{ width: "16rem" }}
@@ -52,8 +50,9 @@ const VendorSidebar = ({ links,  footer }) => {
               className="h-8 w-8 shadow-lg shadow-white bg-transparent rounded-md"
             /> */}
 
-
-            <h1 className=" lg:text-sm xl:text-lg xl:font-bold lg:font-semibold hidden xl:block">Visualize Dashboard</h1>
+            <h1 className=" lg:text-sm xl:text-lg xl:font-bold lg:font-semibold hidden xl:block">
+              Visualize Dashboard
+            </h1>
           </div>
 
           <button
@@ -88,7 +87,9 @@ const VendorSidebar = ({ links,  footer }) => {
         </nav>
 
         {/* Footer */}
-        {footer && <div className="p-4 flex justify-center items-center">{footer}</div>}
+        {footer && (
+          <div className="p-4 flex justify-center items-center">{footer}</div>
+        )}
       </div>
     </>
   );

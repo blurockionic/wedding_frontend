@@ -18,6 +18,7 @@ import VendorDashboard from "./pages/vendorDashboard/Dashboard.jsx";
 import Setting from "./pages/vendorDashboard/Setting.jsx";
 import Profile from "./pages/vendorDashboard/Profile.jsx";
 import Analytics from "./pages/vendorDashboard/Analytics.jsx";
+import VendorServicesPage from "./pages/vendorDashboard/VendorServicePage.jsx";
 
 // Define routes using createBrowserRouter
 const router = createBrowserRouter([
@@ -38,7 +39,8 @@ const router = createBrowserRouter([
         children: [
           { path: "settings", element: <Setting /> }, 
           {path:"profile", element: <Profile/> },
-          { path:"analytics",element: <Analytics/>}
+          { path:"analytics",element: <Analytics/>},
+          { path:"services", element: <VendorServicesPage /> },
         ],
       },
       { path: "*", element: <FullErrorPage /> },
