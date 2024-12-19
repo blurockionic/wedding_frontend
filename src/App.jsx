@@ -14,6 +14,10 @@ import { useDispatch } from "react-redux";
 import ErrorBoundary from "./pages/ErrorPage.jsx";
 import FullErrorPage from "./pages/FullErrorPage.jsx";
 import VendorRegistration from "./pages/auth/vendor _auth/VendorSignup.jsx";
+import VendorDashboard from "./pages/vendorDashboard/Dashboard.jsx";
+import Setting from "./pages/vendorDashboard/Setting.jsx";
+import Profile from "./pages/vendorDashboard/Profile.jsx";
+import Analytics from "./pages/vendorDashboard/Analytics.jsx";
 
 // Define routes using createBrowserRouter
 const router = createBrowserRouter([
@@ -24,10 +28,20 @@ const router = createBrowserRouter([
       { path: "/", element: <LandingPage /> },
       { path: "/signup", element: <Signup /> },
       { path: "/login", element: <Login /> },
-      {path: "/vendorSignup", element:<VendorRegistration/>},
+      { path: "/vendorSignup", element: <VendorRegistration /> },
       { path: "/services", element: <ServicesPage /> },
       { path: "/service/:id", element: <ServiceDetail /> },
-      { path: "*", element: <FullErrorPage/> },
+     
+      {
+        path: "/VendorDashboard",
+        element: <VendorDashboard />,
+        children: [
+          { path: "settings", element: <Setting /> }, 
+          {path:"profile", element: <Profile/> },
+          { path:"analytics",element: <Analytics/>}
+        ],
+      },
+      { path: "*", element: <FullErrorPage /> },
     ],
   },
 ]);
@@ -37,11 +51,15 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (favoriteList && favoriteList.cartItems && favoriteList.cartItems.length > 0) {
+    if (
+      favoriteList &&
+      favoriteList.cartItems &&
+      favoriteList.cartItems.length > 0
+    ) {
       console.log(favoriteList.cartItems); // Debug fetched data
       dispatch(hydrateFavorites(favoriteList)); // Dispatch to update Redux state
     }
-  }, [favoriteList, dispatch]); 
+  }, [favoriteList, dispatch]);
   return (
     <>
       <ErrorBoundary>
