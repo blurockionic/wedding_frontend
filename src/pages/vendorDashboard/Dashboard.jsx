@@ -10,7 +10,7 @@ const VendorDashboard = () => {
       <VendorSidebar
         links={links}
         footer={
-          <p className="text-sm text-gray-400">© 2024 Visualize Dashboard</p>
+          <p className=" text-sm text-gray-400">© 2024 Visualize Dashboard</p>
         }
       />
 

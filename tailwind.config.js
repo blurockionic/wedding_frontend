@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-const plugin = require('tailwindcss/plugin');
+const plugin = require("tailwindcss/plugin");
 
 // Utility to create RGBA colors
 const rgbaColor = (color, opacity) => {
@@ -10,13 +10,17 @@ const rgbaColor = (color, opacity) => {
     const b = parseInt(hex.slice(5, 7), 16);
     return `rgb(${r}, ${g}, ${b})`;
   };
-  
+
   const rgb = hexToRgb(color);
   return `${rgb}, ${opacity}`;
 };
 
 module.exports = {
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/flowbite/**/*.js",
+  ],
   theme: {
     extend: {
       screens: {
@@ -52,21 +56,26 @@ module.exports = {
     },
   },
   plugins: [
+    require("flowbite/plugin")({
+      charts: true,
+    }),
     plugin(function ({ addUtilities, theme, e }) {
-      const colors = theme('colors');
+      const colors = theme("colors");
       const newUtilities = {};
 
-      Object.keys(colors).forEach(color => {
-        if (typeof colors[color] === 'object') {
-          Object.keys(colors[color]).forEach(shade => {
+      Object.keys(colors).forEach((color) => {
+        if (typeof colors[color] === "object") {
+          Object.keys(colors[color]).forEach((shade) => {
             const baseColor = colors[color][shade];
 
             // Generate opacity levels (0.1, 0.2, 0.3, ..., 1)
             for (let i = 1; i <= 10; i++) {
               const opacity = i * 0.1;
               const rgbaValue = rgbaColor(baseColor, opacity);
-              const className = e(`bg-${color}-${shade}-${Math.round(opacity * 100)}`);
-              
+              const className = e(
+                `bg-${color}-${shade}-${Math.round(opacity * 100)}`
+              );
+
               // Adding bg utility for background color with opacity
               newUtilities[className] = {
                 backgroundColor: `rgba(${rgbaValue})`,
@@ -76,7 +85,7 @@ module.exports = {
         }
       });
 
-      addUtilities(newUtilities, ['responsive', 'hover']);
+      addUtilities(newUtilities, ["responsive", "hover"]);
     }),
   ],
 };

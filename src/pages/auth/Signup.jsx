@@ -442,7 +442,7 @@ export default function Signup() {
               text="Login with Google"
               // onClick={handleGoogleLogin}
               leftIcon={<FaGoogle size={20} className="text-red-500" />}
-              className="w-full mt-4 bg-white text-red-600 border-2 border-sageGreen-dark hover:bg-sageGreen-light hover:text-white"
+              className="w-full mt-4 py-2 bg-white text-red-600 border-2 border-sageGreen-dark hover:bg-sageGreen-light hover:text-white"
             />
           </div>
 

@@ -5,16 +5,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/authSlice";
 import { useLogoutMutation } from "../redux/apiSlice.auth";
 
-
-
-
-
 function Navbar() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const dispatch = useDispatch();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [logoutMutation] = useLogoutMutation();
- 
 
   const handleLogout = async () => {
     try {
@@ -28,18 +23,15 @@ function Navbar() {
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
   return (
-    <nav className="w-full bg-transparent sm:bg-white top-0 px-4 z-50">
-      <div className="max-w-screen-xl mx-auto flex justify-between items-center py-4">
+    <nav className="w-full bg-transparent sm:bg-white top-0 px-16 py-2 z-50">
+      <div className="w-full flex justify-between items-center py-4">
         {/* Logo */}
-        <div className="text-2xl font-bold text-gray-800 cursor-pointer">
+        <div className=" text-2xl font-bold text-gray-800 cursor-pointer">
           <NavLink to="/">WEDD</NavLink>
         </div>
 
         {/* Hamburger Icon for mobile */}
-        <button
-          className="block lg:hidden text-gray-800"
-          onClick={toggleMenu}
-        >
+        <button className="block lg:hidden text-gray-800" onClick={toggleMenu}>
           {!isMenuOpen ? (
             <svg
               xmlns="http://www.w3.org/2000/svg"

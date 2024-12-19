@@ -9,7 +9,7 @@ export default function OutletPage() {
 
   return (
     <>
-     <div className=""> </div>
+     <div className=""><Navbar /> </div>
       <div className="">
         <Outlet />
       </div>

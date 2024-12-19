@@ -1,7 +1,6 @@
 import Home from "../pages/section/Home";
 import About from "../pages/section/About";
 
-
 import Contact from "./Contact";
 
 import LazySection from "../components/LazySection";
@@ -13,8 +12,8 @@ export default function LandingPage() {
   return (
     <div>
       <LazySection id="/" Component={Home} />
-      <LazySection id="about" Component={About} />
-      <LazySection id="gallery" Component={WeddingEvent} />
+      {/* <LazySection id="about" Component={About} /> */}
+      {/* <LazySection id="gallery" Component={WeddingEvent} /> */}
       <LazySection id="contact" Component={Contact} />
       <LazySection id="footer" Component={Footer} />
     </div>

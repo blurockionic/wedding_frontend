@@ -1,7 +1,6 @@
-import { forwardRef } from "react";
 import PropTypes from "prop-types"; // Import PropTypes for prop validation
 
-const CustomInput = forwardRef((props, ref) => {
+const CustomInput = (props) => {
   const {
     type,
     placeholder,
@@ -12,8 +11,6 @@ const CustomInput = forwardRef((props, ref) => {
     disabled = false,
     leftIcon = null,
     rightIcon = null,
-    register = () => {},
-    rules,
   } = props;
 
   return (
@@ -30,8 +27,6 @@ const CustomInput = forwardRef((props, ref) => {
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        {...register(name, rules)}
-        ref={ref}
         disabled={disabled}
         className="flex-1 py-2 focus:outline-none"
       />
@@ -40,7 +35,7 @@ const CustomInput = forwardRef((props, ref) => {
       {rightIcon && <div className="ml-2 text-gray-500">{rightIcon}</div>}
     </div>
   );
-});
+};
 
 // Set display name for better debugging
 CustomInput.displayName = "CustomInput";
@@ -56,7 +51,6 @@ CustomInput.propTypes = {
   disabled: PropTypes.bool,
   leftIcon: PropTypes.node,
   rightIcon: PropTypes.node,
-  register: PropTypes.func,
 };
 
 export default CustomInput;

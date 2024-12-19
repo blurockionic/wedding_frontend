@@ -19,7 +19,7 @@ export default function Login() {
   const [loginMutation] = useLoginMutation();
   const [isShowPassWord, setIsShowPassword] = useState(false);
 
-  useAuthRedirect("/",true);
+  useAuthRedirect("/", true);
 
   const {
     register,
@@ -229,8 +229,9 @@ export default function Login() {
                 type="button"
                 text="Login with Google"
                 onClick={handleGoogleLogin}
+                // style={{ paddingTop: "10px" }}
                 leftIcon={<FaGoogle size={20} className="text-red-500" />}
-                className="w-full mt-4 bg-white text-red-600 border-2 border-sageGreen-dark hover:bg-sageGreen-light hover:text-white"
+                className="w-full mt-4 py-2 bg-white text-red-600 border-2 border-sageGreen-dark hover:bg-sageGreen-light hover:text-white"
               />
             </div>
           </form>

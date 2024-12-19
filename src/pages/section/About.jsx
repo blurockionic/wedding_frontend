@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import Aos from "aos";
@@ -14,12 +14,11 @@ export default function About() {
   useEffect(() => {
     Aos.init({
       duration: 1000, // Animation duration (in ms)
-     
     });
   }, []);
 
   return (
-    <div className="container overflow-hidden mx-auto relative pt-20  md:p-8">
+    <div className="container  mx-auto relative pt-20  md:p-8">
       {/* Background Flower Image */}
       <img
         src="/about flower.png"
@@ -31,7 +30,6 @@ export default function About() {
 
       {/* Main Content */}
       <div className="flex flex-col lg:flex-row justify-center items-center gap-5 relative">
-        
         {/* Left Section (Card) */}
         <div
           className="customShadow relative bg-white translate-x-10 flex flex-col gap-5 py-20 px-5 w-full lg:w-1/3 z-20"
@@ -89,7 +87,7 @@ export default function About() {
                       <img
                         src={image}
                         alt={`Slide ${index + 1}`}
-                        className="w-full h-full object-cover"
+                        className="w- h-full object-cover"
                       />
                     </div>
                   </div>
