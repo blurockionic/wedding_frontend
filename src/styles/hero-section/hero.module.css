@@ -1,0 +1,18 @@
+.imageBackground {
+    background-image:
+    linear-gradient(45deg,
+        rgba(0, 0, 0, 0.605),
+        rgba(0, 0, 0, 0.8)), 
+          url(
+'../public/herobg.jpg');
+    background-size: cover; 
+    background-repeat: no-repeat; 
+    background-position: center; 
+    display: flex; 
+    justify-content: space-around; 
+    position: absolute;
+    top: 0; 
+    width: 100%;
+    height: 100vh; 
+    z-index: -50; 
+}

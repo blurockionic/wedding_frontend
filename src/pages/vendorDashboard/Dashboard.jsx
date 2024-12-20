@@ -9,7 +9,7 @@ const VendorDashboard = () => {
     <div className="flex ">
       <VendorSidebar
         footer={
-          <p className="text-sm text-gray-400">© 2024 Visualize Dashboard</p>
+          <p className=" text-sm text-gray-400">© 2024 Visualize Dashboard</p>
         }
       />
 
