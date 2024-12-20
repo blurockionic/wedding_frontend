@@ -35,6 +35,11 @@ html {
   font-family: montserrat;
 }
 
+::-webkit-scrollbar {
+
+  scrollbar-width: none;
+}
+
 
 :root {
   /* Base Colors */

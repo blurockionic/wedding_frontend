@@ -61,6 +61,30 @@ export const serviceApi = createApi({
         method: "DELETE",
       }),
     }),
+    // creat service 
+    createService: builder.mutation({
+      query: (serviceData) => ({
+        url: "/services/create",
+        method: "POST",
+        body: serviceData,
+      }),
+    }),
+    // update service
+    updateService: builder.mutation({
+      query: (serviceData) => ({
+        url: `/services/${serviceData.id}`,
+        method: "PUT",
+        body: serviceData,
+      }),
+    }),
+    // delete service
+    deleteService: builder.mutation({
+      query: (id) => ({
+        url: `/services/${id}`,
+        method: "DELETE",
+      }),
+    }),
+  
   }),
 });
 
@@ -72,4 +96,8 @@ export const {
   useAddToCartMutation,
   useRemoveFromCartMutation,
   useClearCartMutation,
+  useCreateServiceMutation,
+  useUpdateServiceMutation,
+  useDeleteServiceMutation,
+ 
 } = serviceApi;

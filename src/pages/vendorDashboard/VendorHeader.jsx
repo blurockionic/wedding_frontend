@@ -44,12 +44,12 @@ const VendorHeader = () => {
   }, []);
 
   return (
-    <header className="w-full bg-[#121e32] shadow-md px-4 py-3 flex  items-center justify-end lg:justify-between lg:rounded-md">
+    <header className="w-full  bg-[#121e32] customShadow px-6 py-3 flex  items-center justify-end lg:justify-between lg:rounded-md">
       {/* Left: Brand Name */}
       
     <h2 className="font-bold text-3xl md:block hidden text-white ">wedd</h2>
       {/* Right: Action Buttons */}
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-1">
         <HiOutlineLanguage
           className="text-4xl cursor-pointer transition duration-200 ease-in-out p-2 hover:bg-[#2563EB] rounded-full text-white"
         />
