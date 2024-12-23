@@ -37,11 +37,7 @@ export default function Login() {
       if (result.user) {
         dispatch(login({ user: result }));
         reset();
-        toast.success("Login successful!", {
-          position: "top-right",
-          autoClose: 5000,
-          theme: "light",
-        });
+        toast.success("Login successful!");
       }
     } catch (error) {
       toast.error(error.data?.message || "An unexpected error occurred.", {

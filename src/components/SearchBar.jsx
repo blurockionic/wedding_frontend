@@ -55,7 +55,10 @@ const SearchBar = ({
 
   return (
     <div
-      className={`relative flex items-center justify-start border bg-gray-700 border-gray-600 text-gray-300 ${rounded} transition-all duration-300 ${width}`}
+      className={`relative flex items-center justify-start 
+        border-2 
+        ${isFocused ? "border-blue-500" : ""}  // Focused border color
+        bg-gray-700 text-gray-300 ${rounded} transition-all duration-300 ${width}`}
     >
       {/* Input Section */}
       <input
@@ -66,14 +69,15 @@ const SearchBar = ({
         onFocus={handleFocus}
         onBlur={handleBlur}
         placeholder={query.length === 0 ? placeholder : ""}
-        className={`flex-grow py-1 lg:px-4 pl-10 bg-transparent placeholder-gray-500 focus:outline-none ${rounded}`}
+        className={`flex-grow py-1 lg:px-4 md:pl-10 bg-transparent font-thin placeholder-gray-500 focus:outline-none ${rounded}`}
+        aria-label="Search"
       />
 
       {/* Clear Button */}
       {query.length > 0 ? (
         <button
           onClick={handleClear}
-          className="absolute right-3 text-gray-400"
+          className="absolute right-0 md:right-3 text-gray-400"
         >
           <BiX size={24} />
         </button>
@@ -82,7 +86,7 @@ const SearchBar = ({
       {/* Search Icon */}
       {query.length === 0 && icon && (
         <div
-          className="absolute right-3 text-gray-400"
+          className="absolute right-0 md:right-3 text-gray-400"
           style={{ pointerEvents: "none" }}
         >
           {icon}

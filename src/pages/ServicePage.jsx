@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Sidebar from "../components/Sidebar";
 import ServiceList from "../components/ServiceList";
 import { useGetServicesQuery } from "../redux/serviceSlice";
@@ -6,10 +6,12 @@ import { useGetServicesQuery } from "../redux/serviceSlice";
 function ServicesPage() {
   const [filters, setFilters] = useState({});
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for mobile sidebar
-  const { data, isLoading, error } = useGetServicesQuery(filters);
 
+  const memoizedFilters = useMemo(() => filters, [filters]);
 
-  
+  // Fetch services using the filters directly from the query hook
+  const { data, error, isLoading } = useGetServicesQuery(memoizedFilters);
+  console.log(data);
 
   const handleFilterChange = (data) => {
     setFilters(data);
@@ -26,6 +28,7 @@ function ServicesPage() {
       setIsSidebarOpen(event.matches); // Keep sidebar open for larger screens
     };
 
+      
     // Attach listener
     mediaQuery.addEventListener("change", handleMediaChange);
 
@@ -34,7 +37,7 @@ function ServicesPage() {
 
     // Cleanup listener on component unmount
     return () => mediaQuery.removeEventListener("change", handleMediaChange);
-  }, []);
+  }, []); 
 
   return (
     <div className="flex flex-col md:flex-row p-2 h-screen relative">
@@ -74,10 +77,9 @@ function ServicesPage() {
         ) : error ? (
           <div className="flex items-center justify-center h-full">
             <p>{error?.data?.message}</p>
-          
           </div>
         ) : (
-          <ServiceList services={data?.services || []} />
+          <ServiceList services={data?.ServiceResult || []} />
         )}
       </div>
     </div>

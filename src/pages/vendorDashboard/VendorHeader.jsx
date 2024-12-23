@@ -6,20 +6,26 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../redux/authSlice";
+import { useVendorLogoutMutation } from "../../redux/vendorSlice";
 import { HiOutlineLanguage } from "react-icons/hi2";
 import { Link } from "react-router-dom";
 
 const VendorHeader = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+ const [vendorLogout] = useVendorLogoutMutation()
 
   const handleOnLogout = async () => {
-    const response = await logoutUser();
+
+    const response = await vendorLogout();
     if (response) {
-      dispatch(logout());
-      toast.success(response.data.message);
-      navigate("/login");
+      
+      if (response) {
+        dispatch(logout());
+        toast.success(response.data.message);
+        navigate("/vendorLogin");
+      }
+      
     }
   };
 

@@ -8,12 +8,22 @@ import {
   weddingVenues,
   sectorTypes,
 } from "../../../../static/static";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setServiceId } from "../../../../redux/serviceIdSlice";
+import { toast } from "react-toastify";
+
+
+
+
 
 const ServiceCreate = ({ onServiceCreated }) => {
   const [createServiceMutation, { isLoading }] = useCreateServiceMutation();
   const [serviceOptions, setServiceOptions] = useState([]);
   const [selectedService, setSelectedService] = useState("");
   const [selectedSector, setSelectedSector] = useState("");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const {
     register,
@@ -22,16 +32,21 @@ const ServiceCreate = ({ onServiceCreated }) => {
     setValue,
   } = useForm();
 
-  // Handling form submission
-  const onSubmit = (data) => {
-    createServiceMutation({
-      ...data,
-      service: selectedService,
-      sector: selectedSector,
-    });
-
-    console.log(data);
-    onServiceCreated(data.id);
+  const onSubmit = async (data) => {
+    try {
+      
+      const preparedData = {
+        ...data,
+        min_price: Number(data.min_price),
+      };
+  
+      const res = await createServiceMutation(preparedData).unwrap();
+      dispatch(setServiceId(res.id));
+     toast.success("Service created successfully");
+      onServiceCreated?.(); // Optional callback if provided
+    } catch (error) {
+     toast.error("Error creating service:");
+    }
   };
 
   useEffect(() => {
@@ -57,22 +72,20 @@ const ServiceCreate = ({ onServiceCreated }) => {
 
   const handleServiceSelect = (event) => {
     const service = event.target.value;
-    console.log(service);
     setSelectedService(service);
     setValue("service_type", service);
   };
 
   return (
-    <div className="h-fit w-full bg-gradient-to-br  to-slate-600 from-slate-900 py-8">
-      <div
-        className="bg-transparent  h-full p-4 py-6 bg-pink-200 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border border-gray-100
- px-8 w-full max-w-4xl mx-auto"
-      >
-        <h2 className="text-3xl font-bold mb-6 text-white">Create Service</h2>
+    <div className=" w-full p-6 bg-gradient-to-br from-slate-900 to-slate-600 ">
+      <div className="bg-transparent p-8 max-w-4xl mx-auto rounded-lg shadow-lg bg-pink-200 bg-opacity-10 backdrop-blur-lg border border-gray-100">
+        <h2 className="text-4xl font-bold text-center text-white mb-8">
+          Create Service
+        </h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Service Name Field */}
-          <div className="mb-6">
+          <div>
             <label className="block text-lg font-medium text-white">
               Service Name <span className="text-red-500">*</span>
             </label>
@@ -82,17 +95,17 @@ const ServiceCreate = ({ onServiceCreated }) => {
               })}
               type="text"
               placeholder="Enter service name"
-              className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-dustyRose-light"
+              className="mt-2 w-full px-4 py-3  bg-gray-800 text-gray-300 border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
             />
             {errors.service_name && (
-              <span className="text-red-500 text-sm mt-1">
+              <span className="text-red-500 text-sm">
                 {errors.service_name.message}
               </span>
             )}
           </div>
 
           {/* Description Field */}
-          <div className="mb-6">
+          <div>
             <label className="block text-lg font-medium text-white">
               Description <span className="text-red-500">*</span>
             </label>
@@ -101,10 +114,10 @@ const ServiceCreate = ({ onServiceCreated }) => {
                 required: "Description is required",
               })}
               placeholder="Enter a brief description"
-              className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-dustyRose-light"
+              className="mt-2 w-full px-4 py-3  bg-gray-800 text-gray-300 border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
             />
             {errors.description && (
-              <span className="text-red-500 text-sm mt-1">
+              <span className="text-red-500 text-sm">
                 {errors.description.message}
               </span>
             )}
@@ -119,16 +132,17 @@ const ServiceCreate = ({ onServiceCreated }) => {
               <input
                 id="min_price"
                 type="number"
-                step="0.01"
+                min={100}
+                step="100"
                 {...register("min_price", {
                   required: "Minimum price is required",
                   validate: (value) =>
-                    value >= 0 || "Price must be greater than or equal to 0",
+                    value >= 0 || "Price must be greater than or equal to 100",
                 })}
-                className="w-full border px-3 py-2 rounded-lg"
+                className="w-full px-4 py-3 border bg-gray-800 text-gray-300  border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
               />
               {errors.min_price && (
-                <span className="text-red-500 text-sm mt-1">
+                <span className="text-red-500 text-sm">
                   {errors.min_price.message}
                 </span>
               )}
@@ -140,7 +154,7 @@ const ServiceCreate = ({ onServiceCreated }) => {
               <select
                 value={selectedSector}
                 onChange={(e) => setSelectedSector(e.target.value)}
-                className="w-full border px-3 py-2 rounded-lg"
+                className="w-full px-4 py-3   bg-gray-800 text-gray-300 border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
               >
                 <option value="">Select a Category</option>
                 {sectorTypes.map((sector, index) => (
@@ -152,13 +166,14 @@ const ServiceCreate = ({ onServiceCreated }) => {
             </div>
           </div>
 
+          {/* Service Type Field */}
           {serviceOptions.length > 0 && (
-            <div className="mb-6">
+            <div>
               <label className="block text-lg font-medium text-white">
                 Service Type
               </label>
               <select
-                className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-dustyRose-light"
+                className="mt-2 w-full px-4 py-3 border bg-gray-800 text-gray-300  border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
                 value={selectedService}
                 onChange={handleServiceSelect}
               >
@@ -173,13 +188,15 @@ const ServiceCreate = ({ onServiceCreated }) => {
           )}
 
           {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-500 transition"
-            disabled={isLoading}
-          >
-            {isLoading ? "Creating..." : "Create Service"}
-          </button>
+          <div className="flex justify-center">
+            <button
+              type="submit"
+              className="w-full max-w-xs bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-500 transition duration-300"
+              disabled={isLoading}
+            >
+              {isLoading ? "Creating..." : "Create Service"}
+            </button>
+          </div>
         </form>
       </div>
     </div>

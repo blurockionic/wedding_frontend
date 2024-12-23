@@ -6,6 +6,7 @@ import SearchBar from "../../components/SearchBar";
 import { GoSearch } from "react-icons/go";
 import { useGetServicesQuery } from "../../redux/serviceSlice";
 import { PiPlus } from "react-icons/pi";
+import { Outlet } from "react-router-dom";
 
 const VendorServicesPage = () => {
   const [showFormPage, setShowFormPage] = useState(false); // Track form page visibility
@@ -34,7 +35,7 @@ const VendorServicesPage = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-2">
+    <div className="max-w-7xl  mx-auto p-2">
       {/* Top Bar Section */}
       <div className={`flex justify-between items-center my-6 ${showFormPage ? "hidden" : ""}`}>
         {/* Search Bar */}
@@ -127,6 +128,8 @@ const VendorServicesPage = () => {
           
         </div>
       )}
+
+<Outlet />
     </div>
   );
 };

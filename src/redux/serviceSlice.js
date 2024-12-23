@@ -64,7 +64,7 @@ export const serviceApi = createApi({
     // creat service 
     createService: builder.mutation({
       query: (serviceData) => ({
-        url: "/services/create",
+        url: "/services",
         method: "POST",
         body: serviceData,
       }),
@@ -84,6 +84,9 @@ export const serviceApi = createApi({
         method: "DELETE",
       }),
     }),
+
+    
+
   
   }),
 });

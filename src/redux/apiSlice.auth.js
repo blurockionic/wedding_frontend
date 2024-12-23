@@ -5,7 +5,7 @@ export const apiAuthSlice = createApi({
   reducerPath: "authSlice",
   
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:4000/api/",
+    baseUrl: "http://localhost:4000/api/v1",
     credentials: "include",
   }),
 
@@ -13,22 +13,23 @@ export const apiAuthSlice = createApi({
 
     login: builder.mutation({
       query: (userData) => ({
-        url: `/v1/users/login`,
+        url: `/users/login`,
         method: "POST",
         body: userData,
       }),
     }),
 
+   
     logout: builder.mutation({
       query: () => ({
-        url: `/v1/users/logout`,
+        url: `/users/logout`,
         method: "POST",
       }),
     }),
 
     signup: builder.mutation({
       query: (userData) => ({
-        url: `/v1/users/register`,
+        url: `/users/register`,
         method: "POST",
         body: userData,
       }),
@@ -36,7 +37,7 @@ export const apiAuthSlice = createApi({
 
     updateUser: builder.mutation({
       query: (userData) => ({
-        url: `/v1/users/update-user`,
+        url: `/users/update-user`,
         method: "PATCH",
         body: userData,
       }),
@@ -44,7 +45,7 @@ export const apiAuthSlice = createApi({
 
     reqResetPassword: builder.mutation({
       query: (resetData) => ({
-        url: `/v1/users/request-password-reset`,
+        url: `/users/request-password-reset`,
         method: "POST",
         body: resetData,
       }),
@@ -52,7 +53,7 @@ export const apiAuthSlice = createApi({
 
     reqChangePassword: builder.mutation({
       query: ({ token, ...changeData }) => ({
-        url: `/v1/users/reset-password?token=${token}`,
+        url: `/users/reset-password?token=${token}`,
         method: "POST",
         body: changeData,
       }),
@@ -76,4 +77,5 @@ export const {
   useReqResetPasswordMutation,
   useReqChangePasswordMutation,
   useDeleteUserMutation,
+  
 } = apiAuthSlice;

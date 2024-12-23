@@ -65,12 +65,12 @@ export default function Home() {
             data-aos-delay="400"
             data-aos-once="true"
           >
-            <p>
+            <span>
               Plan your <span className="text-[#ffcdf8] "> Dream Wedding </span>
-            </p>
+            </span>
             {/* <br /> */}
 
-            <p>with us</p>
+            <span>with us</span>
 
             {/* button for mobile  */}
           </p>
@@ -142,8 +142,6 @@ export default function Home() {
 
       {/* discover section  */}
       <Discover />
-
-     
     </>
   );
 }

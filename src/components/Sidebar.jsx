@@ -1,8 +1,8 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { serviceTypes } from "../assets/NavabarRouteConfig";  // Assuming your serviceTypes are imported here
+import { serviceTypes } from "../assets/NavabarRouteConfig"; // Assuming your serviceTypes are imported here
 
-function Sidebar({ onFilterChange }) {
+const Sidebar = React.memo(({ onFilterChange }) => {
   const { register, handleSubmit, reset } = useForm();
 
   // Function to handle filter submission
@@ -10,12 +10,12 @@ function Sidebar({ onFilterChange }) {
     // Format data into query string parameters
     const filters = {};
 
-    if (data.location) filters.location = data.location;  // Changed this from 'vendor_name' to 'location'
+    if (data.location) filters.location = data.location; // Changed this from 'vendor_name' to 'location'
     if (data.service_type) filters.service_type = data.service_type;
-    
-    if (data.minPrice) filters.minPrice = `>=${data.minPrice}`;
-    if (data.maxPrice) filters.maxPrice = `<=${data.maxPrice}`;
-    
+
+    if (data.minPrice) filters.minPrice = `${parseFloat(data.minPrice)}`; // No URL encoding here
+    if (data.maxPrice) filters.maxPrice = `${parseFloat(data.maxPrice)}`;
+
     if (data.rating) filters.rating = data.rating;
     if (data.sort_by) filters.sort_by = data.sort_by;
     if (data.sort_order) filters.sort_order = data.sort_order;
@@ -26,7 +26,9 @@ function Sidebar({ onFilterChange }) {
 
   return (
     <div className="w-full h-screen bg-ivory-dark p-4">
-      <h2 className="text-lg bg-slate-300 py-3 border-2 border-dashed uppercase border-green-500 font-bold text-center mb-4">Filters</h2>
+      <h2 className="text-lg bg-slate-300 py-3 border-2 border-dashed uppercase border-green-500 font-bold text-center mb-4">
+        Filters
+      </h2>
       <form onSubmit={handleSubmit(handleFilterChange)} className="space-y-4">
         {/* Location Filter */}
         <div>
@@ -88,7 +90,10 @@ function Sidebar({ onFilterChange }) {
         {/* Sorting Options */}
         <div>
           <label className="block text-gray-700 mb-1">Sort By</label>
-          <select {...register("sort_by")} className="w-full p-2 border rounded">
+          <select
+            {...register("sort_by")}
+            className="w-full p-2 border rounded"
+          >
             <option value="created_at">Created At</option>
             <option value="min_price">Min Price</option>
             <option value="rating">Rating</option>
@@ -96,7 +101,10 @@ function Sidebar({ onFilterChange }) {
         </div>
         <div>
           <label className="block text-gray-700 mb-1">Sort Order</label>
-          <select {...register("sort_order")} className="w-full p-2 border rounded">
+          <select
+            {...register("sort_order")}
+            className="w-full p-2 border rounded"
+          >
             <option value="asc">Ascending</option>
             <option value="desc">Descending</option>
           </select>
@@ -113,8 +121,8 @@ function Sidebar({ onFilterChange }) {
           <button
             type="button"
             onClick={() => {
-              reset();  // Reset the form fields
-              onFilterChange({});  // Optionally reset the parent filter state as well
+              reset(); // Reset the form fields
+              onFilterChange({}); // Optionally reset the parent filter state as well
             }}
             className="w-full bg-gray-300 text-gray-700 py-2 rounded"
           >
@@ -124,6 +132,6 @@ function Sidebar({ onFilterChange }) {
       </form>
     </div>
   );
-}
+});
 
 export default Sidebar;

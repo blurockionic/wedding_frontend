@@ -3,51 +3,22 @@ import ServiceCreate from "./Tabs/ServiceCreate";
 import Mediatab from "./Tabs/Mediatab";
 import FAQsTab from "./Tabs/FAQsTab";
 import AvailabilityTab from "./Tabs/AvailabilityTab";
+import { useSelector } from "react-redux";
 
 const TABS = ["Service Data", "Media", "FAQs", "Availability"];
 
 const ServicePage = ({ onClose }) => {
   const [activeTab, setActiveTab] = useState("Service Data");
-  const [serviceId, setServiceId] = useState(null); // Store the service ID
+  const serviceId = useSelector((state) => state.serviceId);
+  
+  
 
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case "Service Data":
-        return (
-          <ServiceCreate 
-            onServiceCreated={(id) => setServiceId(id)} // Pass handler to store serviceId
-          />
-        );
-      case "Media":
-        return <Mediatab serviceId={serviceId} />; // Pass serviceId to MediaTab
-      case "FAQs":
-        return <FAQsTab serviceId={serviceId} />;
-      case "Availability":
-        return <AvailabilityTab serviceId={serviceId} />;
-      default:
-        return null;
-    }
-  };
 
   return (
     <>
-      <div className="service-page h-fit bg-slate-800">
-        <div className="flex py-1 px-6 bg-transparent shadow-md sticky top-0 z-10">
-          <div className="container mx-auto flex border-gray-300">
-            {TABS.map((tab) => (
-              <button
-                key={tab}
-                className={`px-6 py-3 text-lg font-medium ${
-                  tab === activeTab
-                    ? "text-blue-600 border-b-2 border-blue-600"
-                    : "text-gray-600 hover:text-blue-500"
-                }`}
-                onClick={() => setActiveTab(tab)}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
+      <div className="  bg-slate-800">
+        <div className="flex py-1 px-6 bg-transparent shadow-md sticky top-0 z-10 bg-slate-900">
+         
           <button
             onClick={onClose}
             title="Close Form"
@@ -60,7 +31,8 @@ const ServicePage = ({ onClose }) => {
         <div className="w-full mt-2 bg-slate-600"></div>
 
         {/* Tab Content */}
-        <main className="mx-auto mt-2">{renderTabContent()}</main>
+        {/* <main className="mx-auto   mt-10 rounded-lg shadow-md">{renderTabContent()}</main> */}
+        <ServiceCreate/>
       </div>
     </>
   );

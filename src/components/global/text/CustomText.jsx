@@ -1,4 +1,4 @@
-import PropTypes from "prop-types"; 
+import PropTypes from "prop-types";
 
 const CustomText = ({
   text = "Default Text",
@@ -29,7 +29,7 @@ CustomText.propTypes = {
   style: PropTypes.object,
   as: PropTypes.string, // The tag type (e.g., 'p', 'h1', 'span')
   onClick: PropTypes.func,
-  children: PropTypes.node, 
+  children: PropTypes.node,
 };
 
 export default CustomText;

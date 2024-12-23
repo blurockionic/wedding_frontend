@@ -1,24 +1,28 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Suspense, lazy } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import OutletPage from "./pages/OutletPage";
-import LandingPage from "./pages/LandingPage.jsx";
-import Signup from "./pages/auth/Signup.jsx";
-import Login from "./pages/auth/Login.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import ServicesPage from "./pages/ServicePage.jsx";
-import ServiceDetail from "./pages/serviceDeatails.jsx";
+import { useDispatch, useSelector } from "react-redux";
 import { useGetCartQuery } from "./redux/serviceSlice.js";
 import { hydrateFavorites } from "./redux/favoriteSlice.js";
-import { useDispatch } from "react-redux";
 import ErrorBoundary from "./pages/ErrorPage.jsx";
-import FullErrorPage from "./pages/FullErrorPage.jsx";
-import VendorRegistration from "./pages/auth/vendor _auth/VendorSignup.jsx";
-import VendorDashboard from "./pages/vendorDashboard/Dashboard.jsx";
-import Setting from "./pages/vendorDashboard/Setting.jsx";
-import Profile from "./pages/vendorDashboard/Profile.jsx";
-import Analytics from "./pages/vendorDashboard/Analytics.jsx";
-import VendorServicesPage from "./pages/vendorDashboard/VendorServicePage.jsx";
+
+// Lazy load components
+const OutletPage = lazy(() => import("./pages/OutletPage"));
+const LandingPage = lazy(() => import("./pages/LandingPage.jsx"));
+const Signup = lazy(() => import("./pages/auth/Signup.jsx"));
+const Login = lazy(() => import("./pages/auth/Login.jsx"));
+const ServicesPage = lazy(() => import("./pages/ServicePage.jsx"));
+const ServiceDetail = lazy(() => import("./pages/serviceDeatails.jsx"));
+const VendorRegistration = lazy(() => import("./pages/auth/vendor _auth/VendorSignup.jsx"));
+const VendorDashboard = lazy(() => import("./pages/vendorDashboard/Dashboard.jsx"));
+const Setting = lazy(() => import("./pages/vendorDashboard/Setting.jsx"));
+const Profile = lazy(() => import("./pages/vendorDashboard/Profile.jsx"));
+const Analytics = lazy(() => import("./pages/vendorDashboard/Analytics.jsx"));
+const VendorServicesPage = lazy(() => import("./pages/vendorDashboard/VendorServicePage.jsx"));
+const VendorLogin = lazy(() => import("./pages/auth/vendor _auth/VendorLogin.jsx"));
+const DashBoardDetailPage = lazy(() => import("./pages/vendorDashboard/component/DashBoardDetailPage.jsx"));
+const FullErrorPage = lazy(() => import("./pages/FullErrorPage.jsx"));
 
 // Define routes using createBrowserRouter
 const router = createBrowserRouter([
@@ -30,17 +34,27 @@ const router = createBrowserRouter([
       { path: "/signup", element: <Signup /> },
       { path: "/login", element: <Login /> },
       { path: "/vendorSignup", element: <VendorRegistration /> },
+      { path: "/vendorLogin", element: <VendorLogin /> },
       { path: "/services", element: <ServicesPage /> },
       { path: "/service/:id", element: <ServiceDetail /> },
-     
+
       {
         path: "/VendorDashboard",
         element: <VendorDashboard />,
         children: [
-          { path: "settings", element: <Setting /> }, 
-          {path:"profile", element: <Profile/> },
-          { path:"analytics",element: <Analytics/>},
-          { path:"services", element: <VendorServicesPage /> },
+          { path: "settings", element: <Setting /> },
+          { path: "profile", element: <Profile /> },
+          { path: "analytics", element: <Analytics /> },
+          {
+            path: "services",
+            children: [
+              { path: "", index: true, element: <VendorServicesPage /> },
+              {
+                path: "service-details/:serviceId",
+                element: <DashBoardDetailPage />,
+              },
+            ],
+          },
         ],
       },
       { path: "*", element: <FullErrorPage /> },
@@ -49,8 +63,22 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  const { data: favoriteList, isLoading, error } = useGetCartQuery(); // Automatically fetch data
   const dispatch = useDispatch();
+
+  // Access the user object from the authSlice
+  const user = useSelector((state) => state.auth.user);
+
+  // Check if the user is logged in and has a role of 'user'
+  const isUserLoggedIn = user && user.role === "user";
+
+  // Use the query conditionally
+  const {
+    data: favoriteList,
+    isLoading,
+    error,
+  } = useGetCartQuery(undefined, {
+    skip: !isUserLoggedIn,
+  });
 
   useEffect(() => {
     if (
@@ -58,15 +86,18 @@ function App() {
       favoriteList.cartItems &&
       favoriteList.cartItems.length > 0
     ) {
-      console.log(favoriteList.cartItems); // Debug fetched data
-      dispatch(hydrateFavorites(favoriteList)); // Dispatch to update Redux state
+      console.log(favoriteList.cartItems);
+      dispatch(hydrateFavorites(favoriteList));
     }
   }, [favoriteList, dispatch]);
+
   return (
     <>
       <ErrorBoundary>
-        <ToastContainer />
-        <RouterProvider router={router} />
+        <ToastContainer position="bottom-right" />
+        <Suspense fallback={<div>Loading...</div>}>
+          <RouterProvider router={router} />
+        </Suspense>
       </ErrorBoundary>
     </>
   );

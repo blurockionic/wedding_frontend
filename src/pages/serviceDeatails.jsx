@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Accordion from "../components/Accordian";
+
 import Rating from "../components/Rating";
+ 
+import Accordion from "../components/Accordion";
 import useAuthRedirect from "../hooks/useAuthRedirect";
 
 const mockServiceData = (id) => ({
@@ -35,6 +37,14 @@ const mockServiceData = (id) => ({
       answer:
         "The package includes a full day of photography, 300+ edited photos, and a personalized photo album.",
     },
+    {
+      question: "How long will it take to receive my photos?",
+      answer: "Photos are typically delivered within 4-6 weeks after the event.",
+    },
+    {
+      question: "Do you travel for destination weddings?",
+      answer: "Yes, we are available for destination weddings with additional travel fees.",
+    },
   ],
 });
 
@@ -48,8 +58,6 @@ const fetchServiceDetail = async (id) => {
 };
 
 function ServiceDetail() {
-
-
   const { id } = useParams();
   const [service, setService] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -116,6 +124,16 @@ function ServiceDetail() {
               <Rating rating={review.rating} />
               <p>{review.comment}</p>
             </div>
+          ))}
+        </div>
+      </div>
+
+      {/* FAQ Section */}
+      <div className="mt-8">
+        <h2 className="text-3xl font-bold mb-4">FAQs</h2>
+        <div className="space-y-4">
+          {service.faqs.map((faq, index) => (
+            <Accordion key={index} question={faq.question} answer={faq.answer} />
           ))}
         </div>
       </div>

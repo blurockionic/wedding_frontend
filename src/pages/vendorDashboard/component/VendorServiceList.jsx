@@ -1,12 +1,23 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const VendorServiceList = ({ services }) => {
+
+  const navigate = useNavigate(); // Initialize navigate hook
+
+  
+  const handleCardClick = (serviceId) => {
+    navigate(`service-details/${serviceId}`); 
+  };
+
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-2 md:p-6">
       {services?.length > 0 ? (
         services.map((service) => (
           <div
             key={service.id}
+            onClick={() => handleCardClick(service.id)}
             className="bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-300 flex flex-col justify-between"
           >
             {/* Card Header */}
