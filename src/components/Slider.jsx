@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useDeleteMediaMutation } from "../redux/uploadSlice";
 import { FcDeleteDatabase } from "react-icons/fc";
+import { FiDelete, FiTrash } from "react-icons/fi";
 
 const Slider = ({ data, type, serviceId }) => {
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -81,11 +82,12 @@ const Slider = ({ data, type, serviceId }) => {
 
               {/* Delete Button */}
               <button
+              title="Delete Media"
                 onClick={() => handleDelete(item.public_id)} // Assuming each item has an 'id'
-                className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full shadow-lg hover:bg-red-500"
+                className="absolute top-2 right-2 bg-slate-600 text-white p-2 rounded-full shadow-lg hover:bg-red-500"
               >
                 {!isLoading ? (
-                  <FcDeleteDatabase />
+                  <FiTrash />
                 ) : (
                   <svg
                     className="w-5 h-5 mr-2 text-white animate-spin"

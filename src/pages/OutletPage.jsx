@@ -3,8 +3,10 @@ import Navbar from "../components/Navbar";
 
 export default function OutletPage() {
   const location = useLocation();
+  
+  
 
-  const isVendorDashboard = location.pathname.includes("/vendorDashboard");
+  const isVendorDashboard = location.pathname.includes("/vendordashBoard") || location.pathname.includes("/vendorDashboard");
 
   return (
     <>

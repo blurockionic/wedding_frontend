@@ -19,8 +19,8 @@ const Button = ({ label, onClick, className, type = "button" }) => (
 
 const DashBoardDetailPage = () => {
   const { serviceId } = useParams();
-  const { data, isLoading, isError, error } = useGetServiceByIdQuery(serviceId);
-  const [activeTab, setActiveTab] = useState(null); // Track the active form
+  const { data, isLoading, isError, error ,refetch} = useGetServiceByIdQuery(serviceId);
+  const [activeTab, setActiveTab] = useState(null);
 
   if (isLoading) {
     return <div className="text-center text-gray-600">Loading...</div>;
@@ -36,9 +36,14 @@ const DashBoardDetailPage = () => {
 
   const service = data?.service;
 
+  const handleClose = () => {
+    setActiveTab(null);
+    refetch();
+  
+  }
+
   return (
     <div className="max-w-screen-xl mx-auto p-6">
-      {/* Service Details Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div>
           <h1 className="text-4xl font-bold text-gray-400 capitalize dark:text-white mb-4">
@@ -53,7 +58,7 @@ const DashBoardDetailPage = () => {
           </p>
           <p className="text-gray-400 capitalize dark:text-white">
             <span className="font-semibold">Price Range:</span> ₹
-            {service?.min_price} - ₹{service?.max_price}
+            {service?.min_price} 
           </p>
         </div>
       </div>
@@ -98,14 +103,14 @@ const DashBoardDetailPage = () => {
       <div className="mt-8">
         {activeTab === "media" && (
           <Mediatab
-            handleCloseMedia={() => setActiveTab(null)}
+            handleCloseMedia={handleClose}
             serviceId={serviceId}
           />
         )}
         {activeTab === "faq" && (
-          <FAQsTab handleCloseFAQ={() => setActiveTab(null)} serviceId={serviceId} />
+          <FAQsTab handleCloseFAQ={handleClose} serviceId={serviceId} />
         )}
-        {activeTab === "edit" && <ServiceCreate serviceId={serviceId} />}
+        {activeTab === "edit" && <ServiceCreate onClose={handleClose} serviceData={data.service} />}
       </div>
 
       {/* Buttons Section */}

@@ -48,6 +48,8 @@ const Mediatab = ({ serviceId, handleCloseMedia }) => {
         uploaded: true,
       }));
       setFiles(updatedFiles);
+      handleCloseMedia();
+       // Trigger the refresh
     } catch (error) {
       console.error("Error uploading files:", error);
     }

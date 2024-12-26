@@ -71,10 +71,10 @@ export const serviceApi = createApi({
     }),
     // update service
     updateService: builder.mutation({
-      query: (serviceData) => ({
-        url: `/services/${serviceData.id}`,
+      query: ({preparedData,id}) => ({
+        url: `/services/${id}`,
         method: "PUT",
-        body: serviceData,
+        body: preparedData,
       }),
     }),
     // delete service

@@ -38,7 +38,7 @@ const SearchBar = ({
   const getWidth = () => {
     if (window.matchMedia("(max-width: 640px)").matches) {
       // Small screens
-      return isFocused ? "w-56" : "w-40";
+      return isFocused ? "w-56" : "w-36";
     } else {
       // Larger screens
       return isFocused ? "w-80" : "w-60";
@@ -57,19 +57,19 @@ const SearchBar = ({
     <div
       className={`relative flex items-center justify-start 
         border-2 
-        ${isFocused ? "border-blue-500" : ""}  // Focused border color
-        bg-gray-700 text-gray-300 ${rounded} transition-all duration-300 ${width}`}
+        ${isFocused ? "border-blue-500" : ""} 
+        bg-gray-700 text-gray-300 ${rounded} transition-all ease-in-out duration-300 ${width}`}
     >
       {/* Input Section */}
       <input
         type="text"
         value={query}
         onChange={handleInputChange}
-        onKeyPress={handleKeyPress}
+        onKeyDown={handleKeyPress}
         onFocus={handleFocus}
         onBlur={handleBlur}
         placeholder={query.length === 0 ? placeholder : ""}
-        className={`flex-grow py-1 lg:px-4 md:pl-10 bg-transparent font-thin placeholder-gray-500 focus:outline-none ${rounded}`}
+        className={`flex-grow py-1 lg:px-4 transition-all ease-in-out duration-300 md:pl-10 bg-transparent font-thin placeholder-gray-500 focus:outline-none ${rounded}`}
         aria-label="Search"
       />
 

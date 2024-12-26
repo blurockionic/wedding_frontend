@@ -27,6 +27,7 @@ module.exports = {
         xs: "480px",
       },
       colors: {
+        white: '#f9f9f9',
         dustyRose: {
           DEFAULT: "var(--color-dusty-rose)",
           light: "var(--color-dusty-rose-light)",

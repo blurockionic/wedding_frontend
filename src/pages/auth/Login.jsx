@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { login } from "../../redux/authSlice";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useState } from "react";
 import useAuthRedirect from "../../hooks/useAuthRedirect";
@@ -19,7 +19,10 @@ export default function Login() {
   const [loginMutation] = useLoginMutation();
   const [isShowPassWord, setIsShowPassword] = useState(false);
 
-  useAuthRedirect("/", true);
+ 
+
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -47,6 +50,8 @@ export default function Login() {
       });
     } finally {
       setLoading(false);
+      const from = location.state?.from || "/";
+      navigate(from);
     }
   };
 

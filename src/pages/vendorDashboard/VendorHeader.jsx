@@ -18,15 +18,21 @@ const VendorHeader = () => {
   const handleOnLogout = async () => {
 
     const response = await vendorLogout();
-    if (response) {
+    if(response.error){
+
+      toast.error(response.error.data.message)
       
-      if (response) {
-        dispatch(logout());
-        toast.success(response.data.message);
-        navigate("/vendorLogin");
-      }
-      
+    }else{
+      toast.success(response.data.message);
     }
+    
+    dispatch(logout());
+    navigate("/vendorLogin")
+    
+   
+    
+
+    
   };
 
   const [profileOpen, setProfileOpen] = useState(false);

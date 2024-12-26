@@ -5,6 +5,8 @@ import { serviceTypes } from "../assets/NavabarRouteConfig"; // Assuming your se
 const Sidebar = React.memo(({ onFilterChange }) => {
   const { register, handleSubmit, reset } = useForm();
 
+ 
+
   // Function to handle filter submission
   const handleFilterChange = (data) => {
     // Format data into query string parameters
@@ -25,14 +27,14 @@ const Sidebar = React.memo(({ onFilterChange }) => {
   };
 
   return (
-    <div className="w-full h-screen bg-ivory-dark p-4">
+    <div className="w-full h-screen bg-slate-700 p-4">
       <h2 className="text-lg bg-slate-300 py-3 border-2 border-dashed uppercase border-green-500 font-bold text-center mb-4">
         Filters
       </h2>
       <form onSubmit={handleSubmit(handleFilterChange)} className="space-y-4">
         {/* Location Filter */}
         <div>
-          <label className="block text-gray-700 mb-1">Location</label>
+          <label className="block text-slate-100 mb-1">Location</label>
           <input
             type="text"
             {...register("location")}
@@ -43,7 +45,7 @@ const Sidebar = React.memo(({ onFilterChange }) => {
 
         {/* Service Type Filter */}
         <div>
-          <label className="block text-gray-700 mb-1">Service Type</label>
+          <label className="block text-slate-100 mb-1">Service Type</label>
           <select
             {...register("service_type")}
             className="w-full p-2 border rounded"
@@ -51,7 +53,7 @@ const Sidebar = React.memo(({ onFilterChange }) => {
             <option value="">All</option>
             {serviceTypes.map((type) => (
               <option className="" key={type.value} value={type.value}>
-                {type.label}
+                {type.value}
               </option>
             ))}
           </select>
@@ -59,7 +61,7 @@ const Sidebar = React.memo(({ onFilterChange }) => {
 
         {/* Price Range Filter */}
         <div>
-          <label className="block text-gray-700 mb-1">Price Range</label>
+          <label className="block text-slate-100 mb-1">Price Range</label>
           <div className="flex space-x-2">
             <input
               type="number"
@@ -78,7 +80,7 @@ const Sidebar = React.memo(({ onFilterChange }) => {
 
         {/* Rating Filter */}
         <div>
-          <label className="block text-gray-700 mb-1">Rating</label>
+          <label className="block text-slate-100 mb-1">Rating</label>
           <input
             type="number"
             {...register("rating")}
@@ -89,7 +91,7 @@ const Sidebar = React.memo(({ onFilterChange }) => {
 
         {/* Sorting Options */}
         <div>
-          <label className="block text-gray-700 mb-1">Sort By</label>
+          <label className="block text-slate-100 mb-1">Sort By</label>
           <select
             {...register("sort_by")}
             className="w-full p-2 border rounded"
@@ -100,7 +102,7 @@ const Sidebar = React.memo(({ onFilterChange }) => {
           </select>
         </div>
         <div>
-          <label className="block text-gray-700 mb-1">Sort Order</label>
+          <label className="block text-slate-100 mb-1">Sort Order</label>
           <select
             {...register("sort_order")}
             className="w-full p-2 border rounded"

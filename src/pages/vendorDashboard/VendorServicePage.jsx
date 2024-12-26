@@ -20,6 +20,9 @@ const VendorServicesPage = () => {
     limit: pageSize,
   };
 
+
+  
+
   // Fetch services using the filters object
   const { data, isLoading, error } = useGetServicesQuery(filters);
 
@@ -37,12 +40,16 @@ const VendorServicesPage = () => {
   return (
     <div className="max-w-7xl  mx-auto p-2">
       {/* Top Bar Section */}
-      <div className={`flex justify-between items-center my-6 ${showFormPage ? "hidden" : ""}`}>
+      <div
+        className={`flex justify-between items-center my-6 ${
+          showFormPage ? "hidden" : ""
+        }`}
+      >
         {/* Search Bar */}
         {!showFormPage && (
           <div className="lg:flex text-lg font-bold text-white">
             <div className="flex items-center space-x-4">
-              <div className="transition-all duration-300 ease-in-out w-full">
+              <div className="transition-all duration-300 ease-in-out  w-20">
                 <SearchBar
                   icon={<FiSearch size={18} />}
                   onChange={handleSearch}
@@ -125,11 +132,10 @@ const VendorServicesPage = () => {
         <div className="">
           {/* Add Service Form */}
           <ServiceModel onClose={() => setShowFormPage(false)} />
-          
         </div>
       )}
 
-<Outlet />
+      <Outlet />
     </div>
   );
 };
