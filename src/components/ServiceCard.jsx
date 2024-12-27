@@ -62,7 +62,7 @@ const ServiceCard = React.memo(({ service }) => {
 
   return (
     <div
-      className="customShadow group  bg-gray-200 rounded-lg overflow-hidden cursor-pointer relative"
+      className=" group  bg-gray-200 rounded-lg overflow-hidden cursor-pointer relative"
       onClick={handleCardClick}
       aria-label={`View details of ${service.service_name}`}
     >
@@ -102,7 +102,7 @@ const ServiceCard = React.memo(({ service }) => {
           </h3>
           <span className="text-sm text-gray-500">⭐ {service.rating}</span>
         </div>
-        <div className="flex justify-between">
+        <div className="flex items-center justify-between">
           <span className="text-sm text-gray-500 mt-2 truncate">
             <strong>Vendor:</strong> {service.vendor.name}
           </span>
@@ -110,13 +110,13 @@ const ServiceCard = React.memo(({ service }) => {
             {service.vendor.business_name || "No business name available"}
           </span>
         </div>
-        <div className="flex justify-between items-center mt-4">
-          <div>
+        <div className="flex gap-3 items-center mt-4">
+          
             <span className="text-gray-500">Average Price:</span>{" "}
             <span className="text-gray-700 font-semibold">
               ₹{service.min_price}
             </span>
-          </div>
+          
         </div>
 
         {/* Loading and Error States */}

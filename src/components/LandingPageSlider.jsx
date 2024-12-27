@@ -62,7 +62,7 @@ const LandingPageSlider = React.memo(({ title, services }) => {
 
   return (
     <div
-      className="relative px-3 sm:px-5 lg:px-20 py-10 bg-white text-gray-800 border border-gray-200 shadow-md rounded-lg"
+      className="relative   mx-auto sm:px-5 max-w-7xl py-10 text-black rounded-lg"
     >
       {/* Title */}
       {title && (

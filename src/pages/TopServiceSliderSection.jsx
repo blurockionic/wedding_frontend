@@ -43,7 +43,7 @@ export default function TopServiceSliderSection() {
   }
 
   return (
-    <div className="flex flex-col bg-slate-100 ">
+    <div className=" w-[5xl] mx-auto bg-slate-100 ">
     
       {photoData && (
         <LandingPageSlider

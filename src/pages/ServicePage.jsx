@@ -2,8 +2,17 @@ import React, { useState, useEffect, useMemo } from "react";
 import Sidebar from "../components/Sidebar";
 import ServiceList from "../components/ServiceList";
 import { useGetServicesQuery } from "../redux/serviceSlice";
+import { useLocation } from "react-router-dom";
 
 function ServicesPage() {
+  const location = useLocation();
+
+  // Extract query parameters
+  const queryParams = new URLSearchParams(location.search);
+  const searchType = queryParams.get("search");
+  const searchLocation = queryParams.get("location");
+
+  
   const [filters, setFilters] = useState({});
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for mobile sidebar
   const [currentPage, setCurrentPage] = useState(1); // Current page
@@ -43,7 +52,6 @@ function ServicesPage() {
     return () => mediaQuery.removeEventListener("change", handleMediaChange);
   }, []);
 
-
   return (
     <div className="flex flex-col md:flex-row px-2 h-screen relative">
       {/* Toggle buttons for mobile */}
@@ -70,7 +78,11 @@ function ServicesPage() {
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <Sidebar onFilterChange={handleFilterChange} />
+        <Sidebar
+          searchType={searchType}
+          searchLocation={searchLocation}
+          onFilterChange={handleFilterChange}
+        />
       </div>
 
       {/* Main Content */}

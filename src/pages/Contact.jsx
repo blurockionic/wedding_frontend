@@ -32,7 +32,7 @@ export default function Contact() {
     >
       {/* Left Section */}
       <div className="flex flex-col" data-aos="fade-down" data-aos-delay="500">
-        <h2 className="text-4xl font-bold mb-4 capitalize">Book For an Appointment</h2>
+        <h2 className="lg:text-4xl text-2xl font-bold mb-4 capitalize">Book For an Appointment</h2>
         <p className="mb-4 text-gray-600" data-aos="fade-up" data-aos-delay="700">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. <br />
           Sed dapibus placerat velit. Donec in porttitor elit. Suspendisse

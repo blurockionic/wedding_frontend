@@ -1,21 +1,30 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { serviceTypes } from "../assets/NavabarRouteConfig"; // Assuming your serviceTypes are imported here
+import { brides, grooms, weddingVendors, weddingVenues } from "../static/static";
 
-const Sidebar = React.memo(({ onFilterChange }) => {
-  const { register, handleSubmit, reset } = useForm();
+const Sidebar = React.memo(({ searchType, searchLocation, onFilterChange }) => {
+  const { register, handleSubmit, reset } = useForm({
+    defaultValues: {
+      location: searchLocation || "",
+      service_type: searchType || "",
+    },
+  });
 
- 
+  const allCategories = [
+    ...weddingVenues,
+    ...weddingVendors,
+    ...brides,
+    ...grooms,
+  ];
 
   // Function to handle filter submission
   const handleFilterChange = (data) => {
-    // Format data into query string parameters
     const filters = {};
 
-    if (data.location) filters.location = data.location; // Changed this from 'vendor_name' to 'location'
+    if (data.location) filters.location = data.location;
     if (data.service_type) filters.service_type = data.service_type;
 
-    if (data.minPrice) filters.minPrice = `${parseFloat(data.minPrice)}`; // No URL encoding here
+    if (data.minPrice) filters.minPrice = `${parseFloat(data.minPrice)}`;
     if (data.maxPrice) filters.maxPrice = `${parseFloat(data.maxPrice)}`;
 
     if (data.rating) filters.rating = data.rating;
@@ -28,105 +37,106 @@ const Sidebar = React.memo(({ onFilterChange }) => {
 
   return (
     <div className="w-full h-screen bg-slate-700 p-4">
-      <h2 className="text-lg bg-slate-300 py-3 border-2 border-dashed uppercase border-green-500 font-bold text-center mb-4">
-        Filters
-      </h2>
-      <form onSubmit={handleSubmit(handleFilterChange)} className="space-y-4">
+      <form onSubmit={handleSubmit(handleFilterChange)} className="space-y-5">
         {/* Location Filter */}
-        <div>
-          <label className="block text-slate-100 mb-1">Location</label>
+        <div className="relative">
+          <label className="block text-gray-500 mb-1">Location</label>
           <input
             type="text"
             {...register("location")}
-            placeholder="Location"
-            className="w-full p-2 border rounded"
+            placeholder="Enter location"
+            className="w-full p-2 border rounded bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         {/* Service Type Filter */}
-        <div>
-          <label className="block text-slate-100 mb-1">Service Type</label>
+        <div className="relative">
+          <label className="block text-gray-500 mb-1">Service Type</label>
           <select
             {...register("service_type")}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">All</option>
-            {serviceTypes.map((type) => (
-              <option className="" key={type.value} value={type.value}>
-                {type.value}
+            {allCategories.map((type) => (
+              <option key={type} value={type}>
+                {type}
               </option>
             ))}
           </select>
         </div>
 
         {/* Price Range Filter */}
-        <div>
-          <label className="block text-slate-100 mb-1">Price Range</label>
-          <div className="flex space-x-2">
+        <div className="relative flex space-x-4">
+          <div className="flex-1">
+            <label className="block text-gray-500 mb-1">Min Price</label>
             <input
               type="number"
               {...register("minPrice")}
-              placeholder="Min"
-              className="w-1/2 p-2 border rounded"
+              placeholder="Min price"
+              className="w-full p-2 border bg-white rounded text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+          </div>
+          <div className="flex-1">
+            <label className="block text-gray-500 mb-1">Max Price</label>
             <input
               type="number"
               {...register("maxPrice")}
-              placeholder="Max"
-              className="w-1/2 p-2 border rounded"
+              placeholder="Max price"
+              className="w-full p-2 border bg-white rounded text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
 
         {/* Rating Filter */}
-        <div>
-          <label className="block text-slate-100 mb-1">Rating</label>
+        <div className="relative">
+          <label className="block text-gray-500 mb-1">Rating</label>
           <input
             type="number"
             {...register("rating")}
             placeholder="Rating"
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         {/* Sorting Options */}
-        <div>
-          <label className="block text-slate-100 mb-1">Sort By</label>
+        <div className="relative">
+          <label className="block text-gray-500 mb-1">Sort By</label>
           <select
             {...register("sort_by")}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="created_at">Created At</option>
-            <option value="min_price">Min Price</option>
+            <option value="created_at">Newest First</option>
+            <option value="min_price">Lowest Price First</option>
             <option value="rating">Rating</option>
           </select>
         </div>
-        <div>
-          <label className="block text-slate-100 mb-1">Sort Order</label>
+
+        <div className="relative">
+          <label className="block text-gray-500 mb-1">Sort Order</label>
           <select
             {...register("sort_order")}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="asc">Ascending</option>
-            <option value="desc">Descending</option>
+            <option value="asc">Low to High</option>
+            <option value="desc">High to Low</option>
           </select>
         </div>
 
         {/* Filter and Reset Buttons */}
-        <div className="space-y-4 mt-4">
+        <div className=" gap-2 justify-center items-center flex ">
           <button
             type="submit"
-            className="w-full bg-blushPink text-white py-2 rounded"
+            className="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded"
           >
             Apply Filters
           </button>
           <button
             type="button"
             onClick={() => {
-              reset(); // Reset the form fields
-              onFilterChange({}); // Optionally reset the parent filter state as well
+              reset();
+              onFilterChange({});
             }}
-            className="w-full bg-gray-300 text-gray-700 py-2 rounded"
+            className="w-full  bg-gray-300 text-gray-700 py-2 rounded"
           >
             Reset
           </button>

@@ -39,6 +39,33 @@ html {
 
   scrollbar-width: none;
 }
+@keyframes smooth-scroll {
+  0% {
+    transform: translateX(0); /* Start with the first set visible */
+  }
+  100% {
+    transform: translateX(-50%); /* Only scroll half the width of the container */
+  }
+}
+
+.overflow-hidden {
+  position: relative;
+  overflow: hidden; /* Ensure only the visible portion is shown */
+}
+
+.scroll-container {
+  display: flex;
+  flex-wrap: nowrap;
+  width: calc(100% * 2); 
+  width: 200%; /* Double the width to include original + duplicate cards */
+  animation: smooth-scroll 20s linear infinite; /* Smooth looping animation */
+}
+
+.scroll-container > * {
+  flex-shrink: 0;
+  width: 400px; /* Fixed width of each card */
+}
+
 
 
 :root {
