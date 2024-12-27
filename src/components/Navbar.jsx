@@ -187,8 +187,8 @@ function Navbar() {
     Wedding Vendors
   </span>
   {dropdown === "weddingVendors" && (
-    <div className="absolute right-0 z-50 top-full bg-white shadow-lg w-[500px] py-4  transition-transform duration-300 ease-in-out transform scale-100">
-      <ul className="grid grid-cols-3 gap-4 px-4">
+    <div className="absolute lg:-right-[50%]  z-50 top-full bg-white shadow-lg w-fit md:w-[500px] py-4  transition-transform duration-300 ease-in-out transform scale-100">
+      <ul className="grid grid-cols-1 md:grid-cols-3 gap-4 px-4">
         {/* Adjusted width to w-64 (16rem) and kept 3 columns */}
         {weddingVendors.map((item, index) => (
           <li key={index} className="hover:text-dustyRose">
