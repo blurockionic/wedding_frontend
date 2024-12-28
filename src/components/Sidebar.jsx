@@ -2,6 +2,12 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { brides, grooms, weddingVendors, weddingVenues } from "../static/static";
 
+export const allCategories = [
+  ...weddingVenues,
+  ...weddingVendors,
+  ...brides,
+  ...grooms,
+];
 const Sidebar = React.memo(({ searchType, searchLocation, onFilterChange }) => {
   const { register, handleSubmit, reset } = useForm({
     defaultValues: {
@@ -10,12 +16,7 @@ const Sidebar = React.memo(({ searchType, searchLocation, onFilterChange }) => {
     },
   });
 
-  const allCategories = [
-    ...weddingVenues,
-    ...weddingVendors,
-    ...brides,
-    ...grooms,
-  ];
+ 
 
   // Function to handle filter submission
   const handleFilterChange = (data) => {

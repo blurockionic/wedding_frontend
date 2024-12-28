@@ -6,11 +6,14 @@ import CustomButton from "../../components/global/button/CustomButton";
 import CustomInput from "../../components/global/inputfield/CustomInput";
 import { GoLocation, GoSearch } from "react-icons/go";
 import Discover from "../../components/home/home-discover/Discover";
+import { allCategories } from "../../components/Sidebar"; // Assuming this is the full category list.
 
 export default function Home() {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [location, setLocation] = useState("");
+  const [suggestions, setSuggestions] = useState(allCategories || []); // Filtered suggestions
+  const [showSuggestions, setShowSuggestions] = useState(false); // To manage suggestion visibility
 
   useEffect(() => {
     Aos.init({
@@ -18,13 +21,32 @@ export default function Home() {
     });
   }, []);
 
-  // Unified navigate function to handle search and location
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearch(value);
+
+    if (value) {
+      // Filter suggestions based on user input
+      const filtered = allCategories.filter((category) =>
+        category.toLowerCase().startsWith(value.toLowerCase())
+      );
+      setSuggestions(filtered);
+      setShowSuggestions(true);
+    } else {
+      setShowSuggestions(false);
+    }
+  };
+
+  const handleSuggestionClick = (category) => {
+    setSearch(category);
+    setShowSuggestions(false); // Hide suggestions after selecting
+  };
+
   const handleNavigate = () => {
     const queryParams = new URLSearchParams({
       search,
       location,
     }).toString();
-
     navigate(`/services?${queryParams}`);
   };
 
@@ -89,15 +111,33 @@ export default function Home() {
 
         {/* Search Section */}
         <section className="hidden z-50 py-12 absolute bottom-0 w-full lg:flex items-center justify-center flex-col gap-2 bg-gradient-to-t from-black bg-opacity-50">
-          <div className="flex gap-2">
-            <CustomInput
-              type="text"
-              placeholder="Select Vendor"
-              className="outline-none bg-white w-[400px] focus:border-white"
-              aria-label="Select Vendor"
-              onChange={(e) => setSearch(e.target.value)}
-              leftIcon={<GoSearch size={20} />}
-            />
+          <div className="flex gap-2 relative">
+            <div className="relative w-[400px]">
+              <CustomInput
+                type="text"
+                placeholder="Select Vendor"
+                className="outline-none bg-white w-[400px] focus:border-white"
+                aria-label="Select Vendor"
+                value={search}
+                onChange={handleSearchChange}
+                leftIcon={<GoSearch size={20} />}
+              />
+              {/* Suggestions */}
+              {showSuggestions && suggestions.length > 0 && (
+                <ul className="absolute bg-white border border-gray-300 rounded w-full shadow-lg mt-1 z-10">
+                  {suggestions.map((category, index) => (
+                    <li
+                      key={index}
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => handleSuggestionClick(category)}
+                    >
+                      {category}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
             <CustomInput
               type="text"
               placeholder="in Location"
