@@ -28,7 +28,7 @@ export default function Home() {
     if (value) {
       // Filter suggestions based on user input
       const filtered = allCategories.filter((category) =>
-        category.toLowerCase().startsWith(value.toLowerCase())
+        category.toLowerCase().includes(value.toLowerCase())
       );
       setSuggestions(filtered);
       setShowSuggestions(true);
@@ -124,11 +124,16 @@ export default function Home() {
               />
               {/* Suggestions */}
               {showSuggestions && suggestions.length > 0 && (
-                <ul className="absolute bg-white border border-gray-300 rounded w-full shadow-lg mt-1 z-10">
+                <ul className="absolute  bg-white border border-gray-300 rounded w-full shadow-lg mt-1 z-10"
+                style={{
+                  maxHeight: "200px", 
+                  overflowY: "auto",  
+                }}
+                >
                   {suggestions.map((category, index) => (
                     <li
                       key={index}
-                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                      className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
                       onClick={() => handleSuggestionClick(category)}
                     >
                       {category}
