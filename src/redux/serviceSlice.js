@@ -49,7 +49,7 @@ export const serviceApi = createApi({
     // Remove from cart
     removeFromCart: builder.mutation({
       query: (serviceId) => ({
-        url: `/cart/?${serviceId}`,
+        url: `/cart/${serviceId}`,
         method: "DELETE",
       }),
     }),
