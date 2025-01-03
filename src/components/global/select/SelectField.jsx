@@ -24,7 +24,7 @@ export const SelectField = ({ id, label, options, register, error, placeholder }
         {options.map((option, index) => (
           <option
           
-           className="defaultcss" key={index} value={option.value}>
+          className="defaultcss" key={index} value={option.value}>
             {option.label}
           </option> 
         ))}

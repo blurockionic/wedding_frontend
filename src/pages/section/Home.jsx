@@ -127,7 +127,7 @@ export default function Home() {
                 <ul className="absolute  bg-white border border-gray-300 rounded w-full shadow-lg mt-1 z-10"
                 style={{
                   maxHeight: "200px", 
-                  overflowY: "auto",  
+                  overflowY: "auto", 
                 }}
                 >
                   {suggestions.map((category, index) => (
