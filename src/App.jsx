@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useGetCartQuery } from "./redux/serviceSlice.js";
 import { hydrateFavorites } from "./redux/favoriteSlice.js";
 import ErrorBoundary from "./pages/ErrorPage.jsx";
+import UserProfile from "./pages/userDashboard/UserProfile.jsx";
+import UserDashBoard from "./pages/userDashboard/UserDashBoard.jsx";
 
 // Lazy load components
 const OutletPage = lazy(() => import("./pages/OutletPage"));
@@ -14,15 +16,28 @@ const Signup = lazy(() => import("./pages/auth/Signup.jsx"));
 const Login = lazy(() => import("./pages/auth/Login.jsx"));
 const ServicesPage = lazy(() => import("./pages/ServicePage.jsx"));
 const ServiceDetail = lazy(() => import("./pages/serviceDeatails.jsx"));
-const VendorRegistration = lazy(() => import("./pages/auth/vendor _auth/VendorSignup.jsx"));
-const VendorDashboard = lazy(() => import("./pages/vendorDashboard/Dashboard.jsx"));
+const VendorRegistration = lazy(() =>
+  import("./pages/auth/vendor _auth/VendorSignup.jsx")
+);
+const VendorDashboard = lazy(() =>
+  import("./pages/vendorDashboard/Dashboard.jsx")
+);
 const Setting = lazy(() => import("./pages/vendorDashboard/Setting.jsx"));
 const Profile = lazy(() => import("./pages/vendorDashboard/Profile.jsx"));
 const Analytics = lazy(() => import("./pages/vendorDashboard/Analytics.jsx"));
-const VendorServicesPage = lazy(() => import("./pages/vendorDashboard/VendorServicePage.jsx"));
-const VendorLogin = lazy(() => import("./pages/auth/vendor _auth/VendorLogin.jsx"));
-const DashBoardDetailPage = lazy(() => import("./pages/vendorDashboard/component/DashBoardDetailPage.jsx"));
+const VendorServicesPage = lazy(() =>
+  import("./pages/vendorDashboard/VendorServicePage.jsx")
+);
+const VendorLogin = lazy(() =>
+  import("./pages/auth/vendor _auth/VendorLogin.jsx")
+);
+const DashBoardDetailPage = lazy(() =>
+  import("./pages/vendorDashboard/component/DashBoardDetailPage.jsx")
+);
 const FullErrorPage = lazy(() => import("./pages/FullErrorPage.jsx"));
+const FavoriteListPage = lazy(() =>
+  import("./pages/userDashboard/favoriteList.jsx")
+);
 
 // Define routes using createBrowserRouter
 const router = createBrowserRouter([
@@ -37,6 +52,14 @@ const router = createBrowserRouter([
       { path: "/vendorLogin", element: <VendorLogin /> },
       { path: "/services", element: <ServicesPage /> },
       { path: "/service/:id", element: <ServiceDetail /> },
+      {
+        path: "/profile",
+        element: <UserDashBoard />,
+        children: [
+          { path: "", index: true, element: <UserProfile /> },
+          { path: "favoriteList", element: <FavoriteListPage /> },
+        ],
+      },
 
       {
         path: "/VendorDashboard",

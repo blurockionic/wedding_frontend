@@ -41,7 +41,7 @@ function Navbar() {
     <nav className="w-full bg-transparent sm:bg-white top-0 px-4 lg:px-16 py-2 z-50">
       <div className="w-full flex justify-between items-center py-4">
         {/* Logo */}
-        <div className="text-2xl font-bold text-gray-800 cursor-pointer">
+        <div className="text-2xl font-bold text-primary cursor-pointer">
           <NavLink to="/">WEDD</NavLink>
         </div>
 

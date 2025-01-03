@@ -53,7 +53,7 @@ function ServicesPage() {
   }, []);
 
   return (
-    <div className="flex flex-col md:flex-row px-2 h-screen relative">
+    <div className="flex flex-col gap-2 md:flex-row px-2 h-screen relative">
       {/* Toggle buttons for mobile */}
       {!isSidebarOpen && (
         <button
@@ -74,7 +74,7 @@ function ServicesPage() {
 
       {/* Sidebar */}
       <div
-        className={`absolute md:relative z-10 bg-slate-700 w-full md:w-1/4  md:h-auto transition-transform transform ${
+        className={`absolute md:relative z-10 bg-muted w-full md:w-1/4 md:h-auto transition-transform transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -86,7 +86,7 @@ function ServicesPage() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 bg-slate-600 p-2 relative overflow-hidden">
+      <div className="flex-1  relative overflow-hidden">
         {isLoading ? (
           <div className="flex items-center justify-center h-full">
             <p className="text-gray-600">Loading...</p>

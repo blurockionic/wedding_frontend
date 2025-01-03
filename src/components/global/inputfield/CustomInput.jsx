@@ -15,11 +15,11 @@ const CustomInput = (props) => {
 
   return (
     <div
-      className={`flex items-center rounded-md px-2 py-1 border focus:outline-none focus:ring-2 focus:ring-dustyRose-light ${className}`}
+      className={`flex items-center rounded-md px-2 py-1 border focus:outline-none focus:ring-2 focus:ring-primary ${className}`} // Replaced with custom color for focus ring
       style={style}
     >
       {/* Left Icon */}
-      {leftIcon && <div className="mr-2 text-gray-500">{leftIcon}</div>}
+      {leftIcon && <div className="mr-2 text-primary">{leftIcon}</div>}  {/* Custom color for left icon */}
 
       {/* Input */}
       <input
@@ -28,11 +28,11 @@ const CustomInput = (props) => {
         value={value}
         onChange={onChange}
         disabled={disabled}
-        className="flex-1 py-2 focus:outline-none"
+        className="flex-1 py-2 text-primary placeholder:text-muted-foreground focus:outline-none"  // Custom color for text and placeholder
       />
 
       {/* Right Icon */}
-      {rightIcon && <div className="ml-2 text-gray-500">{rightIcon}</div>}
+      {rightIcon && <div className="ml-2 text-primary">{rightIcon}</div>}  {/* Custom color for right icon */}
     </div>
   );
 };

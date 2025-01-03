@@ -8,26 +8,24 @@ const CustomText = ({
   onClick = null,
   children = null,
 }) => {
+  
+  // Use the provided variant, falling back to 'default' if not found
+ 
   return (
-    <Tag
-      className={`text-gray-800 ${className}`}
-      style={style}
-      onClick={onClick}
-    >
+    <Tag className={className}  onClick={onClick}>
       {children || text}
     </Tag>
   );
 };
 
-// Set display name for better debugging
 CustomText.displayName = "CustomText";
 
-// Prop validation using PropTypes
+// PropTypes for validation
 CustomText.propTypes = {
   text: PropTypes.string,
   className: PropTypes.string,
   style: PropTypes.object,
-  as: PropTypes.string, // The tag type (e.g., 'p', 'h1', 'span')
+  as: PropTypes.string, // Tag type (e.g., 'p', 'h1', 'span')
   onClick: PropTypes.func,
   children: PropTypes.node,
 };

@@ -37,7 +37,7 @@ export const apiAuthSlice = createApi({
 
     updateUser: builder.mutation({
       query: (userData) => ({
-        url: `/users/update-user`,
+        url: `/users`,
         method: "PATCH",
         body: userData,
       }),
