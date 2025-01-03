@@ -8,6 +8,9 @@ import { hydrateFavorites } from "./redux/favoriteSlice.js";
 import ErrorBoundary from "./pages/ErrorPage.jsx";
 import UserProfile from "./pages/userDashboard/UserProfile.jsx";
 import UserDashBoard from "./pages/userDashboard/UserDashBoard.jsx";
+import ForgotPassword from "./pages/forgot-password/ForgotPassword.jsx";
+import ChangePassword from "./pages/change-password/ChangePassword.jsx";
+import Success from "./pages/success/Success.jsx";
 
 // Lazy load components
 const OutletPage = lazy(() => import("./pages/OutletPage"));
@@ -48,6 +51,9 @@ const router = createBrowserRouter([
       { path: "/", element: <LandingPage /> },
       { path: "/signup", element: <Signup /> },
       { path: "/login", element: <Login /> },
+      { path: "/forgot-password", element: <ForgotPassword /> },
+      { path: "/change-password", element: <ChangePassword /> },
+      { path: "/success", element: <Success /> },
       { path: "/vendorSignup", element: <VendorRegistration /> },
       { path: "/vendorLogin", element: <VendorLogin /> },
       { path: "/services", element: <ServicesPage /> },
