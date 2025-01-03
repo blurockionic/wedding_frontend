@@ -115,7 +115,7 @@ export default function Login() {
 
             <div className="mb-6 text-end">
               <Link
-                to={"/forgotPassword"}
+                to={"/forgot-password"}
                 className="font-bold text-sm text-muted-foreground "
               >
                 Forgot Password?

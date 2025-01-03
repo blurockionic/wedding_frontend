@@ -69,7 +69,7 @@ const navigate = useNavigate();
           <img
             src={loginImage}
             alt="Signup Illustration"
-            className="h-[835px] w-full object-cover rounded-tl-lg rounded-bl-lg"
+            className="h-[700px] w-full object-cover rounded-tl-lg rounded-bl-lg"
           />
         </div>
 
