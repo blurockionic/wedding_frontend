@@ -92,17 +92,19 @@ export default function Home() {
             data-aos-delay="400"
             data-aos-once="true"
           >
-            <span>
+            <span class="md:text-6xl lg:text-[72px] md:ms-[62px] lg:ms-0">
               Plan your <span className="text-[#ffcdf8]">Dream Wedding</span>
             </span>
-            <span>with us</span>
+            <span class="lg:p-0 md:ps-[264px] md:mt-[-58px] lg:mt-0 md:text-6xl lg:text-[72px]">
+              with us
+            </span>
           </p>
 
           {/* Mobile Search Button */}
           <CustomButton
             leftIcon={<GoSearch size={20} className="text-white" />}
             text="Search"
-            className="w-1/2 lg:hidden bg-[#fb3966] px-10 py-2 rounded text-white"
+            className="w-1/2 lg:hidden bg-[#fb3966] px-10 py-2 rounded text-white md:ms-[-50px] lg-ms-0"
             onClick={handleNavigate}
           >
             Discover
@@ -124,11 +126,12 @@ export default function Home() {
               />
               {/* Suggestions */}
               {showSuggestions && suggestions.length > 0 && (
-                <ul className="absolute  bg-white border border-gray-300 rounded w-full shadow-lg mt-1 z-10"
-                style={{
-                  maxHeight: "200px", 
-                  overflowY: "auto", 
-                }}
+                <ul
+                  className="absolute  bg-white border border-gray-300 rounded w-full shadow-lg mt-1 z-10"
+                  style={{
+                    maxHeight: "200px",
+                    overflowY: "auto",
+                  }}
                 >
                   {suggestions.map((category, index) => (
                     <li
