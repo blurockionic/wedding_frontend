@@ -6,6 +6,9 @@ import { useUpdateUserMutation } from "../../redux/apiSlice.auth";
 
 const UserProfile = () => {
   const userData = useSelector((state) => state.auth.user.user.user);
+
+  console.log(userData);
+
   const [isEditing, setIsEditing] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(userData.profile_pic || "");
@@ -50,10 +53,6 @@ const UserProfile = () => {
   };
 
   const onSubmit = async (data) => {
-
-
-    
-
     const formData = new FormData();
     for (const key in data) {
       formData.append(key, data[key]);
@@ -62,10 +61,10 @@ const UserProfile = () => {
     if (selectedFile) {
       formData.append("file", selectedFile);
     }
-    
+
     for (let [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`);
-      }
+      console.log(`${key}: ${value}`);
+    }
 
     try {
       const updatedData = await updateUser(formData).unwrap();
@@ -102,7 +101,10 @@ const UserProfile = () => {
             <input
               id={field}
               {...register(field, {
-                required: field !== "email" && field !== "wedding_date" && "This field is required",
+                required:
+                  field !== "email" &&
+                  field !== "wedding_date" &&
+                  "This field is required",
                 pattern:
                   field === "email"
                     ? {
@@ -215,7 +217,9 @@ const UserProfile = () => {
               {Object.entries(userData)
                 .filter(
                   ([key]) =>
-                    !["id", "refresh_token", "role"].includes(key.toLowerCase())
+                    !["id", "refresh_token", "role", "is_verified","cart"].includes(
+                      key.toLowerCase()
+                    )
                 )
                 .map(([key, value]) => (
                   <div className="grid grid-cols-2 justify-between" key={key}>
@@ -225,6 +229,13 @@ const UserProfile = () => {
                     <span>{value}</span>
                   </div>
                 ))}
+
+              <div className="grid grid-cols-2 justify-between" >
+                <span className="text-pink-600 capitalize font-semibold">
+                  verified
+                </span>
+                <span>{userData.is_verified?"Yes":"No"}</span>
+              </div>
             </div>
           )}
         </div>

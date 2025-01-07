@@ -51,7 +51,7 @@ export const apiAuthSlice = createApi({
       }),
     }),
 
-    reqChangePassword: builder.mutation({
+    ChangePassword: builder.mutation({
       query: ({ token, ...changeData }) => ({
         url: `/users/reset-password?token=${token}`,
         method: "POST",
@@ -61,7 +61,7 @@ export const apiAuthSlice = createApi({
 
     deleteUser: builder.mutation({
       query: () => ({
-        url: `/v1/users/delete-user`,
+        url: `/users/delete-user`,
         method: "DELETE",
       }),
     }),
@@ -75,7 +75,7 @@ export const {
   useSignupMutation,
   useUpdateUserMutation,
   useReqResetPasswordMutation,
-  useReqChangePasswordMutation,
+ useChangePasswordMutation,
   useDeleteUserMutation,
   
 } = apiAuthSlice;

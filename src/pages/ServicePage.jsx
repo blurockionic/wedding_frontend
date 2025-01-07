@@ -18,9 +18,13 @@ function ServicesPage() {
   const [currentPage, setCurrentPage] = useState(1); // Current page
   const itemsPerPage = 10; // Items per page
 
+
+  
   const memoizedFilters = useMemo(
     () => ({ ...filters, page: currentPage, limit: itemsPerPage }),
     [filters, currentPage]
+
+
   );
 
   // Fetch services with pagination

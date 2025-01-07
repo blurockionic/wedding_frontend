@@ -5,7 +5,9 @@ export const serviceApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:4000/api/v1/",
     credentials: "include",
+  
   }),
+  tagTypes: ["Cart", "Services"],
   endpoints: (builder) => ({
     // Get all services with dynamic filters
     getServices: builder.query({
@@ -33,8 +35,9 @@ export const serviceApi = createApi({
     }),
 
     // Get cart
-    getCart: builder.query({
+    getCart: builder.mutation({
       query: () => "/cart",
+      providesTags: ["Cart"],
     }),
 
     // Add to cart
@@ -44,6 +47,7 @@ export const serviceApi = createApi({
         method: "POST",
         body: { serviceId }, // Pass serviceId as a JSON body
       }),
+      invalidatesTags: ["Cart"],
     }),
 
     // Remove from cart
@@ -52,6 +56,7 @@ export const serviceApi = createApi({
         url: `/cart/${serviceId}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["Cart"],
     }),
 
     // Clear cart
@@ -59,7 +64,9 @@ export const serviceApi = createApi({
       query: () => ({
         url: "/cart/clear",
         method: "DELETE",
+     
       }),
+      invalidatesTags: ["Cart"],
     }),
     // creat service 
     createService: builder.mutation({
@@ -95,7 +102,7 @@ export const serviceApi = createApi({
 export const {
   useGetServicesQuery,
   useGetServiceByIdQuery,
-  useGetCartQuery,
+  useGetCartMutation,
   useAddToCartMutation,
   useRemoveFromCartMutation,
   useClearCartMutation,

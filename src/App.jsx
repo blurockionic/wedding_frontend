@@ -2,15 +2,17 @@ import React, { useEffect, Suspense, lazy } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useDispatch, useSelector } from "react-redux";
-import { useGetCartQuery } from "./redux/serviceSlice.js";
-import { hydrateFavorites } from "./redux/favoriteSlice.js";
 import ErrorBoundary from "./pages/ErrorPage.jsx";
 import UserProfile from "./pages/userDashboard/UserProfile.jsx";
 import UserDashBoard from "./pages/userDashboard/UserDashBoard.jsx";
 import ForgotPassword from "./pages/forgot-password/ForgotPassword.jsx";
-import ChangePassword from "./pages/change-password/ChangePassword.jsx";
+
 import Success from "./pages/success/Success.jsx";
+import VendorForgotPassword from "./pages/auth/vendor _auth/VendorForgotPassword.jsx";
+import UserForgotPassword from "./pages/auth/UserForgotPassword.jsx";
+import VendorChangePassword from "./pages/change-password/VendorChangePassword.jsx";
+import ChangePassword from "./pages/auth/ChangePassword.jsx";
+
 
 // Lazy load components
 const OutletPage = lazy(() => import("./pages/OutletPage"));
@@ -51,11 +53,13 @@ const router = createBrowserRouter([
       { path: "/", element: <LandingPage /> },
       { path: "/signup", element: <Signup /> },
       { path: "/login", element: <Login /> },
-      { path: "/forgot-password", element: <ForgotPassword /> },
-      { path: "/change-password", element: <ChangePassword /> },
+      { path: "/user-forgot-password", element: <UserForgotPassword /> },
+      { path: "/user-change-password", element: <ChangePassword/> },
       { path: "/success", element: <Success /> },
       { path: "/vendorSignup", element: <VendorRegistration /> },
       { path: "/vendorLogin", element: <VendorLogin /> },
+      { path: "vendor-forgot-password", element: <VendorForgotPassword/> },
+      { path: "vendor-change-password", element: <VendorChangePassword /> },
       { path: "/services", element: <ServicesPage /> },
       { path: "/service/:id", element: <ServiceDetail /> },
       {
@@ -74,6 +78,7 @@ const router = createBrowserRouter([
           { path: "settings", element: <Setting /> },
           { path: "profile", element: <Profile /> },
           { path: "analytics", element: <Analytics /> },
+
           {
             path: "services",
             children: [
@@ -92,33 +97,6 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  const dispatch = useDispatch();
-
-  // Access the user object from the authSlice
-  const user = useSelector((state) => state.auth.user);
-
-  // Check if the user is logged in and has a role of 'user'
-  const isUserLoggedIn = user && user.role === "user";
-
-  // Use the query conditionally
-  const {
-    data: favoriteList,
-    isLoading,
-    error,
-  } = useGetCartQuery(undefined, {
-    skip: !isUserLoggedIn,
-  });
-
-  useEffect(() => {
-    if (
-      favoriteList &&
-      favoriteList.cartItems &&
-      favoriteList.cartItems.length > 0
-    ) {
-      console.log(favoriteList.cartItems);
-      dispatch(hydrateFavorites(favoriteList));
-    }
-  }, [favoriteList, dispatch]);
 
   return (
     <>

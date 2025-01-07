@@ -95,7 +95,7 @@ export default function VendorLogin() {
           />
 
           <Link
-            to="/forgot-password"
+            to="/vendor-forgot-password"
             className="text-sm text-muted-foreground hover:underline block text-end"
           >
             Forgot Password?

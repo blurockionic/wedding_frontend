@@ -1,24 +1,21 @@
 import React, { useState } from "react";
-import ForgotPasswordForm from "../../forgot-password/ForgotPassword";
+import ForgotPasswordForm from "../forgot-password/ForgotPassword";
 import { useNavigate } from "react-router-dom";
-import { useVendorForgotPasswordMutation } from "../../../redux/vendorSlice";
+import { useReqResetPasswordMutation } from "../../redux/apiSlice.auth";
 import { toast } from "react-toastify";
 
 // Vendor forgot password logic
-const VendorForgotPassword = () => {
+const UserForgotPassword = () => {
   const navigate = useNavigate();
-  const [vendorForgotPasswordMutation] = useVendorForgotPasswordMutation();
+  const [userForgotPasswordMutation] = useReqResetPasswordMutation();
 
   const [waitPage, setWaitPage] = useState(false);
 
   // Handle form submission for vendor forgot password
-  const handleVendorForgotPassword = async (data) => {
+  const handleUserForgotPassword = async (data) => {
     try {
       const { email } = data;
-      const res = await vendorForgotPasswordMutation({ email }).unwrap();
-  
-      // Log the entire response to inspect its structure
-      console.log("Response:", res);
+      const res = await userForgotPasswordMutation({ email }).unwrap();
   
       if (res.success) {
         setWaitPage(true);
@@ -34,9 +31,21 @@ const VendorForgotPassword = () => {
     }
   };
 
-  const getVendorForgotPasswordForm = () => {
+  const getUserForgotPasswordForm = () => {
     if (!waitPage) {
-      return <ForgotPasswordForm onSubmit={handleVendorForgotPassword} />;
+      return (
+        <>
+        <h1>
+        <h1 className="text-2xl font-bold text-center font-outfit">
+              Password Reset 
+            </h1>
+        </h1>
+
+        <ForgotPasswordForm onSubmit={handleUserForgotPassword} />
+        
+        
+        </>
+      );
     } else {
       return (
         <>
@@ -54,10 +63,9 @@ const VendorForgotPassword = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-white px-4">
       <div className="w-full max-w-md space-y-8 p-8 border rounded-lg shadow-md">
-        {getVendorForgotPasswordForm()}
+        {getUserForgotPasswordForm()}
       </div>
     </div>
   );
 };
-
-export default VendorForgotPassword;
+export default UserForgotPassword;

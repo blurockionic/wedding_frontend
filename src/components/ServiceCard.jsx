@@ -10,16 +10,26 @@ import {
 import { addFavorite, removeFavorite } from "../redux/favoriteSlice";
 
 const ServiceCard = React.memo(({ service }) => {
+
+console.log(service);
+
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   // Redux store favorites list
-  const favoriteList = useSelector((state) => state.favorites.favorites || []);
+  const favoriteList = useSelector((state) => state.favorites || []);
   const [isFavorite, setIsFavorite] = useState(null);
 
   useEffect(() => {
-    const favoriteService = favoriteList.find((item) => item.id === service.id);
-    setIsFavorite(favoriteService || null);
+    // Ensure favoriteList is an array before using map
+    if (Array.isArray(favoriteList)) {
+      const favoriteService = favoriteList
+        .map((item) => item.service) // Extract the 'service' objects
+        .find((favService) => favService.id === service.id); // Match the 'id'
+  
+      setIsFavorite(favoriteService || null); // Set as null if not found
+    }
   }, [favoriteList, service.id]);
 
   const [addToCart] = useAddToCartMutation();
@@ -31,35 +41,42 @@ const ServiceCard = React.memo(({ service }) => {
 
   const handleFavoriteClick = async (e) => {
     e.stopPropagation();
-
-    // Optimistic Update
-    if (isFavorite) {
-      setIsFavorite(null); // Assume service is removed locally
-    } else {
-      setIsFavorite(service); // Assume service is added locally
-    }
-
-    try {
-      if (isFavorite) {
-        // Backend Call to Remove Favorite
-        await removeFromCart(service.id).unwrap();
-        dispatch(removeFavorite(service.id)); // Update Redux state
-      } else {
-        // Backend Call to Add Favorite
-        await addToCart(service.id).unwrap();
-        dispatch(addFavorite(service)); // Update Redux state
+      // Optimistic Update
+      const originalState = isFavorite;
+      setIsFavorite(!isFavorite);
+    
+      try {
+        if (isFavorite) {
+          // Backend Call to Remove Favorite
+          const response = await removeFromCart(service.id).unwrap();
+    
+          // Sync State with Backend Response
+          if (response.success) {
+            dispatch(removeFavorite(service.id)); // Update Redux state
+          } else {
+            setIsFavorite(originalState); // Revert UI state on failure
+            throw new Error("Failed to remove favorite.");
+          }
+        } else {
+          // Backend Call to Add Favorite
+          const response = await addToCart(service.id).unwrap();
+    
+          // Sync State with Backend Response
+          if (response.success) {
+            dispatch(addFavorite(service)); // Update Redux state
+          } else {
+            setIsFavorite(originalState); // Revert UI state on failure
+            throw new Error("Failed to add favorite.");
+          }
+        }
+      } catch (error) {
+        console.error("Failed to toggle favorite:", error);
+    
+        // Revert UI State on Failure
+        setIsFavorite(originalState);
       }
-    } catch (error) {
-      console.error("Failed to toggle favorite:", error);
-
-      // Revert UI State on Failure
-      if (isFavorite) {
-        setIsFavorite(service); // Revert to previous state
-      } else {
-        setIsFavorite(null); // Revert to previous state
-      }
-    }
-  };
+    };
+    
 
   return (
     <div

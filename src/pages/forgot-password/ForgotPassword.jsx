@@ -1,73 +1,48 @@
-import CustomText from "../../components/global/text/CustomText";
-import CustomButton from "../../components/global/button/CustomButton";
-import { useNavigate } from "react-router-dom";
-import { Input } from "postcss";
+import React from "react";
 import { InputField } from "../../components/global/inputfield/InputField";
-import { useForm } from "react-hook-form";
+import CustomButton from "../../components/global/button/CustomButton";
 import { MdEmail } from "react-icons/md";
+import { useForm } from "react-hook-form";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-const ForgotPassword = () => {
-  const navigate = useNavigate();
+// Define validation schema with Zod
+const ForgotPasswordSchema = z.object({
+  email: z.string().email().nonempty("Email is required"),
+});
 
+const ForgotPasswordForm = ({ onSubmit, errors }) => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm();
+    formState: { errors: formErrors, isValid }, // Access form validation state
+  } = useForm({
+    resolver: zodResolver(ForgotPasswordSchema),
+    mode: "onChange", // Enable validation on change
+  });
 
-  // Handle form submission for forgot password
-  const handleOnResetPassword = (data) => {
-    const { email } = data;
-    console.log(email);
-    //WIP: Call your API here
-
-    //WIP: After successful submission, Redirect to change password page
-    navigate("/change-password");
-  };
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white px-4">
-      <div className="w-full max-w-md space-y-8 shadow-md rounded-lg p-8">
-        {/* Heading and description for the Forgot Password page */}
-        <div className="space-y-5">
-          <CustomText
-            text="Forgot Password"
-            variant="heading"
-            className="text-lg md:text-2xl font-bold text-primary-foreground"
-          />
-          <CustomText
-            text="Enter your email to reset your password"
-            variant="paragraph"
-            className="text-xs md:text-sm text-muted-foreground"
-          />
-        </div>
+    <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+      {/* Input field for email */}
+      <InputField
+        id="email"
+        type="email"
+        label="Email"
+        placeholder="Enter your registered email"
+        register={register} 
+        icon={<MdEmail size={19} className="text-primary" />} 
+        error={formErrors?.email} 
+      />
 
-        {/* Form to handle the email input and submission */}
-        <form
-          className="space-y-4"
-          onSubmit={handleSubmit(handleOnResetPassword)}
-        >
-          {/* Input field for email */}
-          <InputField
-            id="email"
-            type="email"
-            label="Email"
-            placeholder="Enter your email"
-            register={register} 
-            icon={<MdEmail size={19} className="text-primary" />} 
-            error={errors.email} 
-          />
-
-          {/* Reset Password button */}
-          <CustomButton
-            className="w-full py-2 px-4 bg-primary text-white rounded-lg"
-            text="Reset Password"
-            type="submit"
-          />
-        </form>
-      </div>
-    </div>
+      {/* Reset Password button */}
+      <CustomButton
+        className="w-full py-2 px-4 bg-primary text-foreground rounded-lg"
+        text="Reset Password"
+        type="submit"
+        disabled={!isValid}  
+      />
+    </form>
   );
 };
 
-export default ForgotPassword;
+export default ForgotPasswordForm;

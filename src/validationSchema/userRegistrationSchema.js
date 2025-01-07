@@ -8,7 +8,6 @@ export const passwordValidation = z
   .regex(/\d/, "Password must include at least one number")
   .regex(/[!@#$%^&*]/, "Password must include at least one special character");
 
-// Define the schema for user validation
 
 export const userSchema = z.object({
   email: z
@@ -16,10 +15,10 @@ export const userSchema = z.object({
     .email("Invalid email address")
     .transform((val) => val.toLowerCase()),
   password: passwordValidation,
-  confirmPassword: passwordValidation,
+  confirmPassword: z.string(),
   username: z
     .string()
-    .min(1, "user name is required")
+    .min(1, "Username is required")
     .transform((val) => val?.toLowerCase()),
   phone_number: z
     .string()
@@ -27,6 +26,16 @@ export const userSchema = z.object({
   wedding_date: z.string(),
   wedding_location: z
     .string()
-    .min(1, " Wedding location is required")
+    .min(1, "Wedding location is required")
     .transform((val) => val?.toLowerCase()), // Optional string
-});
+})
+  .superRefine((data, ctx) => {
+    // Custom validation logic for matching password and confirmPassword
+    if (data.password !== data.confirmPassword) {
+      ctx.addIssue({
+        path: ["confirmPassword"],
+        message: "Passwords must match",
+        code: z.ZodIssueCode.custom,
+      });
+    }
+  });

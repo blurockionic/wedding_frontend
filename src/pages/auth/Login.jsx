@@ -4,17 +4,17 @@ import { login } from "../../redux/authSlice";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useState } from "react";
-import useAuthRedirect from "../../hooks/useAuthRedirect";
 import { useLoginMutation } from "../../redux/apiSlice.auth";
 import loginImage from "../../../public/login/login.jpg";
 import CustomButton from "../../components/global/button/CustomButton";
 import CustomText from "../../components/global/text/CustomText";
-import { FaEye, FaEyeSlash, FaGoogle, FaLock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { InputField } from "../../components/global/inputfield/InputField";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PasswordField } from "../../components/global/inputfield/PasswordField";
+import { useGetCartMutation } from "../../redux/serviceSlice";
+import { hydrateFavorites } from "../../redux/favoriteSlice";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -23,10 +23,9 @@ const loginSchema = z.object({
 
 export default function Login() {
   const dispatch = useDispatch();
-
   const [loginMutation, { isLoading: loading }] = useLoginMutation();
-  const [isShowPassWord, setIsShowPassword] = useState(false);
-
+  const [getCartMutation] = useGetCartMutation();
+  const [isShowPassword, setIsShowPassword] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -35,23 +34,31 @@ export default function Login() {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm({ resolver: zodResolver(loginSchema) });
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+  });
 
   const handleLogin = async (data) => {
     try {
-      const { email, password } = data;
-      const result = await loginMutation({ email, password }).unwrap();
+      const result = await loginMutation(data).unwrap();
 
       if (result.user) {
         dispatch(login({ user: result }));
+
+        const cart = await getCartMutation();
+        const allcart = cart.data.cartItems.map(cartItem => cartItem.service)
+        
+        
+        console.log(allcart)
+        dispatch(hydrateFavorites(allcart));
+
         reset();
         toast.success("Login successful!");
         const from = location.state?.from || "/";
         navigate(from);
       }
     } catch (error) {
-      console.log(error);
-      toast.error(error.data?.message || "An unexpected error occurred.", {
+      toast.error(error || "An unexpected error occurred.", {
         position: "top-right",
         autoClose: 5000,
         theme: "light",
@@ -93,30 +100,30 @@ export default function Login() {
 
           <form onSubmit={handleSubmit(handleLogin)} className="space-y-4">
             <InputField
-              label={"Email"}
-              id={"email"}
-              type={"email"}
-              autoFocus={true}
+              label="Email"
+              id="email"
+              type="email"
+              autoFocus
               register={register}
               error={errors.email}
               icon={<MdEmail size={19} className="text-primary" />}
-              placeholder={"Enter your email"}
+              placeholder="Enter your email"
             />
 
             <PasswordField
               error={errors.password}
-              type={isShowPassWord ? "text" : "password"}
+              type={isShowPassword ? "text" : "password"}
               setIsShow={setIsShowPassword}
               register={register}
               id="password"
-              label={"Password"}
-              isShow={isShowPassWord}
+              label="Password"
+              isShow={isShowPassword}
             />
 
             <div className="mb-6 text-end">
               <Link
-                to={"/forgot-password"}
-                className="font-bold text-sm text-muted-foreground "
+                to="/user-forgot-password"
+                className="font-bold text-sm text-muted-foreground"
               >
                 Forgot Password?
               </Link>
@@ -127,7 +134,9 @@ export default function Login() {
                 type="submit"
                 text="Login"
                 disabled={loading}
-                className={`w-full ${!loading ? "bg-primary" : "bg-muted"} disabled:cursor-not-allowed cursor-pointer disabled:bg-dustyRose-light border-2 border-dustyRose-dark hover:bg-dustyRose text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-dustyRose-light transition`}
+                className={`w-full ${loading ? "bg-muted" : "bg-primary"} 
+                  disabled:cursor-not-allowed cursor-pointer border-2 hover:bg-dustyRose
+                  text-white font-bold py-2 px-4 rounded transition`}
               />
 
               <div className="mt-4 flex items-center justify-between w-full gap-x-5">
@@ -140,8 +149,8 @@ export default function Login() {
                 type="button"
                 text="Login with Google"
                 onClick={handleGoogleLogin}
-                leftIcon={<FaGoogle size={20} className="text-red-500" />}
-                className="w-full mt-4 py-2 bg-background text-red-600 border hover:border-ring hover:bg-background"
+                leftIcon={<MdEmail size={20} className="text-red-500" />}
+                className="w-full mt-4 py-2 bg-background text-red-600 border hover:border-ring"
               />
             </div>
           </form>
