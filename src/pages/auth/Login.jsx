@@ -46,7 +46,7 @@ export default function Login() {
         dispatch(login({ user: result }));
 
         const cart = await getCartMutation();
-        const allcart = cart.data.cartItems.map(cartItem => cartItem.service)
+        const allcart = cart.data.cartItems.map(cartItem => cartItem.service.id)
         
         
         console.log(allcart)

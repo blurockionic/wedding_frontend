@@ -1,56 +1,69 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ServiceCard from "../../components/ServiceCard";
+import { useGetCartMutation } from "../../redux/serviceSlice";
+import { hydrateFavorites } from "../../redux/favoriteSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useClearCartMutation } from "../../redux/serviceSlice";
-import { resetFavorites } from "../../redux/favoriteSlice";
 
 export default function FavoriteList() {
-  // Get favorite list from Redux store
-  const favoriteList = useSelector((state) => state.favorites.favorites || []);
-
-  console.log(favoriteList);
-  
-
-
+  // State to store fetched services
+  const [favoriteCart, setFavoriteCart] = useState([]);
   const dispatch = useDispatch();
+  const [getCart, { isLoading }] = useGetCartMutation({});
 
-  // Clear cart mutation
-  const [clearCart] = useClearCartMutation();
+  const favoriteList = useSelector((state) => {
+    return state.favorites.favorites || [];
+  });
 
-  // Handle reset cart
-  const handleResetCart = async () => {
-    try {
-      await clearCart().unwrap(); // Backend call to clear cart
-      dispatch(resetFavorites()); // Update Redux state after success
-    } catch (error) {
-      console.error("Failed to clear cart:", error);
+  useEffect(() => {
+    const fetchCartData = async () => {
+      try {
+        const response = await getCart().unwrap();
+        if (response?.cartItems) {
+          setFavoriteCart(response.cartItems);
+          if (response.cartItems.length === 0) {
+            dispatch(hydrateFavorites([]));
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch cart:", err);
+      }
+    };
+
+    if (favoriteList.length > 0) {
+      fetchCartData();
+    } else {
+      setFavoriteCart([]);
     }
-  };
+  }, [getCart, favoriteList]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <p className="text-foreground font-bold text-8xl">{"Loading..."}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="p-5">
       {/* Favorite List Grid */}
-      {favoriteList.length ? (
-        <div className="bg-muted grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {favoriteList.map((favorite) => (
-            <ServiceCard key={favorite.id} service={favorite} />
-          ))}
+      {favoriteCart.length ? (
+        <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {favoriteCart.map((favorite) => {
+            const service = favorite?.service;
+            if (service) {
+              return <ServiceCard key={favorite.id} service={service} />;
+            }
+            return null;
+          })}
         </div>
       ) : (
         // Empty State Message
         <div className="flex items-center justify-center h-64">
-          <p className="text-foreground font-bold  text-8xl">No favorites found.</p>
+          <p className="text-foreground font-bold text-8xl">
+            {"No favorites found."}
+          </p>
         </div>
-      )}
-
-      {/* Clear Cart Button */}
-      {favoriteList.length > 0 && (
-        <button
-          className="bg-primary text-white py-2 px-4 rounded-lg mt-5"
-          onClick={handleResetCart}
-        >
-          Clear Favorites
-        </button>
       )}
     </div>
   );

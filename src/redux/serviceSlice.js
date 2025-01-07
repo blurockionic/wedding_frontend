@@ -5,7 +5,6 @@ export const serviceApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:4000/api/v1/",
     credentials: "include",
-  
   }),
   tagTypes: ["Cart", "Services"],
   endpoints: (builder) => ({
@@ -40,21 +39,13 @@ export const serviceApi = createApi({
       providesTags: ["Cart"],
     }),
 
-    // Add to cart
-    addToCart: builder.mutation({
-      query: (serviceId) => ({
-        url: "/cart",
-        method: "POST",
-        body: { serviceId }, // Pass serviceId as a JSON body
-      }),
-      invalidatesTags: ["Cart"],
-    }),
+   
 
-    // Remove from cart
-    removeFromCart: builder.mutation({
-      query: (serviceId) => ({
-        url: `/cart/${serviceId}`,
-        method: "DELETE",
+    toggleCart: builder.mutation({
+      query: (id) => ({
+        url: `/cart`,
+        method: "POST",
+        body: { id },
       }),
       invalidatesTags: ["Cart"],
     }),
@@ -64,11 +55,10 @@ export const serviceApi = createApi({
       query: () => ({
         url: "/cart/clear",
         method: "DELETE",
-     
       }),
       invalidatesTags: ["Cart"],
     }),
-    // creat service 
+    // creat service
     createService: builder.mutation({
       query: (serviceData) => ({
         url: "/services",
@@ -78,7 +68,7 @@ export const serviceApi = createApi({
     }),
     // update service
     updateService: builder.mutation({
-      query: ({preparedData,id}) => ({
+      query: ({ preparedData, id }) => ({
         url: `/services/${id}`,
         method: "PUT",
         body: preparedData,
@@ -91,10 +81,6 @@ export const serviceApi = createApi({
         method: "DELETE",
       }),
     }),
-
-    
-
-  
   }),
 });
 
@@ -103,11 +89,9 @@ export const {
   useGetServicesQuery,
   useGetServiceByIdQuery,
   useGetCartMutation,
-  useAddToCartMutation,
-  useRemoveFromCartMutation,
+  useToggleCartMutation,
   useClearCartMutation,
   useCreateServiceMutation,
   useUpdateServiceMutation,
   useDeleteServiceMutation,
- 
 } = serviceApi;

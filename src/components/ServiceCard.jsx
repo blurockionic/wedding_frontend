@@ -1,82 +1,47 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { BiHeart as HeartOutline } from "react-icons/bi";
 import { BsHeartFill as HeartFilled } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  useAddToCartMutation,
-  useRemoveFromCartMutation,
-} from "../redux/serviceSlice";
-import { addFavorite, removeFavorite } from "../redux/favoriteSlice";
+import { useToggleCartMutation } from "../redux/serviceSlice";
+import { toggleFavorite } from "../redux/favoriteSlice";
 
-const ServiceCard = React.memo(({ service }) => {
-
-console.log(service);
-
-
+const ServiceCard = React.memo(({ service}) => {
+  const [toggleCart] = useToggleCartMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // Redux store favorites list
-  const favoriteList = useSelector((state) => state.favorites || []);
-  const [isFavorite, setIsFavorite] = useState(null);
+  // Access the favorite list from Redux
+  const favoriteList = useSelector((state) => {
+    return state.favorites.favorites || [];
+  });
 
-  useEffect(() => {
-    // Ensure favoriteList is an array before using map
-    if (Array.isArray(favoriteList)) {
-      const favoriteService = favoriteList
-        .map((item) => item.service) // Extract the 'service' objects
-        .find((favService) => favService.id === service.id); // Match the 'id'
-  
-      setIsFavorite(favoriteService || null); // Set as null if not found
-    }
-  }, [favoriteList, service.id]);
+  // Check if the current service is in the favorite list
+  const isFavorite = useMemo(
+    () => favoriteList.includes(service.id),
+    [favoriteList, service.id]
+  );
 
-  const [addToCart] = useAddToCartMutation();
-  const [removeFromCart] = useRemoveFromCartMutation();
-
+  // Navigate to service details
   const handleCardClick = () => {
     navigate(`/service/${service.id}`);
   };
 
-  const handleFavoriteClick = async (e) => {
-    e.stopPropagation();
-      // Optimistic Update
-      const originalState = isFavorite;
-      setIsFavorite(!isFavorite);
-    
-      try {
-        if (isFavorite) {
-          // Backend Call to Remove Favorite
-          const response = await removeFromCart(service.id).unwrap();
-    
-          // Sync State with Backend Response
-          if (response.success) {
-            dispatch(removeFavorite(service.id)); // Update Redux state
-          } else {
-            setIsFavorite(originalState); // Revert UI state on failure
-            throw new Error("Failed to remove favorite.");
-          }
-        } else {
-          // Backend Call to Add Favorite
-          const response = await addToCart(service.id).unwrap();
-    
-          // Sync State with Backend Response
-          if (response.success) {
-            dispatch(addFavorite(service)); // Update Redux state
-          } else {
-            setIsFavorite(originalState); // Revert UI state on failure
-            throw new Error("Failed to add favorite.");
-          }
-        }
-      } catch (error) {
-        console.error("Failed to toggle favorite:", error);
-    
-        // Revert UI State on Failure
-        setIsFavorite(originalState);
+  // Handle favorite toggle
+  const handleFavoriteClick = async (e, id) => {
+    e.stopPropagation(); 
+
+    try {
+      const response = await toggleCart(id).unwrap();
+      if (response.success) {
       }
-    };
-    
+      dispatch(toggleFavorite(id));
+
+      console.log(favoriteList);
+    } catch (error) {
+      console.error("Failed to toggle favorite:", error);
+    }
+  };
 
   return (
     <div
@@ -95,17 +60,18 @@ console.log(service);
           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50"></div>
+
+        {/* Heart icon visibility */}
         <button
           type="button"
-          className={`absolute top-3 right-3 p-2 bg-white rounded-full shadow-lg transition-all duration-300 ${
-            isFavorite ? "opacity-100 scale-100" : "opacity-0 scale-75"
-          } group-hover:opacity-100 group-hover:scale-100 hover:bg-red-500 hover:text-white`}
-          onClick={handleFavoriteClick}
+          className={`absolute top-3 right-3 p-2 bg-muted rounded-full shadow-lg transition-all duration-300 
+            group-hover:opacity-100 opacity-0 group-hover:scale-100  hover:text-primary`}
+          onClick={(e) => handleFavoriteClick(e, service.id)}
         >
           {isFavorite ? (
-            <HeartFilled className="text-red-500" size={20} />
+            <HeartFilled color={`red`} size={20} />
           ) : (
-            <HeartOutline size={20} />
+            <HeartOutline color="red" size={20} />
           )}
         </button>
       </div>
