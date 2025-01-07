@@ -28,7 +28,7 @@ const CustomInput = (props) => {
         value={value}
         onChange={onChange}
         disabled={disabled}
-        className="flex-1 py-2 text-primary placeholder:text-muted-foreground focus:outline-none border-transparent"  // Custom color for text and placeholder
+        className="flex-1 py-2 text-primary placeholder:text-muted-foreground focus:outline-none border-transparent rounded focus:border-2 focus:border-pink-200 focus:ring-transparent"  // Custom color for text and placeholder
       />
 
       {/* Right Icon */}
