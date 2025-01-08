@@ -1,11 +1,15 @@
 import React from "react";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useLogoutMutation } from "../../redux/apiSlice.auth";
+import { useDispatch } from "react-redux";
+import { userlogout } from "../../redux/authSlice";
+import { toast } from "react-toastify";
 
 const UserDashBoard = () => {
   const location = useLocation(); // Get the current location
   const navigate = useNavigate();
   const [logout] = useLogoutMutation();
+  const dispatch = useDispatch();
 
   // Array of links and their paths
   const navItems = [
@@ -19,9 +23,11 @@ const UserDashBoard = () => {
   const handleLogout = async () => {
     //
     const responce = await logout().unwrap();
+
     if (responce.data.success) {
+      dispatch(userlogout());
       toast.success(responce.data.message);
-      navigate("/login", { replace: true });
+      navigate("/", { replace: true });
       return;
     }
 
