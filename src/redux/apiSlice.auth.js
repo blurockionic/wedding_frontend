@@ -1,16 +1,20 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+
+
+
 // Define the API endpoints
 export const apiAuthSlice = createApi({
   reducerPath: "authSlice",
   
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:4000/api/v1",
+    baseUrl: `${import.meta.env.VITE_API_URL}/api/v1`, 
     credentials: "include",
   }),
 
-  endpoints: (builder) => ({
 
+
+  endpoints: (builder) => ({
     login: builder.mutation({
       query: (userData) => ({
         url: `/users/login`,

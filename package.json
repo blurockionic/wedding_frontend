@@ -15,6 +15,7 @@
     "aos": "^2.3.4",
     "apexcharts": "^4.2.0",
     "country-state-city": "^3.2.1",
+    "dotenv": "^16.4.7",
     "flowbite": "^2.5.2",
     "react": "^18.3.1",
     "react-apexcharts": "^1.7.0",
