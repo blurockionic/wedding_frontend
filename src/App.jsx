@@ -1,11 +1,10 @@
-import React, { useEffect, Suspense, lazy } from "react";
+import  {  Suspense, lazy } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ErrorBoundary from "./pages/ErrorPage.jsx";
 import UserProfile from "./pages/userDashboard/UserProfile.jsx";
 import UserDashBoard from "./pages/userDashboard/UserDashBoard.jsx";
-import ForgotPassword from "./pages/forgot-password/ForgotPassword.jsx";
 
 import Success from "./pages/success/Success.jsx";
 import VendorForgotPassword from "./pages/auth/vendor _auth/VendorForgotPassword.jsx";
@@ -41,7 +40,7 @@ const DashBoardDetailPage = lazy(() =>
 );
 const FullErrorPage = lazy(() => import("./pages/FullErrorPage.jsx"));
 const FavoriteListPage = lazy(() =>
-  import("./pages/userDashboard/favoriteList.jsx")
+  import("./pages/userDashboard/FavoriteList.jsx")
 );
 
 // Define routes using createBrowserRouter

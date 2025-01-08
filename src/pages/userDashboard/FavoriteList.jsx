@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import ServiceCard from "../../components/ServiceCard";
 import { useGetCartMutation } from "../../redux/serviceSlice";
 import { hydrateFavorites } from "../../redux/favoriteSlice";
@@ -34,7 +34,7 @@ export default function FavoriteList() {
     } else {
       setFavoriteCart([]);
     }
-  }, [getCart, favoriteList]);
+  }, [getCart, favoriteList, dispatch]);
 
   if (isLoading) {
     return (
