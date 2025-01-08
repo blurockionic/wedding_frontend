@@ -1,23 +1,47 @@
-import React, { useEffect } from "react";
+import  {  Suspense, lazy } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import OutletPage from "./pages/OutletPage";
-import LandingPage from "./pages/LandingPage.jsx";
-import Signup from "./pages/auth/Signup.jsx";
-import Login from "./pages/auth/Login.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import ServicesPage from "./pages/ServicePage.jsx";
-import ServiceDetail from "./pages/serviceDeatails.jsx";
-import { useGetCartQuery } from "./redux/serviceSlice.js";
-import { hydrateFavorites } from "./redux/favoriteSlice.js";
-import { useDispatch } from "react-redux";
 import ErrorBoundary from "./pages/ErrorPage.jsx";
-import FullErrorPage from "./pages/FullErrorPage.jsx";
-import VendorRegistration from "./pages/auth/vendor _auth/VendorSignup.jsx";
-import VendorDashboard from "./pages/vendorDashboard/Dashboard.jsx";
-import Setting from "./pages/vendorDashboard/Setting.jsx";
-import Profile from "./pages/vendorDashboard/Profile.jsx";
-import Analytics from "./pages/vendorDashboard/Analytics.jsx";
+import UserProfile from "./pages/userDashboard/UserProfile.jsx";
+import UserDashBoard from "./pages/userDashboard/UserDashBoard.jsx";
+
+import Success from "./pages/success/Success.jsx";
+import VendorForgotPassword from "./pages/auth/vendor _auth/VendorForgotPassword.jsx";
+import UserForgotPassword from "./pages/auth/UserForgotPassword.jsx";
+import VendorChangePassword from "./pages/change-password/VendorChangePassword.jsx";
+import ChangePassword from "./pages/auth/ChangePassword.jsx";
+
+
+// Lazy load components
+const OutletPage = lazy(() => import("./pages/OutletPage"));
+const LandingPage = lazy(() => import("./pages/LandingPage.jsx"));
+const Signup = lazy(() => import("./pages/auth/Signup.jsx"));
+const Login = lazy(() => import("./pages/auth/Login.jsx"));
+const ServicesPage = lazy(() => import("./pages/ServicePage.jsx"));
+const ServiceDetail = lazy(() => import("./pages/serviceDeatails.jsx"));
+const VendorRegistration = lazy(() =>
+  import("./pages/auth/vendor _auth/VendorSignup.jsx")
+);
+const VendorDashboard = lazy(() =>
+  import("./pages/vendorDashboard/Dashboard.jsx")
+);
+const Setting = lazy(() => import("./pages/vendorDashboard/Setting.jsx"));
+const Profile = lazy(() => import("./pages/vendorDashboard/Profile.jsx"));
+const Analytics = lazy(() => import("./pages/vendorDashboard/Analytics.jsx"));
+const VendorServicesPage = lazy(() =>
+  import("./pages/vendorDashboard/VendorServicePage.jsx")
+);
+const VendorLogin = lazy(() =>
+  import("./pages/auth/vendor _auth/VendorLogin.jsx")
+);
+const DashBoardDetailPage = lazy(() =>
+  import("./pages/vendorDashboard/component/DashBoardDetailPage.jsx")
+);
+const FullErrorPage = lazy(() => import("./pages/FullErrorPage.jsx"));
+const FavoriteListPage = lazy(() =>
+  import("./pages/userDashboard/FavoriteList.jsx")
+);
 
 // Define routes using createBrowserRouter
 const router = createBrowserRouter([
@@ -28,17 +52,42 @@ const router = createBrowserRouter([
       { path: "/", element: <LandingPage /> },
       { path: "/signup", element: <Signup /> },
       { path: "/login", element: <Login /> },
+      { path: "/user-forgot-password", element: <UserForgotPassword /> },
+      { path: "/user-change-password", element: <ChangePassword/> },
+      { path: "/success", element: <Success /> },
       { path: "/vendorSignup", element: <VendorRegistration /> },
+      { path: "/vendorLogin", element: <VendorLogin /> },
+      { path: "vendor-forgot-password", element: <VendorForgotPassword/> },
+      { path: "vendor-change-password", element: <VendorChangePassword /> },
       { path: "/services", element: <ServicesPage /> },
       { path: "/service/:id", element: <ServiceDetail /> },
-     
+      {
+        path: "/profile",
+        element: <UserDashBoard />,
+        children: [
+          { path: "", index: true, element: <UserProfile /> },
+          { path: "favoriteList", element: <FavoriteListPage /> },
+        ],
+      },
+
       {
         path: "/VendorDashboard",
         element: <VendorDashboard />,
         children: [
-          { path: "settings", element: <Setting /> }, 
-          {path:"profile", element: <Profile/> },
-          { path:"analytics",element: <Analytics/>}
+          { path: "settings", element: <Setting /> },
+          { path: "profile", element: <Profile /> },
+          { path: "analytics", element: <Analytics /> },
+
+          {
+            path: "services",
+            children: [
+              { path: "", index: true, element: <VendorServicesPage /> },
+              {
+                path: "service-details/:serviceId",
+                element: <DashBoardDetailPage />,
+              },
+            ],
+          },
         ],
       },
       { path: "*", element: <FullErrorPage /> },
@@ -47,24 +96,14 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  const { data: favoriteList, isLoading, error } = useGetCartQuery(); // Automatically fetch data
-  const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (
-      favoriteList &&
-      favoriteList.cartItems &&
-      favoriteList.cartItems.length > 0
-    ) {
-      console.log(favoriteList.cartItems); // Debug fetched data
-      dispatch(hydrateFavorites(favoriteList)); // Dispatch to update Redux state
-    }
-  }, [favoriteList, dispatch]);
   return (
     <>
       <ErrorBoundary>
-        <ToastContainer />
-        <RouterProvider router={router} />
+        <ToastContainer position="bottom-right" />
+        <Suspense fallback={<div>Loading...</div>}>
+          <RouterProvider router={router} />
+        </Suspense>
       </ErrorBoundary>
     </>
   );

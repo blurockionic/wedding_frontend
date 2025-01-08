@@ -1,34 +1,39 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+
+
+
 // Define the API endpoints
 export const apiAuthSlice = createApi({
   reducerPath: "authSlice",
   
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:4000/api/",
+    baseUrl: `${import.meta.env.VITE_API_URL}/api/v1`, 
     credentials: "include",
   }),
 
-  endpoints: (builder) => ({
 
+
+  endpoints: (builder) => ({
     login: builder.mutation({
       query: (userData) => ({
-        url: `/v1/users/login`,
+        url: `/users/login`,
         method: "POST",
         body: userData,
       }),
     }),
 
+   
     logout: builder.mutation({
       query: () => ({
-        url: `/v1/users/logout`,
+        url: `/users/logout`,
         method: "POST",
       }),
     }),
 
     signup: builder.mutation({
       query: (userData) => ({
-        url: `/v1/users/register`,
+        url: `/users/register`,
         method: "POST",
         body: userData,
       }),
@@ -36,7 +41,7 @@ export const apiAuthSlice = createApi({
 
     updateUser: builder.mutation({
       query: (userData) => ({
-        url: `/v1/users/update-user`,
+        url: `/users`,
         method: "PATCH",
         body: userData,
       }),
@@ -44,15 +49,15 @@ export const apiAuthSlice = createApi({
 
     reqResetPassword: builder.mutation({
       query: (resetData) => ({
-        url: `/v1/users/request-password-reset`,
+        url: `/users/request-password-reset`,
         method: "POST",
         body: resetData,
       }),
     }),
 
-    reqChangePassword: builder.mutation({
+    ChangePassword: builder.mutation({
       query: ({ token, ...changeData }) => ({
-        url: `/v1/users/reset-password?token=${token}`,
+        url: `/users/reset-password?token=${token}`,
         method: "POST",
         body: changeData,
       }),
@@ -60,7 +65,7 @@ export const apiAuthSlice = createApi({
 
     deleteUser: builder.mutation({
       query: () => ({
-        url: `/v1/users/delete-user`,
+        url: `/users/delete-user`,
         method: "DELETE",
       }),
     }),
@@ -74,6 +79,7 @@ export const {
   useSignupMutation,
   useUpdateUserMutation,
   useReqResetPasswordMutation,
-  useReqChangePasswordMutation,
+ useChangePasswordMutation,
   useDeleteUserMutation,
+  
 } = apiAuthSlice;

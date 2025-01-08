@@ -12,29 +12,17 @@ import Grooms from "../pages/section/Grooms";
 
 const NavbarRoutesConfig = [
   { name: "Home", path: "/", component: LandingPage },
-  { name: "WeddingVenues", path: "/wedding-venues", component: WeedingVenues },
+  
 
-  { name: "Services", path: "/services", component: ServicesPage },
-
-  {
-    name: "WeddingVendors",
-    path: "/wedding-vendors",
-    component: WeddingVendors,
-  },
-  { name: "Brides", path: "/brides", component: Bride },
-  { name: "Grooms", path: "/grooms", component: Grooms },
   { name: "Tools", path: "/planning-tools", component: PlanningTools },
   { name: "Blogs", path: "/blogs", component: Blogs },
 ];
 
 export default NavbarRoutesConfig;
-
-
 export const serviceTypes = [
   { value: "photography", label: "Photo" },
   { value: "florist", label: "Florist" },
   { value: "music", label: "Music" },
   { value: "decor", label: "Decoration" },
   { value: "catering", label: "Catering" },
-
 ];

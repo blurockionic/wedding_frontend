@@ -7,6 +7,7 @@ import { serviceApi } from "./serviceSlice";
 import favoritesSlice from "./favoriteSlice";
 import { uploadSlice } from "./uploadSlice";
 import { vendorApi } from "./vendorSlice";
+import serviceIdSlice from "./serviceIdSlice";
 
 // Combine Reducers
 const rootReducer = combineReducers({
@@ -16,13 +17,15 @@ const rootReducer = combineReducers({
   [favoritesSlice.name]: favoritesSlice.reducer,
   [uploadSlice.reducerPath]: uploadSlice.reducer,
   [vendorApi.reducerPath]: vendorApi.reducer,
+  [serviceIdSlice.name]: serviceIdSlice.reducer,
+ 
 });
 
 // Configure Persist
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: [authSlice.name,favoritesSlice.name],
+  whitelist: [authSlice.name,favoritesSlice.name,serviceIdSlice.name],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

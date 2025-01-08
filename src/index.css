@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -35,51 +36,94 @@ html {
   font-family: montserrat;
 }
 
+::-webkit-scrollbar {
+
+  scrollbar-width: none;
+}
+@keyframes smooth-scroll {
+  0% {
+    transform: translateX(0); /* Start with the first set visible */
+  }
+  100% {
+    transform: translateX(-50%); /* Only scroll half the width of the container */
+  }
+}
+
+.overflow-hidden {
+  position: relative;
+  overflow: hidden; /* Ensure only the visible portion is shown */
+}
+
+.scroll-container {
+  display: flex;
+  flex-wrap: nowrap;
+  width: calc(100% * 2); 
+  width: 200%; /* Double the width to include original + duplicate cards */
+  animation: smooth-scroll 20s linear infinite; /* Smooth looping animation */
+}
+
+.scroll-container > * {
+  flex-shrink: 0;
+  width: 400px; /* Fixed width of each card */
+}
+
+.defaultcss option:checked {
+  background: linear-gradient(to right, #d43fa6, #d43fa6); 
+  font-weight: normal; 
+}
+
+.custom-option:hover {
+  background-color: red;
+  font-weight: bold;
+}
 
 :root {
-  /* Base Colors */
-  --color-dusty-rose: #DCAE96;
-  --color-dusty-rose-light: #E8C8B2;
-  --color-dusty-rose-dark: #B89079;
-
-  --color-sage-green: #B2AC88;
-  --color-sage-green-light: #CBC7A4;
-  --color-sage-green-dark: #918B6B;
-
-  --color-champagne: #F7E7CE;
-  --color-champagne-light: #FFF2DF;
-  --color-champagne-dark: #DBCAB2;
-
-  --color-ivory: #FFFFF0;
-  --color-ivory-light: #FFFFFF;
-  --color-ivory-dark: #E6E6D9;
-
-  --color-blush-pink: #F4C2C2;
-  --color-blush-pink-light: #FAD4D4;
-  --color-blush-pink-dark: #DA9E9E;
+  --background: #ffffff; /* White */
+  --foreground: #1a1a1a; /* Almost black */
+  --card: #ffffff; /* White */
+  --card-foreground: #262626; /* Dark gray */
+  --popover: #ffffff; /* White */
+  --popover-foreground: #190019; /* Very dark magenta */
+  --primary: #d43fa6; /* Vibrant pink */
+  --primary-foreground: #000000; /* Black */
+  --secondary: #e6e6e6; /* Light gray */
+  --secondary-foreground: #000000; /* Black */
+  --muted: #f2f2f2; /* Soft light gray off white */
+  --muted-foreground: #666666; /* Medium gray */
+  --accent: #e5e5e5; /* Very light gray */
+  --accent-foreground: #262626; /* Dark gray */
+  --destructive: #800000; /* Dark red */
+  --destructive-foreground: #ffffff; /* White */
+  --border: #d6d6d6; /* Light gray */
+  --input: #7f7f7f; /* Medium gray */
+  --ring: #d43fa6; /* Vibrant pink */
+  --radius: 0.5rem;
 }
-[data-theme="dark"] {
-  /* Adjusted Dark Mode Colors */
-  --color-dusty-rose: #8B5E5A; /* Muted earthy rose */
-  --color-dusty-rose-light: #9C746E; /* Slightly softer */
-  --color-dusty-rose-dark: #6F4542; /* Deeper shade */
 
-  --color-sage-green: #5F6451; /* Muted dark green */
-  --color-sage-green-light: #747A63; /* Softer accent */
-  --color-sage-green-dark: #484D3E; /* Deep forest green */
-
-  --color-champagne: #A89678; /* Warm golden beige */
-  --color-champagne-light: #B8A689; /* Softer warm shade */
-  --color-champagne-dark: #7F6E55; /* Rich warm brown */
-
-  --color-ivory: #D6D5CC; /* Muted off-white */
-  --color-ivory-light: #E4E3DC; /* Soft light beige */
-  --color-ivory-dark: #B1B0A5; /* Subtle neutral gray */
-
-  --color-blush-pink: #B37676; /* Soft muted pink */
-  --color-blush-pink-light: #C28C8C; /*Slightly brighter*/
-  --color-blush-pink-dark: #8A5050; /*Deep rosewood*/
+.dark {
+  --background: #1a1a1a; /* Almost black */
+  --foreground: #ffffff; /* White */
+  --card: #262626; /* Dark gray */
+  --card-foreground: #ffffff; /* White */
+  --popover: #0d0d0d; /* Very dark gray */
+  --popover-foreground: #ffffff; /* White */
+  --primary: #d43fa6; /* Vibrant pink */
+  --primary-foreground: #000000; /* Black */
+  --secondary: #333333; /* Dark gray */
+  --secondary-foreground: #ffffff; /* White */
+  --muted: #404040; /* Muted dark gray */
+  --muted-foreground: #a6a6a6; /* Light gray */
+  --accent: #404040; /* Muted dark gray */
+  --accent-foreground: #f2f2f2; /* Soft light gray */
+  --destructive: #e11f1f; /* Dark red */
+  --destructive-foreground: #ffffff; /* White */
+  --border: #808080; /* Medium gray */
+  --input: #808080; /* Medium gray */
+  --ring: #d43fa6; /* Vibrant pink */
+  --radius: 0.5rem;
 }
+
+
 
 
 @layer components {

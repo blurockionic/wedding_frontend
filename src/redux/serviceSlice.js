@@ -3,9 +3,10 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const serviceApi = createApi({
   reducerPath: "serviceApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:4000/api/v1/",
+    baseUrl: `${import.meta.env.VITE_API_URL}/api/v1`,
     credentials: "include",
   }),
+  tagTypes: ["Cart", "Services"],
   endpoints: (builder) => ({
     // Get all services with dynamic filters
     getServices: builder.query({
@@ -33,31 +34,50 @@ export const serviceApi = createApi({
     }),
 
     // Get cart
-    getCart: builder.query({
+    getCart: builder.mutation({
       query: () => "/cart",
+      providesTags: ["Cart"],
     }),
 
-    // Add to cart
-    addToCart: builder.mutation({
-      query: (serviceId) => ({
-        url: "/cart",
+   
+
+    toggleCart: builder.mutation({
+      query: (id) => ({
+        url: `/cart`,
         method: "POST",
-        body: { serviceId }, // Pass serviceId as a JSON body
+        body: { id },
       }),
-    }),
-
-    // Remove from cart
-    removeFromCart: builder.mutation({
-      query: (serviceId) => ({
-        url: `/cart/${serviceId}`,
-        method: "DELETE",
-      }),
+      invalidatesTags: ["Cart"],
     }),
 
     // Clear cart
     clearCart: builder.mutation({
       query: () => ({
         url: "/cart/clear",
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Cart"],
+    }),
+    // creat service
+    createService: builder.mutation({
+      query: (serviceData) => ({
+        url: "/services",
+        method: "POST",
+        body: serviceData,
+      }),
+    }),
+    // update service
+    updateService: builder.mutation({
+      query: ({ preparedData, id }) => ({
+        url: `/services/${id}`,
+        method: "PUT",
+        body: preparedData,
+      }),
+    }),
+    // delete service
+    deleteService: builder.mutation({
+      query: (id) => ({
+        url: `/services/${id}`,
         method: "DELETE",
       }),
     }),
@@ -68,8 +88,10 @@ export const serviceApi = createApi({
 export const {
   useGetServicesQuery,
   useGetServiceByIdQuery,
-  useGetCartQuery,
-  useAddToCartMutation,
-  useRemoveFromCartMutation,
+  useGetCartMutation,
+  useToggleCartMutation,
   useClearCartMutation,
+  useCreateServiceMutation,
+  useUpdateServiceMutation,
+  useDeleteServiceMutation,
 } = serviceApi;

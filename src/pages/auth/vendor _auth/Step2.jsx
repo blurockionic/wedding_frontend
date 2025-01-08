@@ -34,7 +34,7 @@ const Step2 = () => {
       default:
         setServiceOptions([]);
     }
-    setSelectedServices([]); // Clear selected services on category change
+    setSelectedServices([]); 
   }, [selectedCategory]);
 
   // Handle the selection or deselection of a service

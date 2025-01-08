@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import Accordion from "../components/Accordian";
+import { useParams, useNavigate } from "react-router-dom";
 import Rating from "../components/Rating";
-import useAuthRedirect from "../hooks/useAuthRedirect";
+import Accordion from "../components/Accordion";
+import { IoCall } from "react-icons/io5";
+import { BsWhatsapp } from "react-icons/bs";
+import { useSelector } from "react-redux";
 
+
+// Mock data and API call simulation
 const mockServiceData = (id) => ({
   service_id: id,
   service_name: "Premium Wedding Photography",
@@ -35,10 +39,17 @@ const mockServiceData = (id) => ({
       answer:
         "The package includes a full day of photography, 300+ edited photos, and a personalized photo album.",
     },
+    {
+      question: "How long will it take to receive my photos?",
+      answer: "Photos are typically delivered within 4-6 weeks after the event.",
+    },
+    {
+      question: "Do you travel for destination weddings?",
+      answer: "Yes, we are available for destination weddings with additional travel fees.",
+    },
   ],
 });
 
-// Simulated API call
 const fetchServiceDetail = async (id) => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -47,13 +58,16 @@ const fetchServiceDetail = async (id) => {
   });
 };
 
+
+
+
 function ServiceDetail() {
-
-
+  const isLoggedIn =  useSelector((state) => state.auth.isLoggedIn);
   const { id } = useParams();
   const [service, setService] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,8 +84,17 @@ function ServiceDetail() {
     fetchData();
   }, [id]);
 
+  const handleLoginRedirect = () => {
+    navigate("/login",{state:{from:location.pathname}});
+  };
+
   if (loading) return <div className="text-center">Loading...</div>;
-  if (error) return <div className="text-center text-red-500">{error}</div>;
+  if (error) return (
+    <div className="text-center text-red-500">
+      {error}
+      <button onClick={() => setLoading(true)} className="mt-4 text-blue-500">Retry</button>
+    </div>
+  );
 
   return (
     <div className="max-w-screen-xl mx-auto p-6">
@@ -103,10 +126,52 @@ function ServiceDetail() {
               />
             ))}
           </div>
+
+          {/* Vendor Details Section */}
+          <div className="bg-[#f9f9f9] p-6 rounded-lg mt-6 shadow-lg">
+            <h2 className="text-2xl font-bold text-slate-700 mb-4">Vendor Details</h2>
+            <p className="text-lg text-slate-600 mb-4">
+              <strong>Name:</strong> {service.vendor.name}
+            </p>
+
+            <div className="flex flex-col space-y-4 mt-4">
+              {/* Conditional Rendering based on Login Status */}
+              {isLoggedIn ? (
+                <div className="flex space-x-4">
+                  <a
+                    href={`tel:${service.vendor.phone}`}
+                    className="bg-green-500 text-white flex justify-center items-center gap-2 px-5 py-3 rounded-lg hover:bg-green-700 transition"
+                    aria-label={`Call ${service.vendor.name}`}
+                  >
+                    Call <IoCall />
+                  </a>
+                  <a
+                    href={`https://wa.me/${service.vendor.phone}`}
+                    className="bg-green-500 text-white flex justify-center items-center gap-2 px-5 py-3 rounded-lg hover:bg-green-600 transition"
+                    aria-label={`WhatsApp ${service.vendor.name}`}
+                  >
+                    WhatsApp <BsWhatsapp />
+                  </a>
+                </div>
+              ) : (
+                <div className="bg-yellow-100 p-4 rounded-lg text-center">
+                  <p className="text-xl font-medium text-red-600 mb-4">
+                    Please log in to contact the vendor.
+                  </p>
+                  <button
+                    onClick={handleLoginRedirect}
+                    className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition transform hover:scale-105"
+                  >
+                    Log in to Continue
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Reviews */}
+      {/* Reviews Section */}
       <div className="mt-8">
         <h2 className="text-3xl font-bold mb-4">Reviews</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -116,6 +181,16 @@ function ServiceDetail() {
               <Rating rating={review.rating} />
               <p>{review.comment}</p>
             </div>
+          ))}
+        </div>
+      </div>
+
+      {/* FAQ Section */}
+      <div className="mt-8">
+        <h2 className="text-3xl font-bold mb-4">FAQs</h2>
+        <div className="space-y-4">
+          {service.faqs.map((faq, index) => (
+            <Accordion key={index} question={faq.question} answer={faq.answer} />
           ))}
         </div>
       </div>

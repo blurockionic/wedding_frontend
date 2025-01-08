@@ -1,26 +1,38 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FaSearch, FaBell, FaUserCircle } from "react-icons/fa";
+import { GoSearch, GoBell, GoPerson } from "react-icons/go";
 import SearchBar from "../../components/SearchBar";
 import { FiSearch } from "react-icons/fi";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../redux/authSlice";
+import { useVendorLogoutMutation } from "../../redux/vendorSlice";
 import { HiOutlineLanguage } from "react-icons/hi2";
 import { Link } from "react-router-dom";
 
 const VendorHeader = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [showSearch, setShowSearch] = useState(false);
+ const [vendorLogout] = useVendorLogoutMutation()
 
   const handleOnLogout = async () => {
-    const response = await logoutUser();
-    if (response) {
-      dispatch(logout());
+
+    const response = await vendorLogout();
+    if(response.error){
+
+      toast.error(response.error.data.message)
+      
+    }else{
       toast.success(response.data.message);
-      navigate("/login");
     }
+    
+    dispatch(logout());
+    navigate("/vendorLogin")
+    
+   
+    
+
+    
   };
 
   const [profileOpen, setProfileOpen] = useState(false);
@@ -44,43 +56,23 @@ const VendorHeader = () => {
   }, []);
 
   return (
-    <header className="w-full bg-[#374151] shadow-md px-4 py-3 flex items-center justify-end lg:justify-between lg:rounded-md">
+    <header className="w-full  bg-[#121e32] customShadow px-6 py-3 flex  items-center justify-end lg:justify-between lg:rounded-md">
       {/* Left: Brand Name */}
-      <div className="hidden lg:flex text-lg font-bold text-white">
-        <div className="flex items-center space-x-4">
-          <div
-            className={`relative ${
-              showSearch ? "block" : "hidden"
-            } md:block transition-all`}
-          >
-            <SearchBar
-              customStyles="outline-none"
-              icon={<FiSearch size={18} />}
-            />
-          </div>
-          <button
-            onClick={() => setShowSearch((prev) => !prev)}
-            className="p-2 hidden rounded-full text-white hover:bg-[#2563EB] transition"
-            aria-label="Toggle Search"
-          >
-            <FaSearch size={18} />
-          </button>
-        </div>
-      </div>
-
+      
+    <h2 className="font-bold text-3xl md:block hidden text-white ">wedd</h2>
       {/* Right: Action Buttons */}
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-1">
         <HiOutlineLanguage
           className="text-4xl cursor-pointer transition duration-200 ease-in-out p-2 hover:bg-[#2563EB] rounded-full text-white"
         />
 
-        <FaBell
+        <GoBell
           className="text-4xl cursor-pointer transition duration-200 ease-in-out p-2 hover:bg-[#2563EB] rounded-full text-white"
         />
 
         {/* Profile Dropdown */}
         <div className="relative" ref={profileRef}>
-          <FaUserCircle
+          <GoPerson
             onClick={handleProfileOpen}
             className="text-3xl cursor-pointer transition duration-200 ease-in-out p-2 hover:bg-[#2563EB] rounded-full text-white"
             size={40}

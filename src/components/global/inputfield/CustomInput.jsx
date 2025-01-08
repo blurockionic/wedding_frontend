@@ -1,7 +1,6 @@
-import { forwardRef } from "react";
 import PropTypes from "prop-types"; // Import PropTypes for prop validation
 
-const CustomInput = forwardRef((props, ref) => {
+const CustomInput = (props) => {
   const {
     type,
     placeholder,
@@ -12,17 +11,15 @@ const CustomInput = forwardRef((props, ref) => {
     disabled = false,
     leftIcon = null,
     rightIcon = null,
-    register = () => {},
-    rules,
   } = props;
 
   return (
     <div
-      className={`flex items-center rounded-md px-2 py-1 border focus:outline-none focus:ring-2 focus:ring-dustyRose-light ${className}`}
+      className={`flex items-center rounded-md px-2 py-1 border focus:outline-none focus:ring-2 focus:ring-primary ${className}`} // Replaced with custom color for focus ring
       style={style}
     >
       {/* Left Icon */}
-      {leftIcon && <div className="mr-2 text-gray-500">{leftIcon}</div>}
+      {leftIcon && <div className="mr-2 text-primary">{leftIcon}</div>}  {/* Custom color for left icon */}
 
       {/* Input */}
       <input
@@ -30,17 +27,15 @@ const CustomInput = forwardRef((props, ref) => {
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        {...register(name, rules)}
-        ref={ref}
         disabled={disabled}
-        className="flex-1 py-2 focus:outline-none"
+        className="flex-1 py-2 text-primary placeholder:text-muted-foreground focus:outline-none border-transparent rounded focus:border-2 focus:border-pink-200 focus:ring-transparent"  // Custom color for text and placeholder
       />
 
       {/* Right Icon */}
-      {rightIcon && <div className="ml-2 text-gray-500">{rightIcon}</div>}
+      {rightIcon && <div className="ml-2 text-primary">{rightIcon}</div>}  {/* Custom color for right icon */}
     </div>
   );
-});
+};
 
 // Set display name for better debugging
 CustomInput.displayName = "CustomInput";
@@ -56,7 +51,6 @@ CustomInput.propTypes = {
   disabled: PropTypes.bool,
   leftIcon: PropTypes.node,
   rightIcon: PropTypes.node,
-  register: PropTypes.func,
 };
 
 export default CustomInput;

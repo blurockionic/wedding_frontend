@@ -1,0 +1,110 @@
+export const dummyData = {
+  ServiceResult: [
+    {
+      id: "6762912c8bc4b8c031e31d07",
+      vendorId: "6762904e8bc4b8c031e31d04",
+      service_name: "event photography",
+      description:
+        "capture your special moments with professional photography services.",
+      min_price: 200,
+      max_price: 500,
+      price: null,
+      service_type: "photography",
+      rating: 0,
+      created_at: "2024-12-18T09:08:59.869Z",
+      updated_at: "2024-12-18T09:08:59.869Z",
+      vendor: {
+        id: "6762904e8bc4b8c031e31d04",
+        name: "santosh",
+        description:
+          "We provide top-notch electronics repair and installation services.",
+        city: "Yozgat",
+      },
+    },
+    {
+      id: "6762912c8bc4b8c031e31d08",
+      vendorId: "6762904e8bc4b8c031e31d04",
+      service_name: "wedding catering",
+      description:
+        "delicious and customized catering services for your wedding.",
+      min_price: 500,
+      max_price: 1000,
+      price: null,
+      service_type: "catering",
+      rating: 0,
+      created_at: "2024-12-18T09:08:59.869Z",
+      updated_at: "2024-12-18T09:08:59.869Z",
+      vendor: {
+        id: "6762904e8bc4b8c031e31d04",
+        name: "santosh",
+        description:
+          "We provide top-notch electronics repair and installation services.",
+        city: "Yozgat",
+      },
+    },
+    {
+      id: "6762912c8bc4b8c031e31d09",
+      vendorId: "6762904e8bc4b8c031e31d04",
+      service_name: "wedding decor",
+      description:
+        "beautiful decor to make your wedding day even more special.",
+      min_price: 300,
+      max_price: 700,
+      price: null,
+      service_type: "decor",
+      rating: 0,
+      created_at: "2024-12-18T09:08:59.869Z",
+      updated_at: "2024-12-18T09:08:59.869Z",
+      vendor: {
+        id: "6762904e8bc4b8c031e31d04",
+        name: "santosh",
+        description:
+          "We provide top-notch electronics repair and installation services.",
+        city: "Yozgat",
+      },
+    },
+    {
+      id: "6762912c8bc4b8c031e31d0a",
+      vendorId: "6762904e8bc4b8c031e31d04",
+      service_name: "dj music",
+      description:
+        "set the right mood with our professional dj services for your event.",
+      min_price: 400,
+      max_price: 900,
+      price: null,
+      service_type: "music",
+      rating: 0,
+      created_at: "2024-12-18T09:08:59.869Z",
+      updated_at: "2024-12-18T09:08:59.869Z",
+      vendor: {
+        id: "6762904e8bc4b8c031e31d04",
+        name: "santosh",
+        description:
+          "We provide top-notch electronics repair and installation services.",
+        city: "Yozgat",
+      },
+    },
+    {
+      id: "6762912c8bc4b8c031e31d0b",
+      vendorId: "676275aded2fdd3b49bf865f",
+      service_name: "luxury transportation",
+      description: "arrive in style with our luxury transportation services.",
+      min_price: 300,
+      max_price: 600,
+      price: null,
+      service_type: "transportation",
+      rating: 0,
+      created_at: "2024-12-18T09:08:59.869Z",
+      updated_at: "2024-12-18T09:08:59.869Z",
+      vendor: {
+        id: "676275aded2fdd3b49bf865f",
+        name: "santosh gupta",
+        description: "",
+        city: "bilaspur",
+      },
+    },
+  ],
+  total: 5,
+  page: 1,
+  totalPages: 1,
+};

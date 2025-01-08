@@ -1,82 +1,82 @@
-/** @type {import('tailwindcss').Config} */
-const plugin = require('tailwindcss/plugin');
+/** @type {import('tailwindcss').Config} */ 
+    const plugin = require ("tailwindcss/plugin");
 
 // Utility to create RGBA colors
-const rgbaColor = (color, opacity) => {
-  // Extract RGB components from the color, assuming color is in hex or rgb format
-  const hexToRgb = (hex) => {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    return `rgb(${r}, ${g}, ${b})`;
-  };
-  
-  const rgb = hexToRgb(color);
-  return `${rgb}, ${opacity}`;
-};
 
 module.exports = {
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/flowbite/**/*.js",
+  ],
   theme: {
     extend: {
-      screens: {
-        xs: "480px",
-      },
       colors: {
-        dustyRose: {
-          DEFAULT: "var(--color-dusty-rose)",
-          light: "var(--color-dusty-rose-light)",
-          dark: "var(--color-dusty-rose-dark)",
+        background: "var(--background)",
+        foreground: "var(--foreground)",
+        card: "var(--card)",
+        "card-foreground": "var(--card-foreground)",
+        popover: "var(--popover)",
+        "popover-foreground": "var(--popover-foreground)",
+        primary: "var(--primary)",
+        "primary-foreground": "var(--primary-foreground)",
+        secondary: "var(--secondary)",
+        "secondary-foreground": "var(--secondary-foreground)",
+        muted: "var(--muted)",
+        "muted-foreground": "var(--muted-foreground)",
+        accent: "var(--accent)",
+        "accent-foreground": "var(--accent-foreground)",
+        destructive: "var(--destructive)",
+        "destructive-foreground": "var(--destructive-foreground)",
+        border: "var(--border)",
+        input: "var(--input)",
+        ring: "var(--ring)",
+      },
+      borderRadius: {
+        DEFAULT: "0.5rem", 
+      },
+      fontFamily: {
+        outfit: ["outfit", "sans-serif"],
+        montserrat: ["montserrat", "sans-serif"],
+        pd: ["pd", "serif"],
+      },
+      boxShadow: {
+        custom: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+      },
+      keyframes: {
+        "smooth-scroll": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
         },
-        sageGreen: {
-          DEFAULT: "var(--color-sage-green)",
-          light: "var(--color-sage-green-light)",
-          dark: "var(--color-sage-green-dark)",
-        },
-        champagne: {
-          DEFAULT: "var(--color-champagne)",
-          light: "var(--color-champagne-light)",
-          dark: "var(--color-champagne-dark)",
-        },
-        ivory: {
-          DEFAULT: "var(--color-ivory)",
-          light: "var(--color-ivory-light)",
-          dark: "var(--color-ivory-dark)",
-        },
-        blushPink: {
-          DEFAULT: "var(--color-blush-pink)",
-          light: "var(--color-blush-pink-light)",
-          dark: "var(--color-blush-pink-dark)",
-        },
+      },
+      animation: {
+        "smooth-scroll": "smooth-scroll 20s linear infinite",
       },
     },
   },
   plugins: [
+    require("flowbite/plugin")({
+      charts: true,
+    }),
     plugin(function ({ addUtilities, theme, e }) {
-      const colors = theme('colors');
+      const colors = theme("colors");
       const newUtilities = {};
 
-      Object.keys(colors).forEach(color => {
-        if (typeof colors[color] === 'object') {
-          Object.keys(colors[color]).forEach(shade => {
+      Object.keys(colors).forEach((color) => {
+        if (typeof colors[color] === "object") {
+          Object.keys(colors[color]).forEach((shade) => {
             const baseColor = colors[color][shade];
 
-            // Generate opacity levels (0.1, 0.2, 0.3, ..., 1)
             for (let i = 1; i <= 10; i++) {
               const opacity = i * 0.1;
-              const rgbaValue = rgbaColor(baseColor, opacity);
               const className = e(`bg-${color}-${shade}-${Math.round(opacity * 100)}`);
-              
-              // Adding bg utility for background color with opacity
-              newUtilities[className] = {
-                backgroundColor: `rgba(${rgbaValue})`,
-              };
+              newUtilities[className] = { backgroundColor: `rgba(${baseColor}, ${opacity})` };
             }
           });
         }
       });
 
-      addUtilities(newUtilities, ['responsive', 'hover']);
+      addUtilities(newUtilities, ["responsive", "hover"]);
     }),
   ],
 };
