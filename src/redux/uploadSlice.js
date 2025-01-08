@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const uploadSlice = createApi({
   reducerPath: "uploadSlice",
   baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.API_URL}/api/v1`,
+    baseUrl: `${import.meta.env.VITE_API_URL}/api/v1`,
     credentials: "include",
   }),
   endpoints: (builder) => ({

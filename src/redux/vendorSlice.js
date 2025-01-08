@@ -4,7 +4,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const vendorApi = createApi({
   reducerPath: "vendorApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.API_URL}/api/v1/vendors`,
+    baseUrl: `${import.meta.env.VITE_API_URL}/api/v1/vendors`,
     credentials: "include",
   }),
   endpoints: (builder) => ({
