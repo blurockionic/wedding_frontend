@@ -1,8 +1,11 @@
 import React from "react";
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useLogoutMutation } from "../../redux/apiSlice.auth";
 
 const UserDashBoard = () => {
   const location = useLocation(); // Get the current location
+  const navigate = useNavigate();
+  const [logout] = useLogoutMutation();
 
   // Array of links and their paths
   const navItems = [
@@ -11,6 +14,19 @@ const UserDashBoard = () => {
     { name: "FavoriteList", path: "favoriteList" },
     { name: "Settings", path: "settings" },
   ];
+
+  // Function to handle logout
+  const handleLogout = async () => {
+    //
+    const responce = await logout().unwrap();
+    if (responce.data.success) {
+      toast.success(responce.data.message);
+      navigate("/login", { replace: true });
+      return;
+    }
+
+    toast.error(responce.data.message);
+  };
 
   return (
     <div className="bg-gradient-to-r h-screen from-pink-50 via-white to-pink-100">
@@ -37,6 +53,14 @@ const UserDashBoard = () => {
                 </NavLink>
               </li>
             ))}
+            <li>
+              <button
+                onClick={handleLogout}
+                className="w-full px-4 py-3 text-sm bg-pink-500 rounded-md hover:bg-pink-600 focus:outline-none"
+              >
+                Logout
+              </button>
+            </li>
           </ul>
         </div>
 
