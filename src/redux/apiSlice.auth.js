@@ -5,7 +5,7 @@ export const apiAuthSlice = createApi({
   reducerPath: "authSlice",
   
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:4000/api/v1",
+    baseUrl: `${import.meta.env.API_URL}/api/v1`, 
     credentials: "include",
   }),
 
