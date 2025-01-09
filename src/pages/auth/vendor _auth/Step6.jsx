@@ -1,12 +1,8 @@
-import React from "react";
 import { useFormContext } from "react-hook-form";
 
 const Step6 = () => {
   const { getValues } = useFormContext();
-
   const formData = getValues();
-
-
   const renderServices = () => {
     if (formData.service_type) {
       return formData.service_type.join(", ");

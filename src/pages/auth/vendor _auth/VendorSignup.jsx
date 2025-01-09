@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import Step1 from "./Step1";
 import Step2 from "./Step2";
@@ -7,7 +7,7 @@ import Step4 from "./Step4";
 import Step5 from "./Step5";
 import Step6 from "./Step6";
 import { useVendorSignupMutation } from "../../../redux/vendorSlice";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 function VendorRegistration() {
@@ -29,7 +29,7 @@ function VendorRegistration() {
     },
     mode: "onBlur",
   });
-const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [vendorSignup, { isLoading, isError, error }] =
     useVendorSignupMutation();
@@ -41,22 +41,24 @@ const navigate = useNavigate()
 
   const prevStep = () => setCurrentStep((prev) => prev - 1);
 
+  // Handle form submission
   const handleSubmit = async (data) => {
     try {
       console.log("Data submitted: ", data);
-      
+
       // Call the vendorSignup mutation function
       const vendorData = await vendorSignup(data).unwrap();
       console.log("Vendor registration successful: ", vendorData);
       toast.success(vendorData?.message);
-  
-      // navigate('/vendorLogin',{replace:true});
 
-      // Reset form state
+      // Reset form state if needed
       methods.reset();
-      setCurrentStep(1);
+      // setCurrentStep(1);
+      navigate("/vendorLogin", { replace: true });
+      
     } catch (error) {
       console.error("Vendor registration failed: ", error);
+      toast.error("Vendor registration failed. Please try again.");
     }
   };
 

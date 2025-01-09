@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import NavbarRoutesConfig from "../assets/NavabarRouteConfig";
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../redux/authSlice";
 import { useLogoutMutation } from "../redux/apiSlice.auth";
 import {
   brides,

@@ -1,38 +1,32 @@
-import React, { useEffect, useRef, useState } from "react";
-import { GoSearch, GoBell, GoPerson } from "react-icons/go";
-import SearchBar from "../../components/SearchBar";
-import { FiSearch } from "react-icons/fi";
+import { useEffect, useRef, useState } from "react";
+import { GoBell, GoPerson } from "react-icons/go";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../../redux/authSlice";
 import { useVendorLogoutMutation } from "../../redux/vendorSlice";
 import { HiOutlineLanguage } from "react-icons/hi2";
 import { Link } from "react-router-dom";
+import { userlogout } from "../../redux/authSlice";
 
 const VendorHeader = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
- const [vendorLogout] = useVendorLogoutMutation()
+  const [vendorLogout] = useVendorLogoutMutation();
 
+  // handle on logout
   const handleOnLogout = async () => {
-
-    const response = await vendorLogout();
-    if(response.error){
-
-      toast.error(response.error.data.message)
-      
-    }else{
-      toast.success(response.data.message);
+    try {
+      const response = await vendorLogout();
+      const { success, message } = response.data;
+      if (success) {
+        toast.success(message);
+        dispatch(userlogout());
+        navigate("/vendorLogin");
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+      toast.error("Logout failed. Please try again.");
     }
-    
-    dispatch(logout());
-    navigate("/vendorLogin")
-    
-   
-    
-
-    
   };
 
   const [profileOpen, setProfileOpen] = useState(false);
@@ -58,17 +52,13 @@ const VendorHeader = () => {
   return (
     <header className="w-full  bg-[#121e32] customShadow px-6 py-3 flex  items-center justify-end lg:justify-between lg:rounded-md">
       {/* Left: Brand Name */}
-      
-    <h2 className="font-bold text-3xl md:block hidden text-white ">wedd</h2>
+
+      <h2 className="font-bold text-3xl md:block hidden text-white ">wedd</h2>
       {/* Right: Action Buttons */}
       <div className="flex items-center space-x-1">
-        <HiOutlineLanguage
-          className="text-4xl cursor-pointer transition duration-200 ease-in-out p-2 hover:bg-[#2563EB] rounded-full text-white"
-        />
+        <HiOutlineLanguage className="text-4xl cursor-pointer transition duration-200 ease-in-out p-2 hover:bg-[#2563EB] rounded-full text-white" />
 
-        <GoBell
-          className="text-4xl cursor-pointer transition duration-200 ease-in-out p-2 hover:bg-[#2563EB] rounded-full text-white"
-        />
+        <GoBell className="text-4xl cursor-pointer transition duration-200 ease-in-out p-2 hover:bg-[#2563EB] rounded-full text-white" />
 
         {/* Profile Dropdown */}
         <div className="relative" ref={profileRef}>
