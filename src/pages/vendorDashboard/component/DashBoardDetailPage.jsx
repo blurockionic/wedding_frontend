@@ -1,10 +1,14 @@
 import { useParams } from "react-router-dom";
-import { useGetServiceByIdQuery } from "../../../redux/serviceSlice";
+import {
+  useDeleteServiceMutation,
+  useGetServiceByIdQuery,
+} from "../../../redux/serviceSlice";
 import Slider from "../../../components/Slider";
 import Mediatab from "./Tabs/Mediatab";
 import FAQsTab from "./Tabs/FAQsTab";
 import ServiceCreate from "./Tabs/ServiceCreate";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 // Reusable Button Component
 const Button = ({ label, onClick, className, type = "button" }) => (
@@ -19,8 +23,10 @@ const Button = ({ label, onClick, className, type = "button" }) => (
 
 const DashBoardDetailPage = () => {
   const { serviceId } = useParams();
-  const { data, isLoading, isError, error ,refetch} = useGetServiceByIdQuery(serviceId);
+  const { data, isLoading, isError, error, refetch } =
+    useGetServiceByIdQuery(serviceId);
   const [activeTab, setActiveTab] = useState(null);
+  const [deleteService,{refetch:refetchDelete}] = useDeleteServiceMutation();
 
   if (isLoading) {
     return <div className="text-center text-gray-600">Loading...</div>;
@@ -29,7 +35,8 @@ const DashBoardDetailPage = () => {
   if (isError) {
     return (
       <div className="text-center text-red-500">
-        {error?.data?.message || "An error occurred while fetching the service."}
+        {error?.data?.message ||
+          "An error occurred while fetching the service."}
       </div>
     );
   }
@@ -39,8 +46,19 @@ const DashBoardDetailPage = () => {
   const handleClose = () => {
     setActiveTab(null);
     refetch();
+  };
   
-  }
+  const handleDelete = async () => {
+    try {
+      const res = await deleteService(serviceId).unwrap();
+      if (res.success) {
+        toast.success(res.message);
+        refetchDelete();
+      }
+    } catch (error) {
+      toast.error(error?.data?.message || "Failed to delete the service.");
+    }
+  };
 
   return (
     <div className="max-w-screen-xl mx-auto p-6">
@@ -58,7 +76,7 @@ const DashBoardDetailPage = () => {
           </p>
           <p className="text-gray-400 capitalize dark:text-white">
             <span className="font-semibold">Price Range:</span> ₹
-            {service?.min_price} 
+            {service?.min_price}
           </p>
         </div>
       </div>
@@ -68,7 +86,7 @@ const DashBoardDetailPage = () => {
         <h2 className="text-2xl font-bold text-gray-400 capitalize dark:text-white mb-4">
           Media
         </h2>
-        {service?.media?.[0] && (
+        {service?.media?.[0] &&
           ["image_urls", "video_urls"].map(
             (mediaType) =>
               service?.media?.[0]?.[mediaType]?.length > 0 && (
@@ -79,8 +97,7 @@ const DashBoardDetailPage = () => {
                   type={mediaType === "image_urls" ? "image" : "video"}
                 />
               )
-          )
-        )}
+          )}
       </div>
 
       {/* FAQ Section */}
@@ -102,15 +119,14 @@ const DashBoardDetailPage = () => {
       </div>
       <div className="mt-8">
         {activeTab === "media" && (
-          <Mediatab
-            handleCloseMedia={handleClose}
-            serviceId={serviceId}
-          />
+          <Mediatab handleCloseMedia={handleClose} serviceId={serviceId} />
         )}
         {activeTab === "faq" && (
           <FAQsTab handleCloseFAQ={handleClose} serviceId={serviceId} />
         )}
-        {activeTab === "edit" && <ServiceCreate onClose={handleClose} serviceData={data.service} />}
+        {activeTab === "edit" && (
+          <ServiceCreate onClose={handleClose} serviceData={data.service} />
+        )}
       </div>
 
       {/* Buttons Section */}
@@ -138,12 +154,12 @@ const DashBoardDetailPage = () => {
         />
         <Button
           label="Delete Service"
+          onClick={handleDelete}
           className="bg-red-500 dark:bg-red-600 text-white"
         />
       </div>
 
       {/* Conditional Form Rendering */}
-     
     </div>
   );
 };

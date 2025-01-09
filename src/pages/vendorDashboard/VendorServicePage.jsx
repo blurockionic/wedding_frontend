@@ -4,9 +4,10 @@ import ServiceModel from "./component/ServiceModel";
 import { FiSearch } from "react-icons/fi";
 import SearchBar from "../../components/SearchBar";
 import { GoSearch } from "react-icons/go";
-import { useGetServicesQuery } from "../../redux/serviceSlice";
+import { useDeleteServiceMutation, useGetServicesQuery } from "../../redux/serviceSlice";
 import { PiPlus } from "react-icons/pi";
 import { Outlet } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const VendorServicesPage = () => {
   const [showFormPage, setShowFormPage] = useState(false); // Track form page visibility
@@ -14,14 +15,19 @@ const VendorServicesPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10; // Page size
 
+
+  const vendorId =  useSelector((state) => state?.auth?.user?.user?.vendor?.id)
+
+
+
+
   const filters = {
     search: searchTerm,
     page: currentPage,
     limit: pageSize,
+    vendorId
+   
   };
-
-
-  
 
   // Fetch services using the filters object
   const { data, isLoading, error } = useGetServicesQuery(filters);
