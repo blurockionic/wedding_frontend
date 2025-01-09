@@ -1,4 +1,3 @@
-import React from "react";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useLogoutMutation } from "../../redux/apiSlice.auth";
 import { useDispatch } from "react-redux";
@@ -21,17 +20,23 @@ const UserDashBoard = () => {
 
   // Function to handle logout
   const handleLogout = async () => {
-    //
-    const responce = await logout().unwrap();
+    console.log("Logout clicked");
+    try {
+      const response = await logout().unwrap();
+      const {success,message} = response;
+      console.log("Hello", success,message);
 
-    if (responce.data.success) {
-      dispatch(userlogout());
-      toast.success(responce.data.message);
-      navigate("/", { replace: true });
-      return;
+      if (success) {
+        dispatch(userlogout());
+        toast.success(message);
+        navigate("/", { replace: true });
+        return;
+      }
+      toast.error(message);
+    } catch (error) {
+      console.error("Logout failed:", error);
+      toast.error("Logout failed. Please try again.");
     }
-
-    toast.error(responce.data.message);
   };
 
   return (
@@ -59,15 +64,13 @@ const UserDashBoard = () => {
                 </NavLink>
               </li>
             ))}
-            <li>
-              <button
-                onClick={handleLogout}
-                className="w-full px-4 py-3 text-sm bg-pink-500 rounded-md hover:bg-pink-600 focus:outline-none"
-              >
-                Logout
-              </button>
-            </li>
           </ul>
+          <button
+            onClick={() => handleLogout()}
+            className="w-full px-4 py-3 text-sm bg-pink-500 rounded-md hover:bg-pink-600 focus:outline-none z-50"
+          >
+            Logout
+          </button>
         </div>
 
         {/* Outlet for rendering child components */}
