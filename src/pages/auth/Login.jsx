@@ -15,6 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PasswordField } from "../../components/global/inputfield/PasswordField";
 import { useGetCartMutation } from "../../redux/serviceSlice";
 import { hydrateFavorites } from "../../redux/favoriteSlice";
+import useNoAuthRedirect from "../../hooks/useNoAuthRedirect";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -22,6 +23,7 @@ const loginSchema = z.object({
 });
 
 export default function Login() {
+  // useNoAuthRedirect()
   const dispatch = useDispatch();
   const [loginMutation, { isLoading: loading }] = useLoginMutation();
   const [getCartMutation] = useGetCartMutation();
@@ -39,11 +41,16 @@ export default function Login() {
   });
 
   const handleLogin = async (data) => {
-    try {
-      const result = await loginMutation(data).unwrap();
 
-      if (result.user) {
-        dispatch(login({ user: result }));
+
+  
+    
+    try {
+      const {success,user,message} = await loginMutation(data).unwrap();
+
+      console.log(success,user,message);
+      if (success) {
+        dispatch(login(user));
 
         const cart = await getCartMutation();
         const allcart = cart.data.cartItems.map(cartItem => cartItem.service.id)
@@ -53,12 +60,12 @@ export default function Login() {
         dispatch(hydrateFavorites(allcart));
 
         reset();
-        toast.success("Login successful!");
+        toast.success(message);
         const from = location.state?.from || "/";
         navigate(from);
       }
     } catch (error) {
-      toast.error(error || "An unexpected error occurred.", {
+      toast.error(error|| "An unexpected error occurred.", {
         position: "top-right",
         autoClose: 5000,
         theme: "light",
