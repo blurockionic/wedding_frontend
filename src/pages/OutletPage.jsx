@@ -6,7 +6,7 @@ export default function OutletPage() {
   
   
 
-  const isVendorDashboard = location.pathname.includes("/vendordashBoard") || location.pathname.includes("/vendorDashboard");
+  const isVendorDashboard = location.pathname.toLowerCase().includes("/vendordashboard");
 
   return (
     <>

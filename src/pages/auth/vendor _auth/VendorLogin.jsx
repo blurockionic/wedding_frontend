@@ -11,6 +11,7 @@ import { InputField } from "../../../components/global/inputfield/InputField";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PasswordField } from "../../../components/global/inputfield/PasswordField";
+import useNoAuthRedirect from "../../../hooks/useNoAuthRedirect";
 
 const vendorLoginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -18,6 +19,8 @@ const vendorLoginSchema = z.object({
 });
 
 export default function VendorLogin() {
+  useNoAuthRedirect("vendor","/VendorLogin")
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -38,7 +41,7 @@ export default function VendorLogin() {
       const result = await vendorLoginMutation({ email, password }).unwrap();
 
       if (result.vendor) {
-        dispatch(login({ user: result }));
+        dispatch(login(result.vendor));
         reset();
         toast.success("Vendor login successful!");
         navigate("/vendorDashboard", { replace: true });

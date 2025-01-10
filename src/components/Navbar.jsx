@@ -13,7 +13,7 @@ import TopNavbar from "./topnavbar/TopNavbar";
 import CustomText from "./global/text/CustomText";
 
 function Navbar() {
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const {isLoggedIn,user} = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [logoutMutation] = useLogoutMutation();
@@ -224,7 +224,7 @@ function Navbar() {
               )}
             </li>
 
-            {!isLoggedIn ? (
+            {!isLoggedIn  ? (
               <>
                 <li className="lg:inline-block">
                   <NavLink

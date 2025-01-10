@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   useDeleteServiceMutation,
   useGetServiceByIdQuery,
@@ -9,6 +9,7 @@ import FAQsTab from "./Tabs/FAQsTab";
 import ServiceCreate from "./Tabs/ServiceCreate";
 import { useState } from "react";
 import { toast } from "react-toastify";
+
 
 // Reusable Button Component
 const Button = ({ label, onClick, className, type = "button" }) => (
@@ -26,7 +27,8 @@ const DashBoardDetailPage = () => {
   const { data, isLoading, isError, error, refetch } =
     useGetServiceByIdQuery(serviceId);
   const [activeTab, setActiveTab] = useState(null);
-  const [deleteService,{refetch:refetchDelete}] = useDeleteServiceMutation();
+  const [deleteService] = useDeleteServiceMutation();
+  const navigate  = useNavigate()
 
   if (isLoading) {
     return <div className="text-center text-gray-600">Loading...</div>;
@@ -53,10 +55,11 @@ const DashBoardDetailPage = () => {
       const res = await deleteService(serviceId).unwrap();
       if (res.success) {
         toast.success(res.message);
-        refetchDelete();
       }
     } catch (error) {
       toast.error(error?.data?.message || "Failed to delete the service.");
+    }finally{
+      navigate("/VendorDashboard/services")
     }
   };
 

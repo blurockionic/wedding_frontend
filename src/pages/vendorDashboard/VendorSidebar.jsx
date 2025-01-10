@@ -3,9 +3,9 @@ import { FaBars, FaTimes } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 import { links } from "../../static/static";
 
-const VendorSidebar = ({ footer }) => {
+const VendorSidebar = ({ footer, setIsOpen, isOpen }) => {
   const location = useLocation();
-  const [isOpen, setIsOpen] = useState(false);
+
   const [activeTab, setActiveTab] = useState(location.pathname);
 
   const toggleSidebar = () => {
@@ -18,13 +18,14 @@ const VendorSidebar = ({ footer }) => {
 
   return (
     <>
-      {/* Hamburger Button */}
-      <button
-        onClick={toggleSidebar}
-        className="fixed top-1 lg:top-2 left-2 lg:left-4 z-50 bg-gradient-to-b from-blue-700 via-blue-800 to-blue-900 text-gray-100 p-3 rounded-full shadow-lg lg:hidden"
-      >
-        {isOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
-      </button>
+      {!isOpen && (
+        <button
+          onClick={toggleSidebar}
+          className="fixed top-1 lg:top-2 left-2 lg:left-4 z-50 bg-gradient-to-b from-blue-700 via-blue-800 to-blue-900 text-gray-100 p-3 rounded-full shadow-lg lg:hidden"
+        >
+          {isOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+        </button>
+      )}
 
       {/* Sidebar Overlay for Mobile */}
       {isOpen && (

@@ -3,15 +3,29 @@ import { useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useUpdateUserMutation } from "../../redux/apiSlice.auth";
+import {useNavigate } from "react-router-dom";
+import useAuthRedirect from "../../hooks/useAuthRedirect";
 
 const UserProfile = () => {
-  const userData = useSelector((state) => state.auth.user.user.user);
+ 
+const navigate = useNavigate()
+
+  const userData = useSelector((state) => state.auth.user);
+
+  if (userData.role!=="USER") {
+    toast.error("you are not authenticated to aceess this page")
+    navigate("/",{replace:true})
+    return
+    
+  }
+
+ 
 
   console.log(userData);
 
   const [isEditing, setIsEditing] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(userData.profile_pic || "");
+  const [previewUrl, setPreviewUrl] = useState(userData?.profile_pic || "");
 
   const [updateUser, { isLoading }] = useUpdateUserMutation();
 
@@ -217,9 +231,13 @@ const UserProfile = () => {
               {Object.entries(userData)
                 .filter(
                   ([key]) =>
-                    !["id", "refresh_token", "role", "is_verified","cart"].includes(
-                      key.toLowerCase()
-                    )
+                    ![
+                      "id",
+                      "refresh_token",
+                      "role",
+                      "is_verified",
+                      "cart",
+                    ].includes(key.toLowerCase())
                 )
                 .map(([key, value]) => (
                   <div className="grid grid-cols-2 justify-between" key={key}>
@@ -230,11 +248,11 @@ const UserProfile = () => {
                   </div>
                 ))}
 
-              <div className="grid grid-cols-2 justify-between" >
+              <div className="grid grid-cols-2 justify-between">
                 <span className="text-pink-600 capitalize font-semibold">
                   verified
                 </span>
-                <span>{userData.is_verified?"Yes":"No"}</span>
+                <span>{userData.is_verified ? "Yes" : "No"}</span>
               </div>
             </div>
           )}

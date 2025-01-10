@@ -4,14 +4,12 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ErrorBoundary from "./pages/ErrorPage.jsx";
 import UserProfile from "./pages/userDashboard/UserProfile.jsx";
-import UserDashBoard from "./pages/userDashboard/UserDashBoard.jsx";
-
+import UserDashboard from "./pages/userDashboard/UserDashBoard.jsx";
 import Success from "./pages/success/Success.jsx";
 import VendorForgotPassword from "./pages/auth/vendor _auth/VendorForgotPassword.jsx";
 import UserForgotPassword from "./pages/auth/UserForgotPassword.jsx";
 import VendorChangePassword from "./pages/change-password/VendorChangePassword.jsx";
 import ChangePassword from "./pages/auth/ChangePassword.jsx";
-
 
 // Lazy load components
 const OutletPage = lazy(() => import("./pages/OutletPage"));
@@ -27,7 +25,6 @@ const VendorDashboard = lazy(() =>
   import("./pages/vendorDashboard/Dashboard.jsx")
 );
 const Setting = lazy(() => import("./pages/vendorDashboard/Setting.jsx"));
-const Profile = lazy(() => import("./pages/vendorDashboard/Profile.jsx"));
 const Analytics = lazy(() => import("./pages/vendorDashboard/Analytics.jsx"));
 const VendorServicesPage = lazy(() =>
   import("./pages/vendorDashboard/VendorServicePage.jsx")
@@ -48,6 +45,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <OutletPage />,
+
     children: [
       { path: "/", element: <LandingPage /> },
       { path: "/signup", element: <Signup /> },
@@ -63,7 +61,7 @@ const router = createBrowserRouter([
       { path: "/service/:id", element: <ServiceDetail /> },
       {
         path: "/profile",
-        element: <UserDashBoard />,
+        element: <UserDashboard />,
         children: [
           { path: "", index: true, element: <UserProfile /> },
           { path: "favoriteList", element: <FavoriteListPage /> },
@@ -72,16 +70,16 @@ const router = createBrowserRouter([
 
       {
         path: "/VendorDashboard",
-        element: <VendorDashboard />,
+        element: <VendorDashboard/>,
         children: [
           { path: "settings", element: <Setting /> },
-          { path: "profile", element: <Profile /> },
-          { path: "analytics", element: <Analytics /> },
+          { path: "analytics", index: true, element: <Analytics /> },
+          {path:"bookings",element:<>bookings</>},
 
           {
             path: "services",
             children: [
-              { path: "", index: true, element: <VendorServicesPage /> },
+              { path: "",  element: <VendorServicesPage /> },
               {
                 path: "service-details/:serviceId",
                 element: <DashBoardDetailPage />,
