@@ -11,7 +11,7 @@ const ServiceCard = React.memo(({ service}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // Access the favorite list from Redux
+
   const favoriteList = useSelector((state) => {
     return state.favorites.favorites || [];
   });
@@ -37,7 +37,6 @@ const ServiceCard = React.memo(({ service}) => {
       }
       dispatch(toggleFavorite(id));
 
-      console.log(favoriteList);
     } catch (error) {
       console.error("Failed to toggle favorite:", error);
     }

@@ -12,8 +12,10 @@ import { InputField } from "../../components/global/inputfield/InputField";
 import { userSchema } from "../../validationSchema/userRegistrationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FaGoogle } from "react-icons/fa";
+import useProtectAfterLogin from "../../hooks/useProtectAfterLogin";
 
 export default function Signup() {
+  useProtectAfterLogin(["user"],"/")
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isShowPasswordCon, setIsShowPasswordCon] = useState(false);
 const navigate = useNavigate();

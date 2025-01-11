@@ -1,11 +1,10 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ServiceCard from "../../components/ServiceCard";
 import { useGetCartMutation } from "../../redux/serviceSlice";
 import { hydrateFavorites } from "../../redux/favoriteSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function FavoriteList() {
-  // State to store fetched services
   const [favoriteCart, setFavoriteCart] = useState([]);
   const dispatch = useDispatch();
   const [getCart, { isLoading }] = useGetCartMutation({});
@@ -43,7 +42,6 @@ export default function FavoriteList() {
       </div>
     );
   }
-
   return (
     <div className="p-5">
       {/* Favorite List Grid */}

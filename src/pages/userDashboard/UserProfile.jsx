@@ -1,27 +1,23 @@
-import React, { useState } from "react";
+import React, {  useState } from "react";
 import { useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useUpdateUserMutation } from "../../redux/apiSlice.auth";
-import {useNavigate } from "react-router-dom";
-import useAuthRedirect from "../../hooks/useAuthRedirect";
+import { useNavigate } from "react-router-dom";
 
 const UserProfile = () => {
- 
-const navigate = useNavigate()
+  const navigate = useNavigate()
+
+
+
 
   const userData = useSelector((state) => state.auth.user);
-
+  
   if (userData.role!=="USER") {
-    toast.error("you are not authenticated to aceess this page")
-    navigate("/",{replace:true})
+    navigate("/")
     return
     
   }
-
- 
-
-  console.log(userData);
 
   const [isEditing, setIsEditing] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);

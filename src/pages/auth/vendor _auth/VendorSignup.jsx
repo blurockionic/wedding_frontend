@@ -9,8 +9,12 @@ import Step6 from "./Step6";
 import { useVendorSignupMutation } from "../../../redux/vendorSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import useProtectAfterLogin from "../../../hooks/useProtectAfterLogin";
 
 function VendorRegistration() {
+
+  useProtectAfterLogin(["vendor"],"/VendorDashboard")
+
   const [currentStep, setCurrentStep] = useState(1);
 
   const methods = useForm({

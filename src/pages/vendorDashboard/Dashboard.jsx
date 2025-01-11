@@ -2,12 +2,10 @@ import VendorSidebar from "./VendorSidebar";
 import VendorHeader from "./VendorHeader";
 import { Outlet } from "react-router-dom";
 import { useState } from "react";
-import useAuthRedirect from "../../hooks/useAuthRedirect";
-import useNoAuthRedirect from "../../hooks/useNoAuthRedirect";
+
 
 const VendorDashboard = () => {
-  // useNoAuthRedirect("user","/VendorLogin");
-  useAuthRedirect()
+ 
   
   const [isOpen, setIsOpen] = useState(false);
 

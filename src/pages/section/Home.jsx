@@ -92,10 +92,10 @@ export default function Home() {
             data-aos-delay="400"
             data-aos-once="true"
           >
-            <span class="md:text-6xl lg:text-[72px] md:ms-[62px] lg:ms-0">
+            <span className="md:text-6xl lg:text-[72px] md:ms-[62px] lg:ms-0">
               Plan your <span className="text-[#ffcdf8]">Dream Wedding</span>
             </span>
-            <span class="lg:p-0 md:ps-[264px] md:mt-[-58px] lg:mt-0 md:text-6xl lg:text-[72px]">
+            <span className="lg:p-0 md:ps-[264px] md:mt-[-58px] lg:mt-0 md:text-6xl lg:text-[72px]">
               with us
             </span>
           </p>

@@ -3,13 +3,10 @@ import { useLogoutMutation } from "../../redux/apiSlice.auth";
 import { useDispatch } from "react-redux";
 import { userlogout } from "../../redux/authSlice";
 import { toast } from "react-toastify";
-import useNoAuthRedirect from "../../hooks/useNoAuthRedirect";
-import useAuthRedirect from "../../hooks/useAuthRedirect";
+
 
 const UserDashBoard = () => {
 
-
- useAuthRedirect()
 
   const location = useLocation(); // Get the current location
   const navigate = useNavigate();

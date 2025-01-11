@@ -15,7 +15,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PasswordField } from "../../components/global/inputfield/PasswordField";
 import { useGetCartMutation } from "../../redux/serviceSlice";
 import { hydrateFavorites } from "../../redux/favoriteSlice";
-import useNoAuthRedirect from "../../hooks/useNoAuthRedirect";
+import useProtectAfterLogin from "../../hooks/useProtectAfterLogin";
+
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -23,7 +24,9 @@ const loginSchema = z.object({
 });
 
 export default function Login() {
-  // useNoAuthRedirect()
+
+  useProtectAfterLogin(["user"],"/")
+
   const dispatch = useDispatch();
   const [loginMutation, { isLoading: loading }] = useLoginMutation();
   const [getCartMutation] = useGetCartMutation();
@@ -41,37 +44,41 @@ export default function Login() {
   });
 
   const handleLogin = async (data) => {
+  try {
+    // Make the login request
+    const { success, user, message } = await loginMutation(data).unwrap();
 
 
-  
-    
-    try {
-      const {success,user,message} = await loginMutation(data).unwrap();
+    if (success) {
+      dispatch(login(user));
 
-      console.log(success,user,message);
-      if (success) {
-        dispatch(login(user));
+      // Fetch user's cart data after successful login
+      const cart = await getCartMutation();
+      const allCart = cart.data.cartItems.map(
+        (cartItem) => cartItem.serviceId
+      );
 
-        const cart = await getCartMutation();
-        const allcart = cart.data.cartItems.map(cartItem => cartItem.service.id)
-        
-        
-        console.log(allcart)
-        dispatch(hydrateFavorites(allcart));
+      dispatch(hydrateFavorites(allCart));
 
-        reset();
-        toast.success(message);
-        const from = location.state?.from || "/";
-        navigate(from);
-      }
-    } catch (error) {
-      toast.error(error|| "An unexpected error occurred.", {
-        position: "top-right",
-        autoClose: 5000,
-        theme: "light",
-      });
+      // Reset form and navigate to the previous page or default home page
+      reset();
+      toast.success(message); // Display success message from the backend
+
+      const from = location.state?.from || "/";
+      navigate(from);
     }
-  };
+  } catch (error) {
+    // Display the exact error message from the backend
+    const errorMessage = error?.data?.message || error.message || "An unexpected error occurred.";
+
+    toast.error(errorMessage, {
+      position: "top-right",
+      autoClose: 5000,
+      theme: "light",
+    });
+  }
+};
+
 
   const handleGoogleLogin = () => {
     toast.info("Google login is not yet implemented.", {
@@ -139,11 +146,11 @@ export default function Login() {
             <div className="flex flex-col items-center justify-center w-full">
               <CustomButton
                 type="submit"
-                text="Login"
+                text={loading ? "Logging in..." : "Login"}
                 disabled={loading}
-                className={`w-full ${loading ? "bg-muted" : "bg-primary"} 
-                  disabled:cursor-not-allowed cursor-pointer border-2 hover:bg-dustyRose
-                  text-white font-bold py-2 px-4 rounded transition`}
+                className={`w-full ${loading ? "bg-forground-muted" : "bg-primary"} 
+    disabled:cursor-not-allowed cursor-pointer border-2 hover:bg-dustyRose
+    text-muted font-bold py-2 px-4 rounded transition`}
               />
 
               <div className="mt-4 flex items-center justify-between w-full gap-x-5">

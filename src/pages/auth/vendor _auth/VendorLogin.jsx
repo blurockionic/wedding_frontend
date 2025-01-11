@@ -11,7 +11,7 @@ import { InputField } from "../../../components/global/inputfield/InputField";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PasswordField } from "../../../components/global/inputfield/PasswordField";
-import useNoAuthRedirect from "../../../hooks/useNoAuthRedirect";
+import useProtectAfterLogin from "../../../hooks/useProtectAfterLogin";
 
 const vendorLoginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -19,7 +19,7 @@ const vendorLoginSchema = z.object({
 });
 
 export default function VendorLogin() {
-  useNoAuthRedirect("vendor","/VendorLogin")
+  useProtectAfterLogin(["vendor"],"/VendorDashboard")
   
   const dispatch = useDispatch();
   const navigate = useNavigate();
