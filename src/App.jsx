@@ -79,7 +79,7 @@ const router = createBrowserRouter([
           />
         ), // Protected route
         children: [
-          { path: "userProfile", index: true, element: <UserProfile /> },
+          { path: "", index: true, element: <UserProfile /> },
           { path: "favoriteList", element: <FavoriteListPage /> },
         ],
       },
