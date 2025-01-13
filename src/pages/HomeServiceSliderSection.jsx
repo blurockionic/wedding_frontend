@@ -33,14 +33,14 @@ export default function TopServiceSliderSection() {
   }
 
   // Handle error state
-  if (photoError || cateringError) {
-    return (
-      <div>
-        Error loading services:{" "}
-        {photoError?.message || cateringError?.message}
-      </div>
-    );
-  }
+  // if (photoError || cateringError) {
+  //   return (
+  //     <div>
+  //       Error loading services:{" "}
+  //       {photoError?.message || cateringError?.message}
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className=" w-[5xl] mx-auto bg-slate-100 ">
@@ -53,7 +53,7 @@ export default function TopServiceSliderSection() {
       )}
 
       
-      {cateringData && (
+      { cateringData && (
         <LandingPageSlider
           title="Top catering services"
           services={cateringData}

@@ -26,7 +26,7 @@ export default function Contact() {
 
   return (
     <div
-      className="flex flex-col md:flex-row gap-8 bg-ivory p-6 md:py-32 md:px-40 relative"
+      className="flex  flex-col md:flex-row gap-8 bg-muted p-6 md:py-32 md:px-40 relative"
       data-aos="fade-in"
       data-aos-delay="200"
     >

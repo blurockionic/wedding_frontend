@@ -7,7 +7,7 @@ import LazySection from "../components/LazySection";
 import Footer from "./Footer";
 import WeddingEvent from "./section/WeddingEvent";
 import ServicesPage from "./ServicePage";
-import TopServiceSliderSection from "./TopServiceSliderSection";
+import TopServiceSliderSection from "./HomeServiceSliderSection";
 
 export default function LandingPage() {
   return (
