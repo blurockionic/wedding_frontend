@@ -9,6 +9,7 @@ import { useSearchParams } from "react-router-dom";
 import { z } from "zod"; // Using Zod for validation
 import { useChangePasswordMutation } from "../../redux/apiSlice.auth";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "react-toastify";
 
 // Zod validation schema for form
 const changePasswordSchema = z
@@ -46,28 +47,26 @@ const ChangePassword = () => {
   });
 
   const handleChangePassword = async (data) => {
-    const { confirmPassword } = data;
-    
+    const{confirmPassword}=data;
 
     try {
-      // Perform password change mutation
       const res = await userChangePasswordMutation({
         confirmPassword,
         token,
       }).unwrap();
 
-      if (res.error) {
-        console.error(res.error);
-      } else {
-        console.log("Password changed successfully");
-        reset(); // Reset form on success
-        navigate("/success", {
-          state: { message: "Your password has been changed successfully" },
-        });
+      if (res.success) {
+        toast.success(
+          res.message || "Your password has been changed successfully."
+        );
+        reset();
+        setIsShowPasswordCon(false)
+        setIsShowPassword(false)
+        navigate("/Success")
       }
     } catch (error) {
-      console.error("Error changing password:", error);
-      toast.error("Something went wrong. Please try again.");
+     
+      toast.error(res.message || "Failed to change password.");
     }
   };
 
