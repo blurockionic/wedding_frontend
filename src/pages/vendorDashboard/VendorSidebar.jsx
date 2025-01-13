@@ -6,7 +6,7 @@ import { links } from "../../static/static";
 const VendorSidebar = ({ footer, setIsOpen, isOpen }) => {
   const location = useLocation();
 
-  const [activeTab, setActiveTab] = useState(location.pathname);
+  const [activeTab, setActiveTab] = useState("");
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);

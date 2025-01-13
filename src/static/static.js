@@ -47,7 +47,7 @@ export const grooms = ["Sherwani", "Men's Grooming", "Men's Accessories"];
 
 export const links = [
   { label: "Dashboard", href: "analytics", icon: MdOutlineAnalytics },
-  { label: "Services", href: "services", icon:  MdDesignServices },
+  { label: "Services", href: "", icon:  MdDesignServices },
   { label: "Bookings/Inquiries", href: "bookings", icon: IoBookmarksOutline },
 
 

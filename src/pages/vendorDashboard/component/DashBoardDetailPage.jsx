@@ -59,7 +59,7 @@ const DashBoardDetailPage = () => {
     } catch (error) {
       toast.error(error?.data?.message || "Failed to delete the service.");
     }finally{
-      navigate("/VendorDashboard/services")
+      navigate("/VendorDashboard")
     }
   };
 
