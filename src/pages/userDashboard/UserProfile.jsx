@@ -24,6 +24,7 @@ const UserProfile = () => {
   const [previewUrl, setPreviewUrl] = useState(userData?.profile_pic || "");
 
   const [updateUser, { isLoading }] = useUpdateUserMutation();
+  console.log(userData.wedding_date)
 
   const {
     register,
@@ -35,7 +36,7 @@ const UserProfile = () => {
       user_name: userData.user_name || "",
       email: userData.email || "",
       phone_number: userData.phone_number || "",
-      wedding_date: userData.wedding_date
+      wedding_date: userData?.wedding_date
         ? new Date(userData.wedding_date).toISOString().split("T")[0]
         : "",
       wedding_location: userData.wedding_location || "",
