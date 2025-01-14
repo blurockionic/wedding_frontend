@@ -260,10 +260,10 @@ function Navbar() {
                   className="py-1 md:py:0 lg:py-0 px-2 md:px-0 lg:px-0 flex items-center justify-start gap-x-2 rounded-full border-2 border-ring cursor-pointer "
                 >
                   <img
-                    src={user.profile_photo||user.user_name
+                    src={user?.profile_photo||user?.user_name
                       .split(" ")
                       .map((name) => name.charAt(0).toUpperCase())
-                      .join("")  }
+                      .join("")}
                     alt="Profile"
                     className="w-8 h-8 rounded-full"
                   />
