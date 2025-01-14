@@ -13,7 +13,12 @@ function ServicesPage() {
   const searchLocation = queryParams.get("location");
 
   
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState({
+    location:searchLocation,
+    service_type:searchType
+
+
+  });
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for mobile sidebar
   const [currentPage, setCurrentPage] = useState(1); // Current page
   const itemsPerPage = 10; // Items per page

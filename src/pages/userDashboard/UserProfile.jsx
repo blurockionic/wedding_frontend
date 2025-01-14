@@ -1,22 +1,22 @@
-import React, {  useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useUpdateUserMutation } from "../../redux/apiSlice.auth";
+import { userUpdate } from "../../redux/authSlice";
 import { useNavigate } from "react-router-dom";
+import CustomButton from "../../components/global/button/CustomButton";
+import { FaRegThumbsDown, FaRegThumbsUp } from "react-icons/fa";
 
 const UserProfile = () => {
-  const navigate = useNavigate()
-
-
-
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const userData = useSelector((state) => state.auth.user);
-  
-  if (userData.role!=="USER") {
-    navigate("/")
-    return
-    
+
+  if (userData.role !== "USER") {
+    navigate("/");
+    return;
   }
 
   const [isEditing, setIsEditing] = useState(false);
@@ -32,12 +32,14 @@ const UserProfile = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      first_name: userData.first_name || "",
-      last_name: userData.last_name || "",
+      user_name: userData.user_name || "",
       email: userData.email || "",
       phone_number: userData.phone_number || "",
-      wedding_date: userData.wedding_date || "",
+      wedding_date: userData.wedding_date
+        ? new Date(userData.wedding_date).toISOString().split("T")[0]
+        : "",
       wedding_location: userData.wedding_location || "",
+      profile_photo: userData.profile_photo || "",
     },
   });
 
@@ -65,25 +67,33 @@ const UserProfile = () => {
   const onSubmit = async (data) => {
     const formData = new FormData();
     for (const key in data) {
-      formData.append(key, data[key]);
+      const val =
+        key === "wedding_date" && data[key]
+          ? new Date(data[key]).toISOString()
+          : data[key];
+
+      formData.append(key, val);
     }
 
     if (selectedFile) {
-      formData.append("file", selectedFile);
-    }
-
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}: ${value}`);
+      formData.append("profile_photo", selectedFile);
     }
 
     try {
       const updatedData = await updateUser(formData).unwrap();
-      if (updatedData) {
-        toast.success("User updated successfully");
-        setIsEditing(false);
+
+      toast.success(updatedData.message);
+
+      try {
+        dispatch(userUpdate(updatedData.user));
+      } catch (error) {
+        console.error("Dispatch error:", error);
+        toast.error("Failed to update user data in the store.");
       }
     } catch (error) {
-      toast.error("Error updating user data. Please try again.");
+      toast.error(error.data.message || "Failed to update user.");
+    } finally {
+      setIsEditing(false);
     }
   };
 
@@ -94,11 +104,11 @@ const UserProfile = () => {
 
   const renderProfileInfo = () => {
     const fields = [
-      "first_name",
-      "last_name",
+      "user_name",
       "phone_number",
       "wedding_date",
       "wedding_location",
+      "email",
     ];
 
     return (
@@ -110,6 +120,7 @@ const UserProfile = () => {
             </label>
             <input
               id={field}
+              autoFocus={isEditing && field === "user_name"}
               {...register(field, {
                 required:
                   field !== "email" &&
@@ -124,8 +135,8 @@ const UserProfile = () => {
                     : undefined,
               })}
               type={field === "wedding_date" ? "date" : "text"}
-              className="w-full border border-pink-200 rounded p-2"
-              disabled={!isEditing}
+              className="disabled:cursor-not-allowed cursor-pointer w-full border  border-pink-200 rounded p-2"
+              disabled={field === "email" || !isEditing}
             />
             {errors[field] && (
               <p className="text-sm text-red-500">{errors[field].message}</p>
@@ -134,22 +145,6 @@ const UserProfile = () => {
         ))}
       </div>
     );
-  };
-
-  const handleUpload = async () => {
-    if (selectedFile) {
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-
-      try {
-        const response = await uploadMutation(formData).unwrap();
-        toast.success("File uploaded successfully");
-      } catch (error) {
-        toast.error("File upload failed. Please try again.");
-      }
-    } else {
-      toast.warning("Please select a file to upload.");
-    }
   };
 
   return (
@@ -172,7 +167,7 @@ const UserProfile = () => {
           </h2>
           <div className="w-24 sm:w-32 h-24 sm:h-32 rounded-full overflow-hidden border-4 border-pink-300 mb-4">
             <img
-              src={previewUrl || "/wedding-placeholder.png"}
+              src={isEditing ? previewUrl : userData?.profile_photo}
               alt="Profile"
               className="w-full h-full object-cover"
             />
@@ -199,72 +194,53 @@ const UserProfile = () => {
           )}
         </div>
 
-        <div className="w-full col-span-2 bg-white rounded-lg p-6 border border-pink-200">
-          <h2 className="text-xl sm:text-2xl font-serif text-pink-600 mb-4">
-            Personal Information
-          </h2>
-          {isEditing ? (
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              {renderProfileInfo()}
-              <div className="flex justify-end space-x-4 mt-6">
-                <button
-                  type="button"
-                  className="text-sm font-semibold text-gray-600 hover:text-gray-800"
-                  onClick={handleCancel}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-6 py-2 text-sm font-semibold text-white bg-pink-600 rounded hover:bg-pink-700"
-                >
-                  Save Changes
-                </button>
-              </div>
-            </form>
-          ) : (
-            <div className="space-y-4">
-              {Object.entries(userData)
-                .filter(
-                  ([key]) =>
-                    ![
-                      "id",
-                      "refresh_token",
-                      "role",
-                      "is_verified",
-                      "cart",
-                    ].includes(key.toLowerCase())
-                )
-                .map(([key, value]) => (
-                  <div className="grid grid-cols-2 justify-between" key={key}>
-                    <span className="text-pink-600 capitalize font-semibold">
-                      {key.replace("_", " ")}:
-                    </span>
-                    <span>{value}</span>
-                  </div>
-                ))}
-
-              <div className="grid grid-cols-2 justify-between">
-                <span className="text-pink-600 capitalize font-semibold">
-                  verified
-                </span>
-                <span>{userData.is_verified ? "Yes" : "No"}</span>
-              </div>
+        <div
+          className={`w-full col-span-2 ${
+            isEditing ? "bg-green-100 border-dashed border-4" : "bg-white"
+          } rounded-lg p-6 border border-pink-200`}
+        >
+          <div className="text-xl flex justify-between sm:text-2xl font-serif text-pink-600 mb-4">
+            <span> Personal Information</span>
+            <span className="flex">
+              {" "}
+              Verified: {"  "}
+              {userData.is_verified ? (
+                <FaRegThumbsUp />
+              ) : (
+                <FaRegThumbsDown />
+              )}{" "}
+            </span>
+          </div>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {renderProfileInfo()}
+            <div className="flex justify-end space-x-4 mt-6">
+              {isEditing ? (
+                <>
+                  <button
+                    type="button"
+                    className="text-sm font-semibold text-gray-600 hover:text-gray-800"
+                    onClick={handleCancel}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-6 py-2 text-sm font-semibold text-white bg-pink-600 rounded hover:bg-pink-700"
+                  >
+                    {isLoading ? "updating..." : "Save Changes"}
+                  </button>
+                </>
+              ) : (
+                <CustomButton
+                  onClick={() => setIsEditing(true)}
+                  text=" Edit Profile"
+                  className={`px-6 py-2 text-sm font-semibold text-white bg-pink-600 rounded hover:bg-pink-700`}
+                />
+              )}
             </div>
-          )}
+          </form>
         </div>
       </div>
-
-      {!isEditing && (
-        <div className="text-center mt-8">
-          <button
-            onClick={() => setIsEditing(true)}
-            className="px-6 py-2 text-sm font-semibold text-white bg-pink-600 rounded hover:bg-pink-700"
-          >
-            Edit Profile
-          </button>
-        </div>
-      )}
     </div>
   );
 };

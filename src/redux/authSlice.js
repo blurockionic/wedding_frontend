@@ -18,8 +18,13 @@ const authSlice = createSlice({
       state.isLoggedIn = false;
       state.user = null;
     },
+    userUpdate:(state,action)=>{
+      state.user = action.payload;
+    }
   },
 });
 
-export const { login, userlogout } = authSlice.actions;
+export const { login, userlogout ,userUpdate
+  
+} = authSlice.actions;
 export default authSlice;
