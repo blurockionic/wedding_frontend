@@ -327,7 +327,7 @@ function ServiceDetail() {
 
           {/* Conditional Modal */}
           {!isLoggedIn && (
-            <div className="bg-yellow-100 z-30 p-4 rounded-lg text-center fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div className="bg-yellow-100 z-20 p-4 rounded-lg text-center fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
               <p className="text-xl font-medium text-red-600 mb-4">
                 Please login to view details or contact the vendor.
               </p>
