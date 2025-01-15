@@ -13,7 +13,7 @@ export default function OutletPage() {
     
       {!isVendorDashboard && <Navbar />}
       
-      <div className="">
+      <div className="z-30">
         <Outlet />
       </div>
     </>

@@ -87,15 +87,15 @@ export default function Home() {
           </p>
 
           <p
-            className="pb-28 text-3xl md:text-7xl font-bold text-white flex flex-col items-center justify-center"
+            className="pb-20  text-3xl md:text-6xl lg:text-7xl font-bold text-white flex flex-col items-center text-center"
             data-aos="fade-up"
             data-aos-delay="400"
             data-aos-once="true"
           >
-            <span className="md:text-6xl lg:text-[72px] md:ms-[62px] lg:ms-0">
+            <span className="text-4xl md:text-5xl lg:text-[72px]">
               Plan your <span className="text-[#ffcdf8]">Dream Wedding</span>
             </span>
-            <span className="lg:p-0 md:ps-[264px] md:mt-[-58px] lg:mt-0 md:text-6xl lg:text-[72px]">
+            <span className="mt-2 mb-10 text-4xl md:text-5xl lg:text-[72px]">
               with us
             </span>
           </p>
@@ -104,7 +104,7 @@ export default function Home() {
           <CustomButton
             leftIcon={<GoSearch size={20} className="text-white" />}
             text="Search"
-            className="w-1/2 lg:hidden bg-[#fb3966] px-10 py-2 rounded text-white md:ms-[-50px] lg-ms-0"
+            className="w-1/2 lg:hidden bg-[#fb3966] px-10 py-2 rounded text-white md:ms-[-50px] lg-ms-0 "
             onClick={handleNavigate}
           >
             Discover
