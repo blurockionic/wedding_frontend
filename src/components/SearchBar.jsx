@@ -57,8 +57,8 @@ const SearchBar = ({
     <div
       className={`relative flex items-center justify-start 
         border-2 
-        ${isFocused ? "border-blue-500" : ""} 
-        bg-gray-700 text-gray-300 ${rounded} transition-all ease-in-out duration-300 ${width}`}
+        ${isFocused ? "border-primary" : ""} 
+        bg-background text-primary ${rounded} transition-all ease-in-out duration-300 ${width}`}
     >
       {/* Input Section */}
       <input
@@ -69,7 +69,7 @@ const SearchBar = ({
         onFocus={handleFocus}
         onBlur={handleBlur}
         placeholder={query.length === 0 ? placeholder : ""}
-        className={`flex-grow py-1 lg:px-4 transition-all ease-in-out duration-300 md:pl-10 bg-transparent font-thin placeholder-gray-500 focus:outline-none ${rounded}`}
+        className={`flex-grow py-1 lg:px-4 transition-all ease-in-out duration-300 md:pl-10 bg-transparent font-semibold placeholder-gray-500 focus:outline-none ${rounded}`}
         aria-label="Search"
       />
 

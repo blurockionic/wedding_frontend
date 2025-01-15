@@ -42,7 +42,7 @@ const VendorServicesPage = () => {
   };
 
   return (
-    <div className="max-w-7xl  mx-auto p-2">
+    <div className="max-w-7xl  mx-auto p-6 m-2 rounded-md bg-secondary ">
       {/* Top Bar Section */}
       <div
         className={`flex justify-between items-center my-6 ${
@@ -51,7 +51,7 @@ const VendorServicesPage = () => {
       >
         {/* Search Bar */}
         {!showFormPage && (
-          <div className="lg:flex text-lg font-bold text-white">
+          <div className="lg:flex text-lg">
             <div className="flex items-center space-x-4">
               <div className="transition-all duration-300 ease-in-out  w-20">
                 <SearchBar
@@ -74,7 +74,7 @@ const VendorServicesPage = () => {
           <button
             onClick={() => setShowFormPage(true)}
             title="Click to add a new service"
-            className="flex items-center px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
+            className="flex items-center px-6 py-2 bg-primary text-white rounded-lg hover:bg-pink-700 transition duration-300"
           >
             <PiPlus size={20} className="md:mr-2" />
             <span className="hidden md:block">Add Service</span>
@@ -87,13 +87,13 @@ const VendorServicesPage = () => {
         <div className="relative flex flex-col justify-between h-[79vh] md:h-[70vh]">
           <div className="mb-4 border-b border-gray-300">
             <div className="flex space-x-4">
-              <button className="px-4 py-2 text-gray-600 hover:text-blue-600 transition duration-200">
+              <button className="px-4 py-2 text-foreground hover:text-primary transition duration-200">
                 All Services
               </button>
-              <button className="px-4 py-2 text-gray-600 hover:text-blue-600 transition duration-200">
+              <button className="px-4 py-2 text-foreground hover:text-primary transition duration-200">
                 Active Services
               </button>
-              <button className="px-4 py-2 text-gray-600 hover:text-blue-600 transition duration-200">
+              <button className="px-4 py-2 text-foreground hover:text-primary transition duration-200">
                 Archived Services
               </button>
             </div>
@@ -114,7 +114,7 @@ const VendorServicesPage = () => {
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="px-3 py-1 bg-gray-400 text-gray-700 rounded-md hover:bg-gray-500 disabled:bg-gray-300 transition duration-200"
+              className="px-3 py-1 bg-primary text-background rounded-md hover:bg-pink-700 disabled:bg-pink-300 transition duration-200 disabled:cursor-not-allowed"
             >
               Previous
             </button>
@@ -126,7 +126,7 @@ const VendorServicesPage = () => {
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage * pageSize >= data?.totalCount}
-              className="px-3 py-1 bg-gray-400 text-gray-700 rounded-md hover:bg-gray-500 disabled:bg-gray-300 transition duration-200"
+              className="px-3 py-1 bg-primary text-background rounded-md hover:bg-pink-700 disabled:bg-gray-300 transition duration-200"
             >
               Next
             </button>

@@ -24,7 +24,6 @@ const SubHeader = () => {
   const [copyLink, setCopyLink] = useState("");
   const [showCalendar, setShowCalendar] = useState(false);
   const [showMore, setShowMore] = useState(false);
-  const [dataset, setDataSet] = useState([]);
   const [queryParams, setQueryParams] = useState({
     age: "",
     gender: "",
@@ -56,67 +55,7 @@ const SubHeader = () => {
     });
   }, [searchParams]);
 
-  // useEffect(()=>{
-  //   const fetchData = async (preferences: any) => {
-  //     const res = await fetchDataset(preferences);
-  //     console.log(res);
-  //     setDataSet(res);
-  //   };
-
-  // },[queryParams])
-
-  //   useEffect(() => {
-  //     // const savedPreferences = getUserPreferences();
-
-  //     // Set user preferences and date from saved preferences
-  //     if (savedPreferences) {
-  //       setUserPrefrences(savedPreferences);
-  //       setDate({ from: savedPreferences.from, to: savedPreferences.to });
-  //     }
-
-  //     const fetchData = async (preferences) => {
-  //       const res = await fetchDataset(preferences);
-  //       console.log(res);
-  //       setDataSet(res);
-  //     };
-
-  //     if (savedPreferences) {
-  //       // Fetch data using saved preferences if queryParams is not present
-  //       fetchData(savedPreferences);
-  //     }
-  //   }, []);
-
-  // //push into data int url
-  //   useEffect(() => {
-  //     const params = new URLSearchParams();
-
-  //     if (userPrefernces.age) params.append("age", userPrefernces.age.toString());
-  //     if (userPrefernces.gender) params.append("gender", userPrefernces.gender);
-
-  //     // Convert the Date objects to a string format (ISO or custom format)
-  //     if (userPrefernces.from)
-  //       params.append("from", userPrefernces.from);
-  //     if (userPrefernces.to) params.append("to", userPrefernces.to);
-
-  //     // Dynamically update the URL with query parameters
-  //     window.history.pushState(
-  //       {},
-  //       "",
-  //       `${location.pathname}?${params.toString()}`
-  //     );
-
-  //     setCopyLink(`${baseUrl}${location.pathname}?${params.toString()}`);
-  //   }, [userPrefernces]);
-
-  //   //save userpreference
-  //   useEffect(() => {
-  //     if (isUpdate) {
-  //       //cookie
-  //       saveUserPreferences(userPrefernces);
-  //       setIsUpdate(true);
-  //     }
-  //   }, [isUpdate, userPrefernces]);
-
+  
   const toggleModal = () => {
     setModalOpen(!isModalOpen);
   };
@@ -143,17 +82,7 @@ const SubHeader = () => {
   };
   console.log(userPrefernces);
 
-  const handleOnChangeFilterGender = (value) => {
-    setIsUpdate(true);
-    setUserPrefrences((prev) => ({ ...prev, gender: value }));
-    // setFilters((prev) => ({ ...prev, gender: value }));
-  };
-
-  const handleOnChangeFilterAge = (value) => {
-    setIsUpdate(true);
-    setUserPrefrences((prev) => ({ ...prev, age: value }));
-    // setFilters((prev) => ({ ...prev, age: value }));
-  };
+ 
 
   //share
   const toggleModalShare = () => {
@@ -202,42 +131,11 @@ const SubHeader = () => {
     // setDataSet(l);
   };
 
-  // const onChange =(newDate)=>{
-
-  //     setSelectedDate(newDate);
-  //     handleOnSelect(newDate);
-
-  // }
+  
 
   return (
     <div className="w-full flex lg:items-center justify-between p-4 bg-gray-100 dark:bg-gray-400">
       <div className="w-full flex flex-col lg:flex-row items-center lg:items-center gap-y-3 lg:gap-x-2">
-        <div className="w-full flex justify-center lg:justify-end items-center gap-x-3">
-          <select
-            value={userPrefernces.age}
-            onChange={(e) => handleOnChangeFilterAge(e.target.value)}
-            className="w-full lg:w-[125px] dark:bg-card dark:text-card-foreground p-2 rounded-md"
-          >
-            <option value="" disabled>
-              Age
-            </option>
-            <option value="15-25">15-25</option>
-            <option value=">25">&gt;25</option>
-          </select>
-
-          <select
-            value={userPrefernces.gender}
-            onChange={(e) => handleOnChangeFilterGender(e.target.value)}
-            className="w-full lg:w-[150px] dark:bg-card dark:text-card-foreground p-2 rounded-md"
-          >
-            <option value="" disabled>
-              Gender
-            </option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-          </select>
-        </div>
-
         <div className="w-full lg:w-auto flex gap-x-2">
           {/* Date Picker Button */}
           <div className="relative w-full lg:w-auto flex gap-x-2">

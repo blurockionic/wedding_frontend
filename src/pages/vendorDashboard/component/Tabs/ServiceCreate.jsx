@@ -35,30 +35,24 @@ const ServiceCreate = ({ onClose, serviceData }) => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    
-    
     try {
       const preparedData = {
         ...data,
         min_price: Number(data.min_price),
       };
-      
+
       let res;
       if (serviceData) {
-        
         res = await updateServiceMutation({
           preparedData,
-          id: serviceData.id
-          
+          id: serviceData.id,
         }).unwrap();
-       
-      
+
         toast.success(res.message);
       } else {
         // Create new service
         res = await createServiceMutation(preparedData).unwrap();
         if (res?.success) {
-          
           navigate(`service-details/${res?.service?.id || serviceData?.id}`);
         }
       }
@@ -76,7 +70,7 @@ const ServiceCreate = ({ onClose, serviceData }) => {
     // Prepopulate form if serviceData exists
     if (serviceData) {
       console.log(serviceData);
-      
+
       const { service_name, description, min_price, service_type } =
         serviceData;
       setValue("service_name", service_name);
@@ -116,23 +110,27 @@ const ServiceCreate = ({ onClose, serviceData }) => {
   };
 
   return (
-    <div className="w-full p-6 bg-gradient-to-br from-slate-900 to-slate-600">
-      <div className="bg-transparent p-8 max-w-4xl mx-auto rounded-lg shadow-lg bg-pink-200 bg-opacity-10 backdrop-blur-lg border border-gray-100">
-        <h2 className="text-4xl font-bold text-center text-white mb-8">
-          {serviceData ? "Update Service" : "Create Service"}
-        </h2>
-
-        <button
+    <>
+      <div className="flex justify-end mx-28"> 
+      <button
           onClick={onClose}
-          className="absolute top-3 right-3 bg-gray-700 text-white rounded-full p-2 hover:bg-gray-600 transition"
+          className="relative top-3 left-0 bg-primary text-background rounded-full p-2 hover:bg-gray-600 transition"
         >
           <MdClose className="w-5 h-5" />
         </button>
+      </div>
+      
+      <div className="bg-background p-8 max-w-4xl mx-auto rounded-lg shadow-lg  border border-gray-100">
+        <h2 className="text-4xl font-bold text-center text-foreground mb-8">
+          {serviceData ? "Update Service" : "Create Service"}
+        </h2>
+
+        
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Service Name Field */}
           <div>
-            <label className="block text-lg font-medium text-white">
+            <label className="block text-lg font-medium text-foreground">
               Service Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -141,8 +139,7 @@ const ServiceCreate = ({ onClose, serviceData }) => {
               })}
               type="text"
               placeholder="Enter service name"
-              className="mt-2 w-full px-4 py-3 bg-gray-800 text-gray-300 border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
-              
+              className="mt-2 w-full px-4 py-3 bg-secondary text-foreground border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
             />
             {errors.service_name && (
               <span className="text-red-500 text-sm">
@@ -153,7 +150,7 @@ const ServiceCreate = ({ onClose, serviceData }) => {
 
           {/* Description Field */}
           <div>
-            <label className="block text-lg font-medium text-white">
+            <label className="block text-lg font-medium text-foreground">
               Description <span className="text-red-500">*</span>
             </label>
             <textarea
@@ -161,7 +158,7 @@ const ServiceCreate = ({ onClose, serviceData }) => {
                 required: "Description is required",
               })}
               placeholder="Enter a brief description"
-              className="mt-2 w-full px-4 py-3 bg-gray-800 text-gray-300 border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+              className="mt-2 w-full px-4 py-3 bg-secondary text-foreground border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
             />
             {errors.description && (
               <span className="text-red-500 text-sm">
@@ -173,7 +170,7 @@ const ServiceCreate = ({ onClose, serviceData }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Min Price Field */}
             <div>
-              <label htmlFor="min_price" className="block text-white mb-1">
+              <label htmlFor="min_price" className="block text-foreground mb-1">
                 Min Price
               </label>
               <input
@@ -184,9 +181,10 @@ const ServiceCreate = ({ onClose, serviceData }) => {
                 {...register("min_price", {
                   required: "Minimum price is required",
                   validate: (value) =>
-                    value >= 100 || "Price must be greater than or equal to 100",
+                    value >= 100 ||
+                    "Price must be greater than or equal to 100",
                 })}
-                className="w-full px-4 py-3 bg-gray-800 text-gray-300 border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+                className="w-full px-4 py-3 bg-secondary text-foreground border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
               />
               {errors.min_price && (
                 <span className="text-red-500 text-sm">
@@ -198,13 +196,13 @@ const ServiceCreate = ({ onClose, serviceData }) => {
             {/* Service Category Field */}
             {!serviceData && (
               <div>
-                <label className="block text-white mb-1">
+                <label className="block text-foreground mb-1">
                   Service Category
                 </label>
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-800 text-gray-300 border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+                  className="w-full px-4 py-3 bg-secondary text-foreground border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
                 >
                   <option value="">Select a Category</option>
                   {sectorTypes.map((sector, index) => (
@@ -220,11 +218,11 @@ const ServiceCreate = ({ onClose, serviceData }) => {
           {/* Service Type Field */}
           {!serviceData && serviceOptions.length > 0 && (
             <div>
-              <label className="block text-lg font-medium text-white">
+              <label className="block text-lg font-medium text-foreground">
                 Service Type
               </label>
               <select
-                className="mt-2 w-full px-4 py-3 bg-gray-800 text-gray-300 border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+                className="mt-2 w-full px-4 py-3 bg-secondary text-foreground border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
                 value={selectedService}
                 onChange={handleServiceSelect}
               >
@@ -242,7 +240,7 @@ const ServiceCreate = ({ onClose, serviceData }) => {
           <div className="flex justify-center">
             <button
               type="submit"
-              className="w-full max-w-xs bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-500 transition duration-300"
+              className="w-full max-w-xs bg-primary text-background font-semibold py-3 rounded-lg hover:bg-pink-700 transition duration-300"
               disabled={isCreating || isUpdating}
             >
               {isCreating || isUpdating
@@ -254,7 +252,7 @@ const ServiceCreate = ({ onClose, serviceData }) => {
           </div>
         </form>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -53,43 +53,43 @@ const VendorHeader = () => {
   }, []);
 
   return (
-    <nav className="w-full relative  bg-[#121e32] customShadow px-6 py-3 flex items-center justify-between lg:rounded-md">
+    <nav className="w-full relative  bg-background customShadow px-6 py-3 flex items-center justify-between lg:rounded-md">
       {/* Left: Brand Name */}
-      <Link to="/" className="font-bold text-3xl md:block hidden text-white">
+      <Link to="/" className="font-bold text-3xl md:block hidden text-primary">
         wedd
       </Link>
 
       {/* Right: Action Buttons */}
       <div className="flex items-center space-x-4">
-        <HiOutlineLanguage className="text-4xl cursor-pointer transition duration-200 ease-in-out p-2 hover:bg-[#2563EB] rounded-full text-white" />
-        <GoBell className="text-4xl cursor-pointer transition duration-200 ease-in-out p-2 hover:bg-[#2563EB] rounded-full text-white" />
+        <HiOutlineLanguage className="text-4xl cursor-pointer transition duration-200 ease-in-out p-2 hover:bg-primary hover:text-background rounded-full text-foreground" />
+        <GoBell className="text-4xl cursor-pointer transition duration-200 ease-in-out p-2 hover:bg-primary hover:text-background rounded-full text-foreground" />
         <GoPerson
             onClick={handleProfileOpen}
             
-            className="text-3xl cursor-pointer transition duration-200 ease-in-out p-2 hover:bg-[#2563EB] rounded-full text-white"
+            className="text-3xl cursor-pointer transition duration-200 ease-in-out p-2 hover:bg-primary hover:text-background rounded-full text-foreground"
             size={40}
           />
         {/* Profile Dropdown */}
-        <div className="absolute right-4 top-16 " ref={profileRef} >
+        <div className="absolute right-4 top-20 " ref={profileRef} >
 
           
           {profileOpen && (
-            <div className="   w-48 bg-[#374151] text-white rounded-md shadow-lg overflow-hidden z-50">
+            <div className="w-48 bg-background  rounded-md shadow-lg overflow-hidden z-50">
               <Link
                 to="/profile"
-                className="block px-4 py-2 text-sm text-[#9CA3AF] hover:text-white hover:bg-[#2563EB]"
+                className="block px-4 py-2 text-sm text-foreground hover:text-white hover:bg-primary"
               >
                 Profile
               </Link>
               <Link
                 to="/settings"
-                className="block px-4 py-2 text-sm text-[#9CA3AF] hover:text-white hover:bg-[#2563EB]"
+                className="block px-4 py-2 text-sm text-foreground hover:text-white hover:bg-primary"
               >
                 Settings
               </Link>
               <button
                 onClick={handleOnLogout}
-                className="w-full text-left px-4 py-2 text-sm text-[#9CA3AF] hover:text-white hover:bg-[#2563EB]"
+                className="w-full text-left px-4 py-2 text-sm text-foreground hover:text-white hover:bg-primary"
               >
                 Logout
               </button>
