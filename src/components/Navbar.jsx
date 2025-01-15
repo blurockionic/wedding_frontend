@@ -94,6 +94,49 @@ function Navbar() {
               </li>
             ))}
 
+            {/* Wedding Venues */}
+            <li
+              className="relative lg:inline-block"
+              onMouseEnter={() => setDropdown("wedding venue")}
+              onMouseLeave={() => setDropdown("")}
+            >
+              <span className="cursor-pointer hover:text-dustyRose">Wedding Venue</span>
+              {dropdown === "wedding venue" && (
+                <div className="absolute left-0 top-full bg-white shadow-lg w-48 py-4 z-40">
+                  <ul className="grid grid-cols-1 gap-4 px-4">
+                    {weddingVenues.map((item, index) => (
+                      <li key={index} className="hover:text-dustyRose">
+                        <button onClick={() => handleNavigate(item)} className="block text-left w-full">
+                          {item}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </li>
+              {/* wedding vendor  */}
+            <li
+              className="relative lg:inline-block"
+              onMouseEnter={() => setDropdown("wedding vendor")}
+              onMouseLeave={() => setDropdown("")}
+            >
+              <span className="cursor-pointer hover:text-dustyRose">Wedding Vendor</span>
+              {dropdown === "wedding vendor" && (
+                <div className="absolute left-0 top-full bg-white shadow-lg w-96 py-4 z-40">
+                  <ul className="grid grid-cols-2 gap-4 px-4">
+                    {weddingVendors.map((item, index) => (
+                      <li key={index} className="hover:text-dustyRose">
+                        <button onClick={() => handleNavigate(item)} className="block text-left w-full">
+                          {item}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </li>
+
             {/* Brides Dropdown */}
             <li
               className="relative lg:inline-block"
@@ -177,7 +220,7 @@ function Navbar() {
       <div
         className={`fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ${
           isMenuOpen ? 'opacity-100 backdrop-blur-md' : 'opacity-0 pointer-events-none'
-        } z-30`}
+        } z-40`}
         onClick={() => setIsMenuOpen(false)}
       />
       </nav>
