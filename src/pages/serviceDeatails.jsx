@@ -321,7 +321,7 @@ function ServiceDetail() {
             <div
             className={`absolute w-full inset-0 bg-black bg-opacity-50 transition-opacity duration-300 
               opacity-100 backdrop-blur-md
-            z-30`}
+            z-10`}
           />
           </div>
 
