@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-
 const CustomText = ({
   text = "Default Text",
   className = "",

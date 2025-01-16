@@ -53,7 +53,7 @@ const VendorHeader = () => {
   }, []);
 
   return (
-    <nav className="w-full relative  bg-background customShadow px-6 py-3 flex items-center justify-between lg:rounded-md">
+    <nav className="w-full relative  bg-background shadow-md px-6 py-3 flex items-center justify-between lg:rounded-md">
       {/* Left: Brand Name */}
       <Link to="/" className="font-bold text-3xl md:block hidden text-primary">
         wedd

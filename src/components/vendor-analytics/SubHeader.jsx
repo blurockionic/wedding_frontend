@@ -1,94 +1,10 @@
-import { useEffect, useState } from "react";
-import {
-  GoCalendar,
-  GoCopy,
-  GoDot,
-  GoDownload,
+import {  
   GoSearch,
-  GoShare,
-  GoX,
 } from "react-icons/go";
-import { useLocation, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import CustomButton from "../global/button/CustomButton";
-import Calendar from "react-calendar";
-import CustomText from "../global/text/CustomText";
-import CustomInput from "../global/inputfield/CustomInput";
 
 const SubHeader = () => {
-  const location = useLocation();
-  const [searchParams] = useSearchParams();
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [isModalOpenShare, setModalOpenShare] = useState(false);
-  const [isUpdate, setIsUpdate] = useState(false);
-  const [copyLink, setCopyLink] = useState("");
-  const [showCalendar, setShowCalendar] = useState(false);
-  const [showMore, setShowMore] = useState(false);
-  const [queryParams, setQueryParams] = useState({
-    age: "",
-    gender: "",
-    from: "",
-    to: "",
-  });
-
-  const [date, setDate] = useState({
-    from: undefined,
-    to: undefined,
-  });
-
-  const [userPrefernces, setUserPrefrences] = useState({
-    from: undefined,
-    to: undefined,
-    age: "",
-    gender: "",
-  });
-
-  const [selectedDate, setSelectedDate] = useState(new Date());
-
-  //  Update queryParams when searchParams or refreshKey changes
-  useEffect(() => {
-    setQueryParams({
-      age: searchParams.get("age") || "",
-      gender: searchParams.get("gender") || "",
-      from: searchParams.get("from") || "",
-      to: searchParams.get("to") || "",
-    });
-  }, [searchParams]);
-
-  
-  const toggleModal = () => {
-    setModalOpen(!isModalOpen);
-  };
-
-  const handleOnSelectFrom = (selectedRange) => {
-    console.log(selectedRange);
-    setIsUpdate(true);
-    setDate(selectedRange);
-
-    setUserPrefrences((prev) => ({
-      ...prev,
-      from: selectedRange,
-    }));
-  };
-
-  const handleOnSelectTo = (selectedRange) => {
-    setIsUpdate(true);
-    setDate(selectedRange);
-
-    setUserPrefrences((prev) => ({
-      ...prev,
-      to: selectedRange,
-    }));
-  };
-  console.log(userPrefernces);
-
- 
-
-  //share
-  const toggleModalShare = () => {
-    setModalOpenShare(!isModalOpenShare);
-  };
-
   //copy link
   const handleOnCopyLink = (link) => {
     // Check if Clipboard API is supported
@@ -98,7 +14,6 @@ const SubHeader = () => {
         .then(() => {
           console.log(`Link copied to clipboard: ${link}`);
           toast.success("Link copied to clipboard");
-          setModalOpenShare(false);
         })
         .catch((err) => {
           console.error("Failed to copy the link: ", err);
@@ -116,7 +31,6 @@ const SubHeader = () => {
         document.execCommand("copy");
         console.log(`Link copied to clipboard: ${link}`);
         toast.success("Link copied to clipboard");
-        setModalOpenShare(false);
       } catch (err) {
         console.error("Failed to copy the link: ", err);
       }
@@ -131,70 +45,10 @@ const SubHeader = () => {
     // setDataSet(l);
   };
 
-  
-
   return (
     <div className="w-full flex lg:items-center justify-between p-4 bg-gray-100 dark:bg-gray-400">
       <div className="w-full flex flex-col lg:flex-row items-center lg:items-center gap-y-3 lg:gap-x-2">
         <div className="w-full lg:w-auto flex gap-x-2">
-          {/* Date Picker Button */}
-          <div className="relative w-full lg:w-auto flex gap-x-2">
-            <button
-              id="date"
-              className={`w-full lg:w-[400px] justify-start text-left font-normal flex items-center p-2 border border-gray-300 rounded-md ${
-                !userPrefernces?.from && "text-muted-foreground"
-              }`}
-              onClick={() => setShowCalendar((prev) => !prev)}
-            >
-              <GoCalendar size={24} className="mr-2" />
-              {userPrefernces?.from ? (
-                userPrefernces?.to ? (
-                  <>
-                    {format(userPrefernces.from, "LLL dd, y")} -{" "}
-                    {format(userPrefernces.to, "LLL dd, y")}
-                  </>
-                ) : (
-                  format(userPrefernces.from, "LLL dd, y")
-                )
-              ) : (
-                <span>Pick a date</span>
-              )}
-            </button>
-
-            {/* Calendar Popup */}
-            {showCalendar && (
-              <div className="absolute mt-2 p-4 w-auto bg-white border border-gray-300 shadow-lg rounded-md z-50">
-                <div className="flex justify-end">
-                  <GoX
-                    size={24}
-                    className="mr-2 bg-white text-red-500 cursor-pointer"
-                    onClick={() => {
-                      setShowCalendar(!showCalendar);
-                    }}
-                  />
-                </div>
-                <Calendar
-                  className="z-50 p-4"
-                  initialFocus={true}
-                  mode="range"
-                  defaultView="month"
-                  defaultMonth={userPrefernces?.from}
-                  value={selectedDate}
-                  onChange={(date) => handleOnSelectFrom(date)}
-                />
-                <Calendar
-                  className="z-50 p-4"
-                  initialFocus={true}
-                  mode="range"
-                  defaultView="month"
-                  defaultMonth={userPrefernces?.to}
-                  value={selectedDate}
-                  onChange={(date) => handleOnSelectTo(date)}
-                />
-              </div>
-            )}
-          </div>
-
           {/* Search Button */}
           <CustomButton
             text="Search"
@@ -202,131 +56,8 @@ const SubHeader = () => {
             iconLeft={<GoSearch />}
             className="flex px-4 py-1 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none dark:bg-card dark:text-card-foreground"
           />
-
-          {/* More Button for Mobile */}
-          <div className="flex lg:hidden">
-            <button
-              className="flex items-center justify-center p-2 border border-gray-300 rounded-md"
-              onClick={() => setShowMore((prev) => !prev)}
-            >
-              <GoDot size={24} />
-            </button>
-
-            {/* More Options Popup */}
-            {showMore && (
-              <div className="absolute right-4  mt-12 w-40 bg-white border border-gray-300 shadow-lg rounded-md flex flex-col gap-y-2">
-                <CustomButton
-                  text="Import"
-                  onClick={toggleModal}
-                  iconLeft={<GoDownload />}
-                  className="px-4 py-1 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none"
-                />
-                <CustomButton
-                  text="Share"
-                  onClick={toggleModalShare}
-                  iconLeft={<GoShare />}
-                  className="px-4 py-1 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none"
-                />
-              </div>
-            )}
-          </div>
         </div>
-
-        <CustomButton
-          text="Import"
-          onClick={toggleModal}
-          iconLeft={<GoDownload />}
-          className="hidden lg:flex px-4 py-1 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none dark:bg-card dark:text-card-foreground"
-        />
-        <CustomButton
-          text="Share"
-          onClick={toggleModalShare}
-          iconLeft={<GoShare />}
-          className="hidden lg:flex px-4 py-1 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none dark:bg-card dark:text-card-foreground"
-        />
       </div>
-
-      <button
-        onClick={toggleModal}
-        className="fixed hidden bottom-4 right-4 z-50 items-center justify-center w-14 h-14 text-white bg-blue-500 rounded-full shadow-lg hover:bg-blue-600 focus:outline-none"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 4v16m8-8H4"
-          />
-        </svg>
-      </button>
-      {/* upload  */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 ">
-          <div className="bg-white p-6 rounded-md shadow-md w-full max-w-md dark:bg-card dark:text-card-foreground dark:shadow-xl dark:shadow-white">
-            <CustomText
-              className="text-lg font-semibold mb-8"
-              style={{ textAlign: "center", fontSize: 24 }}
-            >
-              Upload CSV File
-            </CustomText>
-            {/* <FileUploader /> */}
-            <div className="flex justify-end space-x-2">
-              <CustomButton
-                text="Cancel"
-                onClick={toggleModal}
-                className="px-4 py-2 mt-5 bg-red-500  dark:bg-red-900 rounded-md hover:bg-red-600 focus:outline-none"
-              />
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* //share  */}
-
-      {isModalOpenShare && (
-        <div className="fixed inset-0 z-50  flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-md shadow-md w-full max-w-md dark:bg-card dark:text-card-foreground dark:shadow-xl dark:shadow-white">
-            <CustomText
-              className="text-lg font-semibold mb-8"
-              style={{ textAlign: "center", fontSize: 24 }}
-            >
-              Share link with other
-            </CustomText>
-            <div className="flex justify-between items-center gap-x-2">
-              <CustomInput
-                style={{ width: 290 }}
-                type="text"
-                value={copyLink}
-                className="dark:bg-gray-200 dark:text-black"
-                iconLeft={
-                  <>
-                    <GoCopy size={24} className="dark:text-black" />
-                  </>
-                }
-              />
-              <CustomButton
-                text="Copy Link"
-                onClick={() => handleOnCopyLink(copyLink)}
-                className=" w-full px-4 py-3 text-sm bg-blue-500 dark:bg-blue-900 rounded-md hover:bg-blue-600 focus:outline-none"
-              />
-            </div>
-
-            <div className="flex justify-end space-x-2">
-              <CustomButton
-                text="Cancel"
-                onClick={toggleModalShare}
-                className="px-4 py-2 mt-5 bg-red-500 dark:bg-red-900 rounded-md hover:bg-red-600 focus:outline-none"
-              />
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

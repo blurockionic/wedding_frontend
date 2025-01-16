@@ -5,6 +5,7 @@ import Accordion from "../components/Accordion";
 import { IoCall } from "react-icons/io5";
 import { BsWhatsapp } from "react-icons/bs";
 import { useSelector } from "react-redux";
+import { useUpdateLeadStatusMutation } from "../redux/serviceSlice";
 
 // Mock data and API call simulation
 const mockServiceData = (id) => ({
@@ -66,11 +67,23 @@ function ServiceDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const [updateLead] = useUpdateLeadStatusMutation()
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetchServiceDetail(id);
+        
+        const res = await fetch(`http://localhost:4000/api/v1/services/${id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include', 
+        });
+        
+        const data = await res.json()
+        console.log(data)
         setService(response);
       } catch {
         setError("Failed to fetch service details.");
@@ -96,6 +109,17 @@ function ServiceDetail() {
         </button>
       </div>
     );
+
+    console.log(service)
+
+    const leadHandler = async () => {
+      try {
+         const res = await updateLead(id).unwrap()
+         console.log(res);
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
   return (
     <>
@@ -147,6 +171,7 @@ function ServiceDetail() {
                     {isLoggedIn ? (
                       <div className="flex space-x-4">
                         <a
+                        onClick={leadHandler}
                           href={`tel:${service.vendor.phone}`}
                           className="bg-green-500 text-white flex justify-center items-center gap-2 px-5 py-3 rounded-lg hover:bg-green-700 transition"
                           aria-label={`Call ${service.vendor.name}`}
@@ -154,6 +179,7 @@ function ServiceDetail() {
                           Call <IoCall />
                         </a>
                         <a
+                        onClick={leadHandler}
                           href={`https://wa.me/${service.vendor.phone}`}
                           className="bg-green-500 text-white flex justify-center items-center gap-2 px-5 py-3 rounded-lg hover:bg-green-600 transition"
                           aria-label={`WhatsApp ${service.vendor.name}`}

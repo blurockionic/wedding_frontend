@@ -37,7 +37,10 @@ const VendorSidebar = ({ footer, setIsOpen, isOpen }) => {
 
       {/* Sidebar */}
       <div
-        className={`my-2 lg:my-2 lg:mx-2 fixed h-[98vh] rounded-md inset-y-0 left-0 z-50 flex flex-col bg-gradient-to-br from-pink-900 via-pink-700 to-pink-500 text-gray-100 shadow-lg transform ${
+        className={`my-2 lg:my-2 lg:mx-2 fixed h-[98vh] rounded-md inset-y-0 
+          left-0 z-50 flex flex-col border border-primary text-gray-100 
+          bg-gradient-to-br from-white via-pink-50 to-pink-300
+          shadow-xl transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0 lg:static lg:shadow-none transition-transform duration-300 ease-in-out`}
         style={{ width: "16rem" }}
@@ -51,7 +54,7 @@ const VendorSidebar = ({ footer, setIsOpen, isOpen }) => {
               className="h-8 w-8 shadow-lg shadow-white bg-transparent rounded-md"
             /> */}
 
-            <h1 className=" lg:text-sm xl:text-lg xl:font-bold lg:font-semibold hidden xl:block">
+            <h1 className=" lg:text-sm xl:text-lg xl:font-bold lg:font-semibold hidden xl:block text-foreground">
               Wedd Dashboard
             </h1>
           </div>
@@ -74,10 +77,10 @@ const VendorSidebar = ({ footer, setIsOpen, isOpen }) => {
                   className={`flex 
                     items-center
                      gap-4 p-3
-                      hover:bg-background
+                      hover:bg-primary
                        hover:text-foreground 
                        rounded-md ${
-                    activeTab === link.href ? "bg-background text-foreground" : ""
+                    activeTab === link.href ? "bg-primary text-background" : "text-foreground"
                   }`}
                   onClick={() => {
                     setIsOpen(false); // Close sidebar on link click
@@ -85,7 +88,7 @@ const VendorSidebar = ({ footer, setIsOpen, isOpen }) => {
                   }}
                 >
                   <link.icon className={`h-6 w-6  ${
-                    activeTab === link.href ? "bg-background text-foreground" : ""
+                    activeTab === link.href ? " text-background" : ""
                   }` }/>
                   <span className="text-sm">{link.label}</span>
                 </Link>

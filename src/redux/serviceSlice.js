@@ -81,6 +81,23 @@ export const serviceApi = createApi({
         method: "DELETE",
       }),
     }),
+
+    //GET ANALYTICS
+    getAnalytics: builder.query({
+      query: () => "analytics/getViewData",
+    }),
+
+    //lead udapte
+    updateLeadStatus: builder.mutation({
+      query: (id) => ({
+        url: `/services/makeLead/${id}`,
+        method: "PUT", 
+      }),
+    }),
+    //recent activity
+    getRecentLeads: builder.query({
+      query: () => "/analytics/getlead",
+    })
   }),
 });
 
@@ -94,4 +111,7 @@ export const {
   useCreateServiceMutation,
   useUpdateServiceMutation,
   useDeleteServiceMutation,
+  useGetAnalyticsQuery,
+  useUpdateLeadStatusMutation,
+  useGetRecentLeadsQuery
 } = serviceApi;
