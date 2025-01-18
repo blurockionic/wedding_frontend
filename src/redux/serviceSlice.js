@@ -97,7 +97,47 @@ export const serviceApi = createApi({
     //recent activity
     getRecentLeads: builder.query({
       query: () => "/analytics/getlead",
-    })
+    }),
+    //create FAQ
+    createFAQ: builder.mutation({
+      query: ({id, data})=>({
+        url: `/services/${id}/faq`,
+        method: "POST",
+        body: data 
+      })
+    }),
+    // update FAQ 
+    updateFAQ: builder.mutation({
+      query: ({id, faqId, data})=>({
+        url: `/services/${id}/faq/${faqId}`,
+        method: "POST",
+        body: data
+      }),
+    }),
+      //DELETE FAQ
+      deleteFAQ: builder.mutation({
+        query: ({id, faqId})=>({
+          url: `/services/${id}/faq/${faqId}`,
+          method: "DELETE"
+        })
+      }),
+
+      //submit feedback
+      createFeedback: builder.mutation({
+        query:({id, data})=>({
+          url: `/services/feedback/${id}`,
+          method:"POST",
+          body: data
+        })
+      }),
+      //update feedback
+      updateFeedback: builder.mutation({
+        query:({id,feedbackId, data})=>({
+          url: `/services/feedback/${id}/${feedbackId}`,
+          method:"POST",
+          body: data
+        })
+      }),
   }),
 });
 
@@ -113,5 +153,10 @@ export const {
   useDeleteServiceMutation,
   useGetAnalyticsQuery,
   useUpdateLeadStatusMutation,
-  useGetRecentLeadsQuery
+  useGetRecentLeadsQuery,
+  useCreateFAQMutation,
+  useUpdateFAQMutation,
+  useDeleteFAQMutation,
+  useCreateFeedbackMutation,
+  useUpdateFeedbackMutation
 } = serviceApi;

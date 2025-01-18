@@ -1,7 +1,9 @@
 import { useNavigate, useParams } from "react-router-dom";
 import {
+  useDeleteFAQMutation,
   useDeleteServiceMutation,
   useGetServiceByIdQuery,
+  useUpdateFAQMutation,
 } from "../../../redux/serviceSlice";
 import Slider from "../../../components/Slider";
 import Mediatab from "./Tabs/Mediatab";
@@ -9,7 +11,9 @@ import FAQsTab from "./Tabs/FAQsTab";
 import ServiceCreate from "./Tabs/ServiceCreate";
 import { useState } from "react";
 import { toast } from "react-toastify";
-
+import { CiEdit } from "react-icons/ci";
+import { MdDeleteOutline } from "react-icons/md";
+import { useForm } from "react-hook-form";
 
 // Reusable Button Component
 const Button = ({ label, onClick, className, type = "button" }) => (
@@ -23,12 +27,17 @@ const Button = ({ label, onClick, className, type = "button" }) => (
 );
 
 const DashBoardDetailPage = () => {
+  const [updateFAQ, {refetch: updateRefetch}] = useUpdateFAQMutation()
+  const [deleteFAQ, {refetch: deleteRefetch}] = useDeleteFAQMutation()
+  const [isEditFAQ, setIsEditFAQ] = useState(false);
+  const [indexNumber, setIndexNumber] = useState(null)
   const { serviceId } = useParams();
   const { data, isLoading, isError, error, refetch } =
     useGetServiceByIdQuery(serviceId);
   const [activeTab, setActiveTab] = useState(null);
   const [deleteService] = useDeleteServiceMutation();
-  const navigate  = useNavigate()
+  const navigate = useNavigate();
+  const { register, handleSubmit, setValue, getValues, reset } = useForm();
 
   if (isLoading) {
     return <div className="text-center text-gray-600">Loading...</div>;
@@ -49,7 +58,7 @@ const DashBoardDetailPage = () => {
     setActiveTab(null);
     refetch();
   };
-  
+
   const handleDelete = async () => {
     try {
       const res = await deleteService(serviceId).unwrap();
@@ -58,10 +67,56 @@ const DashBoardDetailPage = () => {
       }
     } catch (error) {
       toast.error(error?.data?.message || "Failed to delete the service.");
-    }finally{
-      navigate("/VendorDashboard")
+    } finally {
+      navigate("/VendorDashboard");
     }
   };
+
+  const handleOnUpdateFAQ = (index) => {
+    setIsEditFAQ(true);
+    setIndexNumber(index);
+    setValue("question", service?.faqs[index].question); 
+    setValue("answer", service?.faqs[index].answer);
+  };
+
+  const handleSaveFAQ = async(data) => {
+    // console.log("Updated FAQ:", {index:indexNumber, ...data });
+    // console.log("Updated FAQ:", service.faqs[indexNumber].id);
+
+    try {
+      const res =  await updateFAQ({
+        id: service.id,
+        faqId: service.faqs[indexNumber].id,
+        data: data
+      })
+     //reload
+
+     if(res){
+      console.log(res)
+      setIsEditFAQ(false);
+      setIndexNumber(null);
+      reset(); 
+     }
+     updateRefetch()
+    } catch (error) {
+      console.log(error)
+    }
+    
+  };
+
+  //handle on delete the FAQ
+  const handleOnDeleteFAQ =async(index)=>{
+    console.log("delete clicked", index);
+    try {
+      const res =  await deleteFAQ({
+        id: service.id,
+        faqId: service.faqs[index].id
+      })
+      console.log(res)
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   return (
     <div className="max-w-screen-xl mx-auto p-6">
@@ -108,17 +163,80 @@ const DashBoardDetailPage = () => {
         <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
           FAQs
         </h2>
-        {service?.faqs?.map((faq, index) => (
-          <div
-            key={index}
-            className="border rounded-lg p-4 mb-4 bg-gray-50 dark:bg-gray-800"
-          >
-            <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
-              Q{index + 1}: {faq.question}
-            </h3>
-            <p className="text-gray-600 dark:text-gray-300">{faq.answer}</p>
+        <div>
+        <div>
+      {service?.faqs?.map((faq, index) => (
+        <div
+          key={index}
+          className="flex justify-between items-center border bg-gray-50 dark:bg-gray-800 px-5 py-3 rounded-md mb-3"
+        >
+          <div className="rounded-lg w-full">
+            {isEditFAQ && index === indexNumber ? (
+              <form
+                onSubmit={handleSubmit(handleSaveFAQ)}
+                className="space-y-2"
+              >
+                <input
+                  type="text"
+                  {...register("question", { required: "Question is required" })}
+                  placeholder="Edit Question"
+                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+                />
+                <textarea
+                  {...register("answer", { required: "Answer is required" })}
+                  placeholder="Edit Answer"
+                  rows="3"
+                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+                ></textarea>
+                <div className="flex gap-3">
+                  <button
+                    type="submit"
+                    className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+                  >
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsEditFAQ(false);
+                      setIndexNumber(null);
+                      reset();
+                    }}
+                    className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <>
+                <h3 className="capitalize text-lg font-semibold text-gray-800 dark:text-white">
+                  Q{index + 1}: {faq.question}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300">{faq.answer}</p>
+              </>
+            )}
           </div>
-        ))}
+          <div className="flex gap-5">
+            <>
+              <CiEdit
+              onClick={() => handleOnUpdateFAQ(index)}
+              size={24}
+              className="cursor-pointer text-green-500"
+            />
+            <MdDeleteOutline
+              onClick={() => handleOnDeleteFAQ(index)}
+              size={24}
+              className="cursor-pointer text-red-500"
+            />
+              </>
+            
+            
+          </div>
+        </div>
+      ))}
+    </div>
+    </div>
       </div>
       <div className="mt-8">
         {activeTab === "media" && (

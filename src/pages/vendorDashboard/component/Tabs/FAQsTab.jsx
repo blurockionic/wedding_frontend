@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { MdClose } from "react-icons/md";
+import { useCreateFAQMutation, useUpdateFAQMutation } from "../../../../redux/serviceSlice";
 
 export default function FAQsTab({ serviceId ,handleCloseFAQ }) {
+  const [createFAQ] = useCreateFAQMutation();
+  // const {} = useUpdateFAQMutation();
+
   const {
     control,
     handleSubmit,
@@ -23,17 +27,17 @@ export default function FAQsTab({ serviceId ,handleCloseFAQ }) {
     }
   }, [fields]); // Trigger this effect whenever fields change
 
-  const onSubmit = (data) => {
+  const onSubmit = async(data) => {
     console.log("Service ID:", serviceId);
     console.log("FAQs:", data.faqs);
-    // Example of sending the data to the server:
-    // fetch('/api/upload-faqs', {
-    //   method: 'POST',
-    //   body: JSON.stringify({ serviceId, faqs: data.faqs }),
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    // });
+    try {
+       const res = await createFAQ({id: serviceId,
+        data: data.faqs
+       }).unwrap()
+
+    } catch (error) {
+      console.error(error)
+    }
   };
 
   const handleIndexClick = (index) => {
