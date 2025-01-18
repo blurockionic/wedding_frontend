@@ -6,6 +6,8 @@ import { IoCall } from "react-icons/io5";
 import { BsWhatsapp } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import { useUpdateLeadStatusMutation } from "../redux/serviceSlice";
+import ImageGallery from "../components/gallery/ImageGallery";
+import FeedbackForm from "../components/feedbackform/FeedbackForm";
 
 // Mock data and API call simulation
 const mockServiceData = (id) => ({
@@ -64,6 +66,7 @@ function ServiceDetail() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const { id } = useParams();
   const [service, setService] = useState(null);
+  const [realService, setRealService] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -83,7 +86,9 @@ function ServiceDetail() {
         });
         
         const data = await res.json()
-        console.log(data)
+        if(data){
+        setRealService(data.service)
+        }
         setService(response);
       } catch {
         setError("Failed to fetch service details.");
@@ -99,6 +104,8 @@ function ServiceDetail() {
     navigate("/login", { state: { from: location.pathname } });
   };
 
+  
+
   if (loading) return <div className="text-center">Loading...</div>;
   if (error)
     return (
@@ -110,7 +117,6 @@ function ServiceDetail() {
       </div>
     );
 
-    console.log(service)
 
     const leadHandler = async () => {
       try {
@@ -129,41 +135,54 @@ function ServiceDetail() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Left Section */}
               <div>
-                <h1 className="text-4xl font-bold text-slate-DEFAULT mb-4">
-                  {service.service_name}
+                <h1 className="text-4xl font-bold text-slate-DEFAULT mb-4 capitalize">
+                  {realService?.service_name}
                 </h1>
                 <p className="text-lg text-slate-light mb-4">
-                  {service.description}
+                  {realService?.description}
                 </p>
-                <Rating rating={service.rating} />
+                <Rating rating={realService?.rating} />
                 <p className="mt-4 text-slate-DEFAULT">
-                  Price Range: {service.min_price} - {service.max_price}
+                  Price Range: {realService?.min_price} - {realService?.max_price || realService?.min_price + 20000}
                 </p>
-                <p className="text-slate-DEFAULT">
-                  Service Type: {service.service_type}
+                <p className="text-slate-DEFAULT capitalize ">
+                  Service Type:  <span className="font-semibold">{realService?.service_type}</span>
                 </p>
               </div>
 
               {/* Right Section */}
               <div>
-                <div className="grid grid-cols-2 gap-4">
-                  {service.media.map((image, index) => (
-                    <img
-                      key={index}
-                      src={image}
-                      alt={`Service Image ${index + 1}`}
-                      className="w-full h-40 object-cover rounded-lg shadow-md"
-                    />
-                  ))}
-                </div>
+                
+                {
+                    realService?.media.length > 0 ? (
+                        <ImageGallery images={realService.media[0].image_urls}/>
+                    ):(
+                      <>
+                      <div className="grid grid-cols-2 gap-4">
+                      <img
+                          src={"https://dummyjson.com/image/500x300"}
+                          alt={`Service Image`}
+                          className="w-full h-40 object-cover rounded-lg shadow-md"
+                        />
+                        <img
+                          src={"https://dummyjson.com/image/500x300"}
+                          alt={`Service Image`}
+                          className="w-full h-40 object-cover rounded-lg shadow-md"
+                        />
+                        </div>
+                      </>
+                    )
+                  }
+                  
+                
 
                 {/* Vendor Details Section */}
                 <div className="bg-[#f9f9f9] p-6 rounded-lg mt-6 shadow-lg">
                   <h2 className="text-2xl font-bold text-slate-700 mb-4">
                     Vendor Details
                   </h2>
-                  <p className="text-lg text-slate-600 mb-4">
-                    <strong>Name:</strong> {service.vendor.name}
+                  <p className="text-lg text-slate-600 mb-4 capitalize cursor-pointer ">
+                    <strong>Name:</strong> <span className="hover:underline hover:text-primary">{realService?.vendor?.name}</span>
                   </p>
 
                   <div className="flex flex-col space-y-4 mt-4">
@@ -172,7 +191,7 @@ function ServiceDetail() {
                       <div className="flex space-x-4">
                         <a
                         onClick={leadHandler}
-                          href={`tel:${service.vendor.phone}`}
+                          href={`tel:${service?.vendor?.phone}`}
                           className="bg-green-500 text-white flex justify-center items-center gap-2 px-5 py-3 rounded-lg hover:bg-green-700 transition"
                           aria-label={`Call ${service.vendor.name}`}
                         >
@@ -180,7 +199,7 @@ function ServiceDetail() {
                         </a>
                         <a
                         onClick={leadHandler}
-                          href={`https://wa.me/${service.vendor.phone}`}
+                          href={`https://wa.me/${service?.vendor?.phone}`}
                           className="bg-green-500 text-white flex justify-center items-center gap-2 px-5 py-3 rounded-lg hover:bg-green-600 transition"
                           aria-label={`WhatsApp ${service.vendor.name}`}
                         >
@@ -217,13 +236,14 @@ function ServiceDetail() {
                   </div>
                 ))}
               </div>
+              <FeedbackForm serviceId ={id}/>
             </div>
 
             {/* FAQ Section */}
             <div className="mt-8">
               <h2 className="text-3xl font-bold mb-4">FAQs</h2>
               <div className="space-y-4">
-                {service.faqs.map((faq, index) => (
+                {realService?.faqs.map((faq, index) => (
                   <Accordion
                     key={index}
                     question={faq.question}

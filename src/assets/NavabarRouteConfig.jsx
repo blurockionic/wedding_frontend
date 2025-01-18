@@ -14,8 +14,8 @@ const NavbarRoutesConfig = [
   { name: "Home", path: "/", component: LandingPage },
   
 
-  { name: "Tools", path: "/planning-tools", component: PlanningTools },
-  { name: "Blogs", path: "/blogs", component: Blogs },
+  // { name: "Tools", path: "/planning-tools", component: PlanningTools },
+  // { name: "Blogs", path: "/blogs", component: Blogs },
 ];
 
 export default NavbarRoutesConfig;
