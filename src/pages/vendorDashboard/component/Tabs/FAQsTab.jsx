@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { MdClose } from "react-icons/md";
 import { useCreateFAQMutation, useUpdateFAQMutation } from "../../../../redux/serviceSlice";
+import { toast } from "react-toastify";
 
 export default function FAQsTab({ serviceId ,handleCloseFAQ }) {
   const [createFAQ] = useCreateFAQMutation();
@@ -28,12 +29,18 @@ export default function FAQsTab({ serviceId ,handleCloseFAQ }) {
   }, [fields]); // Trigger this effect whenever fields change
 
   const onSubmit = async(data) => {
-    console.log("Service ID:", serviceId);
-    console.log("FAQs:", data.faqs);
     try {
-       const res = await createFAQ({id: serviceId,
+       const response = await createFAQ({id: serviceId,
         data: data.faqs
        }).unwrap()
+
+       console.log(response)
+
+       const {success, message} =  response
+       if(success){
+        toast.success(message)
+        handleCloseFAQ(true)
+       }
 
     } catch (error) {
       console.error(error)

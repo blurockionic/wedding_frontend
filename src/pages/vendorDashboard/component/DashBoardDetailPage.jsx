@@ -27,8 +27,8 @@ const Button = ({ label, onClick, className, type = "button" }) => (
 );
 
 const DashBoardDetailPage = () => {
-  const [updateFAQ, {refetch: updateRefetch}] = useUpdateFAQMutation()
-  const [deleteFAQ, {refetch: deleteRefetch}] = useDeleteFAQMutation()
+  const [updateFAQ ] = useUpdateFAQMutation()
+  const [deleteFAQ] = useDeleteFAQMutation()
   const [isEditFAQ, setIsEditFAQ] = useState(false);
   const [indexNumber, setIndexNumber] = useState(null)
   const { serviceId } = useParams();
@@ -80,39 +80,41 @@ const DashBoardDetailPage = () => {
   };
 
   const handleSaveFAQ = async(data) => {
-    // console.log("Updated FAQ:", {index:indexNumber, ...data });
-    // console.log("Updated FAQ:", service.faqs[indexNumber].id);
-
     try {
       const res =  await updateFAQ({
         id: service.id,
         faqId: service.faqs[indexNumber].id,
         data: data
       })
-     //reload
-
-     if(res){
       console.log(res)
+      const {success, message} = res.data 
+     if(success){
       setIsEditFAQ(false);
       setIndexNumber(null);
       reset(); 
+      //success message
+      toast.success(message)
+      // reload the data 
+      refetch()
      }
-     updateRefetch()
     } catch (error) {
       console.log(error)
     }
-    
   };
 
   //handle on delete the FAQ
   const handleOnDeleteFAQ =async(index)=>{
-    console.log("delete clicked", index);
     try {
       const res =  await deleteFAQ({
         id: service.id,
         faqId: service.faqs[index].id
       })
-      console.log(res)
+      const {success, message} = res.data
+      if(success){
+        toast.success(message)
+      // reload the data 
+        refetch()
+      }
     } catch (error) {
       console.error(error)
     }
