@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useFormContext } from "react-hook-form";
 import { useUplMutation } from "../../../redux/uploadSlice";
 import { toast } from "react-toastify";
+import { UploadCloud } from "lucide-react";
 
 const Step4 = () => {
   const {
@@ -9,13 +10,13 @@ const Step4 = () => {
     formState: { errors },
     setValue,
   } = useFormContext();
+  
   const [logoPreview, setLogoPreview] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadMutation] = useUplMutation();
   const fileInputRef = useRef();
 
-  // Cleanup preview URL to avoid memory leaks
   useEffect(() => {
     return () => {
       if (logoPreview) {
@@ -31,7 +32,6 @@ const Step4 = () => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      // File validation (example: file size and type)
       if (!file.type.startsWith("image/")) {
         toast.error("Please upload a valid image file.");
         return;
@@ -56,11 +56,10 @@ const Step4 = () => {
       try {
         const response = await uploadMutation(formData).unwrap();
         setValue("logo_url", response?.file);
-        // setValue("logo_url", response.fileUrl); // Assuming the API returns `fileUrl`
         toast.success("Logo uploaded successfully!");
       } catch (error) {
         console.error("Error uploading logo:", error);
-        alert("Failed to upload logo. Please try again.",error);
+        toast.error("Failed to upload logo. Please try again.");
       } finally {
         setIsUploading(false);
       }
@@ -68,47 +67,82 @@ const Step4 = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold mb-6 text-gray-800">
+    <div className="bg-white p-8 rounded-lg">
+      <h2 className="text-2xl font-semibold mb-8 text-[#1a1a1a]">
         Upload Business Logo
       </h2>
-      <div className="flex flex-col items-center">
-        
-        <input
-          type="file"
-           onChange={handleFileChange}
-          accept="image/*"
-          ref={fileInputRef}
-          className="border border-gray-300 p-2 rounded mb-2 w-full"
-          placeholder="Upload new logo"
-        />
-      </div>
+
+      <div className="space-y-6">
+        {/* Upload Area */}
+        <div className="relative">
+          <div 
+            className="border-2 border-dashed border-[#d6d6d6] rounded-lg p-8 text-center hover:border-[#d43fa6] transition-colors cursor-pointer bg-[#f2f2f2]"
+            onClick={handleFileSelect}
+          >
+            <UploadCloud className="mx-auto h-12 w-12 text-[#666666] mb-4" />
+            <p className="text-[#262626] font-medium mb-2">
+              Click to upload your business logo
+            </p>
+            <p className="text-sm text-[#666666]">
+              SVG, PNG, JPG or GIF (Max. 2MB)
+            </p>
+          </div>
+
+          <input
+            type="file"
+            onChange={handleFileChange}
+            accept="image/*"
+            ref={fileInputRef}
+            className="hidden"
+          />
+        </div>
+
+        {/* Preview Area */}
         {logoPreview && (
-          <div className="mt-4">
-            <img
-              src={logoPreview}
-              alt="Logo Preview"
-              className="w-32 h-32 object-cover rounded-md"
-            />
+          <div className="space-y-6">
+            <div className="p-4 bg-[#f2f2f2] rounded-lg">
+              <p className="text-[#666666] text-sm mb-4">Preview:</p>
+              <div className="flex justify-center">
+                <img
+                  src={logoPreview}
+                  alt="Logo Preview"
+                  className="w-40 h-40 object-contain rounded-md border border-[#d6d6d6] bg-white p-2"
+                />
+              </div>
+            </div>
+
             <button
               type="button"
               onClick={handleUpload}
-              className={`w-full p-4 mt-4 ${
-                isUploading ? "bg-gray-400" : "bg-indigo-600"
-              } text-white hover:bg-indigo-700 rounded-md text-lg font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
               disabled={isUploading}
+              className={`w-full py-3 px-4 rounded-md text-white transition-colors duration-200 ${
+                isUploading
+                  ? "bg-[#e6e6e6] cursor-not-allowed"
+                  : "bg-[#d43fa6] hover:bg-[#c23795]"
+              }`}
             >
-              {isUploading ? "Uploading..." : "Save Logo"}
+              {isUploading ? (
+                <span className="flex items-center justify-center">
+                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Uploading...
+                </span>
+              ) : (
+                "Save Logo"
+              )}
             </button>
           </div>
         )}
+
         {errors.logo_url && (
-          <span className="text-red-500 text-sm mt-1">
+          <p className="text-[#800000] text-sm mt-2">
             {errors.logo_url.message}
-          </span>
+          </p>
         )}
       </div>
-  
+    </div>
   );
 };
 
