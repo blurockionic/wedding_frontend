@@ -13,8 +13,6 @@ const FeedbackForm = ({ serviceId }) => {
   } = useForm();
   const [rating, setRating] = useState(0);
 
-  console.log(serviceId)
-
   const onSubmit = async (data) => {
     const feedbackData = { ...data, rating };
     console.log("Feedback Submitted:", feedbackData);

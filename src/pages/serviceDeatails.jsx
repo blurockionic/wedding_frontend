@@ -5,7 +5,7 @@ import Accordion from "../components/Accordion";
 import { IoCall } from "react-icons/io5";
 import { BsWhatsapp } from "react-icons/bs";
 import { useSelector } from "react-redux";
-import { useUpdateLeadStatusMutation } from "../redux/serviceSlice";
+import { useGetServiceByIdQuery, useUpdateLeadStatusMutation } from "../redux/serviceSlice";
 import ImageGallery from "../components/gallery/ImageGallery";
 import FeedbackForm from "../components/feedbackform/FeedbackForm";
 
@@ -71,23 +71,23 @@ function ServiceDetail() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const [updateLead] = useUpdateLeadStatusMutation()
+  const {data} = useGetServiceByIdQuery(id)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetchServiceDetail(id);
         
-        const res = await fetch(`http://localhost:4000/api/v1/services/${id}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include', 
-        });
-        
-        const data = await res.json()
+        // const res = await fetch(`http://localhost:4000/api/v1/services/${id}`, {
+        //   method: 'GET',
+        //   headers: {
+        //     'Content-Type': 'application/json',
+        //   },
+        //   credentials: 'include', 
+        // });
+            
         if(data){
-        setRealService(data.service)
+        setRealService(data?.service)
         }
         setService(response);
       } catch {
@@ -98,11 +98,13 @@ function ServiceDetail() {
     };
 
     fetchData();
-  }, [id]);
+  }, [data, id]);
 
   const handleLoginRedirect = () => {
     navigate("/login", { state: { from: location.pathname } });
   };
+
+  
 
   
 
@@ -243,7 +245,7 @@ function ServiceDetail() {
             <div className="mt-8">
               <h2 className="text-3xl font-bold mb-4">FAQs</h2>
               <div className="space-y-4">
-                {realService?.faqs.map((faq, index) => (
+                {realService?.faqs?.map((faq, index) => (
                   <Accordion
                     key={index}
                     question={faq.question}
