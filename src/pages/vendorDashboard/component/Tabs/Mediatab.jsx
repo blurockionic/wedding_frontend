@@ -3,6 +3,8 @@ import { useForm, Controller } from "react-hook-form";
 import { BiUpload } from "react-icons/bi";
 import { MdClose } from "react-icons/md";
 import { useUplMultiMutation } from "../../../../redux/uploadSlice";
+import CustomButton from "../../../../components/global/button/CustomButton";
+import { FaPlus } from "react-icons/fa";
 
 const Mediatab = ({ serviceId, handleCloseMedia }) => {
   const [files, setFiles] = useState([]);
@@ -56,15 +58,15 @@ const Mediatab = ({ serviceId, handleCloseMedia }) => {
   };
 
   return (
-    <div className="h-fit w-full py-8">
-      <div className="relative bg-gradient-to-br from-gray-800 via-gray-900 to-black h-full p-6 bg-opacity-20 rounded-xl shadow-lg border border-gray-700 max-w-4xl mx-auto">
-        <h2 className="text-3xl font-extrabold text-white mb-8">
+    <div className="h-fit w-full ">
+      <div className="relative h-full p-6 bg-opacity-20 rounded-xl shadow-lg border border-ring max-w-4xl mx-auto">
+        <h2 className="text-3xl font-extrabold text-foreground mb-8">
           Media Upload
         </h2>
 
         <button
           onClick={handleCloseMedia}
-          className="absolute top-3 right-3 bg-gray-700 text-white rounded-full p-2 hover:bg-gray-600 transition"
+          className="absolute top-3 right-3 bg-gray-100 text-primary rounded-full p-2 hover:bg-gray-200 transition"
         >
           <MdClose className="w-5 h-5" />
         </button>
@@ -97,7 +99,7 @@ const Mediatab = ({ serviceId, handleCloseMedia }) => {
                         onChange={(e) =>
                           handleFileChange(e.target.files[0], index)
                         }
-                        className="p-2 bg-gray-800 text-gray-300 border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+                        className="p-2 bg-gray-800 text-gray-300 border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-ring"
                       />
                     )}
                   />
@@ -124,25 +126,26 @@ const Mediatab = ({ serviceId, handleCloseMedia }) => {
           </div>
 
           <div className="flex gap-4 justify-center mt-6">
-            <button
+            <CustomButton
               type="button"
+              leftIcon={<FaPlus/>}
+              text="Media"
               onClick={addNewRow}
-              className="px-6 py-3 bg-blue-700 text-white font-medium rounded-lg shadow-md hover:bg-blue-600 hover:shadow-lg transition transform hover:scale-105"
-            >
-              Add Another Media
-            </button>
-            <button
+              className="px-6 py-3 bg-primary text-white font-medium rounded-lg shadow-md hover:bg-pink-600 hover:shadow-lg transition transform hover:scale-105"
+            />
+              
+            
+            <CustomButton
               disabled={files.length === 0 || isLoading}
               type="submit"
+              text={isLoading ? "Uploading..." : "Upload Files"}
+              leftIcon={<BiUpload className="w-5 h-5" />}
               className={`px-8 py-3 flex items-center gap-3 font-medium rounded-lg shadow-md transition transform hover:scale-105 ${
                 files.length === 0 || isLoading
                   ? "bg-gray-500 text-gray-300 cursor-not-allowed"
-                  : "bg-green-600 text-white hover:bg-green-500 hover:shadow-lg"
+                  : "border border-ring text-green-500 hover:bg-green-200 hover:shadow-lg"
               }`}
-            >
-              {isLoading ? "Uploading..." : "Upload Files"}{" "}
-              <BiUpload className="w-5 h-5" />
-            </button>
+            />
           </div>
         </form>
 

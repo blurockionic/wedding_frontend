@@ -21,7 +21,7 @@ const VendorSidebar = ({ footer, setIsOpen, isOpen }) => {
       {!isOpen && (
         <button
           onClick={toggleSidebar}
-          className="fixed top-1 lg:top-2 left-2 lg:left-4 z-50 bg-gradient-to-b from-blue-700 via-blue-800 to-blue-900 text-gray-100 p-3 rounded-full shadow-lg lg:hidden"
+          className="fixed top-3 lg:top-2 left-2 lg:left-4 z-50 bg-gradient-to-b from-pink-700 via-pink-800 to-pink-900 text-gray-100 p-3 rounded-full shadow-lg lg:hidden"
         >
           {isOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
         </button>
@@ -30,7 +30,7 @@ const VendorSidebar = ({ footer, setIsOpen, isOpen }) => {
       {/* Sidebar Overlay for Mobile */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden"
+          className="fixed inset-0 z-30 bg-black bg-opacity-70 lg:hidden"
           onClick={toggleSidebar}
         ></div>
       )}
