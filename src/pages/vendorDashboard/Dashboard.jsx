@@ -2,12 +2,14 @@ import VendorSidebar from "./VendorSidebar";
 import VendorHeader from "./VendorHeader";
 import { Outlet } from "react-router-dom";
 import { useState } from "react";
+import DynamicTitle from "../../components/global/dynamicTitle/DynamicTitle";
 
 const VendorDashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
+      <DynamicTitle title={"Vendor Dashbaord"}/>
       {/* Sidebar Component */}
       <div className="fixed inset-y-0 left-0  z-50">
         <VendorSidebar

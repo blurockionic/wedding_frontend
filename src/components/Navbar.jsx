@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import NavbarRoutesConfig from "../assets/NavabarRouteConfig";
 import { useSelector, useDispatch } from "react-redux";
 import { useLogoutMutation } from "../redux/apiSlice.auth";
@@ -20,11 +20,13 @@ function Navbar() {
   const [logoutMutation] = useLogoutMutation();
   const [dropdown, setDropdown] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleOnProfile = () => {
     navigate("/profile");
   };
 
+  console.log(location.pathname);
   const handleNavigate = (item) => {
     setIsMenuOpen(false);
     navigate(`/services?search=${encodeURIComponent(item)}`);
@@ -34,39 +36,55 @@ function Navbar() {
 
   return (
     <>
-      <TopNavbar />
-      <nav className="w-full bg-white top-0 px-4 lg:px-16 z-50 shadow-sm">
-        <div className="w-full flex justify-between items-center py-4">
-          <div className="text-2xl font-bold text-primary cursor-pointer">
-            <NavLink to="/">WEDD</NavLink>
-          </div>
+        <div className={`${(location.pathname === "/vendorLogin") ||
+        (location.pathname === "/vendorSignup") ? "hidden" : "block"}`}>
+        <>
+            <TopNavbar />
+            <nav className="w-full bg-white top-0 px-4 lg:px-16 z-50 shadow-sm">
+              <div className="w-full flex justify-between items-center py-4">
+                <div className="text-2xl font-bold text-primary cursor-pointer">
+                  <NavLink to="/">WEDD</NavLink>
+                </div>
 
-          <button className="block lg:hidden text-gray-800" onClick={toggleMenu}>
-            {!isMenuOpen ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                className="h-6 w-6"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                className="h-6 w-6"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            )}
-          </button>
+                <button
+                  className="block lg:hidden text-gray-800"
+                  onClick={toggleMenu}
+                >
+                  {!isMenuOpen ? (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      className="h-6 w-6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M4 6h16M4 12h16M4 18h16"
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      className="h-6 w-6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  )}
+                </button>
 
-          <ul
-            className={`
+                <ul
+                  className={`
               flex flex-col lg:flex-row lg:gap-8 gap-4
               absolute lg:relative z-50
               rounded-lg m-2
@@ -74,156 +92,199 @@ function Navbar() {
               h-screen lg:h-0 w-1/2 left-0 top-0
               lg:w-auto lg:top-auto lg:items-center
               px-4 py-4 lg:py-0 lg:px-0 transition-transform
-              duration-300 ease-in-out ${isMenuOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
-          >
-            <div className="text-2xl block lg:hidden font-bold text-primary cursor-pointer my-7 ">
-              <NavLink to="/">WEDD</NavLink>
-            </div>
-
-            {NavbarRoutesConfig.map((route) => (
-              <li key={route.path} className="lg:inline-block">
-                <NavLink
-                  to={route.path}
-                  onClick={() => setIsMenuOpen(false)}
-                  className={({ isActive }) =>
-                    isActive ? "text-dustyRose-dark border-b-2 border-primary pb-1" : "hover:text-dustyRose"
-                  }
+              duration-300 ease-in-out ${
+                isMenuOpen ? "translate-x-0" : "-translate-x-full"
+              } lg:translate-x-0`}
                 >
-                  {route.name}
-                </NavLink>
-              </li>
-            ))}
+                  <div className="text-2xl block lg:hidden font-bold text-primary cursor-pointer my-7 ">
+                    <NavLink to="/">WEDD</NavLink>
+                  </div>
 
-            {/* Wedding Venues */}
-            <li
-              className="relative lg:inline-block"
-              onMouseEnter={() => setDropdown("wedding venue")}
-              onMouseLeave={() => setDropdown("")}
-            >
-              <span className="cursor-pointer hover:text-dustyRose">Wedding Venue</span>
-              {dropdown === "wedding venue" && (
-                <div className="absolute left-0 top-full bg-white shadow-lg w-48 py-4 z-40">
-                  <ul className="grid grid-cols-1 gap-4 px-4">
-                    {weddingVenues.map((item, index) => (
-                      <li key={index} className="hover:text-dustyRose">
-                        <button onClick={() => handleNavigate(item)} className="block text-left w-full">
-                          {item}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </li>
-              {/* wedding vendor  */}
-            <li
-              className="relative lg:inline-block"
-              onMouseEnter={() => setDropdown("wedding vendor")}
-              onMouseLeave={() => setDropdown("")}
-            >
-              <span className="cursor-pointer hover:text-dustyRose">Wedding Vendor</span>
-              {dropdown === "wedding vendor" && (
-                <div className="absolute left-0 top-full bg-white shadow-lg w-96 py-4 z-40">
-                  <ul className="grid grid-cols-2 gap-4 px-4">
-                    {weddingVendors.map((item, index) => (
-                      <li key={index} className="hover:text-dustyRose">
-                        <button onClick={() => handleNavigate(item)} className="block text-left w-full">
-                          {item}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </li>
+                  {NavbarRoutesConfig.map((route) => (
+                    <li key={route.path} className="lg:inline-block">
+                      <NavLink
+                        to={route.path}
+                        onClick={() => setIsMenuOpen(false)}
+                        className={({ isActive }) =>
+                          isActive
+                            ? "text-dustyRose-dark border-b-2 border-primary pb-1"
+                            : "hover:text-dustyRose"
+                        }
+                      >
+                        {route.name}
+                      </NavLink>
+                    </li>
+                  ))}
 
-            {/* Brides Dropdown */}
-            <li
-              className="relative lg:inline-block"
-              onMouseEnter={() => setDropdown("brides")}
-              onMouseLeave={() => setDropdown("")}
-            >
-              <span className="cursor-pointer hover:text-dustyRose">Brides</span>
-              {dropdown === "brides" && (
-                <div className="absolute left-0 top-full bg-white shadow-lg w-48 py-4 z-40">
-                  <ul className="grid grid-cols-1 gap-4 px-4">
-                    {brides.map((item, index) => (
-                      <li key={index} className="hover:text-dustyRose">
-                        <button onClick={() => handleNavigate(item)} className="block text-left w-full">
-                          {item}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </li>
-
-            {/* Grooms Dropdown */}
-            <li
-              className="relative lg:inline-block"
-              onMouseEnter={() => setDropdown("grooms")}
-              onMouseLeave={() => setDropdown("")}
-            >
-              <span className="cursor-pointer hover:text-dustyRose">Grooms</span>
-              {dropdown === "grooms" && (
-                <div className="absolute left-0 top-full bg-white shadow-lg w-48 py-4 z-40">
-                  <ul className="grid grid-cols-1 gap-4 px-4">
-                    {grooms.map((item, index) => (
-                      <li key={index} className="hover:text-dustyRose">
-                        <button onClick={() => handleNavigate(item)} className="block text-left w-full">
-                          {item}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </li>
-
-            {!isLoggedIn ? (
-              <>
-                <li className="lg:inline-block">
-                  <NavLink
-                    to="/login"
-                    onClick={() => setIsMenuOpen(false)}
-                    className={({ isActive }) =>
-                      isActive ? "text-dustyRose-dark border-b-2 border-primary pb-1" : "hover:text-dustyRose"
-                    }
+                  {/* Wedding Venues */}
+                  <li
+                    className="relative lg:inline-block"
+                    onMouseEnter={() => setDropdown("wedding venue")}
+                    onMouseLeave={() => setDropdown("")}
                   >
-                    Login
-                  </NavLink>
-                </li>
-                <li className="lg:inline-block">
-                  <NavLink
-                    to="/signup"
-                    onClick={() => setIsMenuOpen(false)}
-                    className={({ isActive }) =>
-                      isActive ? "text-dustyRose-dark border-b-2 border-primary pb-1" : "hover:text-dustyRose"
-                    }
+                    <span className="cursor-pointer hover:text-dustyRose">
+                      Wedding Venue
+                    </span>
+                    {dropdown === "wedding venue" && (
+                      <div className="absolute left-0 top-full bg-white shadow-lg w-48 py-4 z-40">
+                        <ul className="grid grid-cols-1 gap-4 px-4">
+                          {weddingVenues.map((item, index) => (
+                            <li key={index} className="hover:text-dustyRose">
+                              <button
+                                onClick={() => handleNavigate(item)}
+                                className="block text-left w-full"
+                              >
+                                {item}
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </li>
+                  {/* wedding vendor  */}
+                  <li
+                    className="relative lg:inline-block"
+                    onMouseEnter={() => setDropdown("wedding vendor")}
+                    onMouseLeave={() => setDropdown("")}
                   >
-                    Sign up
-                  </NavLink>
-                </li>
-              </>
-            ) : (
-              <li className="lg:inline-block">
-                <div onClick={handleOnProfile} className="flex items-center gap-x-2 cursor-pointer">
-                  <img src={user?.profile_photo || Avatar} alt="Profile" className="w-8 h-8 rounded-full" />
-                  <CustomText variant="paragraph" className="text-sm hidden lg:block" text="Profile" />
-                </div>
-              </li>
-            )}
-          </ul>
+                    <span className="cursor-pointer hover:text-dustyRose">
+                      Wedding Vendor
+                    </span>
+                    {dropdown === "wedding vendor" && (
+                      <div className="absolute left-0 top-full bg-white shadow-lg w-96 py-4 z-40">
+                        <ul className="grid grid-cols-2 gap-4 px-4">
+                          {weddingVendors.map((item, index) => (
+                            <li key={index} className="hover:text-dustyRose">
+                              <button
+                                onClick={() => handleNavigate(item)}
+                                className="block text-left w-full"
+                              >
+                                {item}
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </li>
+
+                  {/* Brides Dropdown */}
+                  <li
+                    className="relative lg:inline-block"
+                    onMouseEnter={() => setDropdown("brides")}
+                    onMouseLeave={() => setDropdown("")}
+                  >
+                    <span className="cursor-pointer hover:text-dustyRose">
+                      Brides
+                    </span>
+                    {dropdown === "brides" && (
+                      <div className="absolute left-0 top-full bg-white shadow-lg w-48 py-4 z-40">
+                        <ul className="grid grid-cols-1 gap-4 px-4">
+                          {brides.map((item, index) => (
+                            <li key={index} className="hover:text-dustyRose">
+                              <button
+                                onClick={() => handleNavigate(item)}
+                                className="block text-left w-full"
+                              >
+                                {item}
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </li>
+
+                  {/* Grooms Dropdown */}
+                  <li
+                    className="relative lg:inline-block"
+                    onMouseEnter={() => setDropdown("grooms")}
+                    onMouseLeave={() => setDropdown("")}
+                  >
+                    <span className="cursor-pointer hover:text-dustyRose">
+                      Grooms
+                    </span>
+                    {dropdown === "grooms" && (
+                      <div className="absolute left-0 top-full bg-white shadow-lg w-48 py-4 z-40">
+                        <ul className="grid grid-cols-1 gap-4 px-4">
+                          {grooms.map((item, index) => (
+                            <li key={index} className="hover:text-dustyRose">
+                              <button
+                                onClick={() => handleNavigate(item)}
+                                className="block text-left w-full"
+                              >
+                                {item}
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </li>
+
+                  {!isLoggedIn ? (
+                    <>
+                      <li className="lg:inline-block">
+                        <NavLink
+                          to="/login"
+                          onClick={() => setIsMenuOpen(false)}
+                          className={({ isActive }) =>
+                            isActive
+                              ? "text-dustyRose-dark border-b-2 border-primary pb-1"
+                              : "hover:text-dustyRose"
+                          }
+                        >
+                          Login
+                        </NavLink>
+                      </li>
+                      <li className="lg:inline-block">
+                        <NavLink
+                          to="/signup"
+                          onClick={() => setIsMenuOpen(false)}
+                          className={({ isActive }) =>
+                            isActive
+                              ? "text-dustyRose-dark border-b-2 border-primary pb-1"
+                              : "hover:text-dustyRose"
+                          }
+                        >
+                          Sign up
+                        </NavLink>
+                      </li>
+                    </>
+                  ) : (
+                    <li className="lg:inline-block">
+                      <div
+                        onClick={handleOnProfile}
+                        className="flex items-center gap-x-2 cursor-pointer"
+                      >
+                        <img
+                          src={user?.profile_photo || Avatar}
+                          alt="Profile"
+                          className="w-8 h-8 rounded-full"
+                        />
+                        <CustomText
+                          variant="paragraph"
+                          className="text-sm hidden lg:block"
+                          text="Profile"
+                        />
+                      </div>
+                    </li>
+                  )}
+                </ul>
+              </div>
+              {/* Background Overlay */}
+              <div
+                className={`fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ${
+                  isMenuOpen
+                    ? "opacity-100 backdrop-blur-md"
+                    : "opacity-0 pointer-events-none"
+                } z-40`}
+                onClick={() => setIsMenuOpen(false)}
+              />
+            </nav>
+          </>
         </div>
-         {/* Background Overlay */}
-      <div
-        className={`fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ${
-          isMenuOpen ? 'opacity-100 backdrop-blur-md' : 'opacity-0 pointer-events-none'
-        } z-40`}
-        onClick={() => setIsMenuOpen(false)}
-      />
-      </nav>
     </>
   );
 }
