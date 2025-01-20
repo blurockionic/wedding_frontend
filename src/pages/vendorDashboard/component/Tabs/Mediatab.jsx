@@ -4,7 +4,7 @@ import { BiUpload } from "react-icons/bi";
 import { MdClose } from "react-icons/md";
 import { useUplMultiMutation } from "../../../../redux/uploadSlice";
 
-const Mediatab = ({ serviceId, handleCloseMedia }) => {
+const reMediatab = ({ serviceId, handleCloseMedia }) => {
   const [files, setFiles] = useState([]);
   const { control, handleSubmit } = useForm();
   const [uploadFiles, { isLoading, isError, error }] = useUplMultiMutation(); // Hook to trigger the file upload

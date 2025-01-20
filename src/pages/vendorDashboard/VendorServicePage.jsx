@@ -5,7 +5,6 @@ import { FiSearch } from "react-icons/fi";
 import SearchBar from "../../components/SearchBar";
 import { GoSearch } from "react-icons/go";
 import {
-  useDeleteServiceMutation,
   useGetServicesQuery,
 } from "../../redux/serviceSlice";
 import { PiPlus } from "react-icons/pi";

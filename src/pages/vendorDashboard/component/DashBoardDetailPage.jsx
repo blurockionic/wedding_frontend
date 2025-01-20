@@ -27,8 +27,8 @@ const Button = ({ label, onClick, className, type = "button" }) => (
 );
 
 const DashBoardDetailPage = () => {
-  const [updateFAQ, {refetch: updateRefetch}] = useUpdateFAQMutation()
-  const [deleteFAQ, {refetch: deleteRefetch}] = useDeleteFAQMutation()
+  const [updateFAQ] = useUpdateFAQMutation()
+  const [deleteFAQ] = useDeleteFAQMutation()
   const [isEditFAQ, setIsEditFAQ] = useState(false);
   const [indexNumber, setIndexNumber] = useState(null)
   const { serviceId } = useParams();
@@ -97,7 +97,7 @@ const DashBoardDetailPage = () => {
       setIndexNumber(null);
       reset(); 
      }
-     updateRefetch()
+     refetch();
     } catch (error) {
       console.log(error)
     }
@@ -113,6 +113,7 @@ const DashBoardDetailPage = () => {
         faqId: service.faqs[index].id
       })
       console.log(res)
+      refetch();
     } catch (error) {
       console.error(error)
     }
@@ -122,17 +123,17 @@ const DashBoardDetailPage = () => {
     <div className="max-w-screen-xl mx-auto p-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div>
-          <h1 className="text-4xl font-bold text-gray-400 capitalize dark:text-white mb-4">
+          <h1 className="text-4xl font-bold text-foreground capitalize dark:text-white mb-4">
             {service?.service_name || "Service Name"}
           </h1>
-          <p className="text-lg text-gray-400 capitalize dark:text-white mb-4">
+          <p className="text-lg text-foreground capitalize dark:text-white mb-4">
             {service?.description}
           </p>
-          <p className="text-gray-400 capitalize dark:text-white mb-2">
+          <p className="text-foreground capitalize dark:text-white mb-2">
             <span className="font-semibold">Service Type:</span>{" "}
             {service?.service_type}
           </p>
-          <p className="text-gray-400 capitalize dark:text-white">
+          <p className="text-foreground capitalize dark:text-white">
             <span className="font-semibold">Price Range:</span> ₹
             {service?.min_price}
           </p>
@@ -141,7 +142,7 @@ const DashBoardDetailPage = () => {
 
       {/* Media Section */}
       <div>
-        <h2 className="text-2xl font-bold text-gray-400 capitalize dark:text-white mb-4">
+        <h2 className="text-2xl font-bold text-foreground  capitalize dark:text-white mb-4">
           Media
         </h2>
         {service?.media?.[0] &&
