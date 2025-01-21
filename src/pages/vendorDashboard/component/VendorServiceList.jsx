@@ -18,32 +18,32 @@ const VendorServiceList = ({ services }) => {
           <div
             key={service.id}
             onClick={() => handleCardClick(service.id)}
-            className="bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-300 flex flex-col justify-between"
+            className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 border border-ring flex flex-col justify-between"
           >
             {/* Card Header */}
-            <div className="p-4 bg-gray-100 border-b border-gray-300">
-              <h3 className="text-lg font-medium text-gray-800 truncate">
+            <div className="p-4 bg-gray-100 border-b border-gray-300 rounded-tl-lg rounded-tr-lg">
+              <h3 className="text-lg font-medium text-gray-800 truncate capitalize">
                 {service.service_name}
               </h3>
               <p className="text-sm text-gray-500 capitalize">
-                Type: {service.service_type || "N/A"}
+               <span className="font-thin text-xs"> Service Type:</span> <span className="font-bold">{service.service_type || "N/A"}</span>
               </p>
             </div>
 
             {/* Card Content */}
             <div className="p-4 flex flex-col space-y-2">
-              <p className="text-sm text-gray-600">
+              {/* <p className="text-sm text-gray-600">
                 {service.description || "No description available."}
-              </p>
+              </p> */}
               <div className="text-sm text-gray-500">
                 <p>
-                  Price Range:{" "}
+                 <span className="text-sm font-thin"> Price Range:</span>{" "}
                   <span className="font-medium text-gray-800">
                     ${service.min_price || "N/A"} - ${service.max_price || "N/A"}
                   </span>
                 </p>
                 <p>
-                  Rating:{" "}
+                <span className="text-sm font-thin">  Rating:</span>
                   <span className="font-medium text-gray-800">
                     {service.rating || 0} ⭐
                   </span>
@@ -52,7 +52,7 @@ const VendorServiceList = ({ services }) => {
             </div>
 
             {/* Card Footer */}
-            <div className=" flex justify-between p-2 bg-gray-100 border-t border-gray-300">
+            <div className=" flex justify-between p-2 bg-gray-100 border-t border-gray-300 rounded-bl-lg rounded-br-lg">
               <p className="text-sm text-gray-500">
                 Vendor:{" "}
                 <span className="font-medium capitalize text-gray-800">

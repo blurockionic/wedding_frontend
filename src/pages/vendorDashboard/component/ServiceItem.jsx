@@ -2,7 +2,7 @@ import React from "react";
 
 const ServiceItem = ({ service }) => {
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+    <div className="bg-white p-6 rounded-lg shadow-lg border border-ring">
       <h3 className="text-xl font-semibold text-gray-800">{service.name}</h3>
       <p className="text-gray-600 mt-2">Type: {service.type}</p>
       <p className="text-gray-600">Price: {service.priceRange}</p>

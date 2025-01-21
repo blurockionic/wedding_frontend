@@ -10,6 +10,7 @@ import Step3 from "./Step3";
 import Step4 from "./Step4";
 import Step5 from "./Step5";
 import Step6 from "./Step6";
+import signup_bg from "../../../../public/signup/sign-bg.jpg"
 
 function VendorRegistration() {
   useProtectAfterLogin(["vendor"], "/VendorDashboard");
@@ -33,7 +34,8 @@ function VendorRegistration() {
     mode: "onBlur",
   });
 
-  const [vendorSignup, { isLoading, isError, error }] = useVendorSignupMutation();
+  const [vendorSignup, { isLoading, isError, error }] =
+    useVendorSignupMutation();
 
   const nextStep = async () => {
     const isValid = await methods.trigger();
@@ -56,8 +58,38 @@ function VendorRegistration() {
 
   return (
     <FormProvider {...methods}>
-      <div className="min-h-screen bg-[#f2f2f2] py-12 px-4">
-        <div className="max-w-4xl mx-auto">
+      <div className="min-h-screen bg-[#f2f2f2]  px-4 grid grid-cols-1 md:grid-cols-3">
+        <div className="col-span-1 hidden md:block">
+          {/* sign up  */}
+          <div
+            className="relative h-screen flex items-center justify-center bg-cover bg-center"
+            style={{ backgroundImage: `url(${signup_bg})` }}
+          >
+            {/* Overlay with backdrop blur */}
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+            
+            {/* Content on top of the image */}
+            <div className="relative z-10 text-center text-white px-6">
+            <button
+                onClick={() => {
+                  navigate("/");
+                }}
+                className=" text-white font-semibold py-3 px-8 text-6xl transition-all duration-300"
+              >
+                Wedd
+              </button>
+              <h2 className="text-4xl md:text-5xl font-bold mb-4">
+                Join Us Today!
+              </h2>
+              <p className="text-lg md:text-xl mb-6">
+                Sign up now to connect with engaged couples and grow your
+                business.
+              </p>
+              
+            </div>
+          </div>
+        </div>
+        <div className="col-span-2 w-full px-10 my-auto">
           {/* Header Card */}
           <div className="bg-white rounded-t-lg shadow-sm p-6 border-b border-[#d6d6d6]">
             <div className="flex items-center justify-between mb-6">
@@ -86,7 +118,9 @@ function VendorRegistration() {
             {currentStep === 3 && <Step3 />}
             {currentStep === 4 && <Step4 />}
             {currentStep === 5 && <Step5 />}
-            {currentStep === 6 && <Step6 onSubmit={methods.handleSubmit(handleSubmit)} />}
+            {currentStep === 6 && (
+              <Step6 onSubmit={methods.handleSubmit(handleSubmit)} />
+            )}
 
             {/* Loading and Error States */}
             {isLoading && (
