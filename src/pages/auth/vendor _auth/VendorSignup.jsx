@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import useProtectAfterLogin from "../../../hooks/useProtectAfterLogin";
 import { useVendorSignupMutation } from "../../../redux/vendorSlice";
@@ -10,7 +10,8 @@ import Step3 from "./Step3";
 import Step4 from "./Step4";
 import Step5 from "./Step5";
 import Step6 from "./Step6";
-import signup_bg from "../../../../public/signup/sign-bg.jpg"
+import signup_bg from "../../../../public/signup/sign-bg.jpg";
+import brandlogo from "../../../../public/logo/brandlogo.png";
 
 function VendorRegistration() {
   useProtectAfterLogin(["vendor"], "/VendorDashboard");
@@ -67,25 +68,28 @@ function VendorRegistration() {
           >
             {/* Overlay with backdrop blur */}
             <div className="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
-            
+
             {/* Content on top of the image */}
-            <div className="relative z-10 text-center text-white px-6">
-            <button
-                onClick={() => {
-                  navigate("/");
-                }}
-                className=" text-white font-semibold py-3 px-8 text-6xl transition-all duration-300"
+            <div className="relative z-10 text-center text-white px-6 ">
+              <NavLink
+                to="/"
+                className="cursor-pointer flex gap-3 justify-center w-full "
               >
-                Wedd
-              </button>
-              <h2 className="text-4xl md:text-5xl font-bold mb-4">
+                <img src={brandlogo} alt="brandlogo" className="w-16 h-16" />
+                <div className="flex flex-col justify-start items-start">
+                  <span className="text-background text-4xl">
+                    Marriage Vendors
+                  </span>
+                  <span className="text-background text-xs">Wedding Orgniser</span>
+                </div>
+              </NavLink>
+              <h2 className="text-4xl md:text-5xl font-bold mb-4 mt-10">
                 Join Us Today!
               </h2>
               <p className="text-lg md:text-xl mb-6">
                 Sign up now to connect with engaged couples and grow your
                 business.
               </p>
-              
             </div>
           </div>
         </div>

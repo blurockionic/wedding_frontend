@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
-import { Link, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { links } from "../../static/static";
+import brandlogo from "../../../public/logo/brandlogo.png";
 
 const VendorSidebar = ({ footer, setIsOpen, isOpen }) => {
   const location = useLocation();
@@ -41,22 +42,20 @@ const VendorSidebar = ({ footer, setIsOpen, isOpen }) => {
           left-0 z-50 flex flex-col border border-primary text-gray-100 
           bg-gradient-to-br from-white via-pink-50 to-pink-300
           shadow-xl transform ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0 lg:static lg:shadow-none transition-transform duration-300 ease-in-out`}
+            isOpen ? "translate-x-0" : "-translate-x-full"
+          } lg:translate-x-0 lg:static lg:shadow-none transition-transform duration-300 ease-in-out`}
         style={{ width: "16rem" }}
       >
         {/* Logo Section */}
         <div className="flex items-center justify-between p-4 mt-3">
           <div className="flex items-center gap-2">
-            {/* <img
-              src={logo}
-              alt="Logo"
-              className="h-8 w-8 shadow-lg shadow-white bg-transparent rounded-md"
-            /> */}
-
-            <h1 className=" lg:text-sm xl:text-lg xl:font-bold lg:font-semibold hidden xl:block text-foreground">
-              Wedd Dashboard
-            </h1>
+            <NavLink to="/" className="flex items-center gap-3 cursor-pointer">
+              <img src={brandlogo} alt="brandlogo" className="w-10 h-10" />
+              <div className="flex flex-col justify-start">
+                <span className="text-primary text-xl">Marriage Vendors</span>
+                <span className="text-primary text-xs">Wedding Orgniser</span>
+              </div>
+            </NavLink>
           </div>
 
           <button
@@ -80,16 +79,20 @@ const VendorSidebar = ({ footer, setIsOpen, isOpen }) => {
                       hover:bg-primary
                        hover:text-foreground 
                        rounded-md ${
-                    activeTab === link.href ? "bg-primary text-background" : "text-foreground"
-                  }`}
+                         activeTab === link.href
+                           ? "bg-primary text-background"
+                           : "text-foreground"
+                       }`}
                   onClick={() => {
                     setIsOpen(false); // Close sidebar on link click
                     handleOnActive(link.href); // Set active tab
                   }}
                 >
-                  <link.icon className={`h-6 w-6  ${
-                    activeTab === link.href ? " text-background" : ""
-                  }` }/>
+                  <link.icon
+                    className={`h-6 w-6  ${
+                      activeTab === link.href ? " text-background" : ""
+                    }`}
+                  />
                   <span className="text-sm">{link.label}</span>
                 </Link>
               </li>
