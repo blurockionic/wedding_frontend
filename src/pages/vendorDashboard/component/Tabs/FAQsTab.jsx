@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { MdClose } from "react-icons/md";
 import { useCreateFAQMutation, useUpdateFAQMutation } from "../../../../redux/serviceSlice";
+import { toast } from "react-toastify";
+import CustomButton from "../../../../components/global/button/CustomButton";
+import { FaPlus } from "react-icons/fa";
 
 export default function FAQsTab({ serviceId ,handleCloseFAQ }) {
   const [createFAQ] = useCreateFAQMutation();
@@ -28,12 +31,18 @@ export default function FAQsTab({ serviceId ,handleCloseFAQ }) {
   }, [fields]); // Trigger this effect whenever fields change
 
   const onSubmit = async(data) => {
-    console.log("Service ID:", serviceId);
-    console.log("FAQs:", data.faqs);
     try {
-       const res = await createFAQ({id: serviceId,
+       const response = await createFAQ({id: serviceId,
         data: data.faqs
        }).unwrap()
+
+       console.log(response)
+
+       const {success, message} =  response
+       if(success){
+        toast.success(message)
+        handleCloseFAQ(true)
+       }
 
     } catch (error) {
       console.error(error)
@@ -45,15 +54,15 @@ export default function FAQsTab({ serviceId ,handleCloseFAQ }) {
   };
 
   return (
-    <div className="h-full  py-10 ">
-      <div className=" relative bg-transparent p-8 max-w-4xl mx-auto rounded-lg bg-gradient-to-br from-gray-800 via-gray-900 to-black bg-opacity-70 backdrop-blur-lg border border-gray-700">
-        <h2 className="text-4xl font-bold  text-white mb-8">
+    <div className="h-full">
+      <div className=" relative bg-transparent p-8 max-w-4xl mx-auto rounded-lg  bg-opacity-70 backdrop-blur-lg border border-ring">
+        <h2 className="text-4xl font-bold  text-foreground mb-8">
           FAQs <span className="text-sm">({fields.length})</span>
         </h2>
 
         <button
           onClick={handleCloseFAQ}
-          className="absolute top-3 right-3 bg-gray-700 text-white rounded-full p-2 hover:bg-gray-600 transition"
+          className="absolute top-3 right-3 bg-gray-100 text-primary rounded-full p-2 hover:bg-gray-200 transition"
         >
           <MdClose className="w-5 h-5" />
 
@@ -67,8 +76,8 @@ export default function FAQsTab({ serviceId ,handleCloseFAQ }) {
               type="button"
               onClick={() => handleIndexClick(index)}
               className={`w-12 h-12 text-white rounded-lg ${
-                selectedIndex === index ? "bg-blue-600" : "bg-gray-600"
-              } hover:bg-blue-500 hover:scale-125 transition-transform`}
+                selectedIndex === index ? "bg-primary" : "bg-gray-600"
+              } hover:bg-pink-600 hover:scale-125 transition-transform`}
             >
               {index + 1}
             </button>
@@ -89,7 +98,7 @@ export default function FAQsTab({ serviceId ,handleCloseFAQ }) {
                   <button
                     type="button"
                     onClick={() => remove(selectedIndex)}
-                    className="relative bg-gradient-to-tr from-slate-500 to-slate-700 text-white rounded-sm w-10 h-10 flex items-center justify-center shadow-md hover:shadow-lg transition-all transform hover:scale-125"
+                    className="relative bg-gray-300 text-primary rounded-lg w-8 h-8 flex items-center justify-center shadow-md hover:shadow-lg transition-all transform hover:scale-125"
                   >
                     x
                   </button>
@@ -110,7 +119,7 @@ export default function FAQsTab({ serviceId ,handleCloseFAQ }) {
                         <input
                           autoFocus
                           {...field}
-                          className="mt-2 w-full px-4 py-3 p-2 bg-gray-800 text-gray-300 border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+                          className="mt-2 w-full px-4 py-3 p-2 bg-gray-800 text-gray-300 border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-ring"
                           placeholder="Enter question"
                         />
                       )}
@@ -135,7 +144,7 @@ export default function FAQsTab({ serviceId ,handleCloseFAQ }) {
                       render={({ field }) => (
                         <textarea
                           {...field}
-                          className="mt-2 w-full px-4 py-3 p-2 bg-gray-800 text-gray-300 border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+                          className="mt-2 w-full px-4 py-3 p-2 bg-gray-800 text-gray-300 border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-ring"
                           placeholder="Enter answer"
                         />
                       )}
@@ -153,16 +162,18 @@ export default function FAQsTab({ serviceId ,handleCloseFAQ }) {
 
           {/* Action Buttons */}
           <div className="flex gap-4 justify-center mt-6">
-            <button
+            <CustomButton
               type="button"
+              leftIcon={<FaPlus/>}
+              text="Another FAQ"
               onClick={() => append({ question: "", answer: "" })}
-              className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-500 transition transform hover:scale-105"
-            >
-              Add Another FAQ
-            </button>
+              className="px-6 py-3 bg-primary text-white font-medium rounded-lg shadow-md hover:bg-pink-500 transition transform hover:scale-105"
+            />
+              
+            
             <button
               type="submit"
-              className="px-8 py-3 bg-green-600 text-white font-medium rounded-lg shadow-md hover:bg-green-500 transition transform hover:scale-105"
+              className="px-8 py-3 border border-ring text-green-500 font-medium rounded-lg shadow-md hover:bg-green-100 transition transform hover:scale-105"
             >
               Submit FAQs
             </button>

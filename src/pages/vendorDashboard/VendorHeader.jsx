@@ -52,11 +52,13 @@ const VendorHeader = () => {
     };
   }, []);
 
+  
+
   return (
-    <nav className="w-full relative  bg-background shadow-md px-6 py-3 flex items-center justify-between lg:rounded-md">
+    <nav className=" bg-background shadow-md px-6 py-3 flex items-center justify-between lg:rounded-md">
       {/* Left: Brand Name */}
-      <Link to="/" className="font-bold text-3xl md:block hidden text-primary">
-        wedd
+      <Link to="/" className="font-bold text-3xl ml-10 m-0 text-primary">
+        Wedd
       </Link>
 
       {/* Right: Action Buttons */}

@@ -14,23 +14,14 @@ import { toast } from "react-toastify";
 import { CiEdit } from "react-icons/ci";
 import { MdDeleteOutline } from "react-icons/md";
 import { useForm } from "react-hook-form";
-
-// Reusable Button Component
-const Button = ({ label, onClick, className, type = "button" }) => (
-  <button
-    type={type}
-    className={`px-4 py-2 rounded-lg ${className}`}
-    onClick={onClick}
-  >
-    {label}
-  </button>
-);
+import CustomButton from "../../../components/global/button/CustomButton";
+import { FaEdit, FaPlus } from "react-icons/fa";
 
 const DashBoardDetailPage = () => {
-  const [updateFAQ] = useUpdateFAQMutation()
-  const [deleteFAQ] = useDeleteFAQMutation()
+  const [updateFAQ] = useUpdateFAQMutation();
+  const [deleteFAQ] = useDeleteFAQMutation();
   const [isEditFAQ, setIsEditFAQ] = useState(false);
-  const [indexNumber, setIndexNumber] = useState(null)
+  const [indexNumber, setIndexNumber] = useState(null);
   const { serviceId } = useParams();
   const { data, isLoading, isError, error, refetch } =
     useGetServiceByIdQuery(serviceId);
@@ -75,74 +66,110 @@ const DashBoardDetailPage = () => {
   const handleOnUpdateFAQ = (index) => {
     setIsEditFAQ(true);
     setIndexNumber(index);
-    setValue("question", service?.faqs[index].question); 
+    setValue("question", service?.faqs[index].question);
     setValue("answer", service?.faqs[index].answer);
   };
 
-  const handleSaveFAQ = async(data) => {
-    // console.log("Updated FAQ:", {index:indexNumber, ...data });
-    // console.log("Updated FAQ:", service.faqs[indexNumber].id);
-
+  const handleSaveFAQ = async (data) => {
     try {
-      const res =  await updateFAQ({
+      const res = await updateFAQ({
         id: service.id,
         faqId: service.faqs[indexNumber].id,
-        data: data
-      })
-     //reload
-
-     if(res){
-      console.log(res)
-      setIsEditFAQ(false);
-      setIndexNumber(null);
-      reset(); 
-     }
-     refetch();
+        data: data,
+      });
+      console.log(res);
+      const { success, message } = res.data;
+      if (success) {
+        setIsEditFAQ(false);
+        setIndexNumber(null);
+        reset();
+        //success message
+        toast.success(message);
+        // reload the data
+        refetch();
+      }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-    
   };
 
   //handle on delete the FAQ
-  const handleOnDeleteFAQ =async(index)=>{
-    console.log("delete clicked", index);
+  const handleOnDeleteFAQ = async (index) => {
     try {
-      const res =  await deleteFAQ({
+      const res = await deleteFAQ({
         id: service.id,
-        faqId: service.faqs[index].id
-      })
-      console.log(res)
-      refetch();
+        faqId: service.faqs[index].id,
+      });
+      const { success, message } = res.data;
+      if (success) {
+        toast.success(message);
+        // reload the data
+        refetch();
+      }
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
 
   return (
-    <div className="max-w-screen-xl mx-auto p-6">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div className="max-w-screen-xl mx-auto px-6">
+      {/* Buttons Section */}
+      <div className="mt-1 flex gap-4 justify-end  p-2 w-full">
+        <CustomButton
+          leftIcon={<FaPlus />}
+          text="Media"
+          className={`border border-green-500 hover:bg-green-100 text-green-500 px-2 py-2${
+            activeTab === "media" ? "ring-2 ring-green-300" : ""
+          }`}
+          onClick={() => setActiveTab(activeTab === "media" ? null : "media")}
+        />
+        <CustomButton
+          text="Add FAQ"
+          leftIcon={<FaPlus />}
+          className={`border border-blue-500 hover:bg-blue-100 text-blue-500 px-2 py-2${
+            activeTab === "faq" ? "ring-2 ring-blue-300" : ""
+          }`}
+          onClick={() => setActiveTab(activeTab === "faq" ? null : "faq")}
+        />
+        <CustomButton
+          text="Service"
+          leftIcon={<FaEdit />}
+          className={`border border-yellow-500 hover:bg-yellow-100 text-yellow-500 px-2 py-2${
+            activeTab === "edit" ? "ring-2 ring-yellow-300" : ""
+          }`}
+          onClick={() => setActiveTab(activeTab === "edit" ? null : "edit")}
+        />
+        <CustomButton
+          text="Service"
+          leftIcon={<MdDeleteOutline size={20} />}
+          onClick={handleDelete}
+          className="border border-red-500 hover:bg-red-100 text-red-500 px-2 py-2"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-7 mt-5 md:px-4">
         <div>
+          <span className="text-sm">Service Title</span>
           <h1 className="text-4xl font-bold text-foreground capitalize dark:text-white mb-4">
             {service?.service_name || "Service Name"}
           </h1>
-          <p className="text-lg text-foreground capitalize dark:text-white mb-4">
-            {service?.description}
-          </p>
-          <p className="text-foreground capitalize dark:text-white mb-2">
+          <p className="text-gray-600 capitalize dark:text-white mb-2">
             <span className="font-semibold">Service Type:</span>{" "}
             {service?.service_type}
           </p>
-          <p className="text-foreground capitalize dark:text-white">
+          <p className="text-gray-600 capitalize dark:text-white">
             <span className="font-semibold">Price Range:</span> ₹
             {service?.min_price}
+          </p>
+          <p className="text-lg text-gray-600 capitalize mb-4">
+            {service?.description}
           </p>
         </div>
       </div>
 
       {/* Media Section */}
-      <div>
-        <h2 className="text-2xl font-bold text-foreground  capitalize dark:text-white mb-4">
+      <div className="md:px-4">
+        <h2 className="text-2xl font-bold text-foreground capitalize dark:text-white mb-4">
           Media
         </h2>
         {service?.media?.[0] &&
@@ -160,128 +187,125 @@ const DashBoardDetailPage = () => {
       </div>
 
       {/* FAQ Section */}
-      <div className="mt-8">
+      <div className="mt-8 md:px-4">
         <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
           FAQs
         </h2>
         <div>
-        <div>
-      {service?.faqs?.map((faq, index) => (
-        <div
-          key={index}
-          className="flex justify-between items-center border bg-gray-50 dark:bg-gray-800 px-5 py-3 rounded-md mb-3"
-        >
-          <div className="rounded-lg w-full">
-            {isEditFAQ && index === indexNumber ? (
-              <form
-                onSubmit={handleSubmit(handleSaveFAQ)}
-                className="space-y-2"
+          <div>
+            {service?.faqs?.map((faq, index) => (
+              <div
+                key={index}
+                className="flex justify-between items-center border bg-gray-50 dark:bg-gray-800 px-5 py-3 rounded-md mb-3"
               >
-                <input
-                  type="text"
-                  {...register("question", { required: "Question is required" })}
-                  placeholder="Edit Question"
-                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
-                />
-                <textarea
-                  {...register("answer", { required: "Answer is required" })}
-                  placeholder="Edit Answer"
-                  rows="3"
-                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
-                ></textarea>
-                <div className="flex gap-3">
-                  <button
-                    type="submit"
-                    className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
-                  >
-                    Save
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsEditFAQ(false);
-                      setIndexNumber(null);
-                      reset();
-                    }}
-                    className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
-                  >
-                    Cancel
-                  </button>
+                <div className="rounded-lg w-full">
+                  {isEditFAQ && index === indexNumber ? (
+                    <form
+                      onSubmit={handleSubmit(handleSaveFAQ)}
+                      className="space-y-2"
+                    >
+                      <input
+                        type="text"
+                        {...register("question", {
+                          required: "Question is required",
+                        })}
+                        placeholder="Edit Question"
+                        className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+                      />
+                      <textarea
+                        {...register("answer", {
+                          required: "Answer is required",
+                        })}
+                        placeholder="Edit Answer"
+                        rows="3"
+                        className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+                      ></textarea>
+                      <div className="flex gap-3">
+                        <button
+                          type="submit"
+                          className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+                        >
+                          Save
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsEditFAQ(false);
+                            setIndexNumber(null);
+                            reset();
+                          }}
+                          className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </form>
+                  ) : (
+                    <>
+                      <h3 className="capitalize text-lg font-semibold text-gray-800 dark:text-white">
+                        Q{index + 1}: {faq.question}
+                      </h3>
+                      <p className="text-gray-600 dark:text-gray-300">
+                        {faq.answer}
+                      </p>
+                    </>
+                  )}
                 </div>
-              </form>
-            ) : (
-              <>
-                <h3 className="capitalize text-lg font-semibold text-gray-800 dark:text-white">
-                  Q{index + 1}: {faq.question}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300">{faq.answer}</p>
-              </>
-            )}
-          </div>
-          <div className="flex gap-5">
-            <>
-              <CiEdit
-              onClick={() => handleOnUpdateFAQ(index)}
-              size={24}
-              className="cursor-pointer text-green-500"
-            />
-            <MdDeleteOutline
-              onClick={() => handleOnDeleteFAQ(index)}
-              size={24}
-              className="cursor-pointer text-red-500"
-            />
-              </>
-            
-            
+                <div className="flex gap-5">
+                  <>
+                    <CiEdit
+                      onClick={() => handleOnUpdateFAQ(index)}
+                      size={24}
+                      className="cursor-pointer text-green-500"
+                    />
+                    <MdDeleteOutline
+                      onClick={() => handleOnDeleteFAQ(index)}
+                      size={24}
+                      className="cursor-pointer text-red-500"
+                    />
+                  </>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-      ))}
-    </div>
-    </div>
       </div>
-      <div className="mt-8">
+      <div className="mt-8 md:px-4">
         {activeTab === "media" && (
-          <Mediatab handleCloseMedia={handleClose} serviceId={serviceId} />
+          <>
+            {/* Background Overlay */}
+            <div className="fixed inset-0 z-10 bg-transparent bg-opacity-50 backdrop-blur-md"></div>
+
+            {/* Modal Content */}
+            <div className="fixed z-20 top-1/2 left-1/2 md:left-[60%] transform -translate-x-1/2 -translate-y-1/2 bg-transparent backdrop-blur-md rounded-lg shadow-lg max-w-lg w-full">
+              <Mediatab handleCloseMedia={handleClose} serviceId={serviceId} />
+            </div>
+          </>
         )}
+
         {activeTab === "faq" && (
-          <FAQsTab handleCloseFAQ={handleClose} serviceId={serviceId} />
+          <>
+            {/* Background Overlay */}
+            <div className="fixed inset-0 z-10 bg-transparent bg-opacity-50 backdrop-blur-md"></div>
+
+            {/* Modal Content */}
+            <div className="fixed z-20 top-1/2 left-1/2 md:left-[60%] transform -translate-x-1/2 -translate-y-1/2 bg-transparent backdrop-blur-md rounded-lg shadow-lg  max-w-lg w-full">
+              <FAQsTab handleCloseFAQ={handleClose} serviceId={serviceId} />
+            </div>
+          </>
         )}
         {activeTab === "edit" && (
-          <ServiceCreate onClose={handleClose} serviceData={data.service} />
+          <>
+            {/* Background Overlay */}
+            <div className="fixed inset-0 z-10 bg-transparent bg-opacity-50  backdrop-blur-md"></div>
+
+            {/* Modal Content */}
+            <div className="fixed z-20 top-1/2 left-1/2 md:left-[60%] transform -translate-x-1/2 -translate-y-1/2 bg-transparent backdrop-blur-md rounded-lg shadow-lg  max-w-lg w-full">
+              <ServiceCreate onClose={handleClose} serviceData={data.service} />
+            </div>
+          </>
         )}
       </div>
-
-      {/* Buttons Section */}
-      <div className="mt-8 flex gap-4 justify-end">
-        <Button
-          label="Add Media"
-          className={`bg-green-500 dark:bg-green-600 text-white ${
-            activeTab === "media" ? "ring-2 ring-green-300" : ""
-          }`}
-          onClick={() => setActiveTab(activeTab === "media" ? null : "media")}
-        />
-        <Button
-          label="Add FAQ"
-          className={`bg-blue-500 dark:bg-blue-600 text-white ${
-            activeTab === "faq" ? "ring-2 ring-blue-300" : ""
-          }`}
-          onClick={() => setActiveTab(activeTab === "faq" ? null : "faq")}
-        />
-        <Button
-          label="Edit Service"
-          className={`bg-yellow-500 dark:bg-yellow-600 text-white ${
-            activeTab === "edit" ? "ring-2 ring-yellow-300" : ""
-          }`}
-          onClick={() => setActiveTab(activeTab === "edit" ? null : "edit")}
-        />
-        <Button
-          label="Delete Service"
-          onClick={handleDelete}
-          className="bg-red-500 dark:bg-red-600 text-white"
-        />
-      </div>
-
-      {/* Conditional Form Rendering */}
     </div>
   );
 };

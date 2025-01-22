@@ -111,16 +111,18 @@ const ServiceCreate = ({ onClose, serviceData }) => {
 
   return (
     <>
-      <div className="flex justify-end mx-28"> 
+     
+      <div className="bg-transparent p-8 max-w-4xl mx-auto rounded-lg shadow-lg  border border-ring">
+        
+      <div className="flex justify-end w-full mb-2"> 
       <button
           onClick={onClose}
-          className="relative top-3 left-0 bg-primary text-background rounded-full p-2 hover:bg-gray-600 transition"
+          className="relative left-0 bg-primary text-background rounded-full p-2 hover:bg-gray-600 transition"
         >
           <MdClose className="w-5 h-5" />
         </button>
       </div>
       
-      <div className="bg-background p-8 max-w-4xl mx-auto rounded-lg shadow-lg  border border-gray-100">
         <h2 className="text-4xl font-bold text-center text-foreground mb-8">
           {serviceData ? "Update Service" : "Create Service"}
         </h2>
@@ -139,7 +141,7 @@ const ServiceCreate = ({ onClose, serviceData }) => {
               })}
               type="text"
               placeholder="Enter service name"
-              className="mt-2 w-full px-4 py-3 bg-secondary text-foreground border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+              className="mt-2 w-full px-4 py-3 bg-secondary text-foreground border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-ring"
             />
             {errors.service_name && (
               <span className="text-red-500 text-sm">
@@ -158,7 +160,7 @@ const ServiceCreate = ({ onClose, serviceData }) => {
                 required: "Description is required",
               })}
               placeholder="Enter a brief description"
-              className="mt-2 w-full px-4 py-3 bg-secondary text-foreground border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+              className="mt-2 w-full px-4 py-3 bg-secondary text-foreground border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-ring"
             />
             {errors.description && (
               <span className="text-red-500 text-sm">
@@ -184,7 +186,7 @@ const ServiceCreate = ({ onClose, serviceData }) => {
                     value >= 100 ||
                     "Price must be greater than or equal to 100",
                 })}
-                className="w-full px-4 py-3 bg-secondary text-foreground border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+                className="w-full px-4 py-3 bg-secondary text-foreground border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-ring"
               />
               {errors.min_price && (
                 <span className="text-red-500 text-sm">
@@ -202,7 +204,7 @@ const ServiceCreate = ({ onClose, serviceData }) => {
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-full px-4 py-3 bg-secondary text-foreground border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+                  className="w-full px-4 py-3 bg-secondary text-foreground border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-ring"
                 >
                   <option value="">Select a Category</option>
                   {sectorTypes.map((sector, index) => (
@@ -222,7 +224,7 @@ const ServiceCreate = ({ onClose, serviceData }) => {
                 Service Type
               </label>
               <select
-                className="mt-2 w-full px-4 py-3 bg-secondary text-foreground border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+                className="mt-2 w-full px-4 py-3 bg-secondary text-foreground border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-ring"
                 value={selectedService}
                 onChange={handleServiceSelect}
               >

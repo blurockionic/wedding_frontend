@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useCreateFeedbackMutation } from "../../redux/serviceSlice";
+import { toast } from "react-toastify";
 
-const FeedbackForm = ({ serviceId }) => {
+const FeedbackForm = ({ serviceId , setIsLoading}) => {
   const [creatFeedback] = useCreateFeedbackMutation();
 
   const {
@@ -20,8 +21,13 @@ const FeedbackForm = ({ serviceId }) => {
     try {
       const res = await creatFeedback({ id: serviceId, data: feedbackData });
       console.log(res);
-      reset(); 
-      setRating(0); 
+      const {message, success} = res.data
+      if(success){
+        reset(); 
+        setRating(0); 
+        toast.success(message)
+        setIsLoading(true)
+      }
     } catch (error) {
       console.log(error);
     }

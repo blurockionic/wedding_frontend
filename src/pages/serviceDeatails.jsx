@@ -71,20 +71,14 @@ function ServiceDetail() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const [updateLead] = useUpdateLeadStatusMutation()
-  const {data} = useGetServiceByIdQuery(id)
+  const {data, refetch} = useGetServiceByIdQuery(id)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetchServiceDetail(id);
-        
-        // const res = await fetch(`http://localhost:4000/api/v1/services/${id}`, {
-        //   method: 'GET',
-        //   headers: {
-        //     'Content-Type': 'application/json',
-        //   },
-        //   credentials: 'include', 
-        // });
+      
             
         if(data){
         setRealService(data?.service)
@@ -100,9 +94,25 @@ function ServiceDetail() {
     fetchData();
   }, [data, id]);
 
+
+  useEffect(()=>{
+    try {
+      refetch()
+    } catch (error) {
+      console.error(error)
+    }finally{
+      setIsLoading(false)
+    }
+  },[isLoading, refetch])
+
   const handleLoginRedirect = () => {
     navigate("/login", { state: { from: location.pathname } });
   };
+
+
+  
+    
+    
 
   
 
@@ -128,6 +138,8 @@ function ServiceDetail() {
         console.error(error);
       }
     }
+
+    
 
   return (
     <>
@@ -230,15 +242,15 @@ function ServiceDetail() {
             <div className="mt-8">
               <h2 className="text-3xl font-bold mb-4">Reviews</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {service.reviews.map((review, index) => (
+                {realService?.feedback.map((review, index) => (
                   <div key={index} className="p-4 bg-gray-100 rounded-lg">
-                    <p className="font-bold">{review.user}</p>
+                    <p className="font-bold">{review.user_name}</p>
                     <Rating rating={review.rating} />
                     <p>{review.comment}</p>
                   </div>
                 ))}
               </div>
-              <FeedbackForm serviceId ={id}/>
+              <FeedbackForm serviceId ={id} setIsLoading={setIsLoading}/>
             </div>
 
             {/* FAQ Section */}

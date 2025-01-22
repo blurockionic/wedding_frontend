@@ -1,5 +1,5 @@
-import { Suspense, lazy } from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Suspense, lazy, useEffect } from "react";
+import { createBrowserRouter, RouterProvider, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ErrorBoundary from "./pages/ErrorPage.jsx";
@@ -45,14 +45,6 @@ const ChangePassword = lazy(() => import("./pages/auth/ChangePassword.jsx"));
 const FavoriteListPage = lazy(() =>
   import("./pages/userDashboard/FavoriteList.jsx")
 );
-
-function wrapWithSuspense(Component) {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <Component />
-    </Suspense>
-  );
-}
 
 // Define routes using createBrowserRouter
 const router = createBrowserRouter([

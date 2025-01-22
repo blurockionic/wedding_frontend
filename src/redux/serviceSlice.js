@@ -116,11 +116,12 @@ export const serviceApi = createApi({
     }),
       //DELETE FAQ
       deleteFAQ: builder.mutation({
-        query: ({id, faqId})=>({
+        query: ({ id, faqId }) => ({
           url: `/services/${id}/faq/${faqId}`,
-          method: "DELETE"
-        })
+          method: "DELETE",
+        }),
       }),
+      
 
       //submit feedback
       createFeedback: builder.mutation({

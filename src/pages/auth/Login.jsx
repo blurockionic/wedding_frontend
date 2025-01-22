@@ -16,6 +16,7 @@ import { PasswordField } from "../../components/global/inputfield/PasswordField"
 import { useGetCartMutation } from "../../redux/serviceSlice";
 import { hydrateFavorites } from "../../redux/favoriteSlice";
 import useProtectAfterLogin from "../../hooks/useProtectAfterLogin";
+import DynamicTitle from "../../components/global/dynamicTitle/DynamicTitle";
 
 
 const loginSchema = z.object({
@@ -89,6 +90,8 @@ export default function Login() {
   };
 
   return (
+    <>
+    <DynamicTitle title={"Vendor Login"}/>
     <div className="min-h-screen flex items-center justify-center bg-white px-4">
       <div className="flex items-center justify-center space-x-10">
         {/* Image Section */}
@@ -184,5 +187,6 @@ export default function Login() {
         </div>
       </div>
     </div>
+    </>
   );
 }
