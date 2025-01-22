@@ -33,6 +33,7 @@
     "react-toastify": "^10.0.6",
     "recharts": "^2.15.0",
     "redux-persist": "^6.0.0",
+    "sitemap": "^8.0.0",
     "swiper": "^11.1.15",
     "zod": "^3.24.1"
   },
