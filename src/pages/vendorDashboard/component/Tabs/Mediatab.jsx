@@ -6,7 +6,7 @@ import { useUplMultiMutation } from "../../../../redux/uploadSlice";
 import CustomButton from "../../../../components/global/button/CustomButton";
 import { FaPlus } from "react-icons/fa";
 
-const reMediatab = ({ serviceId, handleCloseMedia }) => {
+const Mediatab = ({ serviceId, handleCloseMedia }) => {
   const [files, setFiles] = useState([]);
   const { control, handleSubmit } = useForm();
   const [uploadFiles, { isLoading, isError, error }] = useUplMultiMutation(); // Hook to trigger the file upload
