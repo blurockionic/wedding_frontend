@@ -184,7 +184,7 @@ export default function VendorLogin() {
                 type="submit"
                 disabled={loading || !isValid}
                 className={`w-full ${
-                  loading ? "bg-muted" : "bg-primary"
+                  loading ? "bg-muted" : "bg-primary text-white"
                 } disabled:cursor-not-allowed cursor-pointer flex  items-center justify-center w-full disabled:bg-muted border-2 border-ring hover:bg-dustyRose text-accent-foreground font-bold py-2  rounded focus:outline-none  focus:ring-ring transition`}
               >
                 {loading && (
@@ -214,7 +214,7 @@ export default function VendorLogin() {
             </form>
             <div className=" text-center">
               <CustomText variant="paragraph" className="text-sm">
-                Don’t have an account?
+                Don&apos;t have an account?{" "}
                 <Link
                   to="/vendorSignup"
                   className="font-bold text-primary hover:underline"
@@ -335,7 +335,7 @@ export default function VendorLogin() {
       </div>
 
       {/* vendor support  */}
-      <div className="bg-gradient-to-tr from-pink-50 via-pink-100 to-pink-200 py-12 px-16">
+      <div className="bg-gradient-to-br from-white via-pink-50 to-pink-100 py-12 px-16">
          {/* Overlay with backdrop blur */}
       <div className="max-w-4xl mx-auto text-center">
         <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">

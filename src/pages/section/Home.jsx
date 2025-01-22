@@ -50,6 +50,8 @@ export default function Home() {
     navigate(`/services?${queryParams}`);
   };
 
+  
+
   return (
     <>
       <div
@@ -83,7 +85,7 @@ export default function Home() {
             data-aos-delay="200"
             data-aos-once="true"
           >
-            — Hello and Welcome,
+             Welcome,
           </p>
 
           <p
@@ -163,7 +165,7 @@ export default function Home() {
             </CustomButton>
           </div>
           <span className="text-white text-xl">
-            1000+ vendors and couples trust us.
+            Vendors and Couples trust us.
           </span>
         </section>
       </div>

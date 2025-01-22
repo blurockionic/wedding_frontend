@@ -78,16 +78,16 @@ const ServiceCard = React.memo(({ service}) => {
       {/* Content Section */}
       <div className="p-4">
         <h3
-          className="text-lg font-semibold text-gray-800 truncate"
+          className="text-lg font-semibold text-gray-800 truncate capitalize"
           title={service.service_name}
         >
           {service.service_name}
         </h3>
         <div className="flex items-center justify-between text-sm text-gray-500 mt-1">
           <span>
-            <strong>Vendor:</strong> {service.vendor.name}
+            <strong className="font-thin">Vendor:</strong> <span className="capitalize">{service.vendor.name}</span>
           </span>
-          <span>
+          <span className="capitalize">
             {service.vendor.business_name || "No business name available"}
           </span>
         </div>
