@@ -46,6 +46,14 @@ const FavoriteListPage = lazy(() =>
   import("./pages/userDashboard/FavoriteList.jsx")
 );
 
+
+function wrapWithSuspense(Component) {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Component />
+    </Suspense>
+  );
+}
 // Define routes using createBrowserRouter
 const router = createBrowserRouter([
   {
