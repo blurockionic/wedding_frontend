@@ -151,7 +151,7 @@ export default function Login() {
                 type="submit"
                 text={loading ? "Logging in..." : "Login"}
                 disabled={loading}
-                className={`w-full ${loading ? "bg-forground-muted" : "bg-primary"} 
+                className={`w-full ${loading ? "text-primary" : "bg-primary"} 
     disabled:cursor-not-allowed cursor-pointer border-2 hover:bg-dustyRose
     text-muted font-bold py-2 px-4 rounded transition`}
               />

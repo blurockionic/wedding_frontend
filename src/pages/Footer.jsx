@@ -1,8 +1,15 @@
 import React, { useEffect } from "react";
 import Aos from "aos";
 import "aos/dist/aos.css";
-import { FaFacebook, FaTwitter, FaInstagram, FaYoutube, FaTiktok } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import {
+  FaFacebook,
+  FaTwitter,
+  FaInstagram,
+  FaYoutube,
+  FaTiktok,
+} from "react-icons/fa";
+import { Link, NavLink } from "react-router-dom";
+import brandlogo from "../../public/logo/brandlogo.png";
 
 export default function Footer() {
   useEffect(() => {
@@ -15,8 +22,14 @@ export default function Footer() {
     <footer className="bg-gray-100 p-8 text-gray-800">
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         {/* Logo and Description */}
-        <div data-aos="fade-up" data-aos-delay="200">
-          <img src="/Logo.png" alt="trueLove Logo" className="h-16 mb-4 " />
+        <div data-aos="fade-up" data-aos-delay="200" className="space-y-3">
+          <NavLink to="/" className="flex items-center gap-3 cursor-pointer">
+            <img src={brandlogo} alt="brandlogo" className="w-10 h-10" />
+            <div className="flex flex-col justify-start">
+              <span className="text-primary text-2xl">Marriage Vendors</span>
+              <span className="text-primary text-xs">Wedding Orgniser</span>
+            </div>
+          </NavLink>
           <p className="text-sm">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus
             placerat velit.

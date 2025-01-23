@@ -1,6 +1,8 @@
 import React from "react";
 import image1 from "../../../../public/discover/discover1.jpg";
 import image2 from "../../../../public/discover/discover2.jpg";
+import image3 from "../../../../public/discover/brides.jpg";
+import image4 from "../../../../public/discover/groom.jpg";
 import CustomCardWithImage from "../../global/card/CustomCardWithImage";
 import CustomText from "../../global/text/CustomText";
 import CustomeCardTools from "../../global/card/CustomeCardTools";
@@ -15,7 +17,7 @@ const Discover = () => {
     <div className=" max-w-7xl px-2 lg:px-10 mx-auto py-10">
       <CustomText
         as="h1"
-        text={"Enjoy planning your wedding"}
+        text={"Relish the joy of planning your wedding."}
         className="text-3xl font-bold capitalize"
       />
       <CustomText
@@ -24,7 +26,7 @@ const Discover = () => {
         className="text-xl py-1"
       />
 
-      <div className="flex-col space-y-5 md:space-y-0 md:gap-x-10 md:flex lg:flex md:flex-row lg:flex-row justify-between items-center py-10 lg:py-10 mg:py-10">
+      <div className="grid gird-cols-1 md:grid-cols-2 gap-10 px-5 md:px-0 py-10 lg:py-10 mg:py-10">
         <CustomCardWithImage
           imageSrc={image1}
           title="Wedding venues"
@@ -33,7 +35,19 @@ const Discover = () => {
         />
         <CustomCardWithImage
           imageSrc={image2}
-          title="Vendors"
+          title="Wedding Vendors"
+          description="Find the perfect vendor for your wedding "
+          subDescription={"Near you in just a few clicks"}
+        />
+        <CustomCardWithImage
+          imageSrc={image3}
+          title="Brides"
+          description="Photos, reviews, and so much more... "
+          subDescription={"Get in touch from here! "}
+        />
+        <CustomCardWithImage
+          imageSrc={image4}
+          title="Grooms"
           description="Find the perfect vendor for your wedding "
           subDescription={"Near you in just a few clicks"}
         />
@@ -46,30 +60,26 @@ const Discover = () => {
         {/* Scrollable container */}
         <div className="scroll-container py-2 flex gap-5 overflow-x-auto scrollbar-hide">
           {/* Original set of cards */}
+
           <CustomeCardTools
             className={commonCardClass}
-            title={"Your free wedding website"}
-            iconLeft={<GoGift size={25} className="text-green-500" />}
-            descripttion={"Share your wedding details - and your love story."}
-            subDescripttion={"With a customizable website"}
-            onClick={() => {}}
-            buttonText={"Personalize your free website"}
-          />
-          <CustomeCardTools
-            className={commonCardClass}
-            title={"Infinite inspiration"}
+            title={"Checklist"}
             iconLeft={<GoLightBulb size={25} className="text-yellow-500" />}
-            descripttion={"All the freshest wedding inspiration,"}
-            subDescripttion={"Trends and ideas in one place."}
+            descripttion={
+              "Stay organized with a step-by-step wedding checklist,"
+            }
+            subDescripttion={"ensuring nothing is overlooked for your big day."}
             onClick={() => {}}
             buttonText={"Get inspired here"}
           />
           <CustomeCardTools
             className={commonCardClass}
-            title={"Planning tools"}
+            title={"Guest"}
             iconLeft={<GoChecklist size={25} className="text-blue-500" />}
-            descripttion={"Custom planning tools to manage your checklist,"}
-            subDescripttion={"Budget, guests, and vendors."}
+            descripttion={"Simplify guest management with easy-to-use tools,"}
+            subDescripttion={
+              "Track RSVPs, seating, and preferences effortlessly."
+            }
             onClick={() => {}}
             buttonText={"Discover our tools"}
           />
@@ -78,28 +88,23 @@ const Discover = () => {
             className={commonCardClass}
             title={"Your free wedding website"}
             iconLeft={<GoGift size={25} className="text-green-500" />}
-            descripttion={"Share your wedding details - and your love story."}
-            subDescripttion={"With a customizable website"}
+            descripttion={
+              "Create a stunning wedding website to share your story,"
+            }
+            subDescripttion={
+              "And keep your guests informed with customizable features."
+            }
             onClick={() => {}}
             buttonText={"Personalize your free website"}
           />
           <CustomeCardTools
             className={commonCardClass}
-            title={"Infinite inspiration"}
+            title={"Budget"}
             iconLeft={<GoLightBulb size={25} className="text-yellow-500" />}
-            descripttion={"All the freshest wedding inspiration,"}
-            subDescripttion={"Trends and ideas in one place."}
+            descripttion={"Plan your wedding expenses with smart budget tools,"}
+            subDescripttion={"Helping you allocate and track costs with ease."}
             onClick={() => {}}
             buttonText={"Get inspired here"}
-          />
-          <CustomeCardTools
-            className={commonCardClass}
-            title={"Planning tools"}
-            iconLeft={<GoChecklist size={25} className="text-blue-500" />}
-            descripttion={"Custom planning tools to manage your checklist,"}
-            subDescripttion={"Budget, guests, and vendors."}
-            onClick={() => {}}
-            buttonText={"Discover our tools"}
           />
         </div>
 

@@ -205,7 +205,7 @@ const navigate = useNavigate();
                   Please wait...
                 </span>
               ) : (
-                <span>Sign up</span>
+                <span className="text-background">Sign up</span>
               )}
             </button>
 

@@ -12,6 +12,7 @@ import {
 import TopNavbar from "./topnavbar/TopNavbar";
 import CustomText from "./global/text/CustomText";
 import Avatar from "../../public/user.png";
+import brandlogo  from "../../public/logo/brandlogo.png"
 
 function Navbar() {
   const { isLoggedIn, user } = useSelector((state) => state.auth);
@@ -43,7 +44,14 @@ function Navbar() {
             <nav className="w-full bg-white top-0 px-4 lg:px-16 z-50 shadow-sm">
               <div className="w-full flex justify-between items-center py-4">
                 <div className="text-2xl font-bold text-primary cursor-pointer">
-                  <NavLink to="/">WEDD</NavLink>
+                  <NavLink to="/" className="flex items-center gap-3 cursor-pointer">
+                   <img src={brandlogo} alt="brandlogo" className="w-10 h-10"/>
+                   <div className="flex flex-col justify-start">
+                   <span className="text-primary text-2xl">Marriage Vendors</span>
+                   <span className="text-primary text-xs">Wedding Orgniser</span>
+
+                   </div>
+                  </NavLink>
                 </div>
 
                 <button
@@ -97,7 +105,14 @@ function Navbar() {
               } lg:translate-x-0`}
                 >
                   <div className="text-2xl block lg:hidden font-bold text-primary cursor-pointer my-7 ">
-                    <NavLink to="/">WEDD</NavLink>
+                  <NavLink to="/" className="flex items-center gap-3 cursor-pointer">
+                   <img src={brandlogo} alt="brandlogo" className="w-10 h-10"/>
+                   <div className="flex flex-col justify-start">
+                   <span className="text-primary text-lg">Marriage Vendors</span>
+                   <span className="text-primary text-xs">Wedding Orgniser</span>
+
+                   </div>
+                  </NavLink>
                   </div>
 
                   {NavbarRoutesConfig.map((route) => (

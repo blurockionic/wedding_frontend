@@ -84,7 +84,7 @@ html {
   --card-foreground: #262626; /* Dark gray */
   --popover: #ffffff; /* White */
   --popover-foreground: #190019; /* Very dark magenta */
-  --primary: #d43fa6; /* Vibrant pink */
+  --primary: #f20574; /* Vibrant pink */
   --primary-foreground: #000000; /* Black */
   --secondary: #e6e6e6; /* Light gray */
   --secondary-foreground: #000000; /* Black */
@@ -96,8 +96,9 @@ html {
   --destructive-foreground: #ffffff; /* White */
   --border: #d6d6d6; /* Light gray */
   --input: #7f7f7f; /* Medium gray */
-  --ring: #d43fa6; /* Vibrant pink */
+  --ring: #f20574; /* Vibrant pink */
   --radius: 0.5rem;
+  --text: #fecd17
 }
 
 .dark {
