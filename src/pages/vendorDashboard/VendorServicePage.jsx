@@ -8,8 +8,10 @@ import {
   useGetServicesQuery,
 } from "../../redux/serviceSlice";
 import { PiPlus } from "react-icons/pi";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Login from "../auth/Login";
+import { userlogout } from "../../redux/authSlice";
 
 const VendorServicesPage = () => {
   const [showFormPage, setShowFormPage] = useState(false); // Track form page visibility
@@ -18,6 +20,7 @@ const VendorServicesPage = () => {
   const pageSize = 10; // Page size
 
   const vendorId = useSelector((state) => state?.auth?.user?.id);
+  const navigate = useNavigate()
 
   const filters = {
     search: searchTerm,
@@ -39,6 +42,12 @@ const VendorServicesPage = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+
+  if(error && error.includes("expire")){
+    userlogout()
+    
+    navigate("/vendorLogin")
+  }
 
   return (
     <div className="max-w-7xl  mx-auto p-6 m-2 rounded-md bg-gradient-to-br from-white via-pink-50 to-pink-100">

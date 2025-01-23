@@ -15,6 +15,8 @@ const VendorRegistration = lazy(() =>
   import("./pages/auth/vendor _auth/VendorSignup.jsx")
 );
 import VendorDashboard from "./pages/vendorDashboard/Dashboard.jsx";
+import Subscription from "./pages/Subscription.jsx";
+import Plan from "./pages/vendorDashboard/component/Plan.jsx";
 const Setting = lazy(() => import("./pages/vendorDashboard/Setting.jsx"));
 const Analytics = lazy(() => import("./pages/vendorDashboard/Analytics.jsx"));
 const VendorServicesPage = lazy(() =>
@@ -84,7 +86,6 @@ const router = createBrowserRouter([
       },
       { path: "/services", element: wrapWithSuspense(ServicesPage) },
       { path: "/service/:id", element: wrapWithSuspense(ServiceDetail) },
-
       {
         path: "/profile",
         element: (
@@ -116,8 +117,8 @@ const router = createBrowserRouter([
           },
           { path: "analytics", element: wrapWithSuspense(Analytics) },
           { path: "settings", element: wrapWithSuspense(Setting) },
-          { path: "bookings", element: <>bookings</> },
-
+          { path: "bookings", element:<Subscription/>},
+          
           {
             path: "service-details/:serviceId",
             element: wrapWithSuspense(DashBoardDetailPage),

@@ -5,6 +5,7 @@ import {
   useGetServiceByIdQuery,
   useUpdateFAQMutation,
 } from "../../../redux/serviceSlice";
+
 import Slider from "../../../components/Slider";
 import Mediatab from "./Tabs/Mediatab";
 import FAQsTab from "./Tabs/FAQsTab";
@@ -16,8 +17,12 @@ import { MdDeleteOutline } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import CustomButton from "../../../components/global/button/CustomButton";
 import { FaEdit, FaPlus } from "react-icons/fa";
-
+import { userlogout } from "../../../redux/authSlice";
+import { useDispatch } from "react-redux";
+import { useVendorLogoutMutation } from "../../../redux/vendorSlice";
 const DashBoardDetailPage = () => {
+  const [vendorLogout] = useVendorLogoutMutation();
+
   const [updateFAQ] = useUpdateFAQMutation();
   const [deleteFAQ] = useDeleteFAQMutation();
   const [isEditFAQ, setIsEditFAQ] = useState(false);
@@ -29,12 +34,25 @@ const DashBoardDetailPage = () => {
   const [deleteService] = useDeleteServiceMutation();
   const navigate = useNavigate();
   const { register, handleSubmit, setValue, getValues, reset } = useForm();
+  const dispatch = useDispatch();
+
+ 
 
   if (isLoading) {
     return <div className="text-center text-gray-600">Loading...</div>;
   }
+  const handleErrors = async (error, dispatch) => {
+    if (error?.data?.message.includes("Access token is missing or invalid")) {
+      const res =  await vendorLogout();
+      toast.success(res?.message)
+      dispatch(userlogout());
+    }
+  };
 
   if (isError) {
+    handleErrors(error, dispatch);
+
+  
     return (
       <div className="text-center text-red-500">
         {error?.data?.message ||
