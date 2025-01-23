@@ -6,18 +6,19 @@ import CustomButton from "../../components/global/button/CustomButton";
 import CustomInput from "../../components/global/inputfield/CustomInput";
 import { GoLocation, GoSearch } from "react-icons/go";
 import Discover from "../../components/home/home-discover/Discover";
-import { allCategories } from "../../components/Sidebar"; // Assuming this is the full category list.
+import { Helmet } from "react-helmet-async";
+import { allCategories } from "../../components/Sidebar";
 
 export default function Home() {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [location, setLocation] = useState("");
-  const [suggestions, setSuggestions] = useState(allCategories || []); // Filtered suggestions
-  const [showSuggestions, setShowSuggestions] = useState(false); // To manage suggestion visibility
+  const [suggestions, setSuggestions] = useState(allCategories || []);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   useEffect(() => {
     Aos.init({
-      duration: 1000, // Duration of the animation
+      duration: 1000,
     });
   }, []);
 
@@ -26,7 +27,6 @@ export default function Home() {
     setSearch(value);
 
     if (value) {
-      // Filter suggestions based on user input
       const filtered = allCategories.filter((category) =>
         category.toLowerCase().includes(value.toLowerCase())
       );
@@ -39,7 +39,7 @@ export default function Home() {
 
   const handleSuggestionClick = (category) => {
     setSearch(category);
-    setShowSuggestions(false); // Hide suggestions after selecting
+    setShowSuggestions(false);
   };
 
   const handleNavigate = () => {
@@ -52,6 +52,54 @@ export default function Home() {
 
   return (
     <>
+      {/* SEO Optimization */}
+      <Helmet>
+        <title>Plan Your Dream Wedding with Us | Top Wedding Vendors</title>
+        <meta
+          name="description"
+          content="Discover the best wedding vendors for your dream wedding. 1000+ trusted vendors, trusted by happy couples. Find vendors in your location effortlessly!"
+        />
+        <meta
+          name="keywords"
+          content="Wedding vendors, Wedding planners, Bridal makeup artists, Wedding photographers, Wedding florists, Wedding venues, Wedding decorators, Wedding caterers, Wedding cake designers, Bridal dresses, Wedding bands, Wedding DJs, Wedding transportation, Wedding videographers, Destination wedding planners, Wedding invitations, Wedding favors, Wedding rentals, Bridal hairstylists, Wedding coordinators, Wedding photographers near me, Wedding dresses online, Best wedding planners, Affordable wedding vendors, Luxury wedding vendors, Wedding services near me, Outdoor wedding venues, Indoor wedding venues, Best wedding photographers, Wedding planner in Ludhiana, Wedding makeup services, Wedding accessories, Wedding photographers in Ludhiana, Pre-wedding shoot vendors, Wedding organizers, Traditional wedding planners, Custom wedding cakes, Bridal boutique, Wedding rental services, Wedding cake near me, Wedding photography packages, Wedding decoration services, Bridal shower planners, Wedding jewelry designers, Bridal party attire, Wedding videography packages, Event stylists for weddings, Wedding favors suppliers, Professional wedding planners, Unique wedding venues, Wedding food caterers, Wedding entertainment services, Wedding dress designers, Wedding planners in Ludhiana, Wedding coordinators in Ludhiana, Wedding lighting services, Wedding bar services, Wedding limo rentals, Wedding photo booths, Wedding dessert tables, Wedding florist in Ludhiana, Wedding rentals online, Destination wedding photographers, Vintage wedding vendors, Elegant wedding decorations, Wedding budget planners, Wedding reception venues, Bridal hair and makeup services, Custom wedding invitations, Wedding planners for small weddings, Wedding videographers in Ludhiana, Luxury bridal accessories, Wedding flower arrangements, Wedding photographers for hire, Top wedding caterers, Local wedding vendors, Budget wedding vendors, Indian wedding vendors, Wedding planners for destination weddings, Wedding hair stylists near me, Wedding cake delivery, Wedding catering services near me, Wedding lighting designers, Wedding planners for budget weddings, Eco-friendly wedding vendors, Outdoor wedding decorators, Beach wedding vendors, Wedding planners for large weddings, Wedding event management companies, Wedding photography albums, Best wedding cake designers, Wedding venues with accommodation, DIY wedding vendors, Wedding videography services near me, Custom wedding bouquets, Wedding dress alterations, Wedding photography services in Ludhiana, Wedding floral designers, Wedding band booking, Wedding planning tips."
+        />
+        <meta name="author" content="Wedding Planner Team" />
+        <meta name="robots" content="index, follow" />
+        <meta property="og:title" content="Plan Your Dream Wedding with Us | Top Wedding Vendors" />
+        <meta
+          property="og:description"
+          content="Discover trusted wedding vendors for your big day and plan the perfect wedding with ease. From photographers to planners, florists, and more, find the best professionals to make your celebration unforgettable."
+        />
+        <meta property="og:image" content="/flowerbg 1.png" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.marriagevendors.com/" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="google-site-verification" content="bNwJRK2wyCg2nnVlVT0AysDAahMXXs29eNcurUyJ02E" />
+        <meta name="adsense-id" content="ca-pub-1234567890123456" />
+        <link rel="canonical" href="https://www.marriagevendors.com/" />
+        {/* Structured Data for Schema */}
+      <script type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          name: "Plan Your Dream Wedding with Us | Top Wedding Vendors",
+          description:
+            "Discover the best wedding vendors for your dream wedding. 1000+ trusted vendors, trusted by happy couples. Find vendors in your location effortlessly!",
+          url: "https://yourwebsite.com/home",
+          author: {
+            "@type": "Organization",
+            name: "Marriage Vendors",
+            "url": "https://www.marriagevendors.com/services?search=wedding+vendors"
+          },
+          potentialAction: {
+            "@type": "SearchAction",
+            target: "https://www.marriagevendors.com/services?search=wedding+vendors",
+            "query-input": "required name=search_term_string"
+          }
+        })}
+      </script>
+      </Helmet>
+
       <div
         className="h-3/4 w-full z-10 relative flex items-center justify-start"
         style={{
@@ -60,6 +108,7 @@ export default function Home() {
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
         }}
+        aria-hidden="true"
       >
         {/* Flower Decoration */}
         <div
@@ -69,7 +118,7 @@ export default function Home() {
           data-aos-once="true"
         >
           <img
-            alt="Flower Decoration"
+            alt="Flower decoration with a soft gradient background"
             src="/flowerbg 1.png"
             className="opacity-90"
           />
@@ -87,7 +136,7 @@ export default function Home() {
           </p>
 
           <p
-            className="pb-20  text-3xl md:text-6xl lg:text-7xl font-bold text-white flex flex-col items-center text-center"
+            className="pb-20 text-3xl md:text-6xl lg:text-7xl font-bold text-white flex flex-col items-center text-center"
             data-aos="fade-up"
             data-aos-delay="400"
             data-aos-once="true"
@@ -104,7 +153,7 @@ export default function Home() {
           <CustomButton
             leftIcon={<GoSearch size={20} className="text-white" />}
             text="Search"
-            className="w-1/2 lg:hidden bg-[#fb3966] px-10 py-2 rounded text-white md:ms-[-50px] lg-ms-0 "
+            className="w-1/2 lg:hidden bg-[#fb3966] px-10 py-2 rounded text-white md:ms-[-50px] lg-ms-0"
             onClick={handleNavigate}
           >
             Discover
@@ -124,10 +173,9 @@ export default function Home() {
                 onChange={handleSearchChange}
                 leftIcon={<GoSearch size={20} />}
               />
-              {/* Suggestions */}
               {showSuggestions && suggestions.length > 0 && (
                 <ul
-                  className="absolute  bg-white border border-gray-300 rounded w-full shadow-lg mt-1 z-10"
+                  className="absolute bg-white border border-gray-300 rounded w-full shadow-lg mt-1 z-10"
                   style={{
                     maxHeight: "200px",
                     overflowY: "auto",
