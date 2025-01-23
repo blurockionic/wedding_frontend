@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { GoMail, GoLock } from "react-icons/go";
 import { useVendorLoginMutation } from "../../../redux/vendorSlice";
 import { login } from "../../../redux/authSlice";
@@ -16,10 +16,19 @@ import CustomButton from "../../../components/global/button/CustomButton";
 import Footer from "../../Footer";
 import ServiceTypeCard from "../../../components/global/card/ServiceTypeCard";
 import { MdEventAvailable, MdOutlinePersonAddAlt } from "react-icons/md";
-import { FaEnvelope, FaFemale, FaHeadset, FaMale, FaMapMarkerAlt, FaPhone, FaStore } from "react-icons/fa";
+import {
+  FaEnvelope,
+  FaFemale,
+  FaHeadset,
+  FaMale,
+  FaMapMarkerAlt,
+  FaPhone,
+  FaStore,
+} from "react-icons/fa";
 import { FiUsers } from "react-icons/fi";
 import { BiAnalyse } from "react-icons/bi";
-import signup_bg from "../../../../public/signup/sign-bg.jpg"
+import signup_bg from "../../../../public/signup/sign-bg.jpg";
+import brandlogo from "../../../../public/logo/brandlogo.png";
 
 const vendorLoginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -68,9 +77,13 @@ export default function VendorLogin() {
   return (
     <>
       <div className="flex justify-center items-center cusrsor-pointer py-4 ">
-        <Link to={"/"}>
-          <h1 className="text-primary text-4xl font-bold">Wedd</h1>
-        </Link>
+        <NavLink to="/" className="flex items-center gap-3 cursor-pointer">
+          <img src={brandlogo} alt="brandlogo" className="w-16 h-16" />
+          <div className="flex flex-col justify-start">
+            <span className="text-primary text-3xl">Marriage Vendors</span>
+            <span className="text-primary text-xs">Wedding Orgniser</span>
+          </div>
+        </NavLink>
       </div>
       <div className="min-h-1/2  grid grid-cols-1 md:grid-cols-2 px-16 py-10 gap-10">
         <div className="space-y-12 md:space-y-24">
@@ -324,11 +337,12 @@ export default function VendorLogin() {
           <p className="text-lg md:text-xl mb-6">
             Sign up now to connect with engaged couples and grow your business.
           </p>
-          <button 
-          onClick={()=> {
-            navigate("/vendorSignup")
-          }}
-          className="bg-primary hover:bg-pink-600 text-white font-semibold py-3 px-8 rounded-full shadow-md transition-all duration-300">
+          <button
+            onClick={() => {
+              navigate("/vendorSignup");
+            }}
+            className="bg-primary hover:bg-pink-600 text-white font-semibold py-3 px-8 rounded-full shadow-md transition-all duration-300"
+          >
             Sign Up
           </button>
         </div>
@@ -336,46 +350,57 @@ export default function VendorLogin() {
 
       {/* vendor support  */}
       <div className="bg-gradient-to-br from-white via-pink-50 to-pink-100 py-12 px-16">
-         {/* Overlay with backdrop blur */}
-      <div className="max-w-4xl mx-auto text-center">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-          Dedicated Vendor Support
-        </h2>
-        <p className="text-lg text-gray-600 mb-8">
-          We&apos;re here to assist you at every step of your journey. Connect with us for personalized support and solutions.
-        </p>
+        {/* Overlay with backdrop blur */}
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+            Dedicated Vendor Support
+          </h2>
+          <p className="text-lg text-gray-600 mb-8">
+            We&apos;re here to assist you at every step of your journey. Connect
+            with us for personalized support and solutions.
+          </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8 ">
-          {/* Support Option 1 */}
-          <div className="flex flex-col items-center 
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8 ">
+            {/* Support Option 1 */}
+            <div
+              className="flex flex-col items-center 
           bg-transparent backdrop-blur-lg
-          border border-ring p-6 rounded-lg shadow-lg">
-            <FaHeadset className="text-blue-500 text-4xl mb-4" />
-            <h3 className="text-lg font-semibold text-gray-800">Live Chat</h3>
-            <p className="text-gray-600">Chat with our support team for instant help.</p>
+          border border-ring p-6 rounded-lg shadow-lg"
+            >
+              <FaHeadset className="text-blue-500 text-4xl mb-4" />
+              <h3 className="text-lg font-semibold text-gray-800">Live Chat</h3>
+              <p className="text-gray-600">
+                Chat with our support team for instant help.
+              </p>
+            </div>
+
+            {/* Support Option 2 */}
+            <div className="flex flex-col items-center border border-ring p-6 rounded-lg shadow-lg">
+              <FaEnvelope className="text-green-500 text-4xl mb-4" />
+              <h3 className="text-lg font-semibold text-gray-800">
+                Email Support
+              </h3>
+              <p className="text-gray-600">
+                Reach us at support@example.com for detailed inquiries.
+              </p>
+            </div>
+
+            {/* Support Option 3 */}
+            <div className="flex flex-col items-center border border-ring p-6 rounded-lg shadow-lg">
+              <FaPhone className="text-purple-500 text-4xl mb-4" />
+              <h3 className="text-lg font-semibold text-gray-800">Call Us</h3>
+              <p className="text-gray-600">
+                Get direct support at +1 (123) 456-7890.
+              </p>
+            </div>
           </div>
 
-          {/* Support Option 2 */}
-          <div className="flex flex-col items-center border border-ring p-6 rounded-lg shadow-lg">
-            <FaEnvelope className="text-green-500 text-4xl mb-4" />
-            <h3 className="text-lg font-semibold text-gray-800">Email Support</h3>
-            <p className="text-gray-600">Reach us at support@example.com for detailed inquiries.</p>
-          </div>
-
-          {/* Support Option 3 */}
-          <div className="flex flex-col items-center border border-ring p-6 rounded-lg shadow-lg">
-            <FaPhone className="text-purple-500 text-4xl mb-4" />
-            <h3 className="text-lg font-semibold text-gray-800">Call Us</h3>
-            <p className="text-gray-600">Get direct support at +1 (123) 456-7890.</p>
-          </div>
+          {/* Contact Support Button */}
+          <button className="border border-ring hover:bg-pink-600 text-foreground hover:text-white font-semibold py-3 px-8 rounded-full shadow-md transition-all duration-300">
+            Contact Support
+          </button>
         </div>
-
-        {/* Contact Support Button */}
-        <button className="border border-ring hover:bg-pink-600 text-foreground hover:text-white font-semibold py-3 px-8 rounded-full shadow-md transition-all duration-300">
-          Contact Support
-        </button>
       </div>
-    </div>
 
       {/* //footer  */}
       <Footer />
