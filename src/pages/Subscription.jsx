@@ -1,8 +1,8 @@
-import React from "react";
 import { useSelector } from "react-redux";
 import Plan from "./vendorDashboard/component/Plan";
 import { useCreateOrderMutation } from "../redux/payment";
 
+// Function to dynamically load external scripts
 function loadScript(src) {
   return new Promise((resolve) => {
     const script = document.createElement("script");
@@ -15,47 +15,91 @@ function loadScript(src) {
 
 function Subscription() {
   const user = useSelector((state) => state.auth.user); // Get user info from Redux state
-  const [createPlan, { isLoading, error }] = useCreateOrderMutation(); // Destructure to get loading state and potential errors
+  const [createPlan, { isLoading, error }] = useCreateOrderMutation(); // Destructure API hooks
 
+  // Function to initiate Razorpay checkout
   async function displayRazorpay(planId) {
-    const res = await loadScript(
-      "https://checkout.razorpay.com/v1/checkout.js"
-    );
-
+    // Load Razorpay SDK dynamically
+    const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
     if (!res) {
-      alert("Razorpay SDK failed to load!");
+      alert("Razorpay SDK failed to load. Please check your internet connection.");
       return;
     }
 
     try {
+      // Create a payment order
       const { order } = await createPlan({ planId }).unwrap();
-
       if (!order) {
         alert("Failed to create Razorpay order!");
         return;
       }
 
-      console.log("Order Data:", order);
-
+      // Razorpay options configuration
       const options = {
-        key: import.meta.env.VITE_PAY_ID, // Razorpay API Key (do not expose sensitive keys in the frontend)
-        amount: order.amount * 100, // Amount in paise (backend provides in rupees)
+        key: import.meta.env.VITE_PAY_ID, // Razorpay API key from environment variables
+        amount: order.amount * 100, // Convert to paise
         currency: order.currency,
         name: "Wedd",
-        description: `Subscription Plan: ${order.planName}`,
-        image: "https://example.com/your_logo", // Your logo URL (optional)
-        order_id: order.id, // Order ID from backend
-        callback_url: "http://localhost:4000/api/v1/subscribe/verify-payment", // Backend verification endpoint
+        description: `Subscription Plan`,
+        image: "https://example.com/your_logo", // Optional logo
+        order_id: order.id, // Razorpay order ID from backend
+        handler: async function (response) {
+          const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = response;
+          console.log(response)
+          try {
+            // Prepare the request payload
+            const payload = {
+              razorpay_payment_id,
+              razorpay_order_id,
+              razorpay_signature,
+            };
+
+            // Validate payment using fetch
+            const validateResponse = await fetch(
+              "http://localhost:4000/api/v1/subscribe/verify-payment", 
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+                credentials: "include"
+              }
+            );
+
+            // Check if the response is successful (status code 200-299)
+            if (!validateResponse.ok) {
+              throw new Error(`HTTP error! Status: ${validateResponse.status}`);
+            }
+
+            // Parse the response JSON
+            const data = await validateResponse.json();
+
+            // Extract and log the message from the response
+            const { message } = data;
+            console.log("Payment validation successful:", message);
+            alert("Payment successful!");
+            // You can update your UI state to reflect payment success here
+          } catch (error) {
+            // Improved error handling with detailed information
+            console.error("Payment validation failed. Details:", {
+              message: error.message,
+              stack: error.stack,
+            });
+            // Optionally, display an error message to the user
+            alert("Payment validation failed. Please try again or contact support.");
+          }
+        },
         prefill: {
           name: user?.name || "Guest",
           email: user?.email || "guest@example.com",
           contact: user?.phone_number || "0000000000",
         },
         notes: {
-          address: "Razorpay Corporate Office", // Optional notes
+          address: "Razorpay Corporate Office",
         },
         theme: {
-          color: "#d43fa6", // Theme color for the Razorpay popup
+          color: "#d43fa6",
         },
       };
 
@@ -63,7 +107,7 @@ function Subscription() {
       paymentObject.open();
     } catch (err) {
       console.error("Error creating Razorpay order:", err);
-      alert("Something went wrong! Please try again.");
+      alert("Something went wrong while initiating payment. Please try again.");
     }
   }
 
@@ -74,9 +118,9 @@ function Subscription() {
         {isLoading ? (
           <div>Loading...</div>
         ) : error ? (
-          <div className="text-red-500">Error: {error.message}</div> // Display error message if API call fails
+          <div className="text-red-500">Error: {error.message}</div> // Display API error
         ) : (
-          <Plan displayRazorpay={displayRazorpay} />
+          <Plan displayRazorpay={displayRazorpay} /> // Pass `displayRazorpay` as a prop to `Plan`
         )}
       </header>
     </div>

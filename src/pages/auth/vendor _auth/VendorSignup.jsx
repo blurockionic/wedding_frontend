@@ -80,7 +80,7 @@ function VendorRegistration() {
                   <span className="text-background text-4xl">
                     Marriage Vendors
                   </span>
-                  <span className="text-background text-xs">Wedding Orgniser</span>
+                  <span className="text-background text-xs">Wedding Organiser</span>
                 </div>
               </NavLink>
               <h2 className="text-4xl md:text-5xl font-bold mb-4 mt-10">

@@ -34,22 +34,19 @@ export default function Contact() {
       <div className="flex flex-col" data-aos="fade-down" data-aos-delay="500">
         <h2 className="lg:text-4xl text-2xl font-bold mb-4 capitalize">Book For an Appointment</h2>
         <p className="mb-4 text-gray-600" data-aos="fade-up" data-aos-delay="700">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. <br />
-          Sed dapibus placerat velit. Donec in porttitor elit. Suspendisse
-          accumsan iaculis tincidunt.
+        Find the perfect service for your wedding needs. Connect with trusted vendors and plan your dream wedding seamlessly. Your journey to a memorable celebration starts here.
         </p>
 
         <h5 className="text-lg font-semibold mb-3">Our Info</h5>
         <div className="space-y-2">
           <p data-aos="fade-up" data-aos-delay="900">
-            <BiPhone className="inline mr-2" /> Phone: 123-456-7890
+            <BiPhone className="inline mr-2" /> Phone: +91-6200932331
           </p>
           <p data-aos="fade-up" data-aos-delay="1100">
-            <MdEmail className="inline mr-2" /> Email: info@example.com
+            <MdEmail className="inline mr-2" /> Email: blurockionic@support.com
           </p>
           <p data-aos="fade-up" data-aos-delay="1300">
-            <FaAddressBook className="inline mr-2" /> Address: 123 Main St,
-            City, State, Zip
+            <FaAddressBook className="inline mr-2" /> Address: Ludhiana, Punjab, India
           </p>
         </div>
       </div>

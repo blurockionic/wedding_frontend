@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import Aos from "aos";
 import "aos/dist/aos.css";
 import {
@@ -10,6 +10,7 @@ import {
 } from "react-icons/fa";
 import { Link, NavLink } from "react-router-dom";
 import brandlogo from "../../public/logo/brandlogo.png";
+import { brides, grooms, weddingVendors, weddingVenues } from "../static/static";
 
 export default function Footer() {
   useEffect(() => {
@@ -20,19 +21,73 @@ export default function Footer() {
 
   return (
     <footer className="bg-gray-100 p-8 text-gray-800">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="px-2 md:px-16 ">
+        <h1 className="text-xl font-bold">Categories</h1>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-5 text-start mt-5 px-2 md:px-16 gap-5">
+        <div>
+        <h1 className="text-xl font-bold">Wedding Venues</h1>
+          <ul className="space-y-2 mt-4">
+            {
+              weddingVenues.map((item, index)=>(
+                <>
+                 <li key={index}><Link to={`/services?search=${item}&location=`}>{item}</Link></li>
+                </>
+              ))
+            }
+          </ul>
+        </div>
+        <div className="md:col-span-2 col-span-0 ">
+        <h1 className="text-xl font-bold">Wedding Vendors</h1>
+        <ul className="space-y-2 mt-4 grid grid-cols-2 md:grid-cols-2">
+            {
+              weddingVendors.map((item, index)=>(
+                <>
+                 <li key={index}><Link to={`/services?search=${item}&location=`}>{item}</Link></li>
+                </>
+              ))
+            }
+          </ul>
+        </div>
+        <div>
+        <h1 className="text-xl font-bold">Brides</h1>
+        <ul className="space-y-2 mt-4">
+            {
+              brides.map((item, index)=>(
+                <>
+                 <li key={index}><Link to={`/services?search=${item}&location=`}>{item}</Link></li>
+                </>
+              ))
+            }
+          </ul>
+        </div>
+        <div>
+        <h1 className="text-xl font-bold">Grooms</h1>
+        <ul className="space-y-2 mt-4">
+            {
+              grooms.map((item, index)=>(
+                <>
+                 <li key={index}><Link to={`/services?search=${item}&location=`}>{item}</Link></li>
+                </>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+
+
+      <div className="max-w-7xl mt-10 mx-auto grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Logo and Description */}
         <div data-aos="fade-up" data-aos-delay="200" className="space-y-3">
           <NavLink to="/" className="flex items-center gap-3 cursor-pointer">
             <img src={brandlogo} alt="brandlogo" className="w-10 h-10" />
             <div className="flex flex-col justify-start">
               <span className="text-primary text-2xl">Marriage Vendors</span>
-              <span className="text-primary text-xs">Wedding Orgniser</span>
+              <span className="text-primary text-xs">Wedding Organiser</span>
             </div>
           </NavLink>
           <p className="text-sm">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus
-            placerat velit.
+          Discover trusted wedding vendors for every need at Marriage Vendors! From stunning venues to photographers, caterers, and more, find everything to plan your perfect day. Compare services, read reviews, and book with confidence. Start creating your dream wedding today!
           </p>
           {/* Social Media Links */}
           <div className="flex gap-6 mt-4 text-xl text-gray-600">
@@ -99,20 +154,15 @@ export default function Footer() {
               </Link>
             </li>
             <li>
-              <Link to="/gallery" className="hover:text-gray-600">
-                Gallery
-              </Link>
-            </li>
-            <li>
-              <Link to="/contact" className="hover:text-gray-600">
-                Contact
+              <Link to="/contactus" className="hover:text-gray-600">
+                Contact us
               </Link>
             </li>
           </ul>
         </div>
 
         {/* Services Links */}
-        <div data-aos="fade-up" data-aos-delay="600">
+        {/* <div data-aos="fade-up" data-aos-delay="600">
           <h3 className="font-bold text-lg mb-4">Services</h3>
           <ul className="space-y-2">
             <li>
@@ -141,7 +191,7 @@ export default function Footer() {
               </Link>
             </li>
           </ul>
-        </div>
+        </div> */}
 
         {/* Google Maps Embed */}
         <div data-aos="fade-up" data-aos-delay="800">
