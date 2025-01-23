@@ -50,6 +50,8 @@ export default function Home() {
     navigate(`/services?${queryParams}`);
   };
 
+  
+
   return (
     <>
       {/* SEO Optimization */}
@@ -132,7 +134,7 @@ export default function Home() {
             data-aos-delay="200"
             data-aos-once="true"
           >
-            — Hello and Welcome,
+             Welcome,
           </p>
 
           <p
@@ -141,11 +143,8 @@ export default function Home() {
             data-aos-delay="400"
             data-aos-once="true"
           >
-            <span className="text-4xl md:text-5xl lg:text-[72px]">
-              Plan your <span className="text-[#ffcdf8]">Dream Wedding</span>
-            </span>
-            <span className="mt-2 mb-10 text-4xl md:text-5xl lg:text-[72px]">
-              with us
+            <span className="text-4xl md:text-5xl lg:text-[60px] flex flex-col mb-12">
+              Your one-stop destination for <span className="text-[#ffcdf8]">Dream Wedding</span>
             </span>
           </p>
 
@@ -153,7 +152,9 @@ export default function Home() {
           <CustomButton
             leftIcon={<GoSearch size={20} className="text-white" />}
             text="Search"
-            className="w-1/2 lg:hidden bg-[#fb3966] px-10 py-2 rounded text-white md:ms-[-50px] lg-ms-0"
+
+            className="w-1/2 lg:hidden bg-primary px-10 py-2 rounded text-white md:ms-[-50px] lg-ms-0 "
+
             onClick={handleNavigate}
           >
             Discover
@@ -204,14 +205,14 @@ export default function Home() {
             />
             <CustomButton
               text="Discover"
-              className="bg-[#e984de] px-10 py-2 rounded text-black"
+              className="bg-primary px-10 py-2 rounded text-white"
               onClick={handleNavigate}
             >
               Discover
             </CustomButton>
           </div>
           <span className="text-white text-xl">
-            1000+ vendors and couples trust us.
+            Vendors and Couples trust us.
           </span>
         </section>
       </div>
