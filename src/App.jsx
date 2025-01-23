@@ -1,5 +1,9 @@
 import { Suspense, lazy, useEffect } from "react";
-import { createBrowserRouter, RouterProvider, useLocation } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  useLocation,
+} from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ErrorBoundary from "./pages/ErrorPage.jsx";
@@ -15,6 +19,7 @@ const VendorRegistration = lazy(() =>
   import("./pages/auth/vendor _auth/VendorSignup.jsx")
 );
 import VendorDashboard from "./pages/vendorDashboard/Dashboard.jsx";
+import { HelmetProvider } from "react-helmet-async";
 const Setting = lazy(() => import("./pages/vendorDashboard/Setting.jsx"));
 const Analytics = lazy(() => import("./pages/vendorDashboard/Analytics.jsx"));
 const VendorServicesPage = lazy(() =>
@@ -37,7 +42,7 @@ const VendorForgotPassword = lazy(() =>
 );
 const UserForgotPassword = lazy(() =>
   import("./pages/auth/UserForgotPassword.jsx")
-)
+);
 const VendorChangePassword = lazy(() =>
   import("./pages/change-password/VendorChangePassword.jsx")
 );
@@ -45,7 +50,6 @@ const ChangePassword = lazy(() => import("./pages/auth/ChangePassword.jsx"));
 const FavoriteListPage = lazy(() =>
   import("./pages/userDashboard/FavoriteList.jsx")
 );
-
 
 function wrapWithSuspense(Component) {
   return (
@@ -133,10 +137,12 @@ const router = createBrowserRouter([
 function App() {
   return (
     <>
-      <ErrorBoundary>
-        <ToastContainer position="bottom-right" />
-        <RouterProvider router={router} />
-      </ErrorBoundary>
+      <HelmetProvider>
+        <ErrorBoundary>
+          <ToastContainer position="bottom-right" />
+          <RouterProvider router={router} />
+        </ErrorBoundary>
+      </HelmetProvider>
     </>
   );
 }

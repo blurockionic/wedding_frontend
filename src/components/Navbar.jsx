@@ -48,7 +48,7 @@ function Navbar() {
                    <img src={brandlogo} alt="brandlogo" className="w-10 h-10"/>
                    <div className="flex flex-col justify-start">
                    <span className="text-primary text-2xl">Marriage Vendors</span>
-                   <span className="text-primary text-xs">Wedding Orgniser</span>
+                   {/* <span className="text-primary text-xs">Wedding Orgniser</span> */}
 
                    </div>
                   </NavLink>
@@ -109,7 +109,7 @@ function Navbar() {
                    <img src={brandlogo} alt="brandlogo" className="w-10 h-10"/>
                    <div className="flex flex-col justify-start">
                    <span className="text-primary text-lg">Marriage Vendors</span>
-                   <span className="text-primary text-xs">Wedding Orgniser</span>
+                   {/* <span className="text-primary text-xs">Wedding Orgniser</span> */}
 
                    </div>
                   </NavLink>

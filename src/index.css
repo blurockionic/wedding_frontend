@@ -98,7 +98,7 @@ html {
   --input: #7f7f7f; /* Medium gray */
   --ring: #f20574; /* Vibrant pink */
   --radius: 0.5rem;
-  --text: #fecd17
+  --text: #fecd17;
 }
 
 .dark {
