@@ -81,7 +81,7 @@ export default function VendorLogin() {
           <img src={brandlogo} alt="brandlogo" className="w-16 h-16" />
           <div className="flex flex-col justify-start">
             <span className="text-primary text-3xl">Marriage Vendors</span>
-            <span className="text-primary text-xs">Wedding Orgniser</span>
+            <span className="text-primary text-xs">Wedding Organiser</span>
           </div>
         </NavLink>
       </div>

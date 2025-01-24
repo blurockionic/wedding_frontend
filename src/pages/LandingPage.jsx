@@ -19,6 +19,7 @@ export default function LandingPage() {
       <LazySection id="contact" Component={Contact} />
      
       <LazySection id="footer" Component={Footer} />
+     
     </div>
   );
 }

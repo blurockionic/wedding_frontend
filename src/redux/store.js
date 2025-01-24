@@ -7,7 +7,7 @@ import { serviceApi } from "./serviceSlice";
 import favoritesSlice from "./favoriteSlice";
 import { uploadSlice } from "./uploadSlice";
 import { vendorApi } from "./vendorSlice";
-import serviceIdSlice from "./serviceIdSlice";
+import { paymentApi } from "./payment";
 
 // Combine Reducers
 const rootReducer = combineReducers({
@@ -17,7 +17,7 @@ const rootReducer = combineReducers({
   [favoritesSlice.name]: favoritesSlice.reducer,
   [uploadSlice.reducerPath]: uploadSlice.reducer,
   [vendorApi.reducerPath]: vendorApi.reducer,
-  [serviceIdSlice.name]: serviceIdSlice.reducer,
+  [paymentApi.reducerPath]:paymentApi.reducer
  
 });
 
@@ -25,7 +25,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: [authSlice.name,favoritesSlice.name,serviceIdSlice.name],
+  whitelist: [authSlice.name,favoritesSlice.name],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -36,7 +36,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
       },
-    }).concat(apiAuthSlice.middleware, serviceApi.middleware,uploadSlice.middleware,vendorApi.middleware,),
+    }).concat(apiAuthSlice.middleware, serviceApi.middleware,uploadSlice.middleware,vendorApi.middleware,paymentApi.middleware),
    // Add logger middleware
 });
 

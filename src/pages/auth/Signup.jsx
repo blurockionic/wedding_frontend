@@ -15,10 +15,10 @@ import { FaGoogle } from "react-icons/fa";
 import useProtectAfterLogin from "../../hooks/useProtectAfterLogin";
 
 export default function Signup() {
-  useProtectAfterLogin(["user"],"/")
+  useProtectAfterLogin(["user"], "/");
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isShowPasswordCon, setIsShowPasswordCon] = useState(false);
-const navigate = useNavigate();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -71,7 +71,7 @@ const navigate = useNavigate();
           <img
             src={loginImage}
             alt="Signup Illustration"
-            className="h-[700px] w-full object-cover rounded-tl-lg rounded-bl-lg"
+            className="h-[750px] w-full object-cover rounded-tl-lg rounded-bl-lg"
           />
         </div>
 
@@ -171,6 +171,30 @@ const navigate = useNavigate();
             </div>
           </div>
 
+          {/* term of service  */}
+
+          <div className="flex items-center mb-5 px-2">
+            <input
+              id="link-checkbox"
+              type="checkbox"
+              value=""
+              className="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded-md focus:ring-ring dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            />
+            <label
+              htmlFor="link-checkbox"
+              className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >
+              I agree with the{" "}
+              <a
+                href="#"
+                className="text-primary dark:text-blue-500 hover:underline"
+              >
+                terms and conditions
+              </a>
+              .
+            </label>
+          </div>
+
           {/* Submit Button */}
           <div className="flex flex-col items-center justify-center w-full">
             <button
@@ -214,13 +238,13 @@ const navigate = useNavigate();
               text="Login with Google"
               // onClick={handleGoogleLogin}
               leftIcon={<FaGoogle size={20} className="text-red-500" />}
-              className="w-full mt-4 py-2 bg-white text-red-600 border-2 border-sageGreen-dark hover:bg-sageGreen-light hover:text-white"
+              className="w-full mt-4 py-2 bg-white text-red-600 border-2 border-sageGreen-dark hover:bg-sageGreen-light hover:text-primary"
             />
 
             <div className="mt-4 flex items-center justify-between gap-3">
               <p className="text-sm text-gray-700">
                 Already have an account?{" "}
-                <Link to="/login" className="text-dustyRose-dark font-medium">
+                <Link to="/login" className="text-primary font-medium">
                   Login
                 </Link>
               </p>

@@ -1,8 +1,7 @@
-import { Suspense, lazy, useEffect } from "react";
+import { Suspense, lazy } from "react";
 import {
   createBrowserRouter,
   RouterProvider,
-  useLocation,
 } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -19,8 +18,11 @@ const VendorRegistration = lazy(() =>
   import("./pages/auth/vendor _auth/VendorSignup.jsx")
 );
 import VendorDashboard from "./pages/vendorDashboard/Dashboard.jsx";
+import Subscription from "./pages/Subscription.jsx";
 import { HelmetProvider } from "react-helmet-async";
+
 const Setting = lazy(() => import("./pages/vendorDashboard/Setting.jsx"));
+const ContactUs = lazy(() => import("./pages/contactus/ContactUs.jsx"));
 const Analytics = lazy(() => import("./pages/vendorDashboard/Analytics.jsx"));
 const VendorServicesPage = lazy(() =>
   import("./pages/vendorDashboard/VendorServicePage.jsx")
@@ -67,6 +69,7 @@ const router = createBrowserRouter([
       { path: "/", element: wrapWithSuspense(LandingPage) },
       { path: "/signup", element: wrapWithSuspense(Signup) },
       { path: "/login", element: wrapWithSuspense(Login) },
+      { path: "/contactus", element: wrapWithSuspense(ContactUs) },
       {
         path: "/user-forgot-password",
         element: wrapWithSuspense(UserForgotPassword),
@@ -88,7 +91,6 @@ const router = createBrowserRouter([
       },
       { path: "/services", element: wrapWithSuspense(ServicesPage) },
       { path: "/service/:id", element: wrapWithSuspense(ServiceDetail) },
-
       {
         path: "/profile",
         element: (
@@ -120,8 +122,8 @@ const router = createBrowserRouter([
           },
           { path: "analytics", element: wrapWithSuspense(Analytics) },
           { path: "settings", element: wrapWithSuspense(Setting) },
-          { path: "bookings", element: <>bookings</> },
-
+          { path: "bookings", element:<Subscription/>},
+          
           {
             path: "service-details/:serviceId",
             element: wrapWithSuspense(DashBoardDetailPage),

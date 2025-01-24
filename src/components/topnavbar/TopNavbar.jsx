@@ -11,12 +11,12 @@ const TopNavbar = () => {
     <div className="w-full flex justify-end items-encter px-4 lg:px-16 pt-1 gap-x-7">
       <CustomButton
       leftIcon={<><GoDeviceMobile/></>}
-        text="+91-1234567890"
+        text="+91-6200932331"
         className="hidden md:flex lg:flex text-primary-foreground text-xs"
       />
       <CustomButton
        leftIcon={<><GoMail/></>}
-        text="wedd@support.com"
+        text="support@blurockionic.com"
         className="hidden md:flex lg:flex text-primary-foreground text-xs "
       />
       <CustomButton

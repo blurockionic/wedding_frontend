@@ -49,8 +49,6 @@ export const links = [
   { label: "Dashboard", href: "analytics", icon: MdOutlineAnalytics },
   { label: "Services", href: "", icon:  MdDesignServices },
   { label: "Bookings/Inquiries", href: "bookings", icon: IoBookmarksOutline },
-
-
 ];
 
 import { MdDesignServices, MdOutlineAnalytics, MdRoomService } from "react-icons/md";
