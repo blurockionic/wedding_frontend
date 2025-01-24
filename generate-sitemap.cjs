@@ -3,13 +3,14 @@ const { createWriteStream } = require('fs');
 
 const links = [
   { url: '/', changefreq: 'daily', priority: 1.0 }, // Root homepage
-  { url: '/section/Home', changefreq: 'daily', priority: 1.0 }, // Another home section page
-  { url: '/section/About', changefreq: 'weekly', priority: 0.9 },
-  { url: 'section/Bride', changefreq: 'weekly', priority: 0.7 },
-  { url: 'section/PanningTools', changefreq: 'weekly', priority: 0.7 },
-  { url: 'section/WeddingVendors', changefreq: 'weekly', priority: 0.7 },
-  { url: 'section/WeddingVenues', changefreq: 'weekly', priority: 0.6 },
-  { url: 'section/Grooms', changefreq: 'monthly', priority: 0.6 },
+  { url: '/Home', changefreq: 'daily', priority: 1.0 }, // Another home section page
+  { url: '/aboutus', changefreq: 'weekly', priority: 0.9 },
+  { url: '/contactus', changefreq: 'weekly', priority: 0.9 },
+  { url: '/login', changefreq: 'weekly', priority: 0.7 },
+  { url: '/signup', changefreq: 'weekly', priority: 0.7 },
+  { url: '/services', changefreq: 'daily', priority: 0.7 },
+  { url: '/vendorlogin', changefreq: 'weekly', priority: 0.7 },
+  
   // Add other routes here
 ];
 
