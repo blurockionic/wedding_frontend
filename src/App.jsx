@@ -1,8 +1,5 @@
 import { Suspense, lazy } from "react";
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ErrorBoundary from "./pages/ErrorPage.jsx";
@@ -51,6 +48,9 @@ const VendorChangePassword = lazy(() =>
 const ChangePassword = lazy(() => import("./pages/auth/ChangePassword.jsx"));
 const FavoriteListPage = lazy(() =>
   import("./pages/userDashboard/FavoriteList.jsx")
+);
+const VendorProfile = lazy(() =>
+  import("./pages/vendorDashboard/VendorProfile.jsx")
 );
 
 function wrapWithSuspense(Component) {
@@ -122,8 +122,8 @@ const router = createBrowserRouter([
           },
           { path: "analytics", element: wrapWithSuspense(Analytics) },
           { path: "settings", element: wrapWithSuspense(Setting) },
-          { path: "bookings", element:<Subscription/>},
-          
+          { path: "bookings", element: <Subscription /> },
+          { path: "vendor-profile", element: wrapWithSuspense(VendorProfile) },
           {
             path: "service-details/:serviceId",
             element: wrapWithSuspense(DashBoardDetailPage),

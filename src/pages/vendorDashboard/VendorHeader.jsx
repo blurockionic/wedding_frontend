@@ -78,7 +78,7 @@ const VendorHeader = () => {
           {profileOpen && (
             <div className="w-48 bg-background  rounded-md shadow-lg overflow-hidden z-50">
               <Link
-                to="/profile"
+                to="vendor-profile"
                 className="block px-4 py-2 text-sm text-foreground hover:text-white hover:bg-primary"
               >
                 Profile

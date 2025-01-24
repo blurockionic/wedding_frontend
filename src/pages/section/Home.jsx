@@ -242,12 +242,12 @@ export default function Home() {
               )}
             </div>
 
-            <div className="relative w-[400px]">
+            <div className="relative w-fit">
               <CustomInput
                 type="text"
                 value={location}
                 placeholder="in Location"
-                className="w-[300px] outline-none focus:border-white bg-white"
+                className="w-[300px] outline-none  focus:border-white bg-white"
                 aria-label="Location"
                 onChange={handleSearchLocationChange}
                 leftIcon={<GoLocation size={20} />}

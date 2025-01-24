@@ -10,7 +10,6 @@ import {
 import { PiPlus } from "react-icons/pi";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import Login from "../auth/Login";
 import { userlogout } from "../../redux/authSlice";
 
 const VendorServicesPage = () => {
@@ -43,10 +42,9 @@ const VendorServicesPage = () => {
     setCurrentPage(page);
   };
 
-  if(error && error.includes("expire")){
-    userlogout()
-    
-    navigate("/vendorLogin")
+  if (error && typeof error === 'string' && error.includes("expire")) {
+    userlogout();
+    navigate("/vendorLogin");
   }
 
   return (
