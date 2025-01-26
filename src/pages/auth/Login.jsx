@@ -1,3 +1,5 @@
+import React from "react";
+import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { login } from "../../redux/authSlice";
@@ -16,8 +18,6 @@ import { PasswordField } from "../../components/global/inputfield/PasswordField"
 import { useGetCartMutation } from "../../redux/serviceSlice";
 import { hydrateFavorites } from "../../redux/favoriteSlice";
 import useProtectAfterLogin from "../../hooks/useProtectAfterLogin";
-import DynamicTitle from "../../components/global/dynamicTitle/DynamicTitle";
-
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -25,8 +25,7 @@ const loginSchema = z.object({
 });
 
 export default function Login() {
-
-  useProtectAfterLogin(["user"],"/")
+  useProtectAfterLogin(["user"], "/");
 
   const dispatch = useDispatch();
   const [loginMutation, { isLoading: loading }] = useLoginMutation();
@@ -45,41 +44,33 @@ export default function Login() {
   });
 
   const handleLogin = async (data) => {
-  try {
-    // Make the login request
-    const { success, user, message } = await loginMutation(data).unwrap();
+    try {
+      const { success, user, message } = await loginMutation(data).unwrap();
+      if (success) {
+        dispatch(login(user));
 
+        const cart = await getCartMutation();
+        const allCart = cart.data.cartItems.map(
+          (cartItem) => cartItem.serviceId
+        );
 
-    if (success) {
-      dispatch(login(user));
+        dispatch(hydrateFavorites(allCart));
+        reset();
+        toast.success(message);
 
-      // Fetch user's cart data after successful login
-      const cart = await getCartMutation();
-      const allCart = cart.data.cartItems.map(
-        (cartItem) => cartItem.serviceId
-      );
-
-      dispatch(hydrateFavorites(allCart));
-
-      // Reset form and navigate to the previous page or default home page
-      reset();
-      toast.success(message); // Display success message from the backend
-
-      const from = location.state?.from || "/";
-      navigate(from);
+        const from = location.state?.from || "/";
+        navigate(from);
+      }
+    } catch (error) {
+      const errorMessage =
+        error?.data?.message || error.message || "An unexpected error occurred.";
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 5000,
+        theme: "light",
+      });
     }
-  } catch (error) {
-    // Display the exact error message from the backend
-    const errorMessage = error?.data?.message || error.message || "An unexpected error occurred.";
-
-    toast.error(errorMessage, {
-      position: "top-right",
-      autoClose: 5000,
-      theme: "light",
-    });
-  }
-};
-
+  };
 
   const handleGoogleLogin = () => {
     toast.info("Google login is not yet implemented.", {
@@ -89,104 +80,137 @@ export default function Login() {
     });
   };
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: "Vendor Login - Marriage Vendors",
+    description:
+      "Login to Marriage Vendors to access your vendor account and manage your services.",
+    image: loginImage,
+    url: "https://yourwebsite.com/login",
+    author: {
+      "@type": " Event Organization",
+      name: "Marriage Vendors",
+    },
+  };
+
   return (
     <>
-    <DynamicTitle title={"Vendor Login"}/>
-    <div className="min-h-screen flex items-center justify-center bg-white px-4">
-      <div className="flex items-center justify-center space-x-10">
-        {/* Image Section */}
-        <div className="hidden md:block w-3/4">
-          <img
-            src={loginImage}
-            className="h-[600px] w-full object-cover object-center rounded-lg"
-            alt="Login Illustration"
-          />
-        </div>
-
-        {/* Form Section */}
-        <div className="h-[600px] sm:bg-white bg-transparent sm:shadow-md rounded-lg sm:px-8 px-4 w-full space-y-6">
-          <CustomText
-            variant="heading"
-            className="text-3xl font-bold text-black"
-          >
-            Welcome to Wedd
-          </CustomText>
-          <CustomText variant="paragraph" className="text-sm text-gray-600">
-            Enter your credentials to access your account
-          </CustomText>
-
-          <form onSubmit={handleSubmit(handleLogin)} className="space-y-4">
-            <InputField
-              label="Email"
-              id="email"
-              type="email"
-              autoFocus
-              register={register}
-              error={errors.email}
-              icon={<MdEmail size={19} className="text-primary" />}
-              placeholder="Enter your email"
+      <Helmet>
+        <title>Vendor Login - Marriage Vendors</title>
+        <meta
+          name="description"
+          content="Login to Marriage Vendors to access your vendor account and manage your services."
+        />
+        <meta
+          name="keywords"
+          content="Vendor Login, Marriage Vendors Login, Wedding Services, Vendor Account ,Vendor Login, Marriage Vendors Account, Wedding Vendor Login, Access Vendor Account, Manage Services Online, Marriage Vendor Portal, Vendor Account Management, Vendor Services Dashboard, Login for Vendors, Manage Vendor Profile, Wedding Services Portal, Vendor Login Page, Online Vendor Management, Vendor Services Login, Marriage Vendor Login Portal, Wedding Vendor Account, Login to Vendor Services, Access Wedding Services, Vendor Portal Login, Vendor Dashboard Acces"
+        />
+        <meta name="author" content="Marriage Vendors" />
+        <meta name="robots" content="index, follow" />
+        <meta property="og:title" content="Vendor Login - Marriage Vendors" />
+        <meta
+          property="og:description"
+          content="Login to Marriage Vendors to access your vendor account and manage your services."
+        />
+        <meta property="og:image" content={loginImage} />
+        <meta property="og:url" content="https://www.marriagevendors.com/" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
+      </Helmet>
+      <div className="min-h-screen flex items-center justify-center bg-white px-4">
+        <div className="flex items-center justify-center space-x-10">
+          <div className="hidden md:block w-3/4">
+            <img
+              src={loginImage}
+              className="h-[600px] w-full object-cover object-center rounded-lg"
+              alt="Login Illustration"
             />
+          </div>
+          <div className="h-[600px] sm:bg-white bg-transparent sm:shadow-md rounded-lg sm:px-8 px-4 w-full space-y-6">
+            <CustomText
+              variant="heading"
+              className="text-3xl font-bold text-black"
+            >
+              Welcome to Marriage Vendors
+            </CustomText>
+            <CustomText variant="paragraph" className="text-sm text-gray-600">
+              Enter your credentials to access your account
+            </CustomText>
 
-            <PasswordField
-              error={errors.password}
-              type={isShowPassword ? "text" : "password"}
-              setIsShow={setIsShowPassword}
-              register={register}
-              id="password"
-              label="Password"
-              isShow={isShowPassword}
-            />
-
-            <div className="mb-6 text-end">
-              <Link
-                to="/user-forgot-password"
-                className="font-bold text-sm text-muted-foreground"
-              >
-                Forgot Password?
-              </Link>
-            </div>
-
-            <div className="flex flex-col items-center justify-center w-full">
-              <CustomButton
-                type="submit"
-                text={loading ? "Logging in..." : "Login"}
-                disabled={loading}
-                className={`w-full ${loading ? "text-primary" : "bg-primary"} 
-    disabled:cursor-not-allowed cursor-pointer border-2 hover:bg-dustyRose
-    text-muted font-bold py-2 px-4 rounded transition`}
+            <form onSubmit={handleSubmit(handleLogin)} className="space-y-4">
+              <InputField
+                label="Email"
+                id="email"
+                type="email"
+                autoFocus
+                register={register}
+                error={errors.email}
+                icon={<MdEmail size={19} className="text-primary" />}
+                placeholder="Enter your email"
               />
 
-              <div className="mt-4 flex items-center justify-between w-full gap-x-5">
-                <div className="h-[1px] px-3 w-full bg-gray-300"></div>
-                <span>or</span>
-                <div className="h-[1px] px-3 w-full bg-gray-300"></div>
+              <PasswordField
+                error={errors.password}
+                type={isShowPassword ? "text" : "password"}
+                setIsShow={setIsShowPassword}
+                register={register}
+                id="password"
+                label="Password"
+                isShow={isShowPassword}
+              />
+
+              <div className="mb-6 text-end">
+                <Link
+                  to="/user-forgot-password"
+                  className="font-bold text-sm text-muted-foreground"
+                >
+                  Forgot Password?
+                </Link>
               </div>
 
-              <CustomButton
-                type="button"
-                text="Login with Google"
-                onClick={handleGoogleLogin}
-                leftIcon={<MdEmail size={20} className="text-red-500" />}
-                className="w-full mt-4 py-2 bg-background text-red-600 border hover:border-ring"
-              />
-            </div>
-          </form>
+              <div className="flex flex-col items-center justify-center w-full">
+                <CustomButton
+                  type="submit"
+                  text={loading ? "Logging in..." : "Login"}
+                  disabled={loading}
+                  className={`w-full ${
+                    loading ? "text-primary" : "bg-primary"
+                  } 
+      disabled:cursor-not-allowed cursor-pointer border-2 hover:bg-dustyRose
+      text-muted font-bold py-2 px-4 rounded transition`}
+                />
 
-          {/* Sign Up Link */}
-          <div className="mt-6 text-center">
-            <CustomText variant="paragraph" className="text-sm">
-              Don’t have an account?{" "}
-              <Link
-                to="/signup"
-                className="font-bold text-primary hover:underline"
-              >
-                Sign Up
-              </Link>
-            </CustomText>
+                <div className="mt-4 flex items-center justify-between w-full gap-x-5">
+                  <div className="h-[1px] px-3 w-full bg-gray-300"></div>
+                  <span>or</span>
+                  <div className="h-[1px] px-3 w-full bg-gray-300"></div>
+                </div>
+
+                <CustomButton
+                  type="button"
+                  text="Login with Google"
+                  onClick={handleGoogleLogin}
+                  leftIcon={<MdEmail size={20} className="text-red-500" />}
+                  className="w-full mt-4 py-2 bg-background text-red-600 border hover:border-ring"
+                />
+              </div>
+            </form>
+
+            <div className="mt-6 text-center">
+              <CustomText variant="paragraph" className="text-sm">
+                Don’t have an account?{" "}
+                <Link
+                  to="/signup"
+                  className="font-bold text-primary hover:underline"
+                >
+                  Sign Up
+                </Link>
+              </CustomText>
+            </div>
           </div>
         </div>
       </div>
-    </div>
     </>
   );
 }
