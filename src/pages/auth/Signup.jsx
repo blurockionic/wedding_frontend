@@ -1,24 +1,26 @@
+import React, { useState } from "react";
+import { Helmet } from "react-helmet-async"; // SEO with Helmet
 import { Link, useNavigate } from "react-router-dom";
 import { useSignupMutation } from "../../redux/apiSlice.auth";
-import { useForm } from "react-hook-form"; // React Hook Form
-import { toast } from "react-toastify"; // Toast notifications
-import "react-toastify/dist/ReactToastify.css"; // Toast styles
-import loginImage from "../../../public/signup/signup.jpg";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import loginImage from "../../../public/signup/signup.jpg"; // Replace with actual image path
 import { GoDeviceMobile, GoLocation, GoMail, GoPerson } from "react-icons/go";
+import { FaGoogle } from "react-icons/fa";
 import CustomButton from "../../components/global/button/CustomButton";
 import { PasswordField } from "../../components/global/inputfield/PasswordField";
 import { InputField } from "../../components/global/inputfield/InputField";
 import { userSchema } from "../../validationSchema/userRegistrationSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FaGoogle } from "react-icons/fa";
 import useProtectAfterLogin from "../../hooks/useProtectAfterLogin";
 
 export default function Signup() {
-  useProtectAfterLogin(["user"], "/");
+  useProtectAfterLogin(["user"], "/"); // Protect users already logged in
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isShowPasswordCon, setIsShowPasswordCon] = useState(false);
   const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -53,10 +55,8 @@ export default function Signup() {
         wedding_location,
       }).unwrap();
       toast.success(response.message);
-      console.log("Signup response:", response);
       navigate("/login");
     } catch (error) {
-      console.error("Signup error:", error);
       toast.error(
         `Signup failed: ${error?.data?.message || "Something went wrong"}`
       );
@@ -65,12 +65,44 @@ export default function Signup() {
 
   return (
     <div className="min-h-screen flex items-center justify-center md:py-10">
+      {/* Helmet for SEO */}
+      <Helmet>
+        <title>Signup | Marriage Vendors</title>
+        <meta
+          name="description"
+          content="Create a new account on Marriage Vendors to organize and plan your wedding seamlessly. Sign up to explore services."
+        />
+        <meta
+          name="keywords"
+          content="signup, marriage vendors, wedding account, wedding planning ,signup, marriage vendors, wedding planning, wedding account, wedding organization, create an account, event management, wedding services, vendor management, bride account, groom account, wedding checklist, online wedding planning, wedding venues, wedding photographers, wedding florists, wedding event organizers, wedding planners, wedding inspiration, wedding trends, wedding packages"
+        />
+        <meta name="author" content="Marriage Vendors" />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://www.marriagevendors.com/signup" />
+
+        {/* Structured Data */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            name: "Signup | Marriage Vendors",
+            description:
+              "Create a new account on Marriage Vendors to organize and plan your wedding seamlessly. Sign up to explore services.",
+            url: "https://www.marriagevendors.com/signup",
+            potentialAction: {
+              "@type": "RegisterAction",
+              target: "https://www.marriagevendors.com/signup",
+            },
+          })}
+        </script>
+      </Helmet>
+
       <div className="md:w-[60%] w-[90%] flex justify-center items-center gap-x-10">
         {/* Image Section */}
         <div className="hidden md:block md:w-3/4">
           <img
             src={loginImage}
-            alt="Signup Illustration"
+            alt="Signup for Marriage Vendors"
             className="h-[750px] w-full object-cover rounded-tl-lg rounded-bl-lg"
           />
         </div>
@@ -80,9 +112,9 @@ export default function Signup() {
           onSubmit={handleSubmit(onSubmit)}
           className="bg-white shadow-md w-full p-5 md:px-8 rounded-lg"
         >
-          <h2 className="text-2xl font-bold text-black mb-6">
-            Fill details to create a new account
-          </h2>
+          <h1 className="text-3xl font-bold text-black mb-6">
+            Create Your Account | Marriage Vendors
+          </h1>
 
           {/* Username */}
           <InputField
@@ -156,33 +188,29 @@ export default function Signup() {
             >
               Event Date
             </label>
-            <div className="relative gap-3">
-              <input
-                type="date"
-                id="wedding_date"
-                {...register("wedding_date")}
-                className="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-md"
-              />
-              {errors.wedding_date && (
-                <p className="text-red-500 text-sm">
-                  {errors.wedding_date.message}
-                </p>
-              )}
-            </div>
+            <input
+              type="date"
+              id="wedding_date"
+              {...register("wedding_date")}
+              className="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-md"
+            />
+            {errors.wedding_date && (
+              <p className="text-red-500 text-sm">
+                {errors.wedding_date.message}
+              </p>
+            )}
           </div>
 
-          {/* term of service  */}
-
+          {/* Terms of Service */}
           <div className="flex items-center mb-5 px-2">
             <input
               id="link-checkbox"
               type="checkbox"
-              value=""
-              className="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded-md focus:ring-ring dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              className="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded-md"
             />
             <label
               htmlFor="link-checkbox"
-              className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              className="ms-2 text-sm font-medium text-gray-900"
             >
               I agree with the{" "}
               <a
@@ -202,46 +230,19 @@ export default function Signup() {
               disabled={isLoading}
               className={`w-full ${
                 isLoading ? "bg-primary-300" : "bg-primary"
-              } disabled:cursor-not-allowed cursor-pointer disabled:bg-muted border-2  text-foreground font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-dustyRose-light transition`}
+              } disabled:cursor-not-allowed cursor-pointer border-2 text-foreground font-bold py-2 px-4 rounded`}
             >
-              {isLoading ? (
-                <span className="flex items-center justify-center">
-                  <svg
-                    className="w-5 h-5 mr-2 text-white animate-spin"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.963 7.963 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  Please wait...
-                </span>
-              ) : (
-                <span className="text-background">Sign up</span>
-              )}
+              {isLoading ? "Please wait..." : "Sign up"}
             </button>
 
             <CustomButton
               type="button"
               text="Login with Google"
-              // onClick={handleGoogleLogin}
               leftIcon={<FaGoogle size={20} className="text-red-500" />}
-              className="w-full mt-4 py-2 bg-white text-red-600 border-2 border-sageGreen-dark hover:bg-sageGreen-light hover:text-primary"
+              className="w-full mt-4 py-2 bg-white text-red-600 border-2 border-sageGreen-dark hover:bg-sageGreen-light"
             />
 
-            <div className="mt-4 flex items-center justify-between gap-3">
+            <div className="mt-4">
               <p className="text-sm text-gray-700">
                 Already have an account?{" "}
                 <Link to="/login" className="text-primary font-medium">

@@ -97,7 +97,7 @@ export default function Login() {
   return (
     <>
       <Helmet>
-        <title>Vendor Login - Marriage Vendors</title>
+        <title>Login - Marriage Vendors</title>
         <meta
           name="description"
           content="Login to Marriage Vendors to access your vendor account and manage your services."
