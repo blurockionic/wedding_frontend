@@ -1,4 +1,19 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+
+// Async thunk for saving checklist to backend
+export const saveChecklist = createAsyncThunk(
+    "checklist/saveChecklist",
+    async (checklistData, { rejectWithValue }) => {
+      console.log("Inside minimal saveChecklist thunk!"); // <--- VERY IMPORTANT LOG
+      return new Promise(resolve => {
+        setTimeout(() => { // Simulate a tiny delay
+          console.log("Minimal thunk resolving");
+          resolve({ message: "Minimal thunk success" }); // Resolve with a simple object
+        }, 100);
+      });
+    }
+  );
 
 const initialState = [
     {
@@ -92,29 +107,56 @@ const checklistSlice = createSlice({
   initialState,
   reducers: {
     toggleItemState: (state, action) => {
-      const { categoryTitle, itemIndex } = action.payload;
-      const category = state.find((cat) => cat.category === categoryTitle);
-      if (category) {
-        const item = category.items[itemIndex];
-        if (item) {
-          item.done = !item.done;
-        }
-      }
-    },
-    addItem: (state, action) => {
-      const { categoryTitle, itemName } = action.payload;
-      const category = state.find((cat) => cat.category === categoryTitle);
-      if (category) {
-        category.items.push({ name: itemName, done: false });
-      }
-    },
-    removeItem: (state, action) => {
-      const { categoryTitle, itemIndex } = action.payload;
-      const category = state.find((cat) => cat.category === categoryTitle);
-      if (category) {
-        category.items.splice(itemIndex, 1);
-      }
-    },
+        const { categoryTitle, itemIndex } = action.payload;
+        return state.map((category) => {
+          if (category.category === categoryTitle) {
+            return {
+              ...category,
+              items: category.items.map((item, index) =>
+                index === itemIndex ? { ...item, done: !item.done } : item
+              ),
+            };
+          }
+          return category;
+        });
+      },
+      addItem: (state, action) => {
+        const { categoryTitle, itemName } = action.payload;
+        return state.map((category) => {
+          if (category.category === categoryTitle) {
+            return {
+              ...category,
+              items: [...category.items, { name: itemName, done: false }],
+            };
+          }
+          return category;
+        });
+      },
+      removeItem: (state, action) => {
+        const { categoryTitle, itemIndex } = action.payload;
+        return state.map((category) => {
+          if (category.category === categoryTitle) {
+            return {
+              ...category,
+              items: category.items.filter((_, index) => index !== itemIndex),
+            };
+          }
+          return category;
+        });
+      },      
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(saveChecklist.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(saveChecklist.fulfilled, (state, action) => {
+        state.status = "succeeded";
+      })
+      .addCase(saveChecklist.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      });
   },
 });
 

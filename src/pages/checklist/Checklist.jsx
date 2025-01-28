@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import Footer from "../Footer";
-import { FaCheckCircle, FaPlus, FaTimes } from "react-icons/fa";
+import { FaCheckCircle, FaPlus, FaTimes, FaSave } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleItemState, addItem, removeItem } from "../../redux/checklistSlice";
+import { toggleItemState, addItem, removeItem, saveChecklist } from "../../redux/checklistSlice";
+import { useSaveChecklistMutation } from "../../redux/checklistApiSlice"; 
 
 // Custom hook to detect screen size
 const useMediaQuery = (query) => {
@@ -133,8 +134,36 @@ const ChecklistCategory = ({ title, items }) => {
 
 const Checklist = () => {
   const checklistData = useSelector((state) => state.checklist);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  console.log(useSelector((state) => state))
+  const [isSaving, setIsSaving] = useState(false);
+  const checklistState = useSelector((state) => state.checklist);
+  const [saveChecklistApi, { isLoading: isSavingApi, isSuccess: isSaveSuccess, isError: isSaveError, error: saveError }] = useSaveChecklistMutation();
+
+  const handleSave = async () => {
+    try {
+      console.log("Checklist being saved:", checklistState);
+
+      // Send checklistState as checklistItems in the request body
+      const payload = {
+        checklistItems: checklistState,
+      };
+      const resultAction = await saveChecklistApi(payload);
+
+      if (resultAction.error) {
+        console.error("Error saving checklist:", resultAction.error);
+        alert(`Error saving checklist: ${resultAction.error.data?.message || resultAction.error.error || 'Unknown error'}`);
+      } else {
+        console.log("Checklist saved successfully:", resultAction.data);
+        alert("Checklist saved successfully!");
+      }
+
+    } catch (error) {
+      console.error("Error during save process:", error);
+      alert(`Error during save process: ${error.message}`);
+    }
+  };
+  
 
   return (
     <div>
@@ -152,6 +181,17 @@ const Checklist = () => {
         <div className="text-3xl md:text-4xl font-bold text-gray-800 mb-8">
           Wedding Checklist
         </div>
+        
+        {/* Save Button */}
+        <div className="mt-6 flex justify-center">
+          <button
+            onClick={handleSave}
+            className="px-6 py-2 bg-pink-600 text-white rounded-md hover:bg-pink-700 transition-all duration-300 ease-in-out flex items-center"
+          >
+            <FaSave className="mr-2" size={18} />
+            Save Checklist
+          </button>
+        </div>
 
         <div
           className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6"
@@ -159,14 +199,20 @@ const Checklist = () => {
             columnGap: "2rem",
           }}
         >
-          {(checklistData) ? (checklistData.map((category, index) => (
-            <ChecklistCategory
-              key={index}
-              title={category.category}
-              items={category.items}
-            />
-          ))) : <div>Loading... </div>}
+          {checklistData ? (
+            checklistData.map((category, index) => (
+              <ChecklistCategory
+                key={index}
+                title={category.category}
+                items={category.items}
+              />
+            ))
+          ) : (
+            <div>Loading...</div>
+          )}
         </div>
+
+        
       </div>
 
       <Footer />
