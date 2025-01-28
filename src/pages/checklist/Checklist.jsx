@@ -4,12 +4,30 @@ import { FaCheckCircle, FaPlus, FaTimes  } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
+// Custom hook to detect screen size
+const useMediaQuery = (query) => {
+  const [matches, setMatches] = useState(
+    typeof window !== "undefined" ? window.matchMedia(query).matches : false
+  );
+
+  React.useEffect(() => {
+    const media = window.matchMedia(query);
+    const listener = () => setMatches(media.matches);
+    media.addEventListener("change", listener);
+    return () => media.removeEventListener("change", listener);
+  }, [query]);
+
+  return matches;
+};
+
 const ChecklistCategory = ({ title, items, toggleItemState, addItem, removeItem }) => {
   const [newItem, setNewItem] = useState("");
   const [clickedIndex, setClickedIndex] = useState(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [isHovering, setIsHovering] = useState(false);
   const [removedIndex, setRemovedIndex] = useState(null);
+
+  const isMediumScreenOrSmaller = useMediaQuery("(max-width: 1024px)");
 
   const handleItemClick = (index) => {
     setClickedIndex(index);
@@ -47,12 +65,16 @@ const ChecklistCategory = ({ title, items, toggleItemState, addItem, removeItem 
         {items.map((item, index) => (
           <li
             key={index}
-            className={`flex items-center space-x-2 cursor-pointer group ${
+            className={`flex items-center space-x-2 cursor-pointer group transition-all duration-300 ease-in-out ${
               item.done ? "text-gray-400" : "text-gray-700"
             }`}
             onClick={() => handleItemClick(index)}
-            onMouseEnter={() => setHoveredIndex(index)}
-            onMouseLeave={() => setHoveredIndex(null)}
+            onMouseEnter={() =>
+              !isMediumScreenOrSmaller && setHoveredIndex(index)
+            }
+            onMouseLeave={() =>
+              !isMediumScreenOrSmaller && setHoveredIndex(null)
+            }
           >
             <FaCheckCircle
               className={`transition-all duration-150 ease-in-out ${
@@ -75,7 +97,7 @@ const ChecklistCategory = ({ title, items, toggleItemState, addItem, removeItem 
             >
               {item.name}
             </span>
-            {hoveredIndex === index && (
+            {((hoveredIndex === index) || (isMediumScreenOrSmaller)) && (
               <FaTimes
                 className="transition-all duration-300 ease-in-out text-gray-300 flex-shrink-0 hover:text-pink-600"
                 size={18}
@@ -93,7 +115,7 @@ const ChecklistCategory = ({ title, items, toggleItemState, addItem, removeItem 
       {/* Add New Item Section */}
       <div
         className={`mt-4 flex items-center space-x-2 overflow-hidden transition-all duration-300 ease-in-out ${
-          isHovering ? "max-h-20 opacity-100" : "max-h-0 opacity-0"
+          (isHovering || (isMediumScreenOrSmaller)) ? "max-h-20 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
         <FaPlus
