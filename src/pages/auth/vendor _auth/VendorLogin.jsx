@@ -76,6 +76,44 @@ export default function VendorLogin() {
 
   return (
     <>
+    {/* SEO Optimization */}
+    <Helmet>
+        <title>Vendor Login - Marriage Vendors | Manage Your Wedding Services</title>
+        <meta
+          name="description"
+          content="Login to your Marriage Vendors account to showcase your wedding services, connect with engaged couples, and grow your business effortlessly."
+        />
+        <meta
+          name="keywords"
+          content="vendor login, wedding vendor login, marriage vendors, wedding business, book more weddings, vendor dashboard"
+        />
+        <meta name="robots" content="index, follow" />
+        <meta property="og:title" content="Vendor Login - Marriage Vendors" />
+        <meta
+          property="og:description"
+          content="Login to showcase your wedding services and connect with engaged couples."
+        />
+        <meta property="og:image" content="https://www.marriagevendors.com/assets/login-DWbP2E5R.jpg" />
+        <meta property="og:url" content="https://www.marriagevendors.com/login" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "Marriage Vendors",
+            url: "https://www.marriagevendors.com/login",
+            logo: "https://www.marriagevendors.com/assets/login-DWbP2E5R.jpg",
+            description:
+              "Marriage Vendors helps wedding professionals connect with engaged couples and grow their businesses.",
+            contactPoint: {
+              "@type": "ContactPoint",
+              telephone: "+91-6200932331",
+              contactType: "customer support",
+            },
+          })}
+        </script>
+      </Helmet>
+
       <div className="flex justify-center items-center cusrsor-pointer py-4 ">
         <NavLink to="/" className="flex items-center gap-3 cursor-pointer">
           <img src={brandlogo} alt="brandlogo" className="w-16 h-16" />
