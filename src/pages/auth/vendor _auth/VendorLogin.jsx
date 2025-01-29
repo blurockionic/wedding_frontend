@@ -16,6 +16,7 @@ import CustomButton from "../../../components/global/button/CustomButton";
 import Footer from "../../Footer";
 import ServiceTypeCard from "../../../components/global/card/ServiceTypeCard";
 import { MdEventAvailable, MdOutlinePersonAddAlt } from "react-icons/md";
+import { Helmet } from "react-helmet";
 import {
   FaEnvelope,
   FaFemale,
