@@ -94,14 +94,14 @@ export default function VendorLogin() {
           content="Login to showcase your wedding services and connect with engaged couples."
         />
         <meta property="og:image" content="https://www.marriagevendors.com/assets/login-DWbP2E5R.jpg" />
-        <meta property="og:url" content="https://www.marriagevendors.com/login" />
+        <meta property="og:url" content="https://www.marriagevendors.com/vendorLogin" />
         <meta name="twitter:card" content="summary_large_image" />
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Organization",
             name: "Marriage Vendors",
-            url: "https://www.marriagevendors.com/login",
+            url: "https://www.marriagevendors.com/vendorLogin",
             logo: "https://www.marriagevendors.com/assets/login-DWbP2E5R.jpg",
             description:
               "Marriage Vendors helps wedding professionals connect with engaged couples and grow their businesses.",

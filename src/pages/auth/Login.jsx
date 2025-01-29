@@ -114,7 +114,7 @@ export default function Login() {
           content="Login to Marriage Vendors to access your couple account, explore vendors, and manage your wedding planning effortlessly."
         />
         <meta property="og:image" content={loginImage} />
-        <meta property="og:url" content="https://www.marriagevendors.com/" />
+        <meta property="og:url" content="https://www.marriagevendors.com/login" />
         <meta name="twitter:card" content="summary_large_image" />
         <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
       </Helmet>

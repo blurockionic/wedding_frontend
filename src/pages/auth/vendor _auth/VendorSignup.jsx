@@ -59,6 +59,45 @@ function VendorRegistration() {
 
   return (
     <FormProvider {...methods}>
+
+      {/* SEO Optimization */}
+      <Helmet>
+        <title>Vendor Signup - Join Marriage Vendors & Grow Your Business</title>
+        <meta
+          name="description"
+          content="Register as a vendor on Marriage Vendors, showcase your wedding services, and connect with engaged couples. Sign up today and grow your business!"
+        />
+        <meta
+          name="keywords"
+          content="vendor registration, wedding vendor signup, marriage vendors, wedding services, wedding business growth"
+        />
+        <meta name="robots" content="index, follow" />
+        <meta property="og:title" content="Vendor Signup - Marriage Vendors" />
+        <meta
+          property="og:description"
+          content="Sign up to showcase your wedding services and connect with engaged couples."
+        />
+        <meta property="og:image" content="https://www.marriagevendors.com/signup-preview.jpg" />
+        <meta property="og:url" content="https://www.marriagevendors.com/vendorSignup" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "Marriage Vendors",
+            url: "https://www.marriagevendors.com/vendorSignup",
+            logo: "/",
+            description:
+              "Marriage Vendors helps wedding professionals connect with engaged couples and grow their businesses.",
+            contactPoint: {
+              "@type": "ContactPoint",
+              telephone: "+91-6200932331",
+              contactType: "customer support",
+            },
+          })}
+        </script>
+      </Helmet>
+
       <div className="min-h-screen bg-[#f2f2f2]  px-4 grid grid-cols-1 md:grid-cols-3">
         <div className="col-span-1 hidden md:block">
           {/* sign up  */}
