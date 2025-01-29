@@ -12,6 +12,7 @@ import Step5 from "./Step5";
 import Step6 from "./Step6";
 import signup_bg from "../../../../public/signup/sign-bg.jpg";
 import brandlogo from "../../../../public/logo/brandlogo.png";
+import { Helmet } from "react-helmet";
 
 function VendorRegistration() {
   useProtectAfterLogin(["vendor"], "/VendorDashboard");
