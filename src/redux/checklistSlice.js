@@ -1,15 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 
 // Async thunk for saving checklist to backend
 export const saveChecklist = createAsyncThunk(
     "checklist/saveChecklist",
     async (checklistData, { rejectWithValue }) => {
-      console.log("Inside minimal saveChecklist thunk!"); // <--- VERY IMPORTANT LOG
+      console.log("Inside minimal saveChecklist thunk!");
       return new Promise(resolve => {
-        setTimeout(() => { // Simulate a tiny delay
+        setTimeout(() => {
           console.log("Minimal thunk resolving");
-          resolve({ message: "Minimal thunk success" }); // Resolve with a simple object
+          resolve({ message: "Minimal thunk success" });
         }, 100);
       });
     }
@@ -143,7 +142,10 @@ const checklistSlice = createSlice({
           }
           return category;
         });
-      },      
+      },
+      setChecklist: (state, action) => {
+        return action.payload; // Replaces the entire checklist state
+      },
   },
   extraReducers: (builder) => {
     builder
@@ -160,5 +162,5 @@ const checklistSlice = createSlice({
   },
 });
 
-export const { toggleItemState, addItem, removeItem } = checklistSlice.actions;
+export const { toggleItemState, addItem, removeItem, setChecklist } = checklistSlice.actions;
 export default checklistSlice;

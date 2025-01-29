@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Footer from "../Footer";
 import { FaCheckCircle, FaPlus, FaTimes, FaSave } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleItemState, addItem, removeItem, saveChecklist } from "../../redux/checklistSlice";
-import { useSaveChecklistMutation } from "../../redux/checklistApiSlice"; 
+import { toggleItemState, addItem, removeItem, setChecklist } from "../../redux/checklistSlice";
+import { useSaveChecklistMutation, useGetChecklistQuery } from "../../redux/checklistApiSlice";
 
 // Custom hook to detect screen size
 const useMediaQuery = (query) => {
@@ -133,20 +133,26 @@ const ChecklistCategory = ({ title, items }) => {
 };
 
 const Checklist = () => {
-  const checklistData = useSelector((state) => state.checklist);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [isSaving, setIsSaving] = useState(false);
-  const checklistState = useSelector((state) => state.checklist);
-  const [saveChecklistApi, { isLoading: isSavingApi, isSuccess: isSaveSuccess, isError: isSaveError, error: saveError }] = useSaveChecklistMutation();
+  const [saveChecklistApi, { isLoading: isSavingApi }] = useSaveChecklistMutation();
+  const { data: fetchedChecklist, isLoading, isError } = useGetChecklistQuery();
+  const checklistData = useSelector((state) => state.checklist);
+
+  // Set checklist data when fetched
+  useEffect(() => {
+    if (fetchedChecklist) {
+      dispatch(setChecklist(fetchedChecklist.checklist1));
+    }
+  }, [fetchedChecklist, dispatch]);
 
   const handleSave = async () => {
     try {
-      console.log("Checklist being saved:", checklistState);
+      console.log("Checklist being saved:", checklistData);
 
-      // Send checklistState as checklistItems in the request body
       const payload = {
-        checklistItems: checklistState,
+        checklistItems: checklistData,
       };
       const resultAction = await saveChecklistApi(payload);
 
@@ -163,7 +169,6 @@ const Checklist = () => {
       alert(`Error during save process: ${error.message}`);
     }
   };
-  
 
   return (
     <div>
@@ -181,38 +186,33 @@ const Checklist = () => {
         <div className="text-3xl md:text-4xl font-bold text-gray-800 mb-8">
           Wedding Checklist
         </div>
-        
-        {/* Save Button */}
-        <div className="mt-6 flex justify-center">
-          <button
-            onClick={handleSave}
-            className="px-6 py-2 bg-pink-600 text-white rounded-md hover:bg-pink-700 transition-all duration-300 ease-in-out flex items-center"
-          >
-            <FaSave className="mr-2" size={18} />
-            Save Checklist
-          </button>
-        </div>
 
-        <div
-          className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6"
-          style={{
-            columnGap: "2rem",
-          }}
-        >
-          {checklistData ? (
-            checklistData.map((category, index) => (
-              <ChecklistCategory
-                key={index}
-                title={category.category}
-                items={category.items}
-              />
-            ))
-          ) : (
-            <div>Loading...</div>
-          )}
-        </div>
+        {/* Show loading indicator while fetching */}
+        {isLoading ? (
+          <div className="text-center text-pink-600">Loading checklist...</div>
+        ) : (
+          <>
+            {/* Save Button */}
+            <div className="mt-6 flex justify-center">
+              <button
+                onClick={handleSave}
+                disabled={!isLoggedIn || isSavingApi}
+                className={`px-6 py-2 rounded-md transition-all duration-300 ease-in-out flex items-center ${
+                  isLoggedIn ? "bg-pink-600 text-white hover:bg-pink-700" : "bg-gray-400 text-gray-700 cursor-not-allowed"
+                }`}
+              >
+                <FaSave className="mr-2" size={18} />
+                {isSavingApi ? "Saving..." : isLoggedIn ? "Save Checklist" : "Login to Save"}
+              </button>
+            </div>
 
-        
+            <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6">
+              {checklistData.map((category, index) => (
+                <ChecklistCategory key={index} title={category.category} items={category.items} />
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
       <Footer />

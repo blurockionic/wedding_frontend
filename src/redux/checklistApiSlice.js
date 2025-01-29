@@ -1,20 +1,26 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const checklistApiSlice = createApi({
-  reducerPath: "checklistApiSlice", // Choose a unique reducer path
+  reducerPath: "checklistApiSlice",
   baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.VITE_API_URL}/api/v1/checklist`, // Base URL for checklist related endpoints
-    credentials: "include", // If you need to send cookies/credentials
+    baseUrl: `${import.meta.env.VITE_API_URL}/api/v1/checklist`,
+    credentials: "include",
   }),
   endpoints: (builder) => ({
     saveChecklist: builder.mutation({
       query: (checklistData) => ({
-        url: `/save`, // Endpoint is /api/v1/checklist/save (combined with baseUrl)
+        url: `/save`,
         method: "POST",
         body: checklistData,
+      }),
+    }),
+    getChecklist: builder.query({
+      query: () => ({
+        url: `/get`,
+        method: "GET",
       }),
     }),
   }),
 });
 
-export const { useSaveChecklistMutation } = checklistApiSlice;
+export const { useSaveChecklistMutation, useGetChecklistQuery } = checklistApiSlice;
