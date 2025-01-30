@@ -10,7 +10,7 @@ import Step3 from "./Step3";
 import Step4 from "./Step4";
 import Step5 from "./Step5";
 import Step6 from "./Step6";
-import signup_bg from "../../../../public/signup/signbg.jpg";
+import signup_bg from "../../../../public/signup/signup.jpg";
 import brandlogo from "../../../../public/logo/brandlogo.png";
 import { Helmet } from "react-helmet";
 
