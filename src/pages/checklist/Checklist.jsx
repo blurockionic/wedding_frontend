@@ -4,8 +4,9 @@ import { FaCheckCircle, FaPlus, FaTimes, FaSave } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleItemState, addItem, removeItem, setChecklist } from "../../redux/checklistSlice";
+import { toggleItemState, addItem, removeItem, setChecklist, addCategory, removeCategory  } from "../../redux/checklistSlice";
 import { useSaveChecklistMutation, useGetChecklistQuery } from "../../redux/checklistApiSlice";
+import { toast } from "react-toastify";
 
 // Custom hook to detect screen size
 const useMediaQuery = (query) => {
@@ -23,7 +24,7 @@ const useMediaQuery = (query) => {
   return matches;
 };
 
-const ChecklistCategory = ({ title, items }) => {
+const ChecklistCategory = ({ title, items, handleSave }) => {
   const [newItem, setNewItem] = useState("");
   const [clickedIndex, setClickedIndex] = useState(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -38,6 +39,7 @@ const ChecklistCategory = ({ title, items }) => {
 
     setTimeout(() => {
       setClickedIndex(null);
+      handleSave(true);
     }, 300);
   };
 
@@ -45,11 +47,27 @@ const ChecklistCategory = ({ title, items }) => {
     if (newItem.trim() !== "") {
       dispatch(addItem({ categoryTitle: title, itemName: newItem }));
       setNewItem("");
+
+      setTimeout(() => {
+        handleSave(true);
+      }, 300);
     }
   };
 
   const handleRemoveItem = (index) => {
     dispatch(removeItem({ categoryTitle: title, itemIndex: index }));
+
+    setTimeout(() => {
+      handleSave(true);
+    }, 300);
+  };
+
+  const handleRemoveCategory = (index) => {
+    dispatch(removeCategory({ categoryTitle: title }));
+
+    setTimeout(() => {
+      handleSave(true);
+    }, 300);
   };
 
   return (
@@ -58,7 +76,16 @@ const ChecklistCategory = ({ title, items }) => {
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
+      <div className="flex w-full">
       <h3 className="text-xl font-semibold text-pink-600 mb-3">{title}</h3>
+      <FaTimes
+        className={`relative top-0 right-0 text-gray-300 hover:text-pink-600 cursor-pointer transition-all duration-300 ease-in-out ml-auto ${
+          isHovering || isMediumScreenOrSmaller ? "max-h-20 opacity-100" : "max-h-0 opacity-0"
+        }`}
+        size={18}
+        onClick={handleRemoveCategory}
+      />
+      </div>
       <ul className="space-y-2">
         {items.map((item, index) => (
           <li
@@ -139,6 +166,18 @@ const Checklist = () => {
   const [saveChecklistApi, { isLoading: isSavingApi }] = useSaveChecklistMutation();
   const { data: fetchedChecklist, isLoading, isError } = useGetChecklistQuery();
   const checklistData = useSelector((state) => state.checklist);
+  const [progress, setProgress] = useState(0);    
+  const [totalTasks, setTotalTasks] = useState(0); 
+  const [completedTasks, setCompletedTasks] = useState(0); 
+  const [newCategory, setNewCategory] = useState("");
+
+  // add new category
+  const handleAddCategory = () => {
+    if (newCategory.trim() === "") return;
+    dispatch(addCategory({ categoryTitle: newCategory.trim() }));
+    setNewCategory("");
+    handleSave(true);
+  };
 
   // Set checklist data when fetched
   useEffect(() => {
@@ -147,7 +186,24 @@ const Checklist = () => {
     }
   }, [fetchedChecklist, dispatch]);
 
-  const handleSave = async () => {
+  // progress bar
+  useEffect(() => {
+    let total = 0;
+    let completed = 0;
+  
+    checklistData.forEach((category) => {
+      category.items.forEach((item) => {
+        total++;
+        if (item.done) completed++;
+      });
+    });
+
+    setTotalTasks(total);
+    setCompletedTasks(completed);
+    setProgress(total > 0 ? ((completed / total) * 100).toFixed(2) : 0);
+  }, [checklistData]);
+
+  const handleSave = async (isUpdate) => {
     try {
       console.log("Checklist being saved:", checklistData);
 
@@ -155,13 +211,19 @@ const Checklist = () => {
         checklistItems: checklistData,
       };
       const resultAction = await saveChecklistApi(payload);
-
+      toast.dismiss();
       if (resultAction.error) {
         console.error("Error saving checklist:", resultAction.error);
-        alert(`Error saving checklist: ${resultAction.error.data?.message || resultAction.error.error || 'Unknown error'}`);
+        toast.error(`Error saving checklist: ${resultAction.error.data?.message == "Access token is missing or invalid" ? "Please login to save!!" : (resultAction.error.data?.message || resultAction.error.error || 'Unknown error')}`, {
+                position: "top-right",
+                autoClose: 5000,
+                theme: "light",
+              });
       } else {
         console.log("Checklist saved successfully:", resultAction.data);
-        alert("Checklist saved successfully!");
+        if (isUpdate == false){
+          toast.success("Checklist saved successfully!");
+        }
       }
 
     } catch (error) {
@@ -192,23 +254,57 @@ const Checklist = () => {
           <div className="text-center text-pink-600">Loading checklist...</div>
         ) : (
           <>
-            {/* Save Button */}
-            <div className="mt-6 flex justify-center">
+
+            {/* Progress bar + Save button container */}
+            <div className="sm:flex items-center justify-between w-full gap-4 mb-4 sm:mb-8">
+
+              <div className="flex flex-col-reverse sm:w-1/2 sm:pr-12 pb-3 sm:pb-0">
+                {/* Progress Bar Container */}
+                <div className="relative w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+                  {/* Progress Indicator */}
+                  <div
+                    className="bg-pink-400 h-full transition-all duration-300"
+                    style={{ width: `${progress}%` }}
+                  ></div>
+                </div>
+                {/* Progress Text */}
+                <p className="text-md text-gray-700 font-semibold whitespace-nowrap mb-2">
+                  You have completed <span className="font-bold">{completedTasks} out of {totalTasks}</span> tasks.
+                </p>
+              </div>
+
+              {/* Save Button (Right Aligned) */}
               <button
-                onClick={handleSave}
+                onClick={() => handleSave(false)}
                 disabled={!isLoggedIn || isSavingApi}
                 className={`px-6 py-2 rounded-md transition-all duration-300 ease-in-out flex items-center ${
                   isLoggedIn ? "bg-pink-600 text-white hover:bg-pink-700" : "bg-gray-400 text-gray-700 cursor-not-allowed"
-                }`}
+                } ml-auto`}
               >
                 <FaSave className="mr-2" size={18} />
                 {isSavingApi ? "Saving..." : isLoggedIn ? "Save Checklist" : "Login to Save"}
               </button>
             </div>
 
+            {/* Add New Category Field */}
+            <div className="flex items-center shadow-md gap-2 mb-4 border-2 p-3 py-2 mb-6 rounded-lg">
+              <FaPlus
+                className="text-pink-500 hover:text-pink-600 transition cursor-pointer"
+                size={30}
+                onClick={handleAddCategory}
+              />
+              <input
+                type="text"
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+                placeholder="Enter new category"
+                className="flex-grow p-2 focus:outline-none border-transparent focus:border-transparent focus:ring-0"
+              />
+            </div>
+
             <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6">
               {checklistData.map((category, index) => (
-                <ChecklistCategory key={index} title={category.category} items={category.items} />
+                <ChecklistCategory key={index} title={category.category} items={category.items} handleSave={handleSave} />
               ))}
             </div>
           </>
