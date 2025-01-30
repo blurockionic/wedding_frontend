@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import loginImage from "../../../public/signup/sign-up.jpg"; // Replace with actual image path
+import loginImage from "../../../public/signup/sign-up.webp"; // Replace with actual image path
 import { GoDeviceMobile, GoLocation, GoMail, GoPerson } from "react-icons/go";
 import { FaGoogle } from "react-icons/fa";
 import CustomButton from "../../components/global/button/CustomButton";
