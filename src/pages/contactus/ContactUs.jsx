@@ -118,9 +118,9 @@ const ContactUs = () => {
               </p>
             </div>
           </div>
-          <button className="border border-ring hover:bg-pink-600 text-foreground hover:text-white font-semibold py-3 px-8 rounded-full shadow-md transition-all duration-300">
+          {/* <button className="border border-ring hover:bg-pink-600 text-foreground hover:text-white font-semibold py-3 px-8 rounded-full shadow-md transition-all duration-300">
             Contact Support
-          </button>
+          </button> */}
         </div>
       </div>
 
