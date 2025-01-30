@@ -149,5 +149,5 @@ const VendorServicesPage = () => {
     </div>
   );
 };
-
+ 
 export default VendorServicesPage;

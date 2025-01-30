@@ -158,6 +158,16 @@ export default function Footer() {
                 Contact us
               </Link>
             </li>
+            <li>
+            <a href="/privacypolicy.html" className="hover:text-gray-400">
+              Privacy 
+            </a>
+          </li>
+          <li>
+            <a href="/terms.html" className="hover:text-gray-600">
+              Terms
+            </a>
+          </li>
           </ul>
         </div>
 
