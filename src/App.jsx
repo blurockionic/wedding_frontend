@@ -51,13 +51,12 @@ const ChangePassword = lazy(() => import("./pages/auth/ChangePassword.jsx"));
 const FavoriteListPage = lazy(() =>
   import("./pages/userDashboard/FavoriteList.jsx")
 );
-<<<<<<< HEAD
 const VendorProfile = lazy(() =>
   import("./pages/vendorDashboard/VendorProfile.jsx")
 );
-=======
+
+const Payments = lazy(() => import("./pages/vendorDashboard/component/Payments.jsx"));
 const AboutPage = lazy(() => import("./pages/section/About.jsx")); // Import the About page
->>>>>>> 585123731a33c59229c2a77b472482392620b120
 
 function wrapWithSuspense(Component) {
   return (
@@ -133,6 +132,7 @@ const router = createBrowserRouter([
           { path: "settings", element: wrapWithSuspense(Setting) },
           { path: "bookings", element: <Subscription /> },
           { path: "vendor-profile", element: wrapWithSuspense(VendorProfile) },
+          {path: "payments", element: wrapWithSuspense(Payments)},
           {
             path: "service-details/:serviceId",
             element: wrapWithSuspense(DashBoardDetailPage),
