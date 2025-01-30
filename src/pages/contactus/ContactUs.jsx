@@ -3,7 +3,7 @@ import Footer from '../Footer';
 import { FaEnvelope, FaHeadset, FaPhone } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import signup_bg from "../../../public/signup/sign-bg.jpg";
+import signup_bg from "../../../public/signup/sign-bg.webp";
 
 const ContactUs = () => {
   const navigate = useNavigate();
