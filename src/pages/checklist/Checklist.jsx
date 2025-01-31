@@ -4,9 +4,10 @@ import { FaCheckCircle, FaPlus, FaTimes, FaSave } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleItemState, addItem, removeItem, setChecklist, addCategory, removeCategory  } from "../../redux/checklistSlice";
+import { toggleItemState, addItem, removeItem, setChecklist, addCategory, removeCategory } from "../../redux/checklistSlice";
 import { useSaveChecklistMutation, useGetChecklistQuery } from "../../redux/checklistApiSlice";
 import { toast } from "react-toastify";
+import { useForm } from "react-hook-form";
 
 // Custom hook to detect screen size
 const useMediaQuery = (query) => {
@@ -24,14 +25,36 @@ const useMediaQuery = (query) => {
   return matches;
 };
 
-const ChecklistCategory = ({ title, items, handleSave }) => {
-  const [newItem, setNewItem] = useState("");
+// Helper function to validate word length
+const validateWordLength = (value, maxWordLength) => {
+  const words = value.split(" ");
+  return words.every((word) => word.length <= maxWordLength);
+};
+
+// Utility function to hyphenate long words
+const hyphenateLongWords = (text, maxLength = 20) => {
+  return text.split(" ").map(word => {
+    if (word.length > maxLength) {
+      // Split the word into chunks of `maxLength` characters
+      return word.match(new RegExp(`.{1,${maxLength}}`, 'g')).join('-\n');
+    }
+    return word;
+  }).join(" ");
+};
+
+const ChecklistCategory = ({ title, items }) => {
   const [clickedIndex, setClickedIndex] = useState(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [isHovering, setIsHovering] = useState(false);
-
   const isMediumScreenOrSmaller = useMediaQuery("(max-width: 1024px)");
   const dispatch = useDispatch();
+
+  const {
+    register: registerItem,
+    handleSubmit: handleItemSubmit,
+    reset: resetItemForm,
+    formState: { errors: itemErrors },
+  } = useForm();
 
   const handleItemClick = (index) => {
     setClickedIndex(index);
@@ -42,19 +65,22 @@ const ChecklistCategory = ({ title, items, handleSave }) => {
     }, 300);
   };
 
-  const handleAddItem = () => {
-    if (newItem.trim() !== "") {
-      dispatch(addItem({ categoryTitle: title, itemName: newItem }));
-      setNewItem("");
-    }
+  const handleAddItem = (data) => {
+    dispatch(addItem({ categoryTitle: title, itemName: data.item }));
+    resetItemForm();
   };
 
   const handleRemoveItem = (index) => {
     dispatch(removeItem({ categoryTitle: title, itemIndex: index }));
   };
 
-  const handleRemoveCategory = (index) => {
+  const handleRemoveCategory = () => {
     dispatch(removeCategory({ categoryTitle: title }));
+  };
+
+  // Function to hyphenate long words in item names
+  const formatItemName = (name) => {
+    return hyphenateLongWords(name, 18);
   };
 
   return (
@@ -64,14 +90,16 @@ const ChecklistCategory = ({ title, items, handleSave }) => {
       onMouseLeave={() => setIsHovering(false)}
     >
       <div className="flex w-full">
-      <h3 className="text-xl font-semibold text-pink-600 mb-3">{title}</h3>
-      <FaTimes
-        className={`relative top-0 right-0 text-gray-300 hover:text-pink-600 cursor-pointer transition-all duration-300 ease-in-out ml-auto ${
-          isHovering || isMediumScreenOrSmaller ? "max-h-20 opacity-100" : "max-h-0 opacity-0"
-        }`}
-        size={18}
-        onClick={handleRemoveCategory}
-      />
+        <h3 className="text-xl font-semibold text-pink-600 mb-3 overflow-hidden">
+          {title/* {hyphenateLongWords(title, 15)} Hyphenate category title */}
+        </h3>
+        <FaTimes
+          className={`relative top-0 right-0 text-gray-300 hover:text-pink-600 cursor-pointer transition-all duration-300 ease-in-out ml-auto ${
+            isHovering || isMediumScreenOrSmaller ? "max-h-20 opacity-100" : "max-h-0 opacity-0"
+          }`}
+          size={18}
+          onClick={handleRemoveCategory}
+        />
       </div>
       <ul className="space-y-2">
         {items.map((item, index) => (
@@ -81,12 +109,8 @@ const ChecklistCategory = ({ title, items, handleSave }) => {
               item.done ? "text-gray-400" : "text-gray-700"
             }`}
             onClick={() => handleItemClick(index)}
-            onMouseEnter={() =>
-              !isMediumScreenOrSmaller && setHoveredIndex(index)
-            }
-            onMouseLeave={() =>
-              !isMediumScreenOrSmaller && setHoveredIndex(null)
-            }
+            onMouseEnter={() => !isMediumScreenOrSmaller && setHoveredIndex(index)}
+            onMouseLeave={() => !isMediumScreenOrSmaller && setHoveredIndex(null)}
           >
             <FaCheckCircle
               className={`transition-all duration-150 ease-in-out ${
@@ -99,7 +123,7 @@ const ChecklistCategory = ({ title, items, handleSave }) => {
               size={20}
             />
             <span
-              className={`flex-grow leading-relaxed transition-all duration-150 ease-in-out ${
+              className={`flex-grow leading-relaxed transition-all duration-150 ease-in-out hyphenate overflow-hidden ${
                 clickedIndex === index ? "scale-105" : ""
               } ${
                 item.done
@@ -107,7 +131,7 @@ const ChecklistCategory = ({ title, items, handleSave }) => {
                   : "group-hover:text-pink-600"
               }`}
             >
-              {item.name}
+              {item.name/* {formatItemName(item.name)} Hyphenate item name */}
             </span>
             {((hoveredIndex === index) || (isMediumScreenOrSmaller)) && (
               <FaTimes
@@ -123,30 +147,42 @@ const ChecklistCategory = ({ title, items, handleSave }) => {
         ))}
       </ul>
 
-      {/* Add New Item Section */}
-      <div
-        className={`mt-4 flex items-center space-x-2 overflow-hidden transition-all duration-300 ease-in-out ${
-          isHovering || isMediumScreenOrSmaller ? "max-h-20 opacity-100" : "max-h-0 opacity-0"
+      {/* Add New Item Form */}
+      <form
+        onSubmit={handleItemSubmit(handleAddItem)}
+        className={`mt-4 flex flex-col space-y-2 overflow-hidden transition-all duration-300 ease-in-out ${
+          isHovering || isMediumScreenOrSmaller || itemErrors.item ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
-        <FaPlus
-          className="text-pink-500 hover:text-pink-600 transition cursor-pointer"
-          size={20}
-          onClick={handleAddItem}
-        />
-        <input
-          type="text"
-          placeholder="Add a new item"
-          className="flex-grow p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
-          value={newItem}
-          onChange={(e) => setNewItem(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleAddItem();
-            }
-          }}
-        />
-      </div>
+        <div className="flex items-center space-x-2">
+          <button type="submit" className="flex-shrink-0">
+            <FaPlus
+              className="text-pink-500 hover:text-pink-600 transition cursor-pointer"
+              size={20}
+            />
+          </button>
+          <input
+            {...registerItem("item", {
+              required: " ",
+              maxLength: {
+                value: 100,
+                message: "Item name cannot exceed 100 characters",
+              },
+              validate: {
+                wordLength: (value) =>
+                  validateWordLength(value, 40) ||
+                  "Each word cannot exceed 40 characters",
+              },
+            })}
+            type="text"
+            placeholder="Add a new item"
+            className="flex-grow p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
+          />
+        </div>
+        {itemErrors.item && (
+          <p className="text-red-500 text-sm ml-8">{itemErrors.item.message}</p>
+        )}
+      </form>
     </div>
   );
 };
@@ -158,20 +194,22 @@ const Checklist = () => {
   const [saveChecklistApi, { isLoading: isSavingApi }] = useSaveChecklistMutation();
   const { data: fetchedChecklist, isLoading, isError } = useGetChecklistQuery();
   const checklistData = useSelector((state) => state.checklist);
-  const [progress, setProgress] = useState(0);    
-  const [totalTasks, setTotalTasks] = useState(0); 
-  const [completedTasks, setCompletedTasks] = useState(0); 
-  const [newCategory, setNewCategory] = useState("");
+  const [progress, setProgress] = useState(0);
+  const [totalTasks, setTotalTasks] = useState(0);
+  const [completedTasks, setCompletedTasks] = useState(0);
 
-  // add new category
-  const handleAddCategory = () => {
-    if (newCategory.trim() === "") return;
-    dispatch(addCategory({ categoryTitle: newCategory.trim() }));
-    setNewCategory("");
-    handleSave(true);
+  const {
+    register: registerCategory,
+    handleSubmit: handleCategorySubmit,
+    reset: resetCategoryForm,
+    formState: { errors: categoryErrors },
+  } = useForm();
+
+  const handleAddCategory = (data) => {
+    dispatch(addCategory({ categoryTitle: data.category }));
+    resetCategoryForm();
   };
 
-  // Set checklist data when fetched
   useEffect(() => {
     if (fetchedChecklist) {
       dispatch(setChecklist(fetchedChecklist.checklist1));
@@ -182,11 +220,10 @@ const Checklist = () => {
     handleSave(true);
   }, [checklistData]);
 
-  // progress bar
   useEffect(() => {
     let total = 0;
     let completed = 0;
-  
+
     checklistData.forEach((category) => {
       category.items.forEach((item) => {
         total++;
@@ -201,30 +238,22 @@ const Checklist = () => {
 
   const handleSave = async (isUpdate) => {
     try {
-      console.log("Checklist being saved:", checklistData);
-
-      const payload = {
-        checklistItems: checklistData,
-      };
+      const payload = { checklistItems: checklistData };
       const resultAction = await saveChecklistApi(payload);
       toast.dismiss();
+
       if (resultAction.error) {
         console.error("Error saving checklist:", resultAction.error);
-        toast.error(`Error saving checklist: ${resultAction.error.data?.message == "Access token is missing or invalid" ? "Please login to save!!" : (resultAction.error.data?.message || resultAction.error.error || 'Unknown error')}`, {
-                position: "top-right",
-                autoClose: 5000,
-                theme: "light",
-              });
-      } else {
-        console.log("Checklist saved successfully:", resultAction.data);
-        if (isUpdate == false){
-          toast.success("Checklist saved successfully!");
-        }
+        toast.error(`Error saving checklist: ${resultAction.error.data?.message || 'Unknown error'}`, {
+          position: "top-right",
+          autoClose: 5000,
+          theme: "light",
+        });
+      } else if (!isUpdate) {
+        toast.success("Checklist saved successfully!");
       }
-
     } catch (error) {
       console.error("Error during save process:", error);
-      alert(`Error during save process: ${error.message}`);
     }
   };
 
@@ -245,31 +274,23 @@ const Checklist = () => {
           Wedding Checklist
         </div>
 
-        {/* Show loading indicator while fetching */}
         {isLoading ? (
           <div className="text-center text-pink-600">Loading checklist...</div>
         ) : (
           <>
-
-            {/* Progress bar + Save button container */}
             <div className="sm:flex items-center justify-between w-full gap-4 mb-4 sm:mb-8">
-
               <div className="flex flex-col-reverse sm:w-1/2 sm:pr-12 pb-3 sm:pb-0">
-                {/* Progress Bar Container */}
                 <div className="relative w-full bg-gray-200 rounded-full h-4 overflow-hidden">
-                  {/* Progress Indicator */}
                   <div
                     className="bg-pink-400 h-full transition-all duration-300"
                     style={{ width: `${progress}%` }}
                   ></div>
                 </div>
-                {/* Progress Text */}
                 <p className="text-md text-gray-700 font-semibold whitespace-nowrap mb-2">
-                  You have completed <span className="font-bold">{completedTasks} out of {totalTasks}</span> tasks.
+                  Completed <span className="font-bold">{completedTasks}/{totalTasks}</span> tasks
                 </p>
               </div>
 
-              {/* Save Button (Right Aligned) */}
               <button
                 onClick={() => handleSave(false)}
                 disabled={!isLoggedIn || isSavingApi}
@@ -282,30 +303,48 @@ const Checklist = () => {
               </button>
             </div>
 
-            {/* Add New Category Field */}
-            <div className="flex items-center shadow-md gap-2 mb-4 border-2 p-3 py-2 mb-6 rounded-lg">
-              <FaPlus
-                className="text-pink-500 hover:text-pink-600 transition cursor-pointer"
-                size={30}
-                onClick={handleAddCategory}
-              />
+            {/* Add New Category Form */}
+            <form
+              onSubmit={handleCategorySubmit(handleAddCategory)}
+              className="flex items-center shadow-md gap-2 mb-4 border-2 p-3 py-2 rounded-lg"
+            >
+              <button type="submit" className="flex-shrink-0">
+                <FaPlus
+                  className="text-pink-500 hover:text-pink-600 transition cursor-pointer"
+                  size={30}
+                />
+              </button>
               <input
+                {...registerCategory("category", {
+                  required: " ",
+                  maxLength: {
+                    value: 75,
+                    message: "Category name cannot exceed 75 characters",
+                  },
+                  validate: {
+                    wordLength: (value) =>
+                      validateWordLength(value, 40) ||
+                      "Each word cannot exceed 40 characters",
+                  },
+                })}
                 type="text"
-                value={newCategory}
-                onChange={(e) => setNewCategory(e.target.value)}
                 placeholder="Enter new category"
                 className="flex-grow p-2 focus:outline-none border-transparent focus:border-transparent focus:ring-0"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleAddCategory();
-                  }
-                }}
               />
-            </div>
+            </form>
+            {categoryErrors.category && (
+              <p className="text-red-500 text-sm ml-10">
+                {categoryErrors.category.message}
+              </p>
+            )}
 
-            <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6">
+            <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6 mt-6">
               {checklistData.map((category, index) => (
-                <ChecklistCategory key={index} title={category.category} items={category.items} handleSave={handleSave} />
+                <ChecklistCategory
+                  key={index}
+                  title={category.category}
+                  items={category.items}
+                />
               ))}
             </div>
           </>
