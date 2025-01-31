@@ -3,8 +3,7 @@ const { createWriteStream } = require('fs');
 
 const links = [
   { url: '/', changefreq: 'daily', priority: 1.0 }, // Root homepage
-  { url: '/Home', changefreq: 'daily', priority: 1.0 }, // Another home section page
-  { url: '/aboutus', changefreq: 'weekly', priority: 0.9 },
+  { url: '/about', changefreq: 'weekly', priority: 0.9 },
   { url: '/contactus', changefreq: 'weekly', priority: 0.9 },
   { url: '/login', changefreq: 'weekly', priority: 0.7 },
   { url: '/signup', changefreq: 'weekly', priority: 0.7 },
