@@ -13,11 +13,11 @@ import brandlogo from "../../public/logo/brandlogo.png";
 import { brides, grooms, weddingVendors, weddingVenues } from "../static/static";
 
 export default function Footer() {
-  useEffect(() => {
-    Aos.init({
-      duration: 1000, // Duration of the animation
-    });
-  }, []);
+  // useEffect(() => {
+  //   Aos.init({
+  //     duration: 1000, // Duration of the animation
+  //   });
+  // }, []);
 
   return (
     <footer className="bg-gray-100 p-8 text-gray-800">
@@ -78,7 +78,8 @@ export default function Footer() {
 
       <div className="max-w-7xl mt-10 mx-auto grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Logo and Description */}
-        <div data-aos="fade-up" data-aos-delay="200" className="space-y-3">
+        {/* data-aos="fade-up" data-aos-delay="200" */}
+        <div  className="space-y-3">
           <NavLink to="/" className="flex items-center gap-3 cursor-pointer">
             <img src={brandlogo} alt="brandlogo" className="w-10 h-10" />
             <div className="flex flex-col justify-start">
@@ -135,7 +136,8 @@ export default function Footer() {
         </div>
 
         {/* Menu Links */}
-        <div data-aos="fade-up" data-aos-delay="400">
+        {/* data-aos="fade-up" data-aos-delay="400" */}
+        <div >
           <h3 className="font-bold text-lg mb-4">Menu</h3>
           <ul className="space-y-2">
             <li>
@@ -204,7 +206,8 @@ export default function Footer() {
         </div> */}
 
         {/* Google Maps Embed */}
-        <div data-aos="fade-up" data-aos-delay="800">
+        {/* data-aos="fade-up" data-aos-delay="800" */}
+        <div >
           <div className="w-full h-full overflow-hidden shadow">
             <iframe
               width="100%"

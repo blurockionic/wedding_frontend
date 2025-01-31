@@ -140,8 +140,10 @@
 // };
 
 // export default AboutUs;
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { Heart, MapPin, Users, Star, Sparkles } from 'lucide-react';
+import aboutimageBg from '../../../public/about/about-img-1.png';
+import Footer from '../Footer';
 
 const reviews = [
   {
@@ -182,16 +184,16 @@ const AboutUs = () => {
       <section className="relative bg-gradient-to-r from-pink-100 to-purple-100 py-20 overflow-hidden rounded-b-[50px]">
         <div className="absolute inset-0 opacity-20">
           <img 
-            src="/api/placeholder/1200/600?text=Wedding+Celebration" 
+            src={aboutimageBg} 
             alt="Wedding Background" 
             className="w-full h-full object-cover"
           />
         </div>
         <div className="container mx-auto px-6 relative z-10 text-center">
           <Heart className="mx-auto text-pink-500 mb-6" size={64} />
-          <h1 className="text-5xl font-bold text-gray-800 mb-4">Text text text</h1>
+          <h1 className="text-5xl font-bold text-gray-800 mb-4">About us</h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-          Text text textText text textText text textText text textText text text
+          Discover trusted wedding vendors for every need at Marriage Vendors! From stunning venues to photographers, caterers, and more, find everything to plan your perfect day. Compare services, read reviews, and book with confidence. Start creating your dream wedding today!
           </p>
         </div>
       </section>
@@ -241,7 +243,7 @@ const AboutUs = () => {
       <section className="py-16 bg-gray-100 relative rounded-b-[50px]">
         <div className="absolute inset-0 opacity-10 grayscale">
           <img 
-            src="/api/placeholder/1600/800?text=India+Map" 
+            src={aboutimageBg} 
             alt="India Map" 
             className="w-full h-full object-cover"
           />
@@ -299,6 +301,9 @@ const AboutUs = () => {
           </div>
         </div>
       </section>
+
+      {/* //footer  */}
+      <Footer/>
     </div>
   );
 };
