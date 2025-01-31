@@ -140,6 +140,11 @@ const ChecklistCategory = ({ title, items, handleSave }) => {
           className="flex-grow p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
           value={newItem}
           onChange={(e) => setNewItem(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleAddItem();
+            }
+          }}
         />
       </div>
     </div>
@@ -290,6 +295,11 @@ const Checklist = () => {
                 onChange={(e) => setNewCategory(e.target.value)}
                 placeholder="Enter new category"
                 className="flex-grow p-2 focus:outline-none border-transparent focus:border-transparent focus:ring-0"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleAddCategory();
+                  }
+                }}
               />
             </div>
 
