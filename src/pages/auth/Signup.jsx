@@ -214,7 +214,7 @@ export default function Signup() {
             >
               I agree with the{" "}
               <a
-                href="#"
+                href="/terms.html"
                 className="text-primary dark:text-blue-500 hover:underline"
               >
                 terms and conditions
