@@ -284,7 +284,7 @@ const AboutUs = () => {
       <section className="py-16 bg-pink-50">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-4xl font-bold mb-6">Ready to Begin Your Love Story?</h2>
-          <p className="text-xl text-gray-700 mb-8">Let's create memories that will last a lifetime</p>
+          <p className="text-xl text-gray-700 mb-8">Let&apos;s create memories that will last a lifetime</p>
           <div className="flex justify-center space-x-4">
             <a 
               href="/signup" 
@@ -293,7 +293,7 @@ const AboutUs = () => {
               Get Started
             </a>
             <a 
-              href="/contact" 
+              href="/contactus" 
               className="border border-pink-500 text-pink-500 px-8 py-3 rounded-full hover:bg-pink-500 hover:text-white transition"
             >
               Contact Us
