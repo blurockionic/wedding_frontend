@@ -39,7 +39,6 @@ const ChecklistCategory = ({ title, items, handleSave }) => {
 
     setTimeout(() => {
       setClickedIndex(null);
-      handleSave(true);
     }, 300);
   };
 
@@ -47,27 +46,15 @@ const ChecklistCategory = ({ title, items, handleSave }) => {
     if (newItem.trim() !== "") {
       dispatch(addItem({ categoryTitle: title, itemName: newItem }));
       setNewItem("");
-
-      setTimeout(() => {
-        handleSave(true);
-      }, 300);
     }
   };
 
   const handleRemoveItem = (index) => {
     dispatch(removeItem({ categoryTitle: title, itemIndex: index }));
-
-    setTimeout(() => {
-      handleSave(true);
-    }, 300);
   };
 
   const handleRemoveCategory = (index) => {
     dispatch(removeCategory({ categoryTitle: title }));
-
-    setTimeout(() => {
-      handleSave(true);
-    }, 300);
   };
 
   return (
@@ -185,6 +172,10 @@ const Checklist = () => {
       dispatch(setChecklist(fetchedChecklist.checklist1));
     }
   }, [fetchedChecklist, dispatch]);
+
+  useEffect(() => {
+    handleSave(true);
+  }, [checklistData]);
 
   // progress bar
   useEffect(() => {

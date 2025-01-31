@@ -143,7 +143,8 @@ const checklistSlice = createSlice({
 
     removeCategory: (state, action) => {
       const { categoryTitle } = action.payload;
-      return state.filter(category => category.category !== categoryTitle);
+      const tempState = state.filter(category => category.category !== categoryTitle)
+      return tempState;
     },
   }
 });
