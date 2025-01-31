@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import loginImage from "../../../public/signup/signup.jpg"; // Replace with actual image path
+import loginImage from "../../../public/signup/sign-up.webp"; // Replace with actual image path
 import { GoDeviceMobile, GoLocation, GoMail, GoPerson } from "react-icons/go";
 import { FaGoogle } from "react-icons/fa";
 import CustomButton from "../../components/global/button/CustomButton";
@@ -214,7 +214,7 @@ export default function Signup() {
             >
               I agree with the{" "}
               <a
-                href="#"
+                href="/terms.html"
                 className="text-primary dark:text-blue-500 hover:underline"
               >
                 terms and conditions

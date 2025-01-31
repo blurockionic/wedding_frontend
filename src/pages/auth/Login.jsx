@@ -118,7 +118,7 @@ export default function Login() {
         <meta name="twitter:card" content="summary_large_image" />
         <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
       </Helmet>
-      <div className="min-h-screen flex items-center justify-center  px-4">
+      <div className="min-h-screen flex items-center justify-center md:py-10">
         <div className="flex items-center justify-center space-x-10">
           <div className="hidden md:block w-3/4">
             <img

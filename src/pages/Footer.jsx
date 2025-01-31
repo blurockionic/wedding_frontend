@@ -1,12 +1,10 @@
-import { useEffect } from "react";
-import Aos from "aos";
 import "aos/dist/aos.css";
 import {
   FaFacebook,
   FaTwitter,
   FaInstagram,
   FaYoutube,
-  FaTiktok,
+  FaLinkedin,
 } from "react-icons/fa";
 import { Link, NavLink } from "react-router-dom";
 import brandlogo from "../../public/logo/brandlogo.png";
@@ -93,7 +91,7 @@ export default function Footer() {
           {/* Social Media Links */}
           <div className="flex gap-6 mt-4 text-xl text-gray-600">
             <a
-              href="https://facebook.com"
+              href="https://www.facebook.com/profile.php?id=61572736825039"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Facebook"
@@ -101,7 +99,7 @@ export default function Footer() {
               <FaFacebook />
             </a>
             <a
-              href="https://twitter.com"
+              href="https://x.com/MarriageVendors"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Twitter"
@@ -109,7 +107,7 @@ export default function Footer() {
               <FaTwitter />
             </a>
             <a
-              href="https://instagram.com"
+              href="https://www.instagram.com/marriagevendors/?hl=en"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram"
@@ -117,7 +115,7 @@ export default function Footer() {
               <FaInstagram />
             </a>
             <a
-              href="https://youtube.com"
+              href="https://www.youtube.com/channel/UCflLelgupPqW0kkKpJdACpA"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="YouTube"
@@ -125,12 +123,12 @@ export default function Footer() {
               <FaYoutube />
             </a>
             <a
-              href="https://tiktok.com"
+              href="https://www.linkedin.com/company/marriagevendors/?viewAsMember=true"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="TikTok"
+              aria-label="linkedin"
             >
-              <FaTiktok />
+              <FaLinkedin />
             </a>
           </div>
         </div>

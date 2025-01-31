@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Footer from "../Footer";
-import { FaCheckCircle, FaPlus, FaTimes  } from "react-icons/fa";
+import { FaCheckCircle, FaPlus, FaTimes, FaSave } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleItemState, addItem, removeItem, setChecklist, addCategory, removeCategory  } from "../../redux/checklistSlice";
+import { useSaveChecklistMutation, useGetChecklistQuery } from "../../redux/checklistApiSlice";
+import { toast } from "react-toastify";
 
 // Custom hook to detect screen size
 const useMediaQuery = (query) => {
@@ -20,47 +24,68 @@ const useMediaQuery = (query) => {
   return matches;
 };
 
-const ChecklistCategory = ({ title, items, toggleItemState, addItem, removeItem }) => {
+const ChecklistCategory = ({ title, items, handleSave }) => {
   const [newItem, setNewItem] = useState("");
   const [clickedIndex, setClickedIndex] = useState(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [isHovering, setIsHovering] = useState(false);
-  const [removedIndex, setRemovedIndex] = useState(null);
 
   const isMediumScreenOrSmaller = useMediaQuery("(max-width: 1024px)");
+  const dispatch = useDispatch();
 
   const handleItemClick = (index) => {
     setClickedIndex(index);
-    toggleItemState(title, index);
+    dispatch(toggleItemState({ categoryTitle: title, itemIndex: index }));
 
     setTimeout(() => {
       setClickedIndex(null);
+      handleSave(true);
     }, 300);
   };
 
   const handleAddItem = () => {
     if (newItem.trim() !== "") {
-      addItem(title, newItem);
+      dispatch(addItem({ categoryTitle: title, itemName: newItem }));
       setNewItem("");
+
+      setTimeout(() => {
+        handleSave(true);
+      }, 300);
     }
   };
 
   const handleRemoveItem = (index) => {
-    setRemovedIndex(index);
+    dispatch(removeItem({ categoryTitle: title, itemIndex: index }));
 
     setTimeout(() => {
-      removeItem(title, index);
-      setRemovedIndex(null);
-    }, 100);
+      handleSave(true);
+    }, 300);
+  };
+
+  const handleRemoveCategory = (index) => {
+    dispatch(removeCategory({ categoryTitle: title }));
+
+    setTimeout(() => {
+      handleSave(true);
+    }, 300);
   };
 
   return (
-    <div 
+    <div
       className="p-4 bg-white shadow-lg rounded-lg border border-pink-300 break-inside-avoid transition-all duration-300 ease-in-out"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
+      <div className="flex w-full">
       <h3 className="text-xl font-semibold text-pink-600 mb-3">{title}</h3>
+      <FaTimes
+        className={`relative top-0 right-0 text-gray-300 hover:text-pink-600 cursor-pointer transition-all duration-300 ease-in-out ml-auto ${
+          isHovering || isMediumScreenOrSmaller ? "max-h-20 opacity-100" : "max-h-0 opacity-0"
+        }`}
+        size={18}
+        onClick={handleRemoveCategory}
+      />
+      </div>
       <ul className="space-y-2">
         {items.map((item, index) => (
           <li
@@ -111,11 +136,10 @@ const ChecklistCategory = ({ title, items, toggleItemState, addItem, removeItem 
         ))}
       </ul>
 
-      
       {/* Add New Item Section */}
       <div
         className={`mt-4 flex items-center space-x-2 overflow-hidden transition-all duration-300 ease-in-out ${
-          (isHovering || (isMediumScreenOrSmaller)) ? "max-h-20 opacity-100" : "max-h-0 opacity-0"
+          isHovering || isMediumScreenOrSmaller ? "max-h-20 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
         <FaPlus
@@ -136,166 +160,80 @@ const ChecklistCategory = ({ title, items, toggleItemState, addItem, removeItem 
 };
 
 const Checklist = () => {
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [saveChecklistApi, { isLoading: isSavingApi }] = useSaveChecklistMutation();
+  const { data: fetchedChecklist, isLoading, isError } = useGetChecklistQuery();
+  const checklistData = useSelector((state) => state.checklist);
+  const [progress, setProgress] = useState(0);    
+  const [totalTasks, setTotalTasks] = useState(0); 
+  const [completedTasks, setCompletedTasks] = useState(0); 
+  const [newCategory, setNewCategory] = useState("");
 
-  const jsonLd = {
-    "@context": "https://schema.org/",
-    "@type": "ContactPage",
-    name: "Contact Us",
-    description:
-      "Contact us to book an appointment or reach out for more information.",
-    url: "https://www.marriagevendors.com/contactus",
-    contactPoint: {
-      "@type": "ContactPoint",
-      telephone: "+91-6200932331",
-      email: "support@blurockionic.com",
-      contactType: "Customer Support",
-      areaServed: "India",
-      availableLanguage: ["English", "Hindi"],
-    },
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: "joshi nagar ludhiana",
-      addressLocality: "Ludhiana",
-      addressRegion: "Punjab",
-      postalCode: "141001",
-      addressCountry: "India",
-    },
+  // add new category
+  const handleAddCategory = () => {
+    if (newCategory.trim() === "") return;
+    dispatch(addCategory({ categoryTitle: newCategory.trim() }));
+    setNewCategory("");
+    handleSave(true);
   };
 
-  const [checklistData, setChecklistData] = useState([
-    {
-      category: "Venue & Decorations",
-      items: [
-        { name: "Book the wedding venue", done: false },
-        { name: "Confirm the capacity and amenities of the venue", done: false },
-        { name: "Select a theme for decorations", done: false },
-        { name: "Hire a wedding decorator", done: false },
-        { name: "Rent furniture, lighting, and props", done: false },
-        { name: "Confirm tent house arrangements", done: false },
-        { name: "Book florists for floral arrangements", done: false },
-      ],
-    },
-    {
-      category: "Catering & Cakes",
-      items: [
-        { name: "Shortlist catering services", done: false },
-        { name: "Finalize the menu", done: false },
-        { name: "Schedule food tasting with caterers", done: false },
-        { name: "Decide on beverages", done: false },
-        { name: "Order the wedding cake", done: false },
-      ],
-    },
-    {
-      category: "Photography & Videography",
-      items: [
-        { name: "Hire photographers (traditional and candid)", done: false },
-        { name: "Hire videographers for event coverage", done: false },
-        { name: "Book a photobooth with props", done: false },
-        { name: "Discuss pre-wedding shoot requirements", done: false },
-        { name: "Confirm delivery timeline for photos and videos", done: false },
-      ],
-    },
-    {
-      category: "Music & Entertainment",
-      items: [
-        { name: "Book a wedding DJ or live band", done: false },
-        { name: "Choose the type of music for each function", done: false },
-        { name: "Plan entertainment performances", done: false },
-        { name: "Arrange sound and lighting equipment", done: false },
-      ],
-    },
-    {
-      category: "Invitations & Gifts",
-      items: [
-        { name: "Finalize the design of wedding invitations", done: false },
-        { name: "Choose digital or printed invitations", done: false },
-        { name: "Order wedding gifts or return favors", done: false },
-        { name: "Create a guest list and send out invitations", done: false },
-      ],
-    },
-    {
-      category: "Transport & Logistics",
-      items: [
-        { name: "Book transportation for the wedding party and guests", done: false },
-        { name: "Arrange parking space at the venue", done: false },
-        { name: "Plan transportation for out-of-town guests", done: false },
-      ],
-    },
-    {
-      category: "Religious & Cultural Services",
-      items: [
-        { name: "Book a pandit or religious officiant", done: false },
-        { name: "Arrange for pooja items or ceremony essentials", done: false },
-        { name: "Consult astrologers (if required for muhurat or compatibility checks)", done: false },
-      ],
-    },
-    {
-      category: "Planning & Coordination",
-      items: [
-        { name: "Hire a wedding planner or coordinator", done: false },
-        { name: "Prepare a timeline for each event", done: false },
-        { name: "Assign point-of-contact roles to key people", done: false },
-        { name: "Schedule vendor meetings and walkthroughs", done: false },
-      ],
-    },
-    {
-      category: "Miscellaneous",
-      items: [
-        { name: "Arrange for a bridal makeup artist and hairstylist", done: false },
-        { name: "Confirm the attire for bride, groom, and close family members", done: false },
-        { name: "Prepare an emergency kit", done: false },
-        { name: "Ensure backup power or generators at the venue", done: false },
-      ],
-    },
-  ]);
+  // Set checklist data when fetched
+  useEffect(() => {
+    if (fetchedChecklist) {
+      dispatch(setChecklist(fetchedChecklist.checklist1));
+    }
+  }, [fetchedChecklist, dispatch]);
 
-  const toggleItemState = (categoryTitle, itemIndex) => {
-    setChecklistData((prevData) =>
-      prevData.map((category) =>
-        category.category === categoryTitle
-          ? {
-              ...category,
-              items: category.items.map((item, index) =>
-                index === itemIndex
-                  ? { ...item, done: !item.done }
-                  : item
-              ),
-            }
-          : category
-      )
-    );
-  };
+  // progress bar
+  useEffect(() => {
+    let total = 0;
+    let completed = 0;
+  
+    checklistData.forEach((category) => {
+      category.items.forEach((item) => {
+        total++;
+        if (item.done) completed++;
+      });
+    });
 
-  const addItem = (categoryTitle, itemName) => {
-    setChecklistData((prevData) =>
-      prevData.map((category) =>
-        category.category === categoryTitle
-          ? {
-              ...category,
-              items: [...category.items, { name: itemName, done: false }],
-            }
-          : category
-      )
-    );
-  };
+    setTotalTasks(total);
+    setCompletedTasks(completed);
+    setProgress(total > 0 ? ((completed / total) * 100).toFixed(2) : 0);
+  }, [checklistData]);
 
-  const removeItem = (categoryTitle, itemIndex) => {
-    setChecklistData((prevData) =>
-      prevData.map((category) =>
-        category.category === categoryTitle
-          ? {
-              ...category,
-              items: category.items.filter((_, index) => index !== itemIndex),
-            }
-          : category
-      )
-    );
+  const handleSave = async (isUpdate) => {
+    try {
+      console.log("Checklist being saved:", checklistData);
+
+      const payload = {
+        checklistItems: checklistData,
+      };
+      const resultAction = await saveChecklistApi(payload);
+      toast.dismiss();
+      if (resultAction.error) {
+        console.error("Error saving checklist:", resultAction.error);
+        toast.error(`Error saving checklist: ${resultAction.error.data?.message == "Access token is missing or invalid" ? "Please login to save!!" : (resultAction.error.data?.message || resultAction.error.error || 'Unknown error')}`, {
+                position: "top-right",
+                autoClose: 5000,
+                theme: "light",
+              });
+      } else {
+        console.log("Checklist saved successfully:", resultAction.data);
+        if (isUpdate == false){
+          toast.success("Checklist saved successfully!");
+        }
+      }
+
+    } catch (error) {
+      console.error("Error during save process:", error);
+      alert(`Error during save process: ${error.message}`);
+    }
   };
 
   return (
     <div>
-      {/* Helmet for SEO */}
       <Helmet>
         <title>Checklist - Book an Appointment</title>
         <meta
@@ -304,37 +242,75 @@ const Checklist = () => {
         />
         <meta name="author" content="Wedding Vendors" />
         <link rel="canonical" href="https://www.marriagevendors.com/contactus" />
-        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
-      {/* Outer container */}
       <div className="max-w-7xl px-2 lg:px-10 mx-auto py-10">
-        {/* Title Section */}
         <div className="text-3xl md:text-4xl font-bold text-gray-800 mb-8">
           Wedding Checklist
         </div>
 
-        {/* Tiles Layout for Checklist */}
-        <div
-          className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6"
-          style={{
-            columnGap: "2rem",
-          }}
-        >
-          {checklistData.map((category, index) => (
-            <ChecklistCategory
-              key={index}
-              title={category.category}
-              items={category.items}
-              toggleItemState={toggleItemState}
-              addItem={addItem}
-              removeItem={removeItem}
-            />
-          ))}
-        </div>
+        {/* Show loading indicator while fetching */}
+        {isLoading ? (
+          <div className="text-center text-pink-600">Loading checklist...</div>
+        ) : (
+          <>
+
+            {/* Progress bar + Save button container */}
+            <div className="sm:flex items-center justify-between w-full gap-4 mb-4 sm:mb-8">
+
+              <div className="flex flex-col-reverse sm:w-1/2 sm:pr-12 pb-3 sm:pb-0">
+                {/* Progress Bar Container */}
+                <div className="relative w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+                  {/* Progress Indicator */}
+                  <div
+                    className="bg-pink-400 h-full transition-all duration-300"
+                    style={{ width: `${progress}%` }}
+                  ></div>
+                </div>
+                {/* Progress Text */}
+                <p className="text-md text-gray-700 font-semibold whitespace-nowrap mb-2">
+                  You have completed <span className="font-bold">{completedTasks} out of {totalTasks}</span> tasks.
+                </p>
+              </div>
+
+              {/* Save Button (Right Aligned) */}
+              <button
+                onClick={() => handleSave(false)}
+                disabled={!isLoggedIn || isSavingApi}
+                className={`px-6 py-2 rounded-md transition-all duration-300 ease-in-out flex items-center ${
+                  isLoggedIn ? "bg-pink-600 text-white hover:bg-pink-700" : "bg-gray-400 text-gray-700 cursor-not-allowed"
+                } ml-auto`}
+              >
+                <FaSave className="mr-2" size={18} />
+                {isSavingApi ? "Saving..." : isLoggedIn ? "Save Checklist" : "Login to Save"}
+              </button>
+            </div>
+
+            {/* Add New Category Field */}
+            <div className="flex items-center shadow-md gap-2 mb-4 border-2 p-3 py-2 mb-6 rounded-lg">
+              <FaPlus
+                className="text-pink-500 hover:text-pink-600 transition cursor-pointer"
+                size={30}
+                onClick={handleAddCategory}
+              />
+              <input
+                type="text"
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+                placeholder="Enter new category"
+                className="flex-grow p-2 focus:outline-none border-transparent focus:border-transparent focus:ring-0"
+              />
+            </div>
+
+            <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6">
+              {checklistData.map((category, index) => (
+                <ChecklistCategory key={index} title={category.category} items={category.items} handleSave={handleSave} />
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
-      {/* Footer */}
       <Footer />
     </div>
   );

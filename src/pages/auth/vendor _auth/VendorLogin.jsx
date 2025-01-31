@@ -28,7 +28,7 @@ import {
 } from "react-icons/fa";
 import { FiUsers } from "react-icons/fi";
 import { BiAnalyse } from "react-icons/bi";
-import signup_bg from "../../../../public/signup/sign-bg.jpg";
+import signup_bg from "../../../../public/signup/sign-bg.webp";
 import brandlogo from "../../../../public/logo/brandlogo.png";
 
 const vendorLoginSchema = z.object({
