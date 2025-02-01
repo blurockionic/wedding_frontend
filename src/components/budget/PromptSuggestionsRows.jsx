@@ -2,8 +2,8 @@ import PropTypes from "prop-types";
 import PromptSuggestionButton from "./PromptSuggestionButton";
 
 var prompts = [
-  "Who is the highest paid F1 driver",
-  "Who will be the newest driver for ferrari",
+  "My Budget is for 2,00,000 please suggest vendors who will plan our dream wedding",
+  "Best Wedding halls near me",
 ];
 
 function PromptSuggestionsRow(props) {

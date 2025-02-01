@@ -93,38 +93,53 @@ const Home = () => {
     };
   
     return (
-      <div className="p-5 w-[60vw] h-[80vh] flex items-center flex-col justify-between text-center bg-gray-400 rounded-2xl bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-30">
-        <section className={noMessages ? "" : "h-[calc(80vh-150px)] flex flex-col justify-between w-full overflow-hidden"}>
-          {noMessages ? (
-            <>
-              <p className="px-[80px]">The ultimate place to ask F1 questions</p>
-              <br />
-              <PromptSuggestionsRow onPromptClick={PromptSubmit} />
-            </>
-          ) : (
-            <div className="flex flex-col overflow-y-auto h-full mb-2">
-              {messages.map((message, index) => (
-                <Bubble key={`message-${index}`} message={message} />
-              ))}
-              {isLoading && <LoadingBubble />}
-              <div ref={messagesEndRef} />
+        <>
+        
+        <section className="flex-col flex justify-center items-center">
+            <div className="w-[70vw] my-8">
+                <h1 className="text-left text-3xl my-4">Plan your budget for your dream wedding with MV AI</h1>
+                <p className="text-left">Find the perfect service for your wedding needs. Connect with trusted vendors and plan your dream wedding seamlessly according to your budgets and need.</p>
             </div>
-          )}
-          <form
-            className="h-14 w-[55vw] border-t-2 border-blue-400 pt-[20px] overflow-hidden flex justify-between"
-            onSubmit={handleSubmit}
-          >
-            <input
-              className="w-[85%] p-[10px] text-[15px] border-none focus:outline-none rounded-lg"
-              type="text"
-              onChange={handleInputChange}
-              value={input}
-              placeholder="Ask me something"
-            />
-            <SubmitButton />
-          </form>
+            <div className="p-5 w-[70vw] h-[80vh] flex items-center flex-col justify-between text-center bg-[#FBCB17] rounded-2xl">
+                <div className="p-5 w-[65vw] h-[70vh] flex items-center flex-col justify-between text-center bg-[#F8BFDA] rounded-2xl">
+                    <section className={noMessages ? "" : "h-[calc(80vh-150px)] flex flex-col justify-between w-full overflow-hidden"}>
+                    {noMessages ? (
+                        <>
+                        <p className="px-[80px]"></p>
+                        <br />
+                        <PromptSuggestionsRow onPromptClick={PromptSubmit} />
+                        </>
+                    ) : (
+                        <div className="flex flex-col overflow-y-auto h-full mb-2">
+                        {messages.map((message, index) => (
+                            <Bubble key={`message-${index}`} message={message} />
+                        ))}
+                        {isLoading && <LoadingBubble />}
+                        <div ref={messagesEndRef} />
+                        </div>
+                    )}
+                    
+                    </section>
+                    
+                </div>
+                <form
+                className="h-14 w-full pt-[20px] overflow-hidden flex justify-between"
+                onSubmit={handleSubmit}
+                >
+                    <SubmitButton />
+
+                    <input
+                    className="w-[80%] p-[10px] text-[15px] border-none focus:outline-none rounded-lg"
+                    type="text"
+                    onChange={handleInputChange}
+                    value={input}
+                    placeholder="Ask me something"
+                    />
+                    <SubmitButton />
+                </form>
+            </div>
         </section>
-      </div>
+        </>
     );
   };
   
