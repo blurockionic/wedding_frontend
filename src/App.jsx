@@ -55,6 +55,7 @@ const FavoriteListPage = lazy(() =>
   import("./pages/userDashboard/FavoriteList.jsx")
 );
 const AboutPage = lazy(() => import("./pages/section/About.jsx")); // Import the About page
+const Budget = lazy(() => import("./pages/section/Budget.jsx"));
 
 function wrapWithSuspense(Component) {
   return (
@@ -76,6 +77,7 @@ const router = createBrowserRouter([
       { path: "/contactus", element: wrapWithSuspense(ContactUs) },
       { path: "/checklist", element: wrapWithSuspense(Checklist) },
       { path: "/about", element: wrapWithSuspense(AboutPage) }, // Add the About page route
+      { path: "/budget", element: wrapWithSuspense(Budget) },
       {
         path: "/user-forgot-password",
         element: wrapWithSuspense(UserForgotPassword),
