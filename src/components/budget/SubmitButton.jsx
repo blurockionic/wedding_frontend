@@ -1,3 +1,4 @@
+import { MdArrowUpward } from "react-icons/md";
 
 const SubmitButton = () => {
   return (
@@ -24,7 +25,7 @@ const SubmitButton = () => {
         ></span>
         <span
             className="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-white"
-            >Submit</span>
+            ><MdArrowUpward/></span>
         </button>
 
 

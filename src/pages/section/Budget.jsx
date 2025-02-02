@@ -123,11 +123,9 @@ const Home = () => {
                     
                 </div>
                 <form
-                className="h-14 w-full pt-[20px] overflow-hidden flex justify-between"
+                className="h-14 w-full pt-[20px] overflow-hidden flex justify-evenly mx-2"
                 onSubmit={handleSubmit}
                 >
-                    <SubmitButton />
-
                     <input
                     className="w-[80%] p-[10px] text-[15px] border-none focus:outline-none rounded-lg"
                     type="text"
