@@ -87,15 +87,15 @@ export default function Home() {
           name: "Plan Your Dream Wedding with Us | Top Wedding Vendors",
           description:
             "Discover the best wedding vendors for your dream wedding. 1000+ trusted vendors, trusted by happy couples. Find vendors in your location effortlessly!",
-          url: "https://yourwebsite.com/home",
+          url: "https://www.marriagevendors.com/",
           author: {
             "@type": "Organization",
             name: "Marriage Vendors",
-            "url": "https://www.marriagevendors.com/services?search=wedding+vendors"
+            "url": "https://www.marriagevendors.com/"
           },
           potentialAction: {
             "@type": "SearchAction",
-            target: "https://www.marriagevendors.com/services?search=wedding+vendors",
+            target: "hhttps://www.marriagevendors.com/",
             "query-input": "required name=search_term_string"
           }
         })}
