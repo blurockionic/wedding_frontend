@@ -56,7 +56,7 @@ export default function Home() {
     <>
       {/* SEO Optimization */}
       <Helmet>
-        <title>Plan Your Dream Wedding with Us | Top Wedding Vendors</title>
+        <title>Home | Marriage Vendors</title>
         <meta
           name="description"
           content="Discover the best wedding vendors for your dream wedding. 1000+ trusted vendors, trusted by happy couples. Find vendors in your location effortlessly!"
