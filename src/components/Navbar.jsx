@@ -133,32 +133,36 @@ function Navbar() {
 
                   {/* Wedding Venues */}
                   <li
-                    className="relative lg:inline-block"
-                    onMouseEnter={() => setDropdown("wedding venue")}
-                    onMouseLeave={() => setDropdown("")}
-                  >
-                    <span className="cursor-pointer hover:text-dustyRose">
-                      Wedding Venue
-                    </span>
-                    {dropdown === "wedding venue" && (
-                      <div className="absolute left-0 top-full bg-white shadow-lg w-48 py-4 z-40">
-                        <ul className="grid grid-cols-1 gap-4 px-4">
-                          {weddingVenues.map((item, index) => (
-                            <li key={index} className="hover:text-dustyRose">
-                              <button
-                                onClick={() => handleNavigate(item)}
-                                className="block text-left w-full"
-                              >
-                                {item}
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </li>
-                  {/* wedding vendor  */}
-                  <li
+                  className="relative lg:inline-block"
+                  onMouseEnter={() => setDropdown("wedding venue")}
+                  onMouseLeave={() => setDropdown("")}
+                >
+                  <span className="cursor-pointer hover:text-dustyRose">
+                    Wedding Venue
+                  </span>
+                  {dropdown === "wedding venue" && (
+                    <div className="absolute left-0 top-full bg-white shadow-lg w-48 py-4 z-40">
+                      <ul className="grid grid-cols-1">
+                        {weddingVenues.map((item, index) => (
+                          <li
+                            key={index}
+                            className="px-4 py-2 hover:text-dustyRose border-b border-gray-200 last:border-0"
+                          >
+                            <button
+                              onClick={() => handleNavigate(item)}
+                              className="block text-left w-full"
+                            >
+                              {item}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </li>
+
+                  {/* wedding vendor  */} 
+                    <li
                     className="relative lg:inline-block"
                     onMouseEnter={() => setDropdown("wedding vendor")}
                     onMouseLeave={() => setDropdown("")}
@@ -169,20 +173,34 @@ function Navbar() {
                     {dropdown === "wedding vendor" && (
                       <div className="absolute left-0 top-full bg-white shadow-lg w-96 py-4 z-40">
                         <ul className="grid grid-cols-2 gap-4 px-4">
-                          {weddingVendors.map((item, index) => (
-                            <li key={index} className="hover:text-dustyRose">
-                              <button
-                                onClick={() => handleNavigate(item)}
-                                className="block text-left w-full"
+                          {weddingVendors.map((item, index) => {
+                            // Calculate the total number of rows.
+                            const totalRows = Math.ceil(weddingVendors.length / 2);
+                            // Determine the current row of this item.
+                            const currentRow = Math.floor(index / 2) + 1;
+                            // Determine if this item is in the left or right column.
+                            const isLeftColumn = index % 2 === 0;
+                            return (
+                              <li
+                                key={index}
+                                className={`px-4 py-2 hover:text-dustyRose border-gray-200 
+                                  ${currentRow < totalRows ? "border-b" : ""} 
+                                  ${isLeftColumn ? "border-r" : "border-l"}`}
                               >
-                                {item}
-                              </button>
-                            </li>
-                          ))}
+                                <button
+                                  onClick={() => handleNavigate(item)}
+                                  className="block text-left w-full"
+                                >
+                                  {item}
+                                </button>
+                              </li>
+                            );
+                          })}
                         </ul>
                       </div>
                     )}
                   </li>
+
 
                   {/* Brides Dropdown */}
                   <li
@@ -195,9 +213,12 @@ function Navbar() {
                     </span>
                     {dropdown === "brides" && (
                       <div className="absolute left-0 top-full bg-white shadow-lg w-48 py-4 z-40">
-                        <ul className="grid grid-cols-1 gap-4 px-4">
+                        <ul className="grid grid-cols-1">
                           {brides.map((item, index) => (
-                            <li key={index} className="hover:text-dustyRose">
+                            <li
+                              key={index}
+                              className="px-4 py-2 hover:text-dustyRose border-b border-gray-200 last:border-0"
+                            >
                               <button
                                 onClick={() => handleNavigate(item)}
                                 className="block text-left w-full"
@@ -211,32 +232,37 @@ function Navbar() {
                     )}
                   </li>
 
+
                   {/* Grooms Dropdown */}
                   <li
-                    className="relative lg:inline-block"
-                    onMouseEnter={() => setDropdown("grooms")}
-                    onMouseLeave={() => setDropdown("")}
-                  >
-                    <span className="cursor-pointer hover:text-dustyRose">
-                      Grooms
-                    </span>
-                    {dropdown === "grooms" && (
-                      <div className="absolute left-0 top-full bg-white shadow-lg w-48 py-4 z-40">
-                        <ul className="grid grid-cols-1 gap-4 px-4">
-                          {grooms.map((item, index) => (
-                            <li key={index} className="hover:text-dustyRose">
-                              <button
-                                onClick={() => handleNavigate(item)}
-                                className="block text-left w-full"
-                              >
-                                {item}
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </li>
+                  className="relative lg:inline-block"
+                  onMouseEnter={() => setDropdown("grooms")}
+                  onMouseLeave={() => setDropdown("")}
+                >
+                  <span className="cursor-pointer hover:text-dustyRose">
+                    Grooms
+                  </span>
+                  {dropdown === "grooms" && (
+                    <div className="absolute left-0 top-full bg-white shadow-lg w-48 py-4 z-40">
+                      <ul className="grid grid-cols-1">
+                        {grooms.map((item, index) => (
+                          <li
+                            key={index}
+                            className="px-4 py-2 hover:text-dustyRose border-b border-gray-200 last:border-0"
+                          >
+                            <button
+                              onClick={() => handleNavigate(item)}
+                              className="block text-left w-full"
+                            >
+                              {item}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </li>
+
 
                   {!isLoggedIn ? (
                     <>
