@@ -21,6 +21,8 @@ import VendorDashboard from "./pages/vendorDashboard/Dashboard.jsx";
 import Subscription from "./pages/Subscription.jsx";
 import { HelmetProvider } from "react-helmet-async";
 
+const Checklist = lazy(() => import("./pages/checklist/Checklist.jsx"));
+
 const Setting = lazy(() => import("./pages/vendorDashboard/Setting.jsx"));
 const ContactUs = lazy(() => import("./pages/contactus/ContactUs.jsx"));
 const Analytics = lazy(() => import("./pages/vendorDashboard/Analytics.jsx"));
@@ -52,6 +54,7 @@ const ChangePassword = lazy(() => import("./pages/auth/ChangePassword.jsx"));
 const FavoriteListPage = lazy(() =>
   import("./pages/userDashboard/FavoriteList.jsx")
 );
+const AboutPage = lazy(() => import("./pages/section/About.jsx")); // Import the About page
 
 function wrapWithSuspense(Component) {
   return (
@@ -60,6 +63,7 @@ function wrapWithSuspense(Component) {
     </Suspense>
   );
 }
+
 // Define routes using createBrowserRouter
 const router = createBrowserRouter([
   {
@@ -70,6 +74,8 @@ const router = createBrowserRouter([
       { path: "/signup", element: wrapWithSuspense(Signup) },
       { path: "/login", element: wrapWithSuspense(Login) },
       { path: "/contactus", element: wrapWithSuspense(ContactUs) },
+      { path: "/checklist", element: wrapWithSuspense(Checklist) },
+      { path: "/about", element: wrapWithSuspense(AboutPage) }, // Add the About page route
       {
         path: "/user-forgot-password",
         element: wrapWithSuspense(UserForgotPassword),

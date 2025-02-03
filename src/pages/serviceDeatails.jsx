@@ -109,6 +109,8 @@ function ServiceDetail() {
     navigate("/login", { state: { from: location.pathname } });
   };
 
+  console.log(service)
+
 
   
     
