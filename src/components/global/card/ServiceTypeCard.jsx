@@ -5,7 +5,7 @@ const ServiceTypeCard = ({ icon: Icon, title, description, cardStyle, iconStyle,
       className={`flex flex-col items-center p-4 rounded-lg shadow-lg ${cardStyle}`}
     >
       {Icon && <Icon className={`text-4xl mb-2 ${iconStyle}`} />}
-      <h3 className={`text-lg font-semibold mb-1 ${titleStyle}`}>{title}</h3>
+      <h3 className={`text-md md:text-lg font-semibold mb-1 ${titleStyle}`}>{title}</h3>
       <p className={`text-gray-600 text-center ${descriptionStyle}`}>{description}</p>
     </div>
   );

@@ -43,11 +43,11 @@ const VendorServicesPage = () => {
     setCurrentPage(page);
   };
 
-  if(error && error.includes("expire")){
-    userlogout()
+  // if(error && error.includes("expire")){
+  //   userlogout()
     
-    navigate("/vendorLogin")
-  }
+  //   navigate("/vendorLogin")
+  // }
 
   return (
     <div className="max-w-7xl  mx-auto p-6 m-2 rounded-md bg-gradient-to-br from-white via-pink-50 to-pink-100">

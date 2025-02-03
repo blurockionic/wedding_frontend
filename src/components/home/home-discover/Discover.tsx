@@ -54,11 +54,11 @@ const Discover = () => {
       </div>
 
       <div className="overflow-hidden py-2 relative mt-5">
-        {/* Left Gradient */}
-        <div className="absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-[#fff] to-transparent pointer-events-none z-10"></div>
+        {/* Left Gradient
+        <div className="absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-[#fff] to-transparent pointer-events-none z-10"></div> */}
 
         {/* Scrollable container */}
-        <div className="scroll-container py-2 flex gap-5 overflow-x-auto scrollbar-hide">
+        <div className=" py-2 flex gap-5 ">
           {/* Original set of cards */}
 
           <CustomeCardTools
@@ -109,7 +109,7 @@ const Discover = () => {
         </div>
 
         {/* Right Gradient */}
-        <div className="absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-[#fff] to-transparent pointer-events-none z-10"></div>
+        {/* <div className="absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-[#fff] to-transparent pointer-events-none z-10"></div> */}
       </div>
     </div>
   );

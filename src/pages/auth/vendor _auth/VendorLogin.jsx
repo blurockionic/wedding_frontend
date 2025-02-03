@@ -124,18 +124,18 @@ export default function VendorLogin() {
           </div>
         </NavLink>
       </div>
-      <div className="min-h-1/2  grid grid-cols-1 md:grid-cols-2 px-16 py-10 gap-10">
+      <div className="min-h-1/2  grid grid-cols-1 md:grid-cols-2 px-5 sm:px-10 md:px-16 lg:px-20 py-10 gap-10">
         <div className="space-y-12 md:space-y-24">
           <div className="space-y-5">
             <h1
               className="text-primary 
-        text-3xl md:text-6xl
+        text-3xl md:text-5xl lg:text-6xl
         font-thin
         "
             >
               Discover the smarter way to connect with couples
             </h1>
-            <ul className="space-y-2 text-xl">
+            <ul className="space-y-2 texl-md sm:text-lg md:text-xl">
               <li className="flex items-center justify-start">
                 <svg
                   className="w-3.5 h-3.5 me-2 text-green-500 dark:text-green-400 flex-shrink-0"
@@ -284,7 +284,7 @@ export default function VendorLogin() {
       </div>
 
       {/* Categories  */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-16 py-10 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-5 md:px-16 py-10 mb-10">
         <ServiceTypeCard
           icon={FiUsers}
           title="Reach engaged couples"
@@ -392,7 +392,7 @@ export default function VendorLogin() {
       </div>
 
       {/* vendor support  */}
-      <div className="bg-gradient-to-br from-white via-pink-50 to-pink-100 py-12 px-16">
+      <div className="bg-gradient-to-br from-white via-pink-50 to-pink-100 py-12 px-5 md:px-16">
         {/* Overlay with backdrop blur */}
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">

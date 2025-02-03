@@ -8,18 +8,24 @@ import { GoLocation, GoSearch } from "react-icons/go";
 import Discover from "../../components/home/home-discover/Discover";
 import { Helmet } from "react-helmet-async";
 import { allCategories } from "../../components/Sidebar";
+import { Country, State, City } from "country-state-city";
 
 export default function Home() {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [location, setLocation] = useState("");
-  const [suggestions, setSuggestions] = useState(allCategories || []);
+  const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [locationSuggestions, setLocationSuggestions] = useState([]);
+  const [states, setStates] = useState([]);
+  const [allCities, setAllCities] = useState([]);
+  const [showlocationSuggestions, setShowlocationSuggestions] = useState(false);
 
   useEffect(() => {
     Aos.init({
       duration: 1000,
     });
+    fetchStatesAndCities();
   }, []);
 
   const handleSearchChange = (e) => {
@@ -36,10 +42,47 @@ export default function Home() {
       setShowSuggestions(false);
     }
   };
-
   const handleSuggestionClick = (category) => {
     setSearch(category);
     setShowSuggestions(false);
+  };
+
+  const handleSearchLocationChange = (e) => {
+    const searchLocation = e.target.value;
+    if (searchLocation) {
+      const filteredLocation = allCities
+        .filter((item) => {
+          return item.name
+            .toLowerCase()
+            .startsWith(searchLocation.toLowerCase());
+        })
+        .map((item) => item.name);
+
+      setLocationSuggestions(filteredLocation);
+      setShowlocationSuggestions(true);
+    } else {
+      setShowlocationSuggestions(false);
+    }
+    setLocation(searchLocation);
+  };
+
+  const handleLocationClick = (c) => {
+    setLocation(c);
+    setShowlocationSuggestions(false);
+  };
+
+  const fetchStatesAndCities = async () => {
+    const india = Country.getCountryByCode("IN");
+    if (india) {
+      const statesList = State.getStatesOfCountry(india.isoCode);
+      setStates(statesList);
+      let cityCollection = [];
+      statesList.map((state) => {
+        const cities = City.getCitiesOfState(india.isoCode, state.isoCode);
+        cityCollection = [...cityCollection, ...cities];
+      });
+      setAllCities(cityCollection.flat());
+    }
   };
 
   const handleNavigate = () => {
@@ -49,8 +92,6 @@ export default function Home() {
     }).toString();
     navigate(`/services?${queryParams}`);
   };
-
-  
 
   return (
     <>
@@ -67,7 +108,10 @@ export default function Home() {
         />
         <meta name="author" content="Wedding Planner Team" />
         <meta name="robots" content="index, follow" />
-        <meta property="og:title" content="Plan Your Dream Wedding with Us | Top Wedding Vendors" />
+        <meta
+          property="og:title"
+          content="Plan Your Dream Wedding with Us | Top Wedding Vendors"
+        />
         <meta
           property="og:description"
           content="Discover trusted wedding vendors for your big day and plan the perfect wedding with ease. From photographers to planners, florists, and more, find the best professionals to make your celebration unforgettable."
@@ -76,10 +120,14 @@ export default function Home() {
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.marriagevendors.com/" />
         <meta name="twitter:card" content="summary" />
-        <meta name="google-site-verification" content="bNwJRK2wyCg2nnVlVT0AysDAahMXXs29eNcurUyJ02E" />
+        <meta
+          name="google-site-verification"
+          content="bNwJRK2wyCg2nnVlVT0AysDAahMXXs29eNcurUyJ02E"
+        />
         <meta name="adsense-id" content="ca-pub-1234567890123456" />
         <link rel="canonical" href="https://www.marriagevendors.com/" />
         {/* Structured Data for Schema */}
+
       <script type="application/ld+json">
         {JSON.stringify({
           "@context": "https://schema.org",
@@ -100,6 +148,7 @@ export default function Home() {
           }
         })}
       </script>
+
       </Helmet>
 
       <div
@@ -134,7 +183,7 @@ export default function Home() {
             data-aos-delay="200"
             data-aos-once="true"
           >
-             Welcome,
+            Welcome
           </p>
 
           <p
@@ -144,7 +193,8 @@ export default function Home() {
             data-aos-once="true"
           >
             <span className="text-4xl md:text-5xl lg:text-[60px] flex flex-col mb-12">
-              Your one-stop destination for <span className="text-[#ffcdf8]">Dream Wedding</span>
+              Your one-stop destination for{" "}
+              <span className="text-[#ffcdf8]">Dream Wedding</span>
             </span>
           </p>
 
@@ -152,9 +202,7 @@ export default function Home() {
           <CustomButton
             leftIcon={<GoSearch size={20} className="text-white" />}
             text="Search"
-
             className="w-1/2 lg:hidden bg-primary px-10 py-2 rounded text-white md:ms-[-50px] lg-ms-0 "
-
             onClick={handleNavigate}
           >
             Discover
@@ -162,13 +210,19 @@ export default function Home() {
         </div>
 
         {/* Search Section */}
-        <section className="hidden z-50 py-12 absolute bottom-0 w-full lg:flex items-center justify-center flex-col gap-2 bg-gradient-to-t from-black bg-opacity-50">
-          <div className="flex gap-2 relative">
+        <section
+          className="hidden z-50 py-12 absolute bottom-0 w-full 
+  lg:flex items-center justify-center flex-col gap-4 
+  bg-gradient-to-t from-black bg-opacity-50"
+        >
+          {/* Input Group */}
+          <div className="flex gap-4 relative">
+            {/* Vendor Input */}
             <div className="relative w-[400px]">
               <CustomInput
                 type="text"
                 placeholder="Select Vendor"
-                className="outline-none bg-white w-[400px] focus:border-white"
+                className="outline-none bg-white w-full focus:border-white"
                 aria-label="Select Vendor"
                 value={search}
                 onChange={handleSearchChange}
@@ -176,11 +230,8 @@ export default function Home() {
               />
               {showSuggestions && suggestions.length > 0 && (
                 <ul
-                  className="absolute bg-white border border-gray-300 rounded w-full shadow-lg mt-1 z-10"
-                  style={{
-                    maxHeight: "200px",
-                    overflowY: "auto",
-                  }}
+                  className="absolute bg-white border border-gray-300 
+          rounded w-full shadow-lg mt-1 z-20 overflow-auto max-h-[200px]"
                 >
                   {suggestions.map((category, index) => (
                     <li
@@ -195,14 +246,36 @@ export default function Home() {
               )}
             </div>
 
-            <CustomInput
-              type="text"
-              placeholder="in Location"
-              className="w-[300px] outline-none focus:border-white bg-white"
-              aria-label="Location"
-              onChange={(e) => setLocation(e.target.value)}
-              leftIcon={<GoLocation size={20} />}
-            />
+            {/* Location Input */}
+            <div className="relative w-[400px]">
+              <CustomInput
+                type="text"
+                value={location}
+                placeholder="In Location"
+                className="w-full outline-none focus:border-white bg-white"
+                aria-label="Location"
+                onChange={handleSearchLocationChange}
+                leftIcon={<GoLocation size={20} />}
+              />
+              {showlocationSuggestions && locationSuggestions.length > 0 && (
+                <ul
+                  className="absolute bg-white border border-gray-300 
+          rounded w-full shadow-lg mt-1 z-20 overflow-auto max-h-[200px]"
+                >
+                  {locationSuggestions.map((c, index) => (
+                    <li
+                      key={index}
+                      className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                      onClick={() => handleLocationClick(c)}
+                    >
+                      {c}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            {/* Discover Button */}
             <CustomButton
               text="Discover"
               className="bg-primary px-10 py-2 rounded text-white"
@@ -211,6 +284,8 @@ export default function Home() {
               Discover
             </CustomButton>
           </div>
+
+          {/* Tagline */}
           <span className="text-white text-xl">
             Vendors and Couples trust us.
           </span>
