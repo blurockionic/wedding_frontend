@@ -140,7 +140,8 @@
 // };
 
 // export default AboutUs;
-import  { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet'; // Import Helmet from react-helmet
 import { Heart, MapPin, Users, Star, Sparkles } from 'lucide-react';
 import aboutimageBg from '../../../public/about/about-img-1.png';
 import Footer from '../Footer';
@@ -168,18 +169,76 @@ const reviews = [
 
 const AboutUs = () => {
   const [currentReview, setCurrentReview] = useState(0);
-  const cities = ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Jaipur", "Goa"];
+  const cities = ["Ludhiana", "Delhi", "Bangalore", "Chennai", "Kolkata", "Jaipur", "Goa"];
 
   useEffect(() => {
     const autoAdvance = setInterval(() => {
       setCurrentReview((prev) => (prev + 1) % reviews.length);
     }, 5000);
-
     return () => clearInterval(autoAdvance);
   }, []);
 
+  // Define JSON‑LD structured data for the webpage
+  const jsonLdWebPage = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "About Us - Marriage Vendors",
+    "url": "https://yourwebsite.com/aboutus",
+    "description": "Discover trusted wedding vendors for every need at Marriage Vendors. Find everything to plan your perfect day including venues, photographers, caterers and more.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Marriage Vendors",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.marriagevendors.com/about"
+      }
+    }
+  };
+
+  // Define JSON‑LD structured data for the organization
+  const jsonLdOrganization = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Marriage Vendors",
+    "url": "https://www.marriagevendors.com/about",
+    "logo": "https://www.marriagevendors.com/",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+1-800-555-1234",
+      "contactType": "Customer Service"
+    },
+    "sameAs": [
+      "https://www.linkedin.com/company/marriagevendors/?viewAsMember=true",
+      "https://x.com/MarriageVendors",
+      "https://www.instagram.com/marriagevendors/?hl=en",
+      "https://www.youtube.com/channel/UCflLelgupPqW0kkKpJdACpA",
+      "https://www.linkedin.com/company/marriagevendors/?viewAsMember=true"
+    ]
+  };
+
   return (
     <div className="bg-white text-gray-800">
+      <Helmet>
+        <title>About Us - Marriage Vendors</title>
+        <meta
+          name="description"
+          content="Discover trusted wedding vendors for every need at Marriage Vendors. Plan your perfect wedding with expert services and personalized solutions."
+          />
+          {/* Add meta keywords */}
+          <meta
+            name="keywords"
+            content="wedding vendors, wedding planning, marriage vendors, wedding checklist, guest list management, wedding inspiration, vendor search, wedding budget, custom wedding website, wedding services"
+          />
+        {/* Inject JSON‑LD for the webpage */}
+        <script type="application/ld+json">
+          {JSON.stringify(jsonLdWebPage)}
+        </script>
+        {/* Inject JSON‑LD for the organization */}
+        <script type="application/ld+json">
+          {JSON.stringify(jsonLdOrganization)}
+        </script>
+      </Helmet>
+
       {/* Hero Section */}
       <section className="relative bg-gradient-to-r from-pink-100 to-purple-100 py-20 overflow-hidden rounded-b-[50px]">
         <div className="absolute inset-0 opacity-20">
@@ -193,7 +252,7 @@ const AboutUs = () => {
           <Heart className="mx-auto text-pink-500 mb-6" size={64} />
           <h1 className="text-5xl font-bold text-gray-800 mb-4">About us</h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-          Discover trusted wedding vendors for every need at Marriage Vendors! From stunning venues to photographers, caterers, and more, find everything to plan your perfect day. Compare services, read reviews, and book with confidence. Start creating your dream wedding today!
+            Discover trusted wedding vendors for every need at Marriage Vendors! From stunning venues to photographers, caterers, and more, find everything to plan your perfect day. Compare services, read reviews, and book with confidence. Start creating your dream wedding today!
           </p>
         </div>
       </section>
@@ -244,7 +303,7 @@ const AboutUs = () => {
         <div className="absolute inset-0 opacity-10 grayscale">
           <img 
             src={aboutimageBg} 
-            alt="India Map" 
+            alt="Wedding Background" 
             className="w-full h-full object-cover"
           />
         </div>
@@ -284,7 +343,7 @@ const AboutUs = () => {
       <section className="py-16 bg-pink-50">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-4xl font-bold mb-6">Ready to Begin Your Love Story?</h2>
-          <p className="text-xl text-gray-700 mb-8">Let&apos;s create memories that will last a lifetime</p>
+          <p className="text-xl text-gray-700 mb-8">Let's create memories that will last a lifetime</p>
           <div className="flex justify-center space-x-4">
             <a 
               href="/signup" 
@@ -302,8 +361,8 @@ const AboutUs = () => {
         </div>
       </section>
 
-      {/* //footer  */}
-      <Footer/>
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
