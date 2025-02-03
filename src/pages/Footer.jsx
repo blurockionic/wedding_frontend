@@ -18,61 +18,68 @@ export default function Footer() {
   // }, []);
 
   return (
-    <footer className="bg-gray-100 p-8 text-gray-800">
-      <div className="px-2 md:px-16 ">
-        <h1 className="text-xl font-bold">Categories</h1>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-5 text-start mt-5 px-2 md:px-16 gap-5">
-        <div>
-        <h1 className="text-xl font-bold">Wedding Venues</h1>
-          <ul className="space-y-2 mt-4">
-            {
-              weddingVenues.map((item, index)=>(
-                <>
-                 <li key={index}><Link to={`/services?search=${item}&location=`}>{item}</Link></li>
-                </>
-              ))
-            }
-          </ul>
-        </div>
-        <div className="md:col-span-2 col-span-0 ">
-        <h1 className="text-xl font-bold">Wedding Vendors</h1>
-        <ul className="space-y-2 mt-4 grid grid-cols-2 md:grid-cols-2">
-            {
-              weddingVendors.map((item, index)=>(
-                <>
-                 <li key={index}><Link to={`/services?search=${item}&location=`}>{item}</Link></li>
-                </>
-              ))
-            }
-          </ul>
-        </div>
-        <div>
-        <h1 className="text-xl font-bold">Brides</h1>
-        <ul className="space-y-2 mt-4">
-            {
-              brides.map((item, index)=>(
-                <>
-                 <li key={index}><Link to={`/services?search=${item}&location=`}>{item}</Link></li>
-                </>
-              ))
-            }
-          </ul>
-        </div>
-        <div>
-        <h1 className="text-xl font-bold">Grooms</h1>
-        <ul className="space-y-2 mt-4">
-            {
-              grooms.map((item, index)=>(
-                <>
-                 <li key={index}><Link to={`/services?search=${item}&location=`}>{item}</Link></li>
-                </>
-              ))
-            }
-          </ul>
-        </div>
-      </div>
+    <footer className="bg-gray-900 text-gray-300 p-10">
+      <div className="max-w-7xl mx-auto">
+        {/* Top Section */}
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
+          {/* Wedding Venues */}
+          <div>
+            <h2 className="text-lg font-semibold text-white">Wedding Venues</h2>
+            <ul className="mt-4 space-y-2">
+              {weddingVenues.map((item, index) => (
+                <li key={index}>
+                  <Link to={`/services?search=${item}&location=`} className="hover:text-white">
+                    {item}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
 
+          {/* Wedding Vendors */}
+          <div className="md:col-span-2">
+            <h2 className="text-lg font-semibold text-white">Wedding Vendors</h2>
+            <ul className="mt-4 grid grid-cols-2 gap-4">
+              {weddingVendors.map((item, index) => (
+                <li key={index}>
+                  <Link to={`/services?search=${item}&location=`} className="hover:text-white">
+                    {item}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Brides */}
+          <div>
+            <h2 className="text-lg font-semibold text-white">Brides</h2>
+            <ul className="mt-4 space-y-2">
+              {brides.map((item, index) => (
+                <li key={index}>
+                  <Link to={`/services?search=${item}&location=`} className="hover:text-white">
+                    {item}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Grooms */}
+          <div>
+            <h2 className="text-lg font-semibold text-white">Grooms</h2>
+            <ul className="mt-4 space-y-2">
+              {grooms.map((item, index) => (
+                <li key={index}>
+                  <Link to={`/services?search=${item}&location=`} className="hover:text-white">
+                    {item}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div className="border-t border-gray-600 mt-10 w-50 mx-auto"></div>
 
       <div className="max-w-7xl mt-10 mx-auto grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Logo and Description */}
