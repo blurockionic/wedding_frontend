@@ -174,10 +174,14 @@ export default function VendorLogin() {
               </li>
             </ul>
           </div>
+          
+        <Link to="/services" className="mt-4 block">
           <CustomButton
             text="Create your free service"
             className="border border-ring px-5 py-3 text-primary"
           />
+        </Link>
+        
         </div>
         {/* vendor login  */}
         <div className="flex items-center justify-center">
@@ -409,7 +413,7 @@ export default function VendorLogin() {
               <FaHeadset className="text-blue-500 text-4xl mb-4" />
               <h3 className="text-lg font-semibold text-gray-800">Live Chat</h3>
               <p className="text-gray-600">
-                Chat with our support team for instant help.
+              Chat with our support team for instant help.
               </p>
             </div>
 
@@ -420,7 +424,7 @@ export default function VendorLogin() {
                 Email Support
               </h3>
               <p className="text-gray-600">
-                Reach us at support@example.com for detailed inquiries.
+               Reach us at support@blurockionic.com for detailed inquiries
               </p>
             </div>
 
@@ -429,15 +433,15 @@ export default function VendorLogin() {
               <FaPhone className="text-purple-500 text-4xl mb-4" />
               <h3 className="text-lg font-semibold text-gray-800">Call Us</h3>
               <p className="text-gray-600">
-                Get direct support at +1 (123) 456-7890.
+               Get direct support at +91-6200932331..
               </p>
             </div>
           </div>
 
-          {/* Contact Support Button */}
+          {/* Contact Support Button
           <button className="border border-ring hover:bg-pink-600 text-foreground hover:text-white font-semibold py-3 px-8 rounded-full shadow-md transition-all duration-300">
             Contact Support
-          </button>
+          </button> */}
         </div>
       </div>
 

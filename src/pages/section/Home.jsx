@@ -97,7 +97,7 @@ export default function Home() {
     <>
       {/* SEO Optimization */}
       <Helmet>
-        <title>Plan Your Dream Wedding with Us | Top Wedding Vendors</title>
+        <title>Home | Marriage Vendors</title>
         <meta
           name="description"
           content="Discover the best wedding vendors for your dream wedding. 1000+ trusted vendors, trusted by happy couples. Find vendors in your location effortlessly!"
@@ -127,27 +127,28 @@ export default function Home() {
         <meta name="adsense-id" content="ca-pub-1234567890123456" />
         <link rel="canonical" href="https://www.marriagevendors.com/" />
         {/* Structured Data for Schema */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebPage",
-            name: "Plan Your Dream Wedding with Us | Top Wedding Vendors",
-            description:
-              "Discover the best wedding vendors for your dream wedding. 1000+ trusted vendors, trusted by happy couples. Find vendors in your location effortlessly!",
-            url: "https://yourwebsite.com/home",
-            author: {
-              "@type": "Organization",
-              name: "Marriage Vendors",
-              url: "https://www.marriagevendors.com/services?search=wedding+vendors",
-            },
-            potentialAction: {
-              "@type": "SearchAction",
-              target:
-                "https://www.marriagevendors.com/services?search=wedding+vendors",
-              "query-input": "required name=search_term_string",
-            },
-          })}
-        </script>
+
+      <script type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          name: "Plan Your Dream Wedding with Us | Top Wedding Vendors",
+          description:
+            "Discover the best wedding vendors for your dream wedding. 1000+ trusted vendors, trusted by happy couples. Find vendors in your location effortlessly!",
+          url: "https://www.marriagevendors.com/",
+          author: {
+            "@type": "Organization",
+            name: "Marriage Vendors",
+            "url": "https://www.marriagevendors.com/"
+          },
+          potentialAction: {
+            "@type": "SearchAction",
+            target: "hhttps://www.marriagevendors.com/",
+            "query-input": "required name=search_term_string"
+          }
+        })}
+      </script>
+
       </Helmet>
 
       <div
