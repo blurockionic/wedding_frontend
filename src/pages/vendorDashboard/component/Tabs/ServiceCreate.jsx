@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   useCreateServiceMutation,
+  useGenerateAIDescriptionMutation,
   useUpdateServiceMutation,
 } from "../../../../redux/serviceSlice";
 import {
@@ -16,11 +17,30 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { MdClose } from "react-icons/md";
 
+import { z } from "zod"; // Using Zod for validation
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { InputField } from "../../../../components/global/inputfield/InputField";
+import CustomText from "../../../../components/global/text/CustomText";
+
+// Zod validation schema for form
+export const serviceValidate = z.object({
+  service_name: z.string().nonempty("Service name is required"),
+  description: z.string().nonempty("Description is required"),
+  min_price: z
+  .string(),
+  service_type: z.string().optional(),
+});
+
 const ServiceCreate = ({ onClose, serviceData }) => {
   const [createServiceMutation, { isLoading: isCreating }] =
     useCreateServiceMutation();
   const [updateServiceMutation, { isLoading: isUpdating }] =
     useUpdateServiceMutation();
+  const [
+    generateAIDescription,
+    { data, isLoading: isGenerating, isError, error },
+  ] = useGenerateAIDescriptionMutation();
 
   const [serviceOptions, setServiceOptions] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -32,9 +52,14 @@ const ServiceCreate = ({ onClose, serviceData }) => {
     handleSubmit,
     formState: { errors },
     setValue,
-  } = useForm();
+    getValues,
+  } = useForm({
+    resolver: zodResolver(serviceValidate),
+  });
 
   const onSubmit = async (data) => {
+    console.log(data);
+    
     try {
       const preparedData = {
         ...data,
@@ -109,91 +134,68 @@ const ServiceCreate = ({ onClose, serviceData }) => {
     setValue("service_type", service);
   };
 
+  const handleAIDescription = async () => {
+    const dataFromUseForm = getValues();
+
+    const initialData = {
+      service_name: dataFromUseForm.service_name,
+      min_price: dataFromUseForm.min_price,
+      service_type: dataFromUseForm.service_type,
+      description: dataFromUseForm.description || "",
+    };
+    if (
+      !initialData.service_name ||
+      !initialData.min_price ||
+      !initialData.service_type
+    ) {
+      toast.error(
+        "Missing required data: service_name, min_price, or service_type."
+      );
+      return;
+    }
+    try {
+      const res = await generateAIDescription(initialData).unwrap();
+
+      setValue("description", res.generatedDescription);
+    } catch (error) {
+      console.error("API Error:", error);
+    }
+  };
+
+ 
   return (
     <>
-     
-      <div className="bg-transparent p-8 max-w-4xl mx-auto rounded-lg shadow-lg  border border-ring">
-        
-      <div className="flex justify-end w-full mb-2"> 
-      <button
+      <div className="bg-transparent relative p-8 max-w-4xl mx-auto rounded-lg shadow-lg  border border-ring">
+        <button
           onClick={onClose}
-          className="relative left-0 bg-primary text-background rounded-full p-2 hover:bg-gray-600 transition"
+          className=" absolute right-10 bg-primary text-background rounded-full p-2 hover:bg-gray-600 transition"
         >
           <MdClose className="w-5 h-5" />
         </button>
-      </div>
-      
+
         <h2 className="text-4xl font-bold text-center text-foreground mb-8">
           {serviceData ? "Update Service" : "Create Service"}
         </h2>
 
-        
-
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {/* Service Name Field */}
-          <div>
-            <label className="block text-lg font-medium text-foreground">
-              Service Name <span className="text-red-500">*</span>
-            </label>
-            <input
-              {...register("service_name", {
-                required: "Service name is required",
-              })}
-              type="text"
-              placeholder="Enter service name"
-              className="mt-2 w-full px-4 py-3 bg-secondary text-foreground border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-ring"
-            />
-            {errors.service_name && (
-              <span className="text-red-500 text-sm">
-                {errors.service_name.message}
-              </span>
-            )}
-          </div>
-
-          {/* Description Field */}
-          <div>
-            <label className="block text-lg font-medium text-foreground">
-              Description <span className="text-red-500">*</span>
-            </label>
-            <textarea
-              {...register("description", {
-                required: "Description is required",
-              })}
-              placeholder="Enter a brief description"
-              className="mt-2 w-full px-4 py-3 bg-secondary text-foreground border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-ring"
-            />
-            {errors.description && (
-              <span className="text-red-500 text-sm">
-                {errors.description.message}
-              </span>
-            )}
-          </div>
+          <InputField
+            id="service_name"
+            type="text"
+            label="Service Name"
+            placeholder="Enter Service Name"
+            register={register}
+            error={errors.service_name}
+          />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Min Price Field */}
-            <div>
-              <label htmlFor="min_price" className="block text-foreground mb-1">
-                Min Price
-              </label>
-              <input
-                id="min_price"
-                type="number"
-                min={100}
-                step="100"
-                {...register("min_price", {
-                  required: "Minimum price is required",
-                  validate: (value) =>
-                    value >= 100 ||
-                    "Price must be greater than or equal to 100",
-                })}
-                className="w-full px-4 py-3 bg-secondary text-foreground border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-ring"
-              />
-              {errors.min_price && (
-                <span className="text-red-500 text-sm">
-                  {errors.min_price.message}
-                </span>
-              )}
-            </div>
+            <InputField
+              id="min_price"
+              type="number"
+              label="Min Price"
+              register={register}
+              error={errors.min_price}
+              placeholder="min_price"
+            />
 
             {/* Service Category Field */}
             {!serviceData && (
@@ -237,6 +239,36 @@ const ServiceCreate = ({ onClose, serviceData }) => {
               </select>
             </div>
           )}
+
+          <div className="relative ">
+            <label className="block font-montserrat text-muted-foreground text-sm font-bold mb-2">
+              Description <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              rows={12}
+
+              {...register("description")}
+              placeholder="Enter a brief description"
+              className="py-2  h-15 w-full border border-border focus:ring-ring focus:outline-none rounded"
+              
+            />
+            {errors.description && (
+              <CustomText
+                variant="error"
+                className="text-destructive mt-1 font-montserrat text-xs"
+              >
+                {errors.description.message}
+              </CustomText>
+            )}
+            <button
+              type="button"
+              onClick={handleAIDescription}
+              className="mt-2 py-2 absolute right-4 bottom-4 px-4 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-all ease-in-out"
+              disabled={isGenerating}
+            >
+              {isGenerating ? "Generating..." : "Gen AI"}
+            </button>
+          </div>
 
           {/* Submit Button */}
           <div className="flex justify-center">

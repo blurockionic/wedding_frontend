@@ -5,7 +5,7 @@ import {
   useGetServiceByIdQuery,
   useUpdateFAQMutation,
 } from "../../../redux/serviceSlice";
-
+import ReactMarkdown from "react-markdown";
 import Slider from "../../../components/Slider";
 import Mediatab from "./Tabs/Mediatab";
 import FAQsTab from "./Tabs/FAQsTab";
@@ -179,9 +179,10 @@ const DashBoardDetailPage = () => {
             <span className="font-semibold">Price Range:</span> ₹
             {service?.min_price}
           </p>
-          <p className="text-lg text-gray-600 capitalize mb-4">
-            {service?.description}
-          </p>
+          
+          <ReactMarkdown className="prose prose-lg text-gray-800">
+          {service?.description}
+        </ReactMarkdown>
         </div>
       </div>
 
