@@ -246,14 +246,6 @@ export default function Home() {
               )}
             </div>
 
-<<<<<<< HEAD
-            <div className="relative w-fit">
-              <CustomInput
-                type="text"
-                value={location}
-                placeholder="in Location"
-                className="w-[300px] outline-none  focus:border-white bg-white"
-=======
             {/* Location Input */}
             <div className="relative w-[400px]">
               <CustomInput
@@ -261,7 +253,6 @@ export default function Home() {
                 value={location}
                 placeholder="In Location"
                 className="w-full outline-none focus:border-white bg-white"
->>>>>>> 7da58dc41d962ffc1e96a63bbbe7ec2a65c19dd8
                 aria-label="Location"
                 onChange={handleSearchLocationChange}
                 leftIcon={<GoLocation size={20} />}
