@@ -150,9 +150,13 @@ const ChecklistCategory = ({ title, items }) => {
       {/* Add New Item Form */}
       <form
         onSubmit={handleItemSubmit(handleAddItem)}
-        className={`mt-4 flex flex-col space-y-2 overflow-hidden transition-all duration-300 ease-in-out ${
-          isHovering || isMediumScreenOrSmaller || itemErrors.item ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
-        }`}
+        // Without hovering
+        className={`mt-4 flex flex-col space-y-2 overflow-hidden transition-all duration-300 ease-in-out`}
+
+        // For hovering:
+        // className={`mt-4 flex flex-col space-y-2 overflow-hidden transition-all duration-300 ease-in-out ${
+        //   isHovering || isMediumScreenOrSmaller || itemErrors.item ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
+        // }`}
       >
         <div className="flex items-center space-x-2">
           <button type="submit" className="flex-shrink-0">
