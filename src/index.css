@@ -7,6 +7,12 @@ html {
   scroll-behavior: smooth;
 }
 
+@keyframes loading-animation {
+  0% { background-position: 0% 50%, 50% 50%, 100% 50%; opacity: 0.75; }
+  50% { background-position: 25% 50%, 75% 50%, 125% 50%; opacity: 0.5; }
+  100% { background-position: 0% 50%, 50% 50%, 100% 50%; opacity: 1; }
+}
+
 .customShadow{
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
@@ -134,4 +140,15 @@ html {
   .btn-primary {
     @apply bg-primary hover:bg-secondary;
   }
+}
+
+.bubble.user {
+  border-radius: 20px 20px 0 20px;
+  background-color: rgb(95, 146, 176);
+  margin-left: auto;
+}
+
+.bubble{
+  border-radius: 20px 20px 20px 0px;
+  background-color: #e09595;
 }

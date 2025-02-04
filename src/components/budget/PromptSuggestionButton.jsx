@@ -6,7 +6,7 @@ function PromptSuggestionButton(props) {
 
   return (
     <button
-      className="bg-[#bd3a77] text-slate-600 border border-[#ac9540] border-b-4 font-medium overflow-hidden relative px-4 py-2 rounded-md hover:brightness-150 hover:border-t-4 hover:border-b active:opacity-75 outline-none duration-300 group max-w-[300px] mx-4"
+      className="bg-[#d694a8] text-slate-600 border border-[#ac9540] border-b-4 font-medium overflow-hidden relative px-4 py-2 rounded-md hover:brightness-150 hover:border-t-4 hover:border-b active:opacity-75 outline-none duration-300 group max-w-[300px] mx-4"
       onClick={onClick}
     >
       <span
