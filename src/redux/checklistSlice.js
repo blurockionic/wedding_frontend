@@ -64,7 +64,7 @@ const initialState = [
     items: [
       { name: "Book a pandit or religious officiant", done: false },
       { name: "Arrange for pooja items or ceremony essentials", done: false },
-      { name: "Consult astrologers (if required for muhurat or compatibility checks)", done: false },
+      { name: "Consult astrologers", done: false },
     ],
   },
   {
