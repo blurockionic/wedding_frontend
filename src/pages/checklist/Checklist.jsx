@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Footer from "../Footer";
 import { FaCheckCircle, FaPlus, FaTimes, FaSave } from "react-icons/fa";
+import { BiBellPlus } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useDispatch, useSelector } from "react-redux";
@@ -90,7 +91,7 @@ const ChecklistCategory = ({ title, items }) => {
       onMouseLeave={() => setIsHovering(false)}
     >
       <div className="flex w-full flex-wrap">
-        <div className="flex-1 min-w-0"> {/* Allows wrapping */}
+        <div className="flex-1 min-w-0">
           <h3 
             className="text-2xl font-semibold text-pink-600 mb-3 break-words whitespace-normal w-full"
             style={{ wordBreak: "break-word" }}
@@ -102,9 +103,10 @@ const ChecklistCategory = ({ title, items }) => {
           className={`text-gray-300 hover:text-pink-600 cursor-pointer transition-all duration-300 ease-in-out ml-auto ${
             isHovering || isMediumScreenOrSmaller ? "max-h-20 opacity-100" : "max-h-0 opacity-0"
           }`}
-          size={18}
+          size={22}
           onClick={handleRemoveCategory}
         />
+        
       </div>
 
       <ul className="space-y-2">
@@ -145,31 +147,36 @@ const ChecklistCategory = ({ title, items }) => {
               </span>
             </div>
 
-            {((hoveredIndex === index) || (isMediumScreenOrSmaller)) && (
+            {/* Icons Container */}
+            <div className="flex flex-shrink-0 w-10 justify-end">
               <FaTimes
-                className="transition-all duration-300 ease-in-out text-gray-300 flex-shrink-0 hover:text-pink-600"
+                className={`transition-all duration-300 ml-1 ease-in-out text-gray-300 hover:text-pink-600 ${
+                  (hoveredIndex === index || isMediumScreenOrSmaller) ? "visible opacity-100" : "invisible opacity-0"
+                }`}
                 size={18}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleRemoveItem(index);
                 }}
               />
-            )}
+            </div>
           </li>
         ))}
       </ul>
-
 
       {/* Reserved Space for Form - Matches Form Height */}
       <div className="mt-4">
         <div className="relative">
           <form
             onSubmit={handleItemSubmit(handleAddItem)}
-            className={`transition-all duration-300 ease-in-out ${
-              isHovering || isMediumScreenOrSmaller || itemErrors.item
-                ? "opacity-100 pointer-events-auto"
-                : "opacity-0 pointer-events-none"
-            }`}
+            // Hover disabled
+            className={`transition-all duration-300 ease-in-out}`}
+            // Hover enabled
+            // className={`transition-all duration-300 ease-in-out ${
+            //   isHovering || isMediumScreenOrSmaller || itemErrors.item
+            //     ? "opacity-100 pointer-events-auto"
+            //     : "opacity-0 pointer-events-none"
+            // }`}
           >
             <div className="flex items-center space-x-2">
               <button type="submit" className="flex-shrink-0">
@@ -193,7 +200,7 @@ const ChecklistCategory = ({ title, items }) => {
                 })}
                 type="text"
                 placeholder="Add a new item"
-                className="flex-grow p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
+                className="flex-grow p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 focus-visible:outline-none"
               />
             </div>
             {itemErrors.item && (
