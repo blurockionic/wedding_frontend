@@ -111,6 +111,20 @@ function ServiceDetail() {
     navigate("/login", { state: { from: location.pathname } });
   };
 
+<<<<<<< HEAD
+=======
+  console.log(service)
+
+
+  
+    
+    
+
+  
+
+  
+
+>>>>>>> 7da58dc41d962ffc1e96a63bbbe7ec2a65c19dd8
   if (loading) return <div className="text-center">Loading...</div>;
   if (error)
     return (

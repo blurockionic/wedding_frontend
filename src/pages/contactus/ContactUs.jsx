@@ -3,7 +3,7 @@ import Footer from '../Footer';
 import { FaEnvelope, FaHeadset, FaPhone } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import signup_bg from "../../../public/signup/sign-bg.jpg";
+import signup_bg from "../../../public/signup/sign-bg.webp";
 
 const ContactUs = () => {
   const navigate = useNavigate();
@@ -118,9 +118,9 @@ const ContactUs = () => {
               </p>
             </div>
           </div>
-          <button className="border border-ring hover:bg-pink-600 text-foreground hover:text-white font-semibold py-3 px-8 rounded-full shadow-md transition-all duration-300">
+          {/* <button className="border border-ring hover:bg-pink-600 text-foreground hover:text-white font-semibold py-3 px-8 rounded-full shadow-md transition-all duration-300">
             Contact Support
-          </button>
+          </button> */}
         </div>
       </div>
 

@@ -140,8 +140,11 @@
 // };
 
 // export default AboutUs;
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet'; // Import Helmet from react-helmet
 import { Heart, MapPin, Users, Star, Sparkles } from 'lucide-react';
+import aboutimageBg from '../../../public/about/about-img-1.png';
+import Footer from '../Footer';
 
 const reviews = [
   {
@@ -166,32 +169,90 @@ const reviews = [
 
 const AboutUs = () => {
   const [currentReview, setCurrentReview] = useState(0);
-  const cities = ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Jaipur", "Goa"];
+  const cities = ["Ludhiana", "Delhi", "Bangalore", "Chennai", "Kolkata", "Jaipur", "Goa"];
 
   useEffect(() => {
     const autoAdvance = setInterval(() => {
       setCurrentReview((prev) => (prev + 1) % reviews.length);
     }, 5000);
-
     return () => clearInterval(autoAdvance);
   }, []);
 
+  // Define JSON‑LD structured data for the webpage
+  const jsonLdWebPage = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "About Us - Marriage Vendors",
+    "url": "https://yourwebsite.com/aboutus",
+    "description": "Discover trusted wedding vendors for every need at Marriage Vendors. Find everything to plan your perfect day including venues, photographers, caterers and more.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Marriage Vendors",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.marriagevendors.com/about"
+      }
+    }
+  };
+
+  // Define JSON‑LD structured data for the organization
+  const jsonLdOrganization = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Marriage Vendors",
+    "url": "https://www.marriagevendors.com/about",
+    "logo": "https://www.marriagevendors.com/",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+1-800-555-1234",
+      "contactType": "Customer Service"
+    },
+    "sameAs": [
+      "https://www.linkedin.com/company/marriagevendors/?viewAsMember=true",
+      "https://x.com/MarriageVendors",
+      "https://www.instagram.com/marriagevendors/?hl=en",
+      "https://www.youtube.com/channel/UCflLelgupPqW0kkKpJdACpA",
+      "https://www.linkedin.com/company/marriagevendors/?viewAsMember=true"
+    ]
+  };
+
   return (
     <div className="bg-white text-gray-800">
+      <Helmet>
+        <title>About Us - Marriage Vendors</title>
+        <meta
+          name="description"
+          content="Discover trusted wedding vendors for every need at Marriage Vendors. Plan your perfect wedding with expert services and personalized solutions."
+          />
+          {/* Add meta keywords */}
+          <meta
+            name="keywords"
+            content="wedding vendors, wedding planning, marriage vendors, wedding checklist, guest list management, wedding inspiration, vendor search, wedding budget, custom wedding website, wedding services"
+          />
+        {/* Inject JSON‑LD for the webpage */}
+        <script type="application/ld+json">
+          {JSON.stringify(jsonLdWebPage)}
+        </script>
+        {/* Inject JSON‑LD for the organization */}
+        <script type="application/ld+json">
+          {JSON.stringify(jsonLdOrganization)}
+        </script>
+      </Helmet>
+
       {/* Hero Section */}
       <section className="relative bg-gradient-to-r from-pink-100 to-purple-100 py-20 overflow-hidden rounded-b-[50px]">
         <div className="absolute inset-0 opacity-20">
           <img 
-            src="/api/placeholder/1200/600?text=Wedding+Celebration" 
+            src={aboutimageBg} 
             alt="Wedding Background" 
             className="w-full h-full object-cover"
           />
         </div>
         <div className="container mx-auto px-6 relative z-10 text-center">
           <Heart className="mx-auto text-pink-500 mb-6" size={64} />
-          <h1 className="text-5xl font-bold text-gray-800 mb-4">Text text text</h1>
+          <h1 className="text-5xl font-bold text-gray-800 mb-4">About us</h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-          Text text textText text textText text textText text textText text text
+            Discover trusted wedding vendors for every need at Marriage Vendors! From stunning venues to photographers, caterers, and more, find everything to plan your perfect day. Compare services, read reviews, and book with confidence. Start creating your dream wedding today!
           </p>
         </div>
       </section>
@@ -241,8 +302,8 @@ const AboutUs = () => {
       <section className="py-16 bg-gray-100 relative rounded-b-[50px]">
         <div className="absolute inset-0 opacity-10 grayscale">
           <img 
-            src="/api/placeholder/1600/800?text=India+Map" 
-            alt="India Map" 
+            src={aboutimageBg} 
+            alt="Wedding Background" 
             className="w-full h-full object-cover"
           />
         </div>
@@ -291,7 +352,7 @@ const AboutUs = () => {
               Get Started
             </a>
             <a 
-              href="/contact" 
+              href="/contactus" 
               className="border border-pink-500 text-pink-500 px-8 py-3 rounded-full hover:bg-pink-500 hover:text-white transition"
             >
               Contact Us
@@ -299,6 +360,9 @@ const AboutUs = () => {
           </div>
         </div>
       </section>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
