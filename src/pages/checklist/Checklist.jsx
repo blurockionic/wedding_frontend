@@ -85,22 +85,28 @@ const ChecklistCategory = ({ title, items }) => {
 
   return (
     <div
-      className="p-4 bg-white shadow-lg rounded-lg border border-pink-300 break-inside-avoid transition-all duration-300 ease-in-out"
+      className="p-4 bg-white shadow-lg rounded-lg border-4 border-pink-300 break-inside-avoid transition-all duration-300 ease-in-out"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
-      <div className="flex w-full">
-        <h3 className="text-xl font-semibold text-pink-600 mb-3 overflow-hidden">
-          {title/* {hyphenateLongWords(title, 15)} Hyphenate category title */}
-        </h3>
+      <div className="flex w-full flex-wrap">
+        <div className="flex-1 min-w-0"> {/* Allows wrapping */}
+          <h3 
+            className="text-2xl font-semibold text-pink-600 mb-3 break-words whitespace-normal w-full"
+            style={{ wordBreak: "break-word" }}
+          >
+            {title}
+          </h3>
+        </div>
         <FaTimes
-          className={`relative top-0 right-0 text-gray-300 hover:text-pink-600 cursor-pointer transition-all duration-300 ease-in-out ml-auto ${
+          className={`text-gray-300 hover:text-pink-600 cursor-pointer transition-all duration-300 ease-in-out ml-auto ${
             isHovering || isMediumScreenOrSmaller ? "max-h-20 opacity-100" : "max-h-0 opacity-0"
           }`}
           size={18}
           onClick={handleRemoveCategory}
         />
       </div>
+
       <ul className="space-y-2">
         {items.map((item, index) => (
           <li
@@ -122,17 +128,23 @@ const ChecklistCategory = ({ title, items }) => {
               }`}
               size={20}
             />
-            <span
-              className={`flex-grow leading-relaxed transition-all duration-150 ease-in-out hyphenate overflow-hidden ${
-                clickedIndex === index ? "scale-105" : ""
-              } ${
-                item.done
-                  ? "line-through opacity-50"
-                  : "group-hover:text-pink-600"
-              }`}
-            >
-              {item.name/* {formatItemName(item.name)} Hyphenate item name */}
-            </span>
+            
+            {/* Wrap item.name in a div to allow wrapping */}
+            <div className="flex-1 min-w-0">
+              <span
+                className={`leading-relaxed transition-all duration-150 ease-in-out hyphenate break-words whitespace-normal block ${
+                  clickedIndex === index ? "scale-105" : ""
+                } ${
+                  item.done
+                    ? "line-through opacity-50"
+                    : "group-hover:text-pink-600"
+                }`}
+                style={{ wordBreak: "break-word" }}
+              >
+                {item.name}
+              </span>
+            </div>
+
             {((hoveredIndex === index) || (isMediumScreenOrSmaller)) && (
               <FaTimes
                 className="transition-all duration-300 ease-in-out text-gray-300 flex-shrink-0 hover:text-pink-600"
@@ -147,46 +159,65 @@ const ChecklistCategory = ({ title, items }) => {
         ))}
       </ul>
 
-      {/* Add New Item Form */}
-      <form
-        onSubmit={handleItemSubmit(handleAddItem)}
-        // Without hovering
-        className={`mt-4 flex flex-col space-y-2 overflow-hidden transition-all duration-300 ease-in-out`}
 
-        // For hovering:
-        // className={`mt-4 flex flex-col space-y-2 overflow-hidden transition-all duration-300 ease-in-out ${
-        //   isHovering || isMediumScreenOrSmaller || itemErrors.item ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
-        // }`}
-      >
-        <div className="flex items-center space-x-2">
-          <button type="submit" className="flex-shrink-0">
-            <FaPlus
-              className="text-pink-500 hover:text-pink-600 transition cursor-pointer"
-              size={20}
-            />
-          </button>
-          <input
-            {...registerItem("item", {
-              required: " ",
-              maxLength: {
-                value: 100,
-                message: "Item name cannot exceed 100 characters",
-              },
-              validate: {
-                wordLength: (value) =>
-                  validateWordLength(value, 40) ||
-                  "Each word cannot exceed 40 characters",
-              },
-            })}
-            type="text"
-            placeholder="Add a new item"
-            className="flex-grow p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
-          />
+      {/* Reserved Space for Form - Matches Form Height */}
+      <div className="mt-4">
+        <div className="relative">
+          <form
+            onSubmit={handleItemSubmit(handleAddItem)}
+            className={`transition-all duration-300 ease-in-out ${
+              isHovering || isMediumScreenOrSmaller || itemErrors.item
+                ? "opacity-100 pointer-events-auto"
+                : "opacity-0 pointer-events-none"
+            }`}
+          >
+            <div className="flex items-center space-x-2">
+              <button type="submit" className="flex-shrink-0">
+                <FaPlus
+                  className="text-pink-500 hover:text-pink-600 transition cursor-pointer"
+                  size={20}
+                />
+              </button>
+              <input
+                {...registerItem("item", {
+                  required: " ",
+                  maxLength: {
+                    value: 100,
+                    message: "Item name cannot exceed 100 characters",
+                  },
+                  // validate: {
+                  //   wordLength: (value) =>
+                  //     validateWordLength(value, 40) ||
+                  //     "Each word cannot exceed 40 characters",
+                  // },
+                })}
+                type="text"
+                placeholder="Add a new item"
+                className="flex-grow p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
+              />
+            </div>
+            {itemErrors.item && (
+              <p className="text-red-500 text-sm ml-8">{itemErrors.item.message}</p>
+            )}
+          </form>
+
+          {/* Invisible Form Placeholder - Always Takes Up Space */}
+          <div
+            className="absolute top-0 left-0 w-full opacity-0 pointer-events-none"
+            aria-hidden="true"
+          >
+            <form>
+              <div className="flex items-center space-x-2">
+                <button type="button" className="flex-shrink-0">
+                  <FaPlus size={20} />
+                </button>
+                <input type="text" className="flex-grow p-2 border rounded-md" />
+              </div>
+              <p className="text-sm ml-8 invisible">Placeholder</p>
+            </form>
+          </div>
         </div>
-        {itemErrors.item && (
-          <p className="text-red-500 text-sm ml-8">{itemErrors.item.message}</p>
-        )}
-      </form>
+      </div>
     </div>
   );
 };
@@ -325,11 +356,11 @@ const Checklist = () => {
                     value: 75,
                     message: "Category name cannot exceed 75 characters",
                   },
-                  validate: {
-                    wordLength: (value) =>
-                      validateWordLength(value, 40) ||
-                      "Each word cannot exceed 40 characters",
-                  },
+                  // validate: {
+                  //   wordLength: (value) =>
+                  //     validateWordLength(value, 40) ||
+                  //     "Each word cannot exceed 40 characters",
+                  // },
                 })}
                 type="text"
                 placeholder="Enter new category"
