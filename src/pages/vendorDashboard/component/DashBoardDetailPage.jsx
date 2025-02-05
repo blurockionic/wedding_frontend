@@ -177,7 +177,7 @@ const DashBoardDetailPage = () => {
           </p>
           <p className="text-gray-600 capitalize dark:text-white">
             <span className="font-semibold">Price Range:</span> ₹
-            {service?.min_price}
+            {service?.min_price}/{service?.service_unit}
           </p>
           
           <ReactMarkdown className="prose prose-lg text-gray-800">
@@ -289,7 +289,7 @@ const DashBoardDetailPage = () => {
           </div>
         </div>
       </div>
-      <div className="mt-8 md:px-4">
+      <div className="mt-8 md:px-4 w-full">
         {activeTab === "media" && (
           <>
             {/* Background Overlay */}
@@ -319,7 +319,7 @@ const DashBoardDetailPage = () => {
             <div className="fixed inset-0 z-10 bg-transparent bg-opacity-50  backdrop-blur-md"></div>
 
             {/* Modal Content */}
-            <div className="fixed z-20 top-1/2 left-1/2 md:left-[60%] transform -translate-x-1/2 -translate-y-1/2 bg-transparent backdrop-blur-md rounded-lg shadow-lg  max-w-lg w-full">
+            <div className="fixed z-20 top-1/2 left-1/2 md:left-[60%] transform -translate-x-1/2 -translate-y-1/2 bg-transparent backdrop-blur-md rounded-lg shadow-lg max-w-[60%] w-full h-[600px] overflow-y-scroll">
               <ServiceCreate onClose={handleClose} serviceData={data.service} />
             </div>
           </>

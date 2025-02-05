@@ -17,6 +17,8 @@ const VendorRegistration = lazy(() =>
 import VendorDashboard from "./pages/vendorDashboard/Dashboard.jsx";
 import Subscription from "./pages/Subscription.jsx";
 import { HelmetProvider } from "react-helmet-async";
+import Plan from "./pages/vendorDashboard/component/Plan.jsx";
+const Billing = lazy(()=>import("./pages/vendorDashboard/Billing.jsx"))
 
 const Checklist = lazy(() => import("./pages/checklist/Checklist.jsx"));
 
@@ -124,15 +126,17 @@ const router = createBrowserRouter([
         ), // Protected route
         children: [
           {
-            path: "",
+            
             index: true,
             element: wrapWithSuspense(VendorServicesPage),
           },
           { path: "analytics", element: wrapWithSuspense(Analytics) },
           { path: "settings", element: wrapWithSuspense(Setting) },
-          { path: "bookings", element: <Subscription /> },
+          { path: "bookings", element: <Billing /> },
           { path: "vendor-profile", element: wrapWithSuspense(VendorProfile) },
           {path: "payments", element: wrapWithSuspense(Payments)},
+          {path: "Plan", element: wrapWithSuspense(Subscription)},
+          // {path:"plan-details",element:wrapWithSuspense()},
           {
             path: "service-details/:serviceId",
             element: wrapWithSuspense(DashBoardDetailPage),
