@@ -195,10 +195,9 @@ const ChecklistCategory = ({ title, items }) => {
                 {/* Icons Container */}
                 <div className="flex flex-shrink-0 w-auto justify-end items-center space-x-2">
                   <div className="relative">
-                    {/* Bell Icon Logic */}
                     {item.scheduleDate ? (
                       <BiBell
-                        className="text-pink-500 cursor-pointer"
+                        className="text-pink-500 cursor-pointer hover:text-pink-700 transition-all duration-300 ease-in-out cursor-pointer"
                         size={18}
                         onClick={(e) => {
                           e.stopPropagation();
