@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import Plan from "./vendorDashboard/component/Plan";
 import { useCreateOrderMutation } from "../redux/payment";
+import { toast } from "react-toastify";
 
 // Function to dynamically load external scripts
 function loadScript(src) {
@@ -39,13 +40,12 @@ function Subscription() {
         key: import.meta.env.VITE_PAY_ID, // Razorpay API key from environment variables
         amount: order.amount * 100, // Convert to paise
         currency: order.currency,
-        name: "Wedd",
+        name: "marriagevendors",
         description: `Subscription Plan`,
-        image: "https://example.com/your_logo", // Optional logo
-        order_id: order.id, // Razorpay order ID from backend
+        image: "https://www.marriagevendors.com/assets/brandlogo-U4Jufhk5.png", // Optional logo
+        order_id: order.id, 
         handler: async function (response) {
           const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = response;
-          console.log(response)
           try {
             // Prepare the request payload
             const payload = {
@@ -56,7 +56,7 @@ function Subscription() {
 
             // Validate payment using fetch
             const validateResponse = await fetch(
-              "http://localhost:4000/api/v1/subscribe/verify-payment", 
+              `${VITE_API_URL}/api/v1/subscribe/verify-payment`, 
               {
                 method: "POST",
                 headers: {
@@ -75,10 +75,7 @@ function Subscription() {
             // Parse the response JSON
             const data = await validateResponse.json();
 
-            // Extract and log the message from the response
-            const { message } = data;
-            console.log("Payment validation successful:", message);
-            alert("Payment successful!");
+            toast.success("Payment successful!");
             // You can update your UI state to reflect payment success here
           } catch (error) {
             // Improved error handling with detailed information

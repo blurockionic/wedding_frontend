@@ -15,9 +15,9 @@ const VendorRegistration = lazy(() =>
   import("./pages/auth/vendor _auth/VendorSignup.jsx")
 );
 import VendorDashboard from "./pages/vendorDashboard/Dashboard.jsx";
-import Subscription from "./pages/Subscription.jsx";
+const Subscription =lazy(()=>import("./pages/Subscription.jsx")) 
 import { HelmetProvider } from "react-helmet-async";
-import Plan from "./pages/vendorDashboard/component/Plan.jsx";
+
 const Billing = lazy(()=>import("./pages/vendorDashboard/Billing.jsx"))
 
 const Checklist = lazy(() => import("./pages/checklist/Checklist.jsx"));

@@ -123,14 +123,15 @@ const VendorSidebar = ({ footer, setIsOpen, isOpen }) => {
                 </Link>
               </li>
             ) : (
-              <li className="group  gap-4 p-3 hover:bg-primary hover:text-foreground  m-2 h-14 text-sm text-white font-semibold bg-gradient-to-r from-green-300 via-blue-400 to-purple-600 bg-[length:200%_200%] animate-gradient-move flex items-center justify-center rounded-md shadow-md"
+              <Link className="group cursor-pointer  gap-4 p-3 hover:bg-primary hover:text-foreground  m-2 h-14 text-sm text-white font-semibold bg-gradient-to-r from-green-300 via-blue-400 to-purple-600 bg-[length:200%_200%] animate-gradient-move flex items-center justify-center rounded-md shadow-md"
+              to={"Plan"}
               onClick={() => {
                 setIsOpen(false);
-                handleOnActive("plan-details");
+                handleOnActive("Plan");
               }}
               >
               {getRemainingDays(data.subscriptions[0])} days remaining
-            </li>
+            </Link>
             )}
           </ul>
         </nav>
