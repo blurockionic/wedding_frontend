@@ -56,7 +56,7 @@ function Subscription() {
 
             // Validate payment using fetch
             const validateResponse = await fetch(
-              `${VITE_API_URL}/api/v1/subscribe/verify-payment`, 
+              `http://localhost:4000/api/v1/subscribe/verify-payment`, 
               {
                 method: "POST",
                 headers: {
