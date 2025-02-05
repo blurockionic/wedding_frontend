@@ -1,16 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Footer from "../Footer";
-import { FaCheckCircle, FaPlus, FaTimes, FaSave } from "react-icons/fa";
-import { BiBellPlus } from "react-icons/bi";
+import { FaCheckCircle, FaPlus, FaTimes, FaSave, FaTrash } from "react-icons/fa";
+import { BiBell, BiBellPlus } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleItemState, addItem, removeItem, setChecklist, addCategory, removeCategory } from "../../redux/checklistSlice";
-import { useSaveChecklistMutation, useGetChecklistQuery } from "../../redux/checklistApiSlice";
+import {
+  toggleItemState,
+  addItem,
+  removeItem,
+  setChecklist,
+  addCategory,
+  removeCategory,
+  setScheduleDate,
+} from "../../redux/checklistSlice";
+import {
+  useSaveChecklistMutation,
+  useGetChecklistQuery,
+} from "../../redux/checklistApiSlice";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 
-// Custom hook to detect screen size
+// Custom hook to detect screen size (no changes)
 const useMediaQuery = (query) => {
   const [matches, setMatches] = useState(
     typeof window !== "undefined" ? window.matchMedia(query).matches : false
@@ -26,29 +39,14 @@ const useMediaQuery = (query) => {
   return matches;
 };
 
-// Helper function to validate word length
-const validateWordLength = (value, maxWordLength) => {
-  const words = value.split(" ");
-  return words.every((word) => word.length <= maxWordLength);
-};
-
-// Utility function to hyphenate long words
-const hyphenateLongWords = (text, maxLength = 20) => {
-  return text.split(" ").map(word => {
-    if (word.length > maxLength) {
-      // Split the word into chunks of `maxLength` characters
-      return word.match(new RegExp(`.{1,${maxLength}}`, 'g')).join('-\n');
-    }
-    return word;
-  }).join(" ");
-};
-
 const ChecklistCategory = ({ title, items }) => {
   const [clickedIndex, setClickedIndex] = useState(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [isHovering, setIsHovering] = useState(false);
+  const [scheduleIndex, setScheduleIndex] = useState(null);
   const isMediumScreenOrSmaller = useMediaQuery("(max-width: 1024px)");
   const dispatch = useDispatch();
+  const modalRef = useRef(null);
 
   const {
     register: registerItem,
@@ -79,10 +77,49 @@ const ChecklistCategory = ({ title, items }) => {
     dispatch(removeCategory({ categoryTitle: title }));
   };
 
-  // Function to hyphenate long words in item names
-  const formatItemName = (name) => {
-    return hyphenateLongWords(name, 18);
+  const handleDateChange = (date, index) => {
+    const dateString = date.toISOString();
+    dispatch(
+      setScheduleDate({
+        categoryTitle: title,
+        itemIndex: index,
+        date: dateString,
+      })
+    );
+    closeModal();
   };
+
+  const handleRemoveDate = (index) => {
+    dispatch(
+      setScheduleDate({ categoryTitle: title, itemIndex: index, date: null })
+    );
+    closeModal();
+  };
+
+  const openModal = (index) => {
+    setScheduleIndex(index);
+  };
+
+  const closeModal = () => {
+    setScheduleIndex(null);
+  };
+
+  // Click-outside handler (for modal)
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        closeModal();
+      }
+    };
+
+    if (scheduleIndex !== null) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [scheduleIndex]);
 
   return (
     <div
@@ -92,7 +129,7 @@ const ChecklistCategory = ({ title, items }) => {
     >
       <div className="flex w-full flex-wrap">
         <div className="flex-1 min-w-0">
-          <h3 
+          <h3
             className="text-2xl font-semibold text-pink-600 mb-3 break-words whitespace-normal w-full"
             style={{ wordBreak: "break-word" }}
           >
@@ -101,82 +138,191 @@ const ChecklistCategory = ({ title, items }) => {
         </div>
         <FaTimes
           className={`text-gray-300 hover:text-pink-600 cursor-pointer transition-all duration-300 ease-in-out ml-auto ${
-            isHovering || isMediumScreenOrSmaller ? "max-h-20 opacity-100" : "max-h-0 opacity-0"
+            isHovering || isMediumScreenOrSmaller
+              ? "max-h-20 opacity-100"
+              : "max-h-0 opacity-0"
           }`}
           size={22}
           onClick={handleRemoveCategory}
         />
-        
       </div>
 
       <ul className="space-y-2">
-        {items.map((item, index) => (
-          <li
-            key={index}
-            className={`flex items-center space-x-2 cursor-pointer group transition-all duration-300 ease-in-out ${
-              item.done ? "text-gray-400" : "text-gray-700"
-            }`}
-            onClick={() => handleItemClick(index)}
-            onMouseEnter={() => !isMediumScreenOrSmaller && setHoveredIndex(index)}
-            onMouseLeave={() => !isMediumScreenOrSmaller && setHoveredIndex(null)}
-          >
-            <FaCheckCircle
-              className={`transition-all duration-150 ease-in-out ${
-                clickedIndex === index ? "scale-125" : ""
-              } ${
-                item.done
-                  ? "text-pink-500 flex-shrink-0"
-                  : "text-gray-300 flex-shrink-0 group-hover:text-pink-400"
-              }`}
-              size={20}
-            />
-            
-            {/* Wrap item.name in a div to allow wrapping */}
-            <div className="flex-1 min-w-0">
-              <span
-                className={`leading-relaxed transition-all duration-150 ease-in-out hyphenate break-words whitespace-normal block ${
-                  clickedIndex === index ? "scale-105" : ""
-                } ${
-                  item.done
-                    ? "line-through opacity-50"
-                    : "group-hover:text-pink-600"
+        {items.map((item, index) => {
+          const itemScheduleDate = item.scheduleDate
+            ? new Date(item.scheduleDate)
+            : null;
+          return (
+            <React.Fragment key={index}>
+              <li
+                className={`flex items-center space-x-2 cursor-pointer group transition-all duration-300 ease-in-out ${
+                  item.done ? "text-gray-400" : "text-gray-700"
                 }`}
-                style={{ wordBreak: "break-word" }}
+                onClick={() => handleItemClick(index)}
+                onMouseEnter={() =>
+                  !isMediumScreenOrSmaller && setHoveredIndex(index)
+                }
+                onMouseLeave={() =>
+                  !isMediumScreenOrSmaller && setHoveredIndex(null)
+                }
               >
-                {item.name}
-              </span>
-            </div>
+                <FaCheckCircle
+                  className={`transition-all duration-150 ease-in-out ${
+                    clickedIndex === index ? "scale-125" : ""
+                  } ${
+                    item.done
+                      ? "text-pink-500 flex-shrink-0"
+                      : "text-gray-300 flex-shrink-0 group-hover:text-pink-400"
+                  }`}
+                  size={20}
+                />
 
-            {/* Icons Container */}
-            <div className="flex flex-shrink-0 w-10 justify-end">
-              <FaTimes
-                className={`transition-all duration-300 ml-1 ease-in-out text-gray-300 hover:text-pink-600 ${
-                  (hoveredIndex === index || isMediumScreenOrSmaller) ? "visible opacity-100" : "invisible opacity-0"
-                }`}
-                size={18}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleRemoveItem(index);
-                }}
-              />
-            </div>
-          </li>
-        ))}
+                <div className="flex-1 min-w-0">
+                  <span
+                    className={`leading-relaxed transition-all duration-150 ease-in-out hyphenate break-words whitespace-normal block ${
+                      clickedIndex === index ? "scale-105" : ""
+                    } ${
+                      item.done
+                        ? "line-through opacity-50"
+                        : "group-hover:text-pink-600"
+                    }`}
+                    style={{ wordBreak: "break-word" }}
+                  >
+                    {item.name}
+                  </span>
+                </div>
+
+                {/* Icons Container */}
+                <div className="flex flex-shrink-0 w-auto justify-end items-center space-x-2">
+                  <div className="relative">
+                    {/* Bell Icon Logic */}
+                    {item.scheduleDate ? (
+                      <BiBell
+                        className="text-pink-500 cursor-pointer"
+                        size={18}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openModal(index);
+                        }}
+                      />
+                    ) : (
+                      <BiBellPlus
+                        className={`transition-all duration-300 ease-in-out text-gray-300 hover:text-pink-600 cursor-pointer ${
+                          hoveredIndex === index || isMediumScreenOrSmaller
+                            ? "visible opacity-100"
+                            : "invisible opacity-0"
+                        }`}
+                        size={18}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openModal(index);
+                        }}
+                      />
+                    )}
+                  </div>
+                  <FaTimes
+                    className={`transition-all duration-300 ml-1 ease-in-out text-gray-300 hover:text-pink-600 ${
+                      hoveredIndex === index || isMediumScreenOrSmaller
+                        ? "visible opacity-100"
+                        : "invisible opacity-0"
+                    }`}
+                    size={18}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemoveItem(index);
+                    }}
+                  />
+                </div>
+              </li>
+            </React.Fragment>
+          );
+        })}
       </ul>
+      
+      {/* Render Modal Conditionally */}
+      {scheduleIndex !== null && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center"
+          onClick={closeModal}
+        >
+          <div
+            ref={modalRef}
+            className="bg-white rounded-xl shadow-2xl w-full max-w-md"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-start p-6 pb-3">
+              <div>
+                <h2 className="text-2xl font-bold text-pink-600 mb-1">
+                  Schedule Task
+                </h2>
+                <p className="text-gray-500 text-sm">
+                  (Select a task completion date.)
+                </p>
+              </div>
+              <button
+                type="button"
+                className="text-gray-300 hover:text-pink-600 rounded-full focus:outline-none transition-all duration-300 ease-in-out"
+                onClick={closeModal}
+              >
+                <FaTimes size={20} />
+              </button>
+            </div>
 
-      {/* Reserved Space for Form - Matches Form Height */}
+            <div className="mx-6 p-3"> 
+              <h3 className="px-3 text-xl font-bold mb-1">
+                {items[scheduleIndex]?.name}
+              </h3>
+              <div className="mb-4 bg-gray-100 p-3 mx-3 rounded-md border border-gray-300">
+                <p className="text-gray-700">
+                  Complete by:{" "}
+                  {(items[scheduleIndex]?.scheduleDate) ? (
+                  <span className="font-semibold text-pink-600">
+                    {new Date(items[scheduleIndex].scheduleDate).toLocaleDateString()}
+                  </span>) : <span className="font-semibold text-pink-600">NA</span>}
+                </p>
+              </div>
+              <div className="w-full flex justify-center">
+                <Calendar
+                  onChange={(date) => handleDateChange(date, scheduleIndex)}
+                  value={
+                    items[scheduleIndex]?.scheduleDate
+                      ? new Date(items[scheduleIndex].scheduleDate)
+                      : null
+                  }
+                  className="w-full"
+                />
+              </div>
+            </div>
+            <div className="mt-6 flex items-center gap-4 p-6 pt-0">
+              {/* Remove Date Button - Conditional Rendering */}
+              {items[scheduleIndex]?.scheduleDate && (
+                <button
+                  type="button"
+                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md flex items-center transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-400"
+                  onClick={() => handleRemoveDate(scheduleIndex)}
+                >
+                  <FaTrash className="mr-2" /> Remove Date
+                </button>
+              )}
+
+              <button
+                type="button"
+                className="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-6 rounded-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-pink-400 ml-auto"
+                onClick={closeModal}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add new item Form */}
       <div className="mt-4">
         <div className="relative">
           <form
             onSubmit={handleItemSubmit(handleAddItem)}
-            // Hover disabled
-            className={`transition-all duration-300 ease-in-out}`}
-            // Hover enabled
-            // className={`transition-all duration-300 ease-in-out ${
-            //   isHovering || isMediumScreenOrSmaller || itemErrors.item
-            //     ? "opacity-100 pointer-events-auto"
-            //     : "opacity-0 pointer-events-none"
-            // }`}
+            className={`transition-all duration-300 ease-in-out`}
           >
             <div className="flex items-center space-x-2">
               <button type="submit" className="flex-shrink-0">
@@ -192,11 +338,6 @@ const ChecklistCategory = ({ title, items }) => {
                     value: 100,
                     message: "Item name cannot exceed 100 characters",
                   },
-                  // validate: {
-                  //   wordLength: (value) =>
-                  //     validateWordLength(value, 40) ||
-                  //     "Each word cannot exceed 40 characters",
-                  // },
                 })}
                 type="text"
                 placeholder="Add a new item"
@@ -204,11 +345,13 @@ const ChecklistCategory = ({ title, items }) => {
               />
             </div>
             {itemErrors.item && (
-              <p className="text-red-500 text-sm ml-8">{itemErrors.item.message}</p>
+              <p className="text-red-500 text-sm ml-8">
+                {itemErrors.item.message}
+              </p>
             )}
           </form>
 
-          {/* Invisible Form Placeholder - Always Takes Up Space */}
+          {/* Invisible Form Placeholder - Always Takes Up Space(for hover effect NA anymore) */}
           <div
             className="absolute top-0 left-0 w-full opacity-0 pointer-events-none"
             aria-hidden="true"
@@ -233,12 +376,19 @@ const Checklist = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [saveChecklistApi, { isLoading: isSavingApi }] = useSaveChecklistMutation();
-  const { data: fetchedChecklist, isLoading, isError } = useGetChecklistQuery();
+  const [saveChecklistApi, { isLoading: isSavingApi }] =
+    useSaveChecklistMutation();
+  const {
+    data: fetchedChecklist,
+    isLoading,
+    isError,
+  } = useGetChecklistQuery();
   const checklistData = useSelector((state) => state.checklist);
   const [progress, setProgress] = useState(0);
   const [totalTasks, setTotalTasks] = useState(0);
   const [completedTasks, setCompletedTasks] = useState(0);
+
+  console.log(checklistData);
 
   const {
     register: registerCategory,
@@ -286,11 +436,16 @@ const Checklist = () => {
 
       if (resultAction.error) {
         console.error("Error saving checklist:", resultAction.error);
-        toast.error(`Error saving checklist: ${resultAction.error.data?.message || 'Unknown error'}`, {
-          position: "top-right",
-          autoClose: 5000,
-          theme: "light",
-        });
+        toast.error(
+          `Error saving checklist: ${
+            resultAction.error.data?.message || "Unknown error"
+          }`,
+          {
+            position: "top-right",
+            autoClose: 5000,
+            theme: "light",
+          }
+        );
       } else if (!isUpdate) {
         toast.success("Checklist saved successfully!");
       }
@@ -329,7 +484,11 @@ const Checklist = () => {
                   ></div>
                 </div>
                 <p className="text-md text-gray-700 font-semibold whitespace-nowrap mb-2">
-                  Completed <span className="font-bold">{completedTasks}/{totalTasks}</span> tasks
+                  Completed{" "}
+                  <span className="font-bold">
+                    {completedTasks}/{totalTasks}
+                  </span>{" "}
+                  tasks
                 </p>
               </div>
 
@@ -337,11 +496,17 @@ const Checklist = () => {
                 onClick={() => handleSave(false)}
                 disabled={!isLoggedIn || isSavingApi}
                 className={`px-6 py-2 rounded-md transition-all duration-300 ease-in-out flex items-center ${
-                  isLoggedIn ? "bg-pink-600 text-white hover:bg-pink-700" : "bg-gray-400 text-gray-700 cursor-not-allowed"
+                  isLoggedIn
+                    ? "bg-pink-600 text-white hover:bg-pink-700"
+                    : "bg-gray-400 text-gray-700 cursor-not-allowed"
                 } ml-auto`}
               >
                 <FaSave className="mr-2" size={18} />
-                {isSavingApi ? "Saving..." : isLoggedIn ? "Save Checklist" : "Login to Save"}
+                {isSavingApi
+                  ? "Saving..."
+                  : isLoggedIn
+                  ? "Save Checklist"
+                  : "Login to Save"}
               </button>
             </div>
 
@@ -363,11 +528,6 @@ const Checklist = () => {
                     value: 75,
                     message: "Category name cannot exceed 75 characters",
                   },
-                  // validate: {
-                  //   wordLength: (value) =>
-                  //     validateWordLength(value, 40) ||
-                  //     "Each word cannot exceed 40 characters",
-                  // },
                 })}
                 type="text"
                 placeholder="Enter new category"
