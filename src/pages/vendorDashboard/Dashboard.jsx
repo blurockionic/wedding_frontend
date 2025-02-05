@@ -13,7 +13,7 @@ const VendorDashboard = () => {
       {/* Sidebar Component */}
       <div className="fixed inset-y-0 left-0  z-50">
         <VendorSidebar
-          footer={<p className="text-sm text-gray-700">© 2024 Wedd</p>}
+          footer={<p className="text-sm text-gray-700">© 2024 Marriage Vendors</p>}
           isOpen={isOpen}
           setIsOpen={setIsOpen}
         />
@@ -31,7 +31,7 @@ const VendorDashboard = () => {
         </div>
 
         {/* Main Content Area */}
-        <main className="flex-1 mt-4">
+        <main className="flex-1 ml-5">
           <Outlet />
         </main>
       </div>

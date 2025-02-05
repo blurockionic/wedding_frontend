@@ -16,6 +16,7 @@ import CustomButton from "../../../components/global/button/CustomButton";
 import Footer from "../../Footer";
 import ServiceTypeCard from "../../../components/global/card/ServiceTypeCard";
 import { MdEventAvailable, MdOutlinePersonAddAlt } from "react-icons/md";
+import { Helmet } from "react-helmet";
 import {
   FaEnvelope,
   FaFemale,
@@ -27,7 +28,7 @@ import {
 } from "react-icons/fa";
 import { FiUsers } from "react-icons/fi";
 import { BiAnalyse } from "react-icons/bi";
-import signup_bg from "../../../../public/signup/sign-bg.jpg";
+import signup_bg from "../../../../public/signup/sign-bg.webp";
 import brandlogo from "../../../../public/logo/brandlogo.png";
 
 const vendorLoginSchema = z.object({
@@ -76,6 +77,44 @@ export default function VendorLogin() {
 
   return (
     <>
+    {/* SEO Optimization */}
+    <Helmet>
+        <title>Vendor Login - Marriage Vendors | Manage Your Wedding Services</title>
+        <meta
+          name="description"
+          content="Login to your Marriage Vendors account to showcase your wedding services, connect with engaged couples, and grow your business effortlessly."
+        />
+        <meta
+          name="keywords"
+          content="vendor login, wedding vendor login, marriage vendors, wedding business, book more weddings, vendor dashboard"
+        />
+        <meta name="robots" content="index, follow" />
+        <meta property="og:title" content="Vendor Login - Marriage Vendors" />
+        <meta
+          property="og:description"
+          content="Login to showcase your wedding services and connect with engaged couples."
+        />
+        <meta property="og:image" content="https://www.marriagevendors.com/assets/login-DWbP2E5R.jpg" />
+        <meta property="og:url" content="https://www.marriagevendors.com/vendorLogin" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "Marriage Vendors",
+            url: "https://www.marriagevendors.com/vendorLogin",
+            logo: "https://www.marriagevendors.com/assets/login-DWbP2E5R.jpg",
+            description:
+              "Marriage Vendors helps wedding professionals connect with engaged couples and grow their businesses.",
+            contactPoint: {
+              "@type": "ContactPoint",
+              telephone: "+91-6200932331",
+              contactType: "customer support",
+            },
+          })}
+        </script>
+      </Helmet>
+
       <div className="flex justify-center items-center cusrsor-pointer py-4 ">
         <NavLink to="/" className="flex items-center gap-3 cursor-pointer">
           <img src={brandlogo} alt="brandlogo" className="w-16 h-16" />
@@ -85,18 +124,18 @@ export default function VendorLogin() {
           </div>
         </NavLink>
       </div>
-      <div className="min-h-1/2  grid grid-cols-1 md:grid-cols-2 px-16 py-10 gap-10">
+      <div className="min-h-1/2  grid grid-cols-1 md:grid-cols-2 px-5 sm:px-10 md:px-16 lg:px-20 py-10 gap-10">
         <div className="space-y-12 md:space-y-24">
           <div className="space-y-5">
             <h1
               className="text-primary 
-        text-3xl md:text-6xl
+        text-3xl md:text-5xl lg:text-6xl
         font-thin
         "
             >
               Discover the smarter way to connect with couples
             </h1>
-            <ul className="space-y-2 text-xl">
+            <ul className="space-y-2 texl-md sm:text-lg md:text-xl">
               <li className="flex items-center justify-start">
                 <svg
                   className="w-3.5 h-3.5 me-2 text-green-500 dark:text-green-400 flex-shrink-0"
@@ -135,10 +174,14 @@ export default function VendorLogin() {
               </li>
             </ul>
           </div>
+          
+        <Link to="/services" className="mt-4 block">
           <CustomButton
             text="Create your free service"
             className="border border-ring px-5 py-3 text-primary"
           />
+        </Link>
+        
         </div>
         {/* vendor login  */}
         <div className="flex items-center justify-center">
@@ -241,7 +284,7 @@ export default function VendorLogin() {
       </div>
 
       {/* Categories  */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-16 py-10 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-5 md:px-16 py-10 mb-10">
         <ServiceTypeCard
           icon={FiUsers}
           title="Reach engaged couples"
@@ -349,7 +392,7 @@ export default function VendorLogin() {
       </div>
 
       {/* vendor support  */}
-      <div className="bg-gradient-to-br from-white via-pink-50 to-pink-100 py-12 px-16">
+      <div className="bg-gradient-to-br from-white via-pink-50 to-pink-100 py-12 px-5 md:px-16">
         {/* Overlay with backdrop blur */}
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
@@ -370,7 +413,7 @@ export default function VendorLogin() {
               <FaHeadset className="text-blue-500 text-4xl mb-4" />
               <h3 className="text-lg font-semibold text-gray-800">Live Chat</h3>
               <p className="text-gray-600">
-                Chat with our support team for instant help.
+              Chat with our support team for instant help.
               </p>
             </div>
 
@@ -381,7 +424,7 @@ export default function VendorLogin() {
                 Email Support
               </h3>
               <p className="text-gray-600">
-                Reach us at support@example.com for detailed inquiries.
+               Reach us at support@blurockionic.com for detailed inquiries
               </p>
             </div>
 
@@ -390,15 +433,15 @@ export default function VendorLogin() {
               <FaPhone className="text-purple-500 text-4xl mb-4" />
               <h3 className="text-lg font-semibold text-gray-800">Call Us</h3>
               <p className="text-gray-600">
-                Get direct support at +1 (123) 456-7890.
+               Get direct support at +91-6200932331..
               </p>
             </div>
           </div>
 
-          {/* Contact Support Button */}
+          {/* Contact Support Button
           <button className="border border-ring hover:bg-pink-600 text-foreground hover:text-white font-semibold py-3 px-8 rounded-full shadow-md transition-all duration-300">
             Contact Support
-          </button>
+          </button> */}
         </div>
       </div>
 

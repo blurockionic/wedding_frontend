@@ -97,7 +97,7 @@ export default function Home() {
     <>
       {/* SEO Optimization */}
       <Helmet>
-        <title>Plan Your Dream Wedding with Us | Top Wedding Vendors</title>
+        <title>Home | Marriage Vendors</title>
         <meta
           name="description"
           content="Discover the best wedding vendors for your dream wedding. 1000+ trusted vendors, trusted by happy couples. Find vendors in your location effortlessly!"
@@ -127,27 +127,28 @@ export default function Home() {
         <meta name="adsense-id" content="ca-pub-1234567890123456" />
         <link rel="canonical" href="https://www.marriagevendors.com/" />
         {/* Structured Data for Schema */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebPage",
-            name: "Plan Your Dream Wedding with Us | Top Wedding Vendors",
-            description:
-              "Discover the best wedding vendors for your dream wedding. 1000+ trusted vendors, trusted by happy couples. Find vendors in your location effortlessly!",
-            url: "https://yourwebsite.com/home",
-            author: {
-              "@type": "Organization",
-              name: "Marriage Vendors",
-              url: "https://www.marriagevendors.com/services?search=wedding+vendors",
-            },
-            potentialAction: {
-              "@type": "SearchAction",
-              target:
-                "https://www.marriagevendors.com/services?search=wedding+vendors",
-              "query-input": "required name=search_term_string",
-            },
-          })}
-        </script>
+
+      <script type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          name: "Plan Your Dream Wedding with Us | Top Wedding Vendors",
+          description:
+            "Discover the best wedding vendors for your dream wedding. 1000+ trusted vendors, trusted by happy couples. Find vendors in your location effortlessly!",
+          url: "https://www.marriagevendors.com/",
+          author: {
+            "@type": "Organization",
+            name: "Marriage Vendors",
+            "url": "https://www.marriagevendors.com/"
+          },
+          potentialAction: {
+            "@type": "SearchAction",
+            target: "hhttps://www.marriagevendors.com/",
+            "query-input": "required name=search_term_string"
+          }
+        })}
+      </script>
+
       </Helmet>
 
       <div
@@ -182,7 +183,7 @@ export default function Home() {
             data-aos-delay="200"
             data-aos-once="true"
           >
-            Welcome,
+            Welcome
           </p>
 
           <p
@@ -209,13 +210,19 @@ export default function Home() {
         </div>
 
         {/* Search Section */}
-        <section className="hidden z-50 py-12 absolute bottom-0 w-full lg:flex items-center justify-center flex-col gap-2 bg-gradient-to-t from-black bg-opacity-50">
-          <div className="flex gap-2 relative">
+        <section
+          className="hidden z-50 py-12 absolute bottom-0 w-full 
+  lg:flex items-center justify-center flex-col gap-4 
+  bg-gradient-to-t from-black bg-opacity-50"
+        >
+          {/* Input Group */}
+          <div className="flex gap-4 relative">
+            {/* Vendor Input */}
             <div className="relative w-[400px]">
               <CustomInput
                 type="text"
                 placeholder="Select Vendor"
-                className="outline-none bg-white w-[400px] focus:border-white"
+                className="outline-none bg-white w-full focus:border-white"
                 aria-label="Select Vendor"
                 value={search}
                 onChange={handleSearchChange}
@@ -223,11 +230,8 @@ export default function Home() {
               />
               {showSuggestions && suggestions.length > 0 && (
                 <ul
-                  className="absolute bg-white border border-gray-300 rounded w-full shadow-lg mt-1 z-10"
-                  style={{
-                    maxHeight: "200px",
-                    overflowY: "auto",
-                  }}
+                  className="absolute bg-white border border-gray-300 
+          rounded w-full shadow-lg mt-1 z-20 overflow-auto max-h-[200px]"
                 >
                   {suggestions.map((category, index) => (
                     <li
@@ -242,24 +246,21 @@ export default function Home() {
               )}
             </div>
 
+            {/* Location Input */}
             <div className="relative w-[400px]">
               <CustomInput
                 type="text"
                 value={location}
-                placeholder="in Location"
-                className="w-[300px] outline-none focus:border-white bg-white"
+                placeholder="In Location"
+                className="w-full outline-none focus:border-white bg-white"
                 aria-label="Location"
                 onChange={handleSearchLocationChange}
                 leftIcon={<GoLocation size={20} />}
-                
               />
               {showlocationSuggestions && locationSuggestions.length > 0 && (
                 <ul
-                  className="absolute bg-white border border-gray-300 rounded w-full shadow-lg mt-1 z-10"
-                  style={{
-                    maxHeight: "200px",
-                    overflowY: "auto",
-                  }}
+                  className="absolute bg-white border border-gray-300 
+          rounded w-full shadow-lg mt-1 z-20 overflow-auto max-h-[200px]"
                 >
                   {locationSuggestions.map((c, index) => (
                     <li
@@ -273,6 +274,8 @@ export default function Home() {
                 </ul>
               )}
             </div>
+
+            {/* Discover Button */}
             <CustomButton
               text="Discover"
               className="bg-primary px-10 py-2 rounded text-white"
@@ -281,6 +284,8 @@ export default function Home() {
               Discover
             </CustomButton>
           </div>
+
+          {/* Tagline */}
           <span className="text-white text-xl">
             Vendors and Couples trust us.
           </span>

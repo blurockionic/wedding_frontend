@@ -83,9 +83,9 @@ export default function Login() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    name: "Vendor Login - Marriage Vendors",
+    name: "Couple Login - Marriage Vendors",
     description:
-      "Login to Marriage Vendors to access your vendor account and manage your services.",
+      "Login to Marriage Vendors to access your couple account, explore vendors, and manage your wedding planning effortlessly.",
     image: loginImage,
     url: "https://yourwebsite.com/login",
     author: {
@@ -97,28 +97,28 @@ export default function Login() {
   return (
     <>
       <Helmet>
-        <title>Vendor Login - Marriage Vendors</title>
+        <title>Couple Login - Marriage Vendors</title>
         <meta
           name="description"
-          content="Login to Marriage Vendors to access your vendor account and manage your services."
+          content="Login to Marriage Vendors to access your couple account, explore vendors, and manage your wedding planning effortlessly."
         />
         <meta
           name="keywords"
-          content="Vendor Login, Marriage Vendors Login, Wedding Services, Vendor Account ,Vendor Login, Marriage Vendors Account, Wedding Vendor Login, Access Vendor Account, Manage Services Online, Marriage Vendor Portal, Vendor Account Management, Vendor Services Dashboard, Login for Vendors, Manage Vendor Profile, Wedding Services Portal, Vendor Login Page, Online Vendor Management, Vendor Services Login, Marriage Vendor Login Portal, Wedding Vendor Account, Login to Vendor Services, Access Wedding Services, Vendor Portal Login, Vendor Dashboard Acces"
+          content="Marriage Vendors, wedding planning, couple login, find wedding vendors, wedding services, vendor directory, wedding management,Couple account, wedding planning login, marriage vendors couple, manage wedding, wedding dashboard, couple profile, wedding services access"
         />
         <meta name="author" content="Marriage Vendors" />
         <meta name="robots" content="index, follow" />
-        <meta property="og:title" content="Vendor Login - Marriage Vendors" />
+        <meta property="og:title" content="Couple Login - Marriage Vendors" />
         <meta
           property="og:description"
-          content="Login to Marriage Vendors to access your vendor account and manage your services."
+          content="Login to Marriage Vendors to access your couple account, explore vendors, and manage your wedding planning effortlessly."
         />
         <meta property="og:image" content={loginImage} />
-        <meta property="og:url" content="https://www.marriagevendors.com/" />
+        <meta property="og:url" content="https://www.marriagevendors.com/login" />
         <meta name="twitter:card" content="summary_large_image" />
         <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
       </Helmet>
-      <div className="min-h-screen flex items-center justify-center bg-white px-4">
+      <div className="min-h-screen flex items-center justify-center md:py-10">
         <div className="flex items-center justify-center space-x-10">
           <div className="hidden md:block w-3/4">
             <img
