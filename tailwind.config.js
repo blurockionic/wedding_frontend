@@ -60,8 +60,12 @@ module.exports = {
     require("flowbite/plugin")({
       charts: true,
     }),
+<<<<<<< HEAD
     flowbite.plugin(),
     require('@tailwindcss/typography'),
+=======
+    // require('@tailwindcss/typography'),
+>>>>>>> 2b469b6292a853e60884f40d2d0442dd2ac6b24b
     plugin(function ({ addUtilities, theme, e }) {
       const colors = theme("colors");
       const newUtilities = {};
