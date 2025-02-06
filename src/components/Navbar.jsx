@@ -246,8 +246,8 @@ function Navbar() {
                           onClick={() => setIsMenuOpen(false)}
                           className={({ isActive }) =>
                             isActive
-                              ? "text-dustyRose-dark border-b-2 border-primary pb-1"
-                              : "hover:text-dustyRose"
+                              ? "text-primary px-3 py-1 border border-primary  rounded-md"
+                              : "px-3 py-1 text-primary border border-primary rounded-md"
                           }
                         >
                           Login
@@ -259,8 +259,8 @@ function Navbar() {
                           onClick={() => setIsMenuOpen(false)}
                           className={({ isActive }) =>
                             isActive
-                              ? "text-dustyRose-dark border-b-2 border-primary pb-1"
-                              : "hover:text-dustyRose"
+                              ? "text-white px-3 py-1 bg-primary rounded-md"
+                              : "text-white px-3 py-1 bg-primary rounded-md"
                           }
                         >
                           Sign up

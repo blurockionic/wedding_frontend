@@ -165,7 +165,7 @@ const ServiceCreate = ({ onClose, serviceData }) => {
  
   return (
     <>
-      <div className="bg-transparent relative p-8 max-w-4xl mx-auto rounded-lg shadow-lg  border border-ring">
+      <div className="bg-transparent relative  p-8 max-w-4xl mx-auto rounded-lg shadow-lg  border border-ring  ">
         <button
           onClick={onClose}
           className=" absolute right-10 bg-primary text-background rounded-full p-2 hover:bg-gray-600 transition"

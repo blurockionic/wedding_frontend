@@ -87,9 +87,9 @@ const ServiceCard = React.memo(({ service}) => {
           <span>
             <strong className="font-thin">Vendor:</strong> <span className="capitalize">{service.vendor.name}</span>
           </span>
-          <span className="capitalize">
+          {/* <span className="capitalize">
             {service.vendor.business_name || "No business name available"}
-          </span>
+          </span> */}
         </div>
         <div className="mt-2 flex items-center justify-between">
           <span className="text-sm text-gray-500">⭐ {service.rating}</span>

@@ -319,7 +319,7 @@ const DashBoardDetailPage = () => {
             <div className="fixed inset-0 z-10 bg-transparent bg-opacity-50  backdrop-blur-md"></div>
 
             {/* Modal Content */}
-            <div className="fixed z-20 top-1/2 left-1/2 md:left-[60%] transform -translate-x-1/2 -translate-y-1/2 bg-transparent backdrop-blur-md rounded-lg shadow-lg  max-w-lg w-full">
+            <div className="fixed z-20 top-1/2 left-1/2 md:left-[60%] transform -translate-x-1/2 -translate-y-1/2 bg-transparent backdrop-blur-md rounded-lg shadow-lg  max-w-lg w-full h-[600px] overflow-y-scroll">
               <ServiceCreate onClose={handleClose} serviceData={data.service} />
             </div>
           </>

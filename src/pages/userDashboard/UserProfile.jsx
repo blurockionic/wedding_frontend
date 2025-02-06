@@ -19,6 +19,8 @@ const UserProfile = () => {
     return;
   }
 
+  console.log(userData)
+
   const [isEditing, setIsEditing] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(userData?.profile_pic || "");

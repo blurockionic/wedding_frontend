@@ -54,6 +54,7 @@ const FavoriteListPage = lazy(() =>
 const VendorProfile = lazy(() =>
   import("./pages/vendorDashboard/VendorProfile.jsx")
 );
+const Category = lazy(() => import("./pages/service-category/ServiceCategoriesPage.jsx"));
 
 const Payments = lazy(() => import("./pages/vendorDashboard/component/Payments.jsx"));
 const AboutPage = lazy(() => import("./pages/section/About.jsx")); // Import the About page
@@ -77,6 +78,7 @@ const router = createBrowserRouter([
       { path: "/login", element: wrapWithSuspense(Login) },
       { path: "/contactus", element: wrapWithSuspense(ContactUs) },
       { path: "/checklist", element: wrapWithSuspense(Checklist) },
+      { path: "/category", element: wrapWithSuspense(Category) },
       { path: "/about", element: wrapWithSuspense(AboutPage) }, // Add the About page route
       {
         path: "/user-forgot-password",

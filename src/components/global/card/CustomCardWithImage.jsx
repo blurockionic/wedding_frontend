@@ -12,7 +12,7 @@ const CustomCardWithImage = ({
 }) => {
   return (
     <div
-      className={`w-auto md:w-[400px] lg:w-[600px] rounded-lg shadow-md flex flex-col md:flex-row hover:shadow-2xl hover:scale-105 transition-all duration-300 ease-in-out ${className}`}
+      className={`w-auto md:w-[400px] lg:w-[600px] rounded-lg shadow-md flex flex-col  hover:shadow-2xl hover:scale-105 transition-all duration-300 ease-in-out ${className}`}
     >
       {/* Image Section */}
       <div className="w-full">
@@ -25,7 +25,7 @@ const CustomCardWithImage = ({
 
       
       <div className="w-full  px-5 flex flex-col justify-center py-5 md:py-0">
-        <CustomText as="h1" className="text-lg md:text-2xl font-bold">
+        <CustomText as="h1" className="text-lg md:text-md font-bold">
           {title}
         </CustomText>
         <CustomText as="p" className="text-sm md:text-lg pb-2 md:pb-0">
@@ -35,13 +35,13 @@ const CustomCardWithImage = ({
           {subDescription}
         </CustomText>
 
-        <CustomButton
+        {/* <CustomButton
           onClick={onClick}
           className={"text-[#FF69B4] px-10 border border-[#FF69B4] md:mt-0"}
           text="See more"
         >
           See more
-        </CustomButton>
+        </CustomButton> */}
       </div>
     </div>
   );
