@@ -11,6 +11,7 @@ import {
   weddingVendors,
   weddingVenues,
   sectorTypes,
+  servicesUnit,
 } from "../../../../static/static";
 import { useNavigate } from "react-router-dom";
 
@@ -27,9 +28,9 @@ import CustomText from "../../../../components/global/text/CustomText";
 export const serviceValidate = z.object({
   service_name: z.string().nonempty("Service name is required"),
   description: z.string().nonempty("Description is required"),
-  min_price: z
-  .string(),
+  min_price: z.string(),
   service_type: z.string().optional(),
+  service_unit: z.string().optional(),
 });
 
 const ServiceCreate = ({ onClose, serviceData }) => {
@@ -45,6 +46,7 @@ const ServiceCreate = ({ onClose, serviceData }) => {
   const [serviceOptions, setServiceOptions] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedService, setSelectedService] = useState("");
+  const [selectedUnit, setSelectedUnit] = useState("");
   const navigate = useNavigate();
 
   const {
@@ -59,11 +61,12 @@ const ServiceCreate = ({ onClose, serviceData }) => {
 
   const onSubmit = async (data) => {
     console.log(data);
-    
+
     try {
       const preparedData = {
         ...data,
         min_price: Number(data.min_price),
+
       };
 
       let res;
@@ -74,6 +77,7 @@ const ServiceCreate = ({ onClose, serviceData }) => {
         }).unwrap();
 
         toast.success(res.message);
+        onClose();
       } else {
         // Create new service
         res = await createServiceMutation(preparedData).unwrap();
@@ -134,6 +138,12 @@ const ServiceCreate = ({ onClose, serviceData }) => {
     setValue("service_type", service);
   };
 
+  const handleUnitSelect = (event) => {
+    const unit = event.target.value;
+    setSelectedUnit(unit);
+    setValue("service_unit", unit);
+  };
+
   const handleAIDescription = async () => {
     const dataFromUseForm = getValues();
 
@@ -142,11 +152,15 @@ const ServiceCreate = ({ onClose, serviceData }) => {
       min_price: dataFromUseForm.min_price,
       service_type: dataFromUseForm.service_type,
       description: dataFromUseForm.description || "",
+      service_unit: dataFromUseForm.service_unit || serviceData?.service_unit,
     };
     if (
-      !initialData.service_name ||
-      !initialData.min_price ||
-      !initialData.service_type
+      !serviceData && (
+        !initialData.service_name ||
+        !initialData.min_price ||
+        !initialData.service_type ||
+        !initialData.service_unit
+      )
     ) {
       toast.error(
         "Missing required data: service_name, min_price, or service_type."
@@ -162,10 +176,9 @@ const ServiceCreate = ({ onClose, serviceData }) => {
     }
   };
 
- 
   return (
     <>
-      <div className="bg-transparent relative  p-8 max-w-4xl mx-auto rounded-lg shadow-lg  border border-ring  ">
+      <div className="bg-transparent relative p-8  mx-auto rounded-lg shadow-lg  border border-ring">
         <button
           onClick={onClose}
           className=" absolute right-10 bg-primary text-background rounded-full p-2 hover:bg-gray-600 transition"
@@ -188,15 +201,6 @@ const ServiceCreate = ({ onClose, serviceData }) => {
           />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <InputField
-              id="min_price"
-              type="number"
-              label="Min Price"
-              register={register}
-              error={errors.min_price}
-              placeholder="min_price"
-            />
-
             {/* Service Category Field */}
             {!serviceData && (
               <div>
@@ -217,28 +221,59 @@ const ServiceCreate = ({ onClose, serviceData }) => {
                 </select>
               </div>
             )}
+
+            {!serviceData && serviceOptions.length > 0 && (
+              <div>
+                <label className="block text-foreground mb-1">
+                  Service Type
+                </label>
+                <select
+                  className=" w-full px-4 py-3 bg-secondary text-foreground border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-ring"
+                  value={selectedService}
+                  onChange={handleServiceSelect}
+                >
+                  <option value="">Select a Service</option>
+                  {serviceOptions.map((service, index) => (
+                    <option key={index} value={service}>
+                      {service}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {selectedService && (
+              <div>
+                <label className="block text-lg font-medium text-foreground">
+                  unit type
+                </label>
+                <select
+                  className="mt-2 w-full px-4 py-3 bg-secondary text-foreground border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-ring"
+                  value={selectedUnit}
+                  onChange={handleUnitSelect}
+                >
+                  <option value="">Select unit type</option>
+                  {servicesUnit[selectedService].map((service, index) => (
+                    <option key={index} value={service}>
+                      {service}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            <InputField
+              id="min_price"
+              type="text"
+              
+              label={`Min Price${selectedUnit ? ` (${selectedUnit})` : ""}`}
+              register={register}
+              error={errors.min_price}
+              placeholder="min_price"
+            />
           </div>
 
           {/* Service Type Field */}
-          {!serviceData && serviceOptions.length > 0 && (
-            <div>
-              <label className="block text-lg font-medium text-foreground">
-                Service Type
-              </label>
-              <select
-                className="mt-2 w-full px-4 py-3 bg-secondary text-foreground border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-ring"
-                value={selectedService}
-                onChange={handleServiceSelect}
-              >
-                <option value="">Select a Service</option>
-                {serviceOptions.map((service, index) => (
-                  <option key={index} value={service}>
-                    {service}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
 
           <div className="relative ">
             <label className="block font-montserrat text-muted-foreground text-sm font-bold mb-2">
@@ -246,11 +281,9 @@ const ServiceCreate = ({ onClose, serviceData }) => {
             </label>
             <textarea
               rows={12}
-
               {...register("description")}
               placeholder="Enter a brief description"
               className="py-2  h-15 w-full border border-border focus:ring-ring focus:outline-none rounded"
-              
             />
             {errors.description && (
               <CustomText

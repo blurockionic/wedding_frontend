@@ -177,7 +177,7 @@ const DashBoardDetailPage = () => {
           </p>
           <p className="text-gray-600 capitalize dark:text-white">
             <span className="font-semibold">Price Range:</span> ₹
-            {service?.min_price}
+            {service?.min_price}/{service?.service_unit}
           </p>
           
           <ReactMarkdown className="prose prose-lg text-gray-800">
@@ -289,7 +289,7 @@ const DashBoardDetailPage = () => {
           </div>
         </div>
       </div>
-      <div className="mt-8 md:px-4">
+      <div className="mt-8 md:px-4 w-full">
         {activeTab === "media" && (
           <>
             {/* Background Overlay */}

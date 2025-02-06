@@ -57,7 +57,7 @@ const VendorHeader = () => {
   return (
     <nav className=" bg-background shadow-md px-6 py-3 flex items-center justify-between lg:rounded-md">
       {/* Left: Brand Name */}
-      <Link to="/" className="font-bold text-2xl ml-10 m-0 text-primary">
+      <Link to="/VendorDashboard" className="font-bold text-2xl ml-10 m-0 text-primary">
         Dashboard
       </Link>
 
