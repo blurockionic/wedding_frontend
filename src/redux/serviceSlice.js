@@ -147,12 +147,22 @@ export const serviceApi = createApi({
         }
       }),
     }),
+
+    switchService: builder.mutation({
+      query: (id) => ({
+        url: `/services/serviceArchive/${id}`,
+        method: "PUT",
+      }),
+    }),
+
+
   }),
 });
 
 // Export hooks for each endpoint
 export const {
   useGetServicesQuery,
+  useSwitchServiceMutation,
   useGetServiceByIdQuery,
   useGetCartMutation,
   useToggleCartMutation,

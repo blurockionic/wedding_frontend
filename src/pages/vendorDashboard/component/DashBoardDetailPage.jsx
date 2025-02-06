@@ -3,6 +3,7 @@ import {
   useDeleteFAQMutation,
   useDeleteServiceMutation,
   useGetServiceByIdQuery,
+  useSwitchServiceMutation,
   useUpdateFAQMutation,
 } from "../../../redux/serviceSlice";
 import ReactMarkdown from "react-markdown";
@@ -20,6 +21,7 @@ import { FaEdit, FaPlus } from "react-icons/fa";
 import { userlogout } from "../../../redux/authSlice";
 import { useDispatch } from "react-redux";
 import { useVendorLogoutMutation } from "../../../redux/vendorSlice";
+import { ToggleSwitch } from "flowbite-react";
 const DashBoardDetailPage = () => {
   const [vendorLogout] = useVendorLogoutMutation();
 
@@ -36,15 +38,20 @@ const DashBoardDetailPage = () => {
   const { register, handleSubmit, setValue, getValues, reset } = useForm();
   const dispatch = useDispatch();
 
- 
+  const [
+    switchService,
+    { data: switchData, isLoading: isSwitching, isError: isSwitchingError },
+  ] = useSwitchServiceMutation();
+
+  const switch1 = data?.service?.status === "active" ? true : false;
 
   if (isLoading) {
     return <div className="text-center text-gray-600">Loading...</div>;
   }
   const handleErrors = async (error, dispatch) => {
     if (error?.data?.message.includes("Access token is missing or invalid")) {
-      const res =  await vendorLogout();
-      toast.success(res?.message)
+      const res = await vendorLogout();
+      toast.success(res?.message);
       dispatch(userlogout());
     }
   };
@@ -52,7 +59,6 @@ const DashBoardDetailPage = () => {
   if (isError) {
     handleErrors(error, dispatch);
 
-  
     return (
       <div className="text-center text-red-500">
         {error?.data?.message ||
@@ -129,10 +135,29 @@ const DashBoardDetailPage = () => {
     }
   };
 
+  const handleSwitch = async () => {
+    try {
+      const response = await switchService(serviceId).unwrap();
+      if (response.success) {
+        toast.success(response.message);
+        refetch(); // Reload data after switching service status
+      }
+    } catch (error) {
+      toast.error(error?.data?.message || "Failed to switch service.");
+    }
+  };
+
   return (
     <div className="max-w-screen-xl mx-auto px-6">
       {/* Buttons Section */}
-      <div className="mt-1 flex gap-4 justify-end  p-2 w-full">
+      <div className="mt-1 flex gap-4 justify-end items-center   p-2 w-full">
+        <ToggleSwitch
+          className="text-cyan-400 border border-cyan-400 rounded-md  px-4 py-2"
+          checked={switch1}
+          label= {switch1 ? "Active" : "Archived"}
+          onChange={handleSwitch}
+        />
+
         <CustomButton
           leftIcon={<FaPlus />}
           text="Media"
@@ -163,6 +188,8 @@ const DashBoardDetailPage = () => {
           onClick={handleDelete}
           className="border border-red-500 hover:bg-red-100 text-red-500 px-2 py-2"
         />
+
+        {/* make atoogle swith to toggle active and archived */}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-7 mt-5 md:px-4">
@@ -179,10 +206,10 @@ const DashBoardDetailPage = () => {
             <span className="font-semibold">Price Range:</span> ₹
             {service?.min_price}/{service?.service_unit}
           </p>
-          
+
           <ReactMarkdown className="prose prose-lg text-gray-800">
-          {service?.description}
-        </ReactMarkdown>
+            {service?.description}
+          </ReactMarkdown>
         </div>
       </div>
 
