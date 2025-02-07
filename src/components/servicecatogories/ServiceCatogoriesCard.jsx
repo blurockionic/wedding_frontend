@@ -1,14 +1,19 @@
 import { Plus } from "lucide-react";
 
-const ServiceCategoriesCard = ({ title, description, image,  handleIsClicked}) => {
+const ServiceCategoriesCard = ({ title, description, image, handleOnSubCategory, className}) => {
+ 
 
   const onClickOnCard = () => {
-    handleIsClicked(true);
+    handleOnSubCategory(title)
   }
   return (
+   <>
     <div 
     onClick={() => onClickOnCard()}
-    className="relative p-5 w-full max-w-sm bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer border border-gray-300">
+    className={`relative p-5 
+    w-full max-w-sm bg-white rounded-2xl 
+    shadow-lg overflow-hidden cursor-pointer border
+     border-gray-300 ${className}`}>
       {/* Background Image */}
       <div
         className="h-40 bg-cover bg-center rounded-t-2xl"
@@ -31,6 +36,7 @@ const ServiceCategoriesCard = ({ title, description, image,  handleIsClicked}) =
         </div>
       </div>
     </div>
+   </>
   );
 };
 
