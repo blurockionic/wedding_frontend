@@ -87,7 +87,7 @@ html {
   --primary: #f20574; /* Vibrant pink */
   --primary-foreground: #000000; /* Black */
   --secondary: #e6e6e6; /* Light gray */
-  --secondary-foreground: #000000; /* Black */
+  --secondary-foreground: #000000; 
   --muted: #f2f2f2; /* Soft light gray off white */
   --muted-foreground: #666666; /* Medium gray */
   --accent: #e5e5e5; /* Very light gray */
