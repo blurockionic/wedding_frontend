@@ -84,7 +84,7 @@ const VendorHeader = () => {
                 Profile
               </Link>
               <Link
-                to="/settings"
+                to="vendor-setting"
                 className="block px-4 py-2 text-sm text-foreground hover:text-white hover:bg-primary"
               >
                 Settings

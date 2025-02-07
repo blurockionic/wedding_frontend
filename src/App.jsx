@@ -59,7 +59,8 @@ const VendorProfile = lazy(() =>
 const Category = lazy(() => import("./pages/service-category/ServiceCategoriesPage.jsx"));
 
 const Payments = lazy(() => import("./pages/vendorDashboard/component/Payments.jsx"));
-const AboutPage = lazy(() => import("./pages/section/About.jsx")); // Import the About page
+const AboutPage = lazy(() => import("./pages/section/About.jsx")); 
+const VendorSetting = lazy(()=>import ("./pages/vendorDashboard/VendorsSetting.jsx"))
 
 function wrapWithSuspense(Component) {
   return (
@@ -138,7 +139,7 @@ const router = createBrowserRouter([
           { path: "vendor-profile", element: wrapWithSuspense(VendorProfile) },
           {path: "payments", element: wrapWithSuspense(Payments)},
           {path: "Plan", element: wrapWithSuspense(Subscription)},
-          // {path:"plan-details",element:wrapWithSuspense()},
+          {path:"vendor-setting",element:wrapWithSuspense(VendorSetting)},
           {
             path: "service-details/:serviceId",
             element: wrapWithSuspense(DashBoardDetailPage),

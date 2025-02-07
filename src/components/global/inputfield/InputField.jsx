@@ -9,8 +9,10 @@ export const InputField = ({
   label,
   autoFocus,
   register,
+  disabled = false,
   error,
   icon,
+  onChange = () => {},
   placeholder,
   style
 }) => (
@@ -32,6 +34,8 @@ export const InputField = ({
         min={min}
         max={max}
         step={step}
+        onChange={onChange}
+        disabled={disabled}
         {...register(id)}
         placeholder={placeholder}
         className={`w-full ${

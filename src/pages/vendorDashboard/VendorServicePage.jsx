@@ -76,11 +76,11 @@ const VendorServicesPage = () => {
     <div className="max-w-7xl mx-auto p-6 m-2 rounded-md bg-gradient-to-br from-white via-pink-50 to-pink-100">
       {/* Top Bar Section */}
       <div
-        className={`flex justify-between items-center my-6 ${
+        className={`flex justify-end items-center my-6 ${
           showFormPage ? "hidden" : ""
         }`}
       >
-        {/* Search Bar */}
+        {/* Search Bar
         {!showFormPage && (
           <div className="lg:flex text-lg">
             <div className="flex items-center space-x-4">
@@ -98,7 +98,7 @@ const VendorServicesPage = () => {
               </button>
             </div>
           </div>
-        )}
+        )} */}
 
         {/* Add Service Button */}
         {!showFormPage && (

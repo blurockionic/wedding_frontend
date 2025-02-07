@@ -52,12 +52,26 @@ export const vendorApi = createApi({
         body: data,
       }),
     }),
+    dashboardChangePassword: builder.mutation({
+      query: ({ pass }) => ({
+        url: `/change-password`,
+        method: "PATCH",
+        body:{pass}
+      })
+    }),
+    vendorDeleteAccount: builder.mutation({
+      query: () => ({
+        url: `/delete`,
+        method: "DELETE"
+      }),
+    }),
   }),
 });
 
 export const {
   useVendorSignupMutation,
-
+  useDashboardChangePasswordMutation,
+  useVendorDeleteAccountMutation,
   useVendorLoginMutation,
   useVendorLogoutMutation,
   useVendorUpdateMutation,
