@@ -62,10 +62,10 @@ html {
   animation: smooth-scroll 20s linear infinite; /* Smooth looping animation */
 }
 
-.scroll-container > * {
+/* .scroll-container > * {
   flex-shrink: 0;
   width: 400px; /* Fixed width of each card */
-}
+/* } */ 
 
 .defaultcss option:checked {
   background: linear-gradient(to right, #d43fa6, #d43fa6); 
