@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */ 
+const flowbite = require("flowbite-react/tailwind");
     const plugin = require ("tailwindcss/plugin");
 
 // Utility to create RGBA colors
@@ -8,6 +9,7 @@ module.exports = {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
     "./node_modules/flowbite/**/*.js",
+    flowbite.content(),
   ],
   theme: {
     extend: {
@@ -58,7 +60,12 @@ module.exports = {
     require("flowbite/plugin")({
       charts: true,
     }),
+<<<<<<< HEAD
+    flowbite.plugin(),
+    require('@tailwindcss/typography'),
+=======
     // require('@tailwindcss/typography'),
+>>>>>>> 2b469b6292a853e60884f40d2d0442dd2ac6b24b
     plugin(function ({ addUtilities, theme, e }) {
       const colors = theme("colors");
       const newUtilities = {};

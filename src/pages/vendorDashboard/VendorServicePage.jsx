@@ -1,25 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import VendorServiceList from "./component/VendorServiceList";
 import ServiceModel from "./component/ServiceModel";
 import { FiSearch } from "react-icons/fi";
 import SearchBar from "../../components/SearchBar";
 import { GoSearch } from "react-icons/go";
-import {
-  useGetServicesQuery,
-} from "../../redux/serviceSlice";
+import { useGetServicesQuery } from "../../redux/serviceSlice";
 import { PiPlus } from "react-icons/pi";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { userlogout } from "../../redux/authSlice";
 
 const VendorServicesPage = () => {
-  const [showFormPage, setShowFormPage] = useState(false); // Track form page visibility
+  const [showFormPage, setShowFormPage] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10; // Page size
+  const [selectedFilter, setSelectedFilter] = useState("all"); // Track selected filter
+  const [filteredServices, setFilteredServices] = useState([]);
 
+  const pageSize = 10;
   const vendorId = useSelector((state) => state?.auth?.user?.id);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const filters = {
     search: searchTerm,
@@ -28,13 +28,33 @@ const VendorServicesPage = () => {
     vendorId,
   };
 
-  // Fetch services using the filters object
-  const { data, isLoading, error } = useGetServicesQuery(filters);
+  // Fetch services
+  const { data, isLoading, error, refetch } = useGetServicesQuery(filters);
+  useEffect(() => {
+    refetch(); // Fetch fresh data when filter changes
+  }, [selectedFilter, refetch]);
+
+  // Filter services based on selected category
+  useEffect(() => {
+    if (data?.ServiceResult) {
+      let filteredData = data.ServiceResult;
+      if (selectedFilter === "active") {
+        filteredData = data.ServiceResult.filter(
+          (service) => service.status === "active"
+        );
+      } else if (selectedFilter === "archived") {
+        filteredData = data.ServiceResult.filter(
+          (service) => service.status === "archived"
+        );
+      }
+      setFilteredServices(filteredData);
+    }
+  }, [data, selectedFilter]);
 
   // Handle search input
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
-    setCurrentPage(1); // Reset to the first page when the search term changes
+    setCurrentPage(1);
   };
 
   // Handle page change
@@ -42,13 +62,18 @@ const VendorServicesPage = () => {
     setCurrentPage(page);
   };
 
-  if (error && typeof error === 'string' && error.includes("expire")) {
+  // Handle filter selection
+  const handleFilterChange = (filter) => {
+    setSelectedFilter(filter);
+  };
+
+  if (error && typeof error === "string" && error.includes("expire")) {
     userlogout();
     navigate("/vendorLogin");
   }
 
   return (
-    <div className="max-w-7xl  mx-auto p-6 m-2 rounded-md bg-gradient-to-br from-white via-pink-50 to-pink-100">
+    <div className="max-w-7xl mx-auto p-6 m-2 rounded-md bg-gradient-to-br from-white via-pink-50 to-pink-100">
       {/* Top Bar Section */}
       <div
         className={`flex justify-between items-center my-6 ${
@@ -91,27 +116,50 @@ const VendorServicesPage = () => {
       {/* Main Content */}
       {!showFormPage ? (
         <div className="relative flex flex-col justify-between h-[79vh] md:h-[70vh]">
+          {/* Filter Buttons */}
           <div className="mb-4 border-b border-gray-300">
             <div className="flex space-x-4">
-              <button className="px-4 py-2 text-foreground hover:text-primary transition duration-200">
+              <button
+                onClick={() => handleFilterChange("all")}
+                className={`px-4 py-2 transition duration-200 ${
+                  selectedFilter === "all"
+                    ? "text-primary font-semibold"
+                    : "text-foreground hover:text-primary"
+                }`}
+              >
                 All Services
               </button>
-              <button className="px-4 py-2 text-foreground hover:text-primary transition duration-200">
+              <button
+                onClick={() => handleFilterChange("active")}
+                className={`px-4 py-2 transition duration-200 ${
+                  selectedFilter === "active"
+                    ? "text-primary font-semibold"
+                    : "text-foreground hover:text-primary"
+                }`}
+              >
                 Active Services
               </button>
-              <button className="px-4 py-2 text-foreground hover:text-primary transition duration-200">
+              <button
+                onClick={() => handleFilterChange("archived")}
+                className={`px-4 py-2 transition duration-200 ${
+                  selectedFilter === "archived"
+                    ? "text-primary font-semibold"
+                    : "text-foreground hover:text-primary"
+                }`}
+              >
                 Archived Services
               </button>
             </div>
           </div>
 
+          {/* Services List */}
           <div className="flex-1 overflow-y-scroll pr-2">
             {isLoading ? (
               <div>Loading...</div>
             ) : error ? (
               <div>Error loading services</div>
             ) : (
-              <VendorServiceList services={data?.ServiceResult} />
+              <VendorServiceList services={filteredServices} />
             )}
           </div>
 
@@ -120,7 +168,7 @@ const VendorServicesPage = () => {
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="px-3 py-1 bg-primary text-background rounded-md hover:bg-pink-700 disabled:bg-pink-300 transition duration-200 disabled:cursor-not-allowed"
+              className="px-3 py-1 bg-primary text-background rounded-md hover:bg-pink-700 disabled:bg-gray-300 transition duration-200"
             >
               Previous
             </button>
@@ -131,7 +179,7 @@ const VendorServicesPage = () => {
 
             <button
               onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage * pageSize >= data?.totalCount}
+              disabled={filteredServices.length < pageSize}
               className="px-3 py-1 bg-primary text-background rounded-md hover:bg-pink-700 disabled:bg-gray-300 transition duration-200"
             >
               Next
@@ -139,8 +187,7 @@ const VendorServicesPage = () => {
           </div>
         </div>
       ) : (
-        <div className="">
-          {/* Add Service Form */}
+        <div>
           <ServiceModel onClose={() => setShowFormPage(false)} />
         </div>
       )}
@@ -149,5 +196,5 @@ const VendorServicesPage = () => {
     </div>
   );
 };
- 
+
 export default VendorServicesPage;

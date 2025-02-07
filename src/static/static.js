@@ -53,7 +53,7 @@ export const grooms = ["Sherwani", "Men's Grooming", "Men's Accessories"];
 export const links = [
   { label: "Dashboard", href: "analytics", icon: MdOutlineAnalytics },
   { label: "Services", href: "", icon:  MdDesignServices },
-  { label: "Biils", href: "bookings", icon:MdOutlinePayment },
+  { label: "Bills", href: "bookings", icon:MdOutlinePayment },
 ];
 
 

@@ -3,18 +3,25 @@ import { FaBars, FaMoneyBillWave, FaTimes } from "react-icons/fa";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { links } from "../../static/static";
 import brandlogo from "../../../public/logo/brandlogo.png";
-import Plan from "./component/Plan";
 import { useGetSubscriptionQuery } from "../../redux/payment";
 import { getRemainingDays } from "../../static/helper";
 
 const VendorSidebar = ({ footer, setIsOpen, isOpen }) => {
   const location = useLocation();
   const currentPath = location.pathname.split("/")[2] || "";
-
+  
   const [activeTab, setActiveTab] = useState(currentPath);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
-  const { data, isLoading: subLoading } = useGetSubscriptionQuery();
+  const { data, isLoading: subLoading, isError } = useGetSubscriptionQuery();
+  const [activeSubscription, setActiveSubscription] = useState(null);
+
+  useEffect(() => {
+    if (data?.subscriptions?.length > 0) {
+      setActiveSubscription(data.subscriptions[0]);
+    }
+  }, [data]);
+
+
+  
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -44,7 +51,7 @@ const VendorSidebar = ({ footer, setIsOpen, isOpen }) => {
 
       <div
         className={`my-2 lg:my-2 lg:mx-2 fixed h-[98vh] rounded-md inset-y-0 
-          left-0 z-50 flex flex-col border border-primary text-gray-100 
+          left-0 z-50 flex flex-col border border-primary  text-gray-100 
           bg-gradient-to-br from-white via-pink-50 to-pink-300
           shadow-xl transform ${
             isOpen ? "translate-x-0" : "-translate-x-full"
@@ -68,7 +75,7 @@ const VendorSidebar = ({ footer, setIsOpen, isOpen }) => {
           </button>
         </div>
 
-        <nav className="flex-1 mt-10">
+        <nav className="flex-1 flex-col h-full justify-between mt-10">
           <ul>
             {links?.map((link, index) => (
               <li key={index} className="group m-2">
@@ -93,17 +100,17 @@ const VendorSidebar = ({ footer, setIsOpen, isOpen }) => {
                 </Link>
               </li>
             ))}
-
+          </ul>
+         
+        </nav>
+            <div className="h-1 bg-white"></div>
+        <div className="text-center">
             {subLoading ? (
               <p className="text-sm text-gray-500">Loading subscription...</p>
-            ) : isError ? (
-              <p className="text-sm text-red-500">
-                Error loading subscription.
-              </p>
-            ) : !data?.subscriptions?.[0] ? ( 
+            ) : isError || !activeSubscription ? (
               <li className="group m-2">
                 <Link
-                  to={"Plan"}
+                  to="Plan"
                   className={`flex items-center gap-4 p-3 hover:bg-primary hover:text-foreground rounded-md ${
                     activeTab === "Plan"
                       ? "bg-primary text-background"
@@ -123,22 +130,24 @@ const VendorSidebar = ({ footer, setIsOpen, isOpen }) => {
                 </Link>
               </li>
             ) : (
-              <Link className="group cursor-pointer  gap-4 p-3 hover:bg-primary hover:text-foreground  m-2 h-14 text-sm text-white font-semibold bg-gradient-to-r from-green-300 via-blue-400 to-purple-600 bg-[length:200%_200%] animate-gradient-move flex items-center justify-center rounded-md shadow-md"
-              to={"Plan"}
-              onClick={() => {
-                setIsOpen(false);
-                handleOnActive("Plan");
-              }}
+              <Link
+                className="group cursor-pointer gap-4 p-3 hover:bg-primary hover:text-foreground m-2 h-14 text-sm text-white font-semibold bg-gradient-to-r from-green-300 via-blue-400 to-purple-600 bg-[length:200%_200%] animate-gradient-move flex items-center justify-center rounded-md shadow-md"
+                to="Plan"
+                onClick={() => {
+                  setIsOpen(false);
+                  handleOnActive("Plan");
+                }}
               >
-              {getRemainingDays(data.subscriptions[0])} days remaining
-            </Link>
+                {+(getRemainingDays(
+                  activeSubscription?.is_trial
+                    ? activeSubscription?.trial_end_date
+                    : activeSubscription?.end_date
+                ))}{" "}
+                days remaining
+              </Link>
             )}
-          </ul>
-        </nav>
-
-        {footer && (
-          <div className="p-4 flex justify-center items-center">{footer}</div>
-        )}
+          </div>
+        {footer && <div className="p-4 flex justify-center items-center">{footer}</div>}
       </div>
     </>
   );
