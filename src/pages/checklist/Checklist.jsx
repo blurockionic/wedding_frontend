@@ -410,8 +410,6 @@ const Checklist = () => {
   const [totalTasks, setTotalTasks] = useState(0);
   const [completedTasks, setCompletedTasks] = useState(0);
 
-  console.log(checklistData);
-
   const {
     register: registerCategory,
     handleSubmit: handleCategorySubmit,
@@ -452,24 +450,27 @@ const Checklist = () => {
 
   const handleSave = async (isUpdate) => {
     try {
-      const payload = { checklistItems: checklistData };
-      const resultAction = await saveChecklistApi(payload);
-      toast.dismiss();
+      
+      if (!isLoading){     
+        const payload = { checklistItems: checklistData };
+        const resultAction = await saveChecklistApi(payload);
+        toast.dismiss();
 
-      if (resultAction.error) {
-        console.error("Error saving checklist:", resultAction.error);
-        toast.error(
-          `Error saving checklist: ${
-            resultAction.error.data?.message || "Unknown error"
-          }`,
-          {
-            position: "top-right",
-            autoClose: 5000,
-            theme: "light",
-          }
-        );
-      } else if (!isUpdate) {
-        toast.success("Checklist saved successfully!");
+        if (resultAction.error) {
+          console.error("Error saving checklist:", resultAction.error);
+          toast.error(
+            `Error saving checklist: ${
+              resultAction.error.data?.message || "Unknown error"
+            }`,
+            {
+              position: "top-right",
+              autoClose: 5000,
+              theme: "light",
+            }
+          );
+        } else if (!isUpdate) {
+          toast.success("Checklist saved successfully!");
+        }
       }
     } catch (error) {
       console.error("Error during save process:", error);
