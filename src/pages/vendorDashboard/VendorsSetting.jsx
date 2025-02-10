@@ -66,11 +66,13 @@ export default function VendorsSetting() {
       toast.success(deleteRes.message);
       setMessage("Account successfully deleted!");
       setConfirmDelete(""); 
-      dispatch( userlogout())
+     
      
       
     } catch (error) {
       toast.error(error?.data?.message || "Failed to delete account.");
+    }finally{
+      dispatch(userlogout());
     }
   };
 
