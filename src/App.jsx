@@ -20,6 +20,7 @@ const VendorRegistration = lazy(() =>
 import VendorDashboard from "./pages/vendorDashboard/Dashboard.jsx";
 import Subscription from "./pages/Subscription.jsx";
 import { HelmetProvider } from "react-helmet-async";
+import HeapServices from "./pages/HeapServices.jsx";
 
 const Checklist = lazy(() => import("./pages/checklist/Checklist.jsx"));
 
@@ -78,6 +79,7 @@ const router = createBrowserRouter([
       { path: "/checklist", element: wrapWithSuspense(Checklist) },
       { path: "/about", element: wrapWithSuspense(AboutPage) }, // Add the About page route
       { path: "/budget", element: wrapWithSuspense(Budget) },
+      { path: "/heapService", element: wrapWithSuspense(HeapServices) },
       {
         path: "/user-forgot-password",
         element: wrapWithSuspense(UserForgotPassword),
