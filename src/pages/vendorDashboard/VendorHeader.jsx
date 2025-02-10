@@ -57,7 +57,7 @@ const VendorHeader = () => {
   return (
     <nav className=" bg-background shadow-md px-6 py-3 flex items-center justify-between lg:rounded-md">
       {/* Left: Brand Name */}
-      <Link to="/" className="font-bold text-2xl ml-10 m-0 text-primary">
+      <Link to="/VendorDashboard" className="font-bold text-2xl ml-10 m-0 text-primary">
         Dashboard
       </Link>
 
@@ -78,13 +78,13 @@ const VendorHeader = () => {
           {profileOpen && (
             <div className="w-48 bg-background  rounded-md shadow-lg overflow-hidden z-50">
               <Link
-                to="/profile"
+                to="vendor-profile"
                 className="block px-4 py-2 text-sm text-foreground hover:text-white hover:bg-primary"
               >
                 Profile
               </Link>
               <Link
-                to="/settings"
+                to="vendor-setting"
                 className="block px-4 py-2 text-sm text-foreground hover:text-white hover:bg-primary"
               >
                 Settings

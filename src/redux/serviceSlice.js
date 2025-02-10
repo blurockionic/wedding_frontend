@@ -39,8 +39,6 @@ export const serviceApi = createApi({
       providesTags: ["Cart"],
     }),
 
-   
-
     toggleCart: builder.mutation({
       query: (id) => ({
         url: `/cart`,
@@ -91,7 +89,7 @@ export const serviceApi = createApi({
     updateLeadStatus: builder.mutation({
       query: (id) => ({
         url: `/services/makeLead/${id}`,
-        method: "PUT", 
+        method: "PUT",
       }),
     }),
     //recent activity
@@ -100,51 +98,71 @@ export const serviceApi = createApi({
     }),
     //create FAQ
     createFAQ: builder.mutation({
-      query: ({id, data})=>({
+      query: ({ id, data }) => ({
         url: `/services/${id}/faq`,
         method: "POST",
-        body: data 
-      })
+        body: data,
+      }),
     }),
-    // update FAQ 
+    // update FAQ
     updateFAQ: builder.mutation({
-      query: ({id, faqId, data})=>({
+      query: ({ id, faqId, data }) => ({
         url: `/services/${id}/faq/${faqId}`,
         method: "POST",
-        body: data
+        body: data,
       }),
     }),
-      //DELETE FAQ
-      deleteFAQ: builder.mutation({
-        query: ({ id, faqId }) => ({
-          url: `/services/${id}/faq/${faqId}`,
-          method: "DELETE",
-        }),
+    //DELETE FAQ
+    deleteFAQ: builder.mutation({
+      query: ({ id, faqId }) => ({
+        url: `/services/${id}/faq/${faqId}`,
+        method: "DELETE",
       }),
-      
+    }),
 
-      //submit feedback
-      createFeedback: builder.mutation({
-        query:({id, data})=>({
-          url: `/services/feedback/${id}`,
-          method:"POST",
-          body: data
-        })
+    //submit feedback
+    createFeedback: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/services/feedback/${id}`,
+        method: "POST",
+        body: data,
       }),
-      //update feedback
-      updateFeedback: builder.mutation({
-        query:({id,feedbackId, data})=>({
-          url: `/services/feedback/${id}/${feedbackId}`,
-          method:"POST",
-          body: data
-        })
+    }),
+    //update feedback
+    updateFeedback: builder.mutation({
+      query: ({ id, feedbackId, data }) => ({
+        url: `/services/feedback/${id}/${feedbackId}`,
+        method: "POST",
+        body: data,
       }),
+    }),
+
+    generateAIDescription: builder.mutation({
+      query: (data) => ({
+        url: "/generateAIDescription",
+        method: "POST",
+        body: data,
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }),
+    }),
+
+    switchService: builder.mutation({
+      query: (id) => ({
+        url: `/services/serviceArchive/${id}`,
+        method: "PUT",
+      }),
+    }),
+
+
   }),
 });
 
 // Export hooks for each endpoint
 export const {
   useGetServicesQuery,
+  useSwitchServiceMutation,
   useGetServiceByIdQuery,
   useGetCartMutation,
   useToggleCartMutation,
@@ -159,5 +177,6 @@ export const {
   useUpdateFAQMutation,
   useDeleteFAQMutation,
   useCreateFeedbackMutation,
-  useUpdateFeedbackMutation
+  useUpdateFeedbackMutation,
+ useGenerateAIDescriptionMutation
 } = serviceApi;

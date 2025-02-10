@@ -2,31 +2,30 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useUpdateUserMutation } from "../../redux/apiSlice.auth";
+import { useVendorUpdateMutation } from "../../redux/vendorSlice";
 import { userUpdate } from "../../redux/authSlice";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../../components/global/button/CustomButton";
 import { FaRegThumbsDown, FaRegThumbsUp } from "react-icons/fa";
 
-const UserProfile = () => {
+const VendorProfile = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const userData = useSelector((state) => state.auth.user);
+  const vendorData = useSelector((state) => state.auth.user);
 
-  if (userData.role !== "USER") {
+  if (vendorData.role !== "vendor") {
     navigate("/");
-    return;
+    return null;
   }
 
-  console.log(userData)
-
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(userData?.profile_pic || "");
+  const [selectedLogo, setSelectedLogo] = useState(null);
+  const [previewLogoUrl, setPreviewLogoUrl] = useState(
+    vendorData?.logo_url || ""
+  );
 
-  const [updateUser, { isLoading }] = useUpdateUserMutation();
-  console.log(userData.wedding_date)
+  const [updateVendor, { isLoading }] = useVendorUpdateMutation();
 
   const {
     register,
@@ -35,14 +34,20 @@ const UserProfile = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      user_name: userData.user_name || "",
-      email: userData.email || "",
-      phone_number: userData.phone_number || "",
-      wedding_date: userData?.wedding_date
-        ? new Date(userData.wedding_date).toISOString().split("T")[0]
-        : "",
-      wedding_location: userData.wedding_location || "",
-      profile_photo: userData.profile_photo || "",
+      name: vendorData.name || "",
+      business_name: vendorData.business_name || "",
+      business_category: vendorData.business_category || "",
+      license_number: vendorData.license_number || "",
+      service_type: vendorData.service_type || [],
+      description: vendorData.description || "",
+      email: vendorData.email || "",
+      phone_number: vendorData.phone_number || "",
+      social_networks: vendorData.social_networks || "",
+      country: vendorData.country || "",
+      state: vendorData.state || "",
+      city: vendorData.city || "",
+      latitude: vendorData.latitude || "",
+      longitude: vendorData.longitude || "",
     },
   });
 
@@ -54,47 +59,38 @@ const UserProfile = () => {
         return;
       }
       if (!file.type.startsWith("image/")) {
-        // i want to send with req so make this with formdata
-
-        setSelectedFile(file);
-
         toast.error("Invalid file type. Please upload an image file.");
         return;
       }
-      setSelectedFile(file);
+      setSelectedLogo(file);
       const url = URL.createObjectURL(file);
-      setPreviewUrl(url);
+      setPreviewLogoUrl(url);
     }
   };
 
   const onSubmit = async (data) => {
     const formData = new FormData();
     for (const key in data) {
-      const val =
-        key === "wedding_date" && data[key]
-          ? new Date(data[key]).toISOString()
-          : data[key];
-
-      formData.append(key, val);
+      formData.append(key, data[key]);
     }
-
-    if (selectedFile) {
-      formData.append("profile_photo", selectedFile);
+    if (selectedLogo) {
+      formData.append("logo_url", selectedLogo);
     }
 
     try {
-      const updatedData = await updateUser(formData).unwrap();
+      const updatedData = await updateVendor(formData).unwrap();
 
-      toast.success(updatedData.message);
-
-      try {
-        dispatch(userUpdate(updatedData.user));
-      } catch (error) {
-        console.error("Dispatch error:", error);
-        toast.error("Failed to update user data in the store.");
+      if (updatedData.success) {
+        toast.success(updatedData.message);
+        try {
+          dispatch(userUpdate(updatedData.vendor));
+        } catch (error) {
+          console.error("Dispatch error:", error);
+          toast.error("Failed to update vendor data in the store.");
+        }
       }
     } catch (error) {
-      toast.error(error.data.message || "Failed to update user.");
+      toast.error(error.data.message || "Failed to update vendor.");
     } finally {
       setIsEditing(false);
     }
@@ -104,15 +100,31 @@ const UserProfile = () => {
     reset();
     setIsEditing(false);
   };
+  
+    const handleImgcancel=()=>{
+      setPreviewLogoUrl("")
+      setSelectedLogo(null)
 
-  const renderProfileInfo = () => {
+
+    }
+
+  const renderVendorInfo = () => {
     const fields = [
-      "user_name",
+      "name",
+      "business_name",
+      "business_category",
+      "license_number",
+      "description",
       "phone_number",
-      "wedding_date",
-      "wedding_location",
       "email",
+      "social_networks",
+      "country",
+      "state",
+      "city",
+     
     ];
+
+
 
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -123,11 +135,11 @@ const UserProfile = () => {
             </label>
             <input
               id={field}
-              autoFocus={isEditing && field === "user_name"}
+              autoFocus={isEditing && field === "name"}
               {...register(field, {
                 required:
                   field !== "email" &&
-                  field !== "wedding_date" &&
+                  field !== "license_number" &&
                   "This field is required",
                 pattern:
                   field === "email"
@@ -137,9 +149,9 @@ const UserProfile = () => {
                       }
                     : undefined,
               })}
-              type={field === "wedding_date" ? "date" : "text"}
-              className="disabled:cursor-not-allowed cursor-pointer w-full border  border-pink-200 rounded p-2"
-              disabled={field === "email" || !isEditing}
+              type="text"
+              className="disabled:cursor-not-allowed cursor-pointer w-full border border-pink-200 rounded p-2"
+              disabled={!isEditing}
             />
             {errors[field] && (
               <p className="text-sm text-red-500">{errors[field].message}</p>
@@ -150,72 +162,64 @@ const UserProfile = () => {
     );
   };
 
-  return (
-    <div className="w-full max-w-5xl mx-auto p-6 rounded-lg">
-      <div className="text-center mb-8">
-        <h1 className="text-2xl sm:text-4xl font-serif font-bold text-pink-700 mb-2">
-          {isEditing ? "Edit Your Profile" : "Your Wedding Journey"}
-        </h1>
-        <p className="text-sm sm:text-lg text-gray-600">
-          {isEditing
-            ? "Update your details to cherish your special moments."
-            : "Celebrate your love story with your personalized profile."}
-        </p>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="w-full bg-white rounded-lg p-6 border border-pink-200 flex flex-col items-center">
-          <h2 className="text-xl sm:text-2xl text-center font-serif text-pink-600 mb-4">
-            Profile Photo
-          </h2>
-          <div className="w-24 sm:w-32 h-24 sm:h-32 rounded-full overflow-hidden border-4 border-pink-300 mb-4">
-            <img
-              src={isEditing ? previewUrl : userData?.profile_photo}
-              alt="Profile"
-              className="w-full h-full object-cover"
-            />
-          </div>
+  return (
+    <div className="w-full max-w-6xl mx-auto p-6 rounded-lg">
+      <div className="flex gap-5 justify-start items-center  ">
+        <div className=" h-full gap-3  bg-white  rounded-lg p-5 border border-pink-200 flex flex-col justify-center items-center">
+          <img
+            src={isEditing ? previewLogoUrl : vendorData?.logo_url}
+            alt="Logo"
+            className="h-24 w-full object-cover"
+          />
+
           {isEditing && (
-            <div className="w-full">
-              <label
-                htmlFor="photo"
-                className="block mb-2 text-sm text-pink-600"
-              >
-                Upload Photo
-              </label>
-              <input
-                id="photo"
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="w-full border border-pink-200 rounded p-2"
-              />
+            <div className="">
+              
+              {previewLogoUrl!=(null||"") ? (
+                <button className="py-1 px-4 text-muted bg-primary rounded" onClick={handleImgcancel}>cancel</button>
+              ) : (
+                <input
+                  id="logo"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="w-full border border-pink-200 rounded p-2"
+                />
+              )}
               <p className="text-xs text-gray-500 mt-1">
                 Max size: 5MB. Formats: JPG, PNG, GIF.
               </p>
             </div>
           )}
         </div>
+        <div className="text-start  mb-8">
+          <h1 className="text-2xl sm:text-4xl font-serif font-bold text-pink-700 mb-2">
+            {isEditing ? "Edit Vendor Profile" : "Vendor Profile"}
+          </h1>
+          <p className="text-sm sm:text-lg text-gray-600">
+            {isEditing
+              ? "Update your business details to reach more customers."
+              : "Manage and showcase your vendor profile."}
+          </p>
+        </div>
+      </div>
 
+      <div className="grid grid-cols-1 lg:grid-cols-1 mt-2  gap-6">
         <div
           className={`w-full col-span-2 ${
             isEditing ? "bg-green-100 border-dashed border-4" : "bg-white"
           } rounded-lg p-6 border border-pink-200`}
         >
           <div className="text-xl flex justify-between sm:text-2xl font-serif text-pink-600 mb-4">
-            <span> Personal Information</span>
+            <span>Business Information</span>
             <span className="flex">
-              {" "}
               Verified: {"  "}
-              {userData.is_verified ? (
-                <FaRegThumbsUp />
-              ) : (
-                <FaRegThumbsDown />
-              )}{" "}
+              {vendorData.is_verified ? <FaRegThumbsUp /> : <FaRegThumbsDown />}
             </span>
           </div>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {renderProfileInfo()}
+            {renderVendorInfo()}
             <div className="flex justify-end space-x-4 mt-6">
               {isEditing ? (
                 <>
@@ -230,13 +234,13 @@ const UserProfile = () => {
                     type="submit"
                     className="px-6 py-2 text-sm font-semibold text-white bg-pink-600 rounded hover:bg-pink-700"
                   >
-                    {isLoading ? "updating..." : "Save Changes"}
+                    {isLoading ? "Updating..." : "Save Changes"}
                   </button>
                 </>
               ) : (
                 <CustomButton
                   onClick={() => setIsEditing(true)}
-                  text=" Edit Profile"
+                  text="Edit Profile"
                   className={`px-6 py-2 text-sm font-semibold text-white bg-pink-600 rounded hover:bg-pink-700`}
                 />
               )}
@@ -248,4 +252,4 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile;
+export default VendorProfile;

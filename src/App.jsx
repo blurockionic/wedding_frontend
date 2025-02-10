@@ -1,8 +1,5 @@
 import { Suspense, lazy } from "react";
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ErrorBoundary from "./pages/ErrorPage.jsx";
@@ -18,8 +15,10 @@ const VendorRegistration = lazy(() =>
   import("./pages/auth/vendor _auth/VendorSignup.jsx")
 );
 import VendorDashboard from "./pages/vendorDashboard/Dashboard.jsx";
-import Subscription from "./pages/Subscription.jsx";
+const Subscription =lazy(()=>import("./pages/Subscription.jsx")) 
 import { HelmetProvider } from "react-helmet-async";
+
+const Billing = lazy(()=>import("./pages/vendorDashboard/Billing.jsx"))
 
 const Checklist = lazy(() => import("./pages/checklist/Checklist.jsx"));
 
@@ -54,7 +53,14 @@ const ChangePassword = lazy(() => import("./pages/auth/ChangePassword.jsx"));
 const FavoriteListPage = lazy(() =>
   import("./pages/userDashboard/FavoriteList.jsx")
 );
-const AboutPage = lazy(() => import("./pages/section/About.jsx")); // Import the About page
+const VendorProfile = lazy(() =>
+  import("./pages/vendorDashboard/VendorProfile.jsx")
+);
+const Category = lazy(() => import("./pages/service-category/ServiceCategoriesPage.jsx"));
+
+const Payments = lazy(() => import("./pages/vendorDashboard/component/Payments.jsx"));
+const AboutPage = lazy(() => import("./pages/section/About.jsx")); 
+const VendorSetting = lazy(()=>import ("./pages/vendorDashboard/VendorsSetting.jsx"))
 
 function wrapWithSuspense(Component) {
   return (
@@ -75,6 +81,7 @@ const router = createBrowserRouter([
       { path: "/login", element: wrapWithSuspense(Login) },
       { path: "/contactus", element: wrapWithSuspense(ContactUs) },
       { path: "/checklist", element: wrapWithSuspense(Checklist) },
+      { path: "/category", element: wrapWithSuspense(Category) },
       { path: "/about", element: wrapWithSuspense(AboutPage) }, // Add the About page route
       {
         path: "/user-forgot-password",
@@ -122,14 +129,17 @@ const router = createBrowserRouter([
         ), // Protected route
         children: [
           {
-            path: "",
+            
             index: true,
             element: wrapWithSuspense(VendorServicesPage),
           },
           { path: "analytics", element: wrapWithSuspense(Analytics) },
           { path: "settings", element: wrapWithSuspense(Setting) },
-          { path: "bookings", element:<Subscription/>},
-          
+          { path: "bookings", element: <Billing /> },
+          { path: "vendor-profile", element: wrapWithSuspense(VendorProfile) },
+          {path: "payments", element: wrapWithSuspense(Payments)},
+          {path: "Plan", element: wrapWithSuspense(Subscription)},
+          {path:"vendor-setting",element:wrapWithSuspense(VendorSetting)},
           {
             path: "service-details/:serviceId",
             element: wrapWithSuspense(DashBoardDetailPage),

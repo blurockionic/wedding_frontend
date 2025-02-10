@@ -9,6 +9,7 @@ import Discover from "../../components/home/home-discover/Discover";
 import { Helmet } from "react-helmet-async";
 import { allCategories } from "../../components/Sidebar";
 import { Country, State, City } from "country-state-city";
+import FeatureService from "../../components/featuredservices/FeatureService";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -128,31 +129,30 @@ export default function Home() {
         <link rel="canonical" href="https://www.marriagevendors.com/" />
         {/* Structured Data for Schema */}
 
-      <script type="application/ld+json">
-        {JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "WebPage",
-          name: "Plan Your Dream Wedding with Us | Top Wedding Vendors",
-          description:
-            "Discover the best wedding vendors for your dream wedding. 1000+ trusted vendors, trusted by happy couples. Find vendors in your location effortlessly!",
-          url: "https://www.marriagevendors.com/",
-          author: {
-            "@type": "Organization",
-            name: "Marriage Vendors",
-            "url": "https://www.marriagevendors.com/"
-          },
-          potentialAction: {
-            "@type": "SearchAction",
-            target: "hhttps://www.marriagevendors.com/",
-            "query-input": "required name=search_term_string"
-          }
-        })}
-      </script>
-
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            name: "Plan Your Dream Wedding with Us | Top Wedding Vendors",
+            description:
+              "Discover the best wedding vendors for your dream wedding. 1000+ trusted vendors, trusted by happy couples. Find vendors in your location effortlessly!",
+            url: "https://www.marriagevendors.com/",
+            author: {
+              "@type": "Organization",
+              name: "Marriage Vendors",
+              url: "https://www.marriagevendors.com/",
+            },
+            potentialAction: {
+              "@type": "SearchAction",
+              target: "hhttps://www.marriagevendors.com/",
+              "query-input": "required name=search_term_string",
+            },
+          })}
+        </script>
       </Helmet>
 
       <div
-        className="h-3/4 w-full z-10 relative flex items-center justify-start"
+        className="h-[80vh] w-full z-10 relative flex items-center justify-center"
         style={{
           backgroundImage: `linear-gradient(360deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), url('/herobg.jpg')`,
           backgroundSize: "cover",
@@ -161,48 +161,30 @@ export default function Home() {
         }}
         aria-hidden="true"
       >
-        {/* Flower Decoration */}
-        <div
-          className="hidden md:block absolute left-0 w-24 h-auto z-20 transform -translate-y-1/2"
-          data-aos="zoom-in"
-          data-aos-delay="1000"
-          data-aos-once="true"
-        >
-          <img
-            alt="Flower decoration with a soft gradient background"
-            src="/flowerbg 1.png"
-            className="opacity-90"
-          />
-        </div>
-
         {/* Content Section */}
-        <div className="p-12 md:pl-24 space-y-6 rounded-lg z-40 flex justify-center items-center flex-col w-full">
+        <div className="p-12 mt-48 md:pl-24 space-y-6 rounded-lg z-40 flex justify-center items-center flex-col w-full">
           <p
-            className="text-lg mt-10 md:mt-0 text-gray-100 leading-tight"
-            data-aos="fade-up"
-            data-aos-delay="200"
-            data-aos-once="true"
-          >
-            Welcome
-          </p>
-
-          <p
-            className="pb-20 text-3xl md:text-6xl lg:text-7xl font-bold text-white flex flex-col items-center text-center"
+            className="text-3xl md:text-6xl lg:text-7xl font-bold text-white flex flex-col items-center text-center"
             data-aos="fade-up"
             data-aos-delay="400"
             data-aos-once="true"
           >
-            <span className="text-4xl md:text-5xl lg:text-[60px] flex flex-col mb-12">
+            <span className="text-2xl md:text-4xl lg:text-[66px] mb-3">
               Your one-stop destination for{" "}
-              <span className="text-[#ffcdf8]">Dream Wedding</span>
             </span>
+            <span className="text-[#fecd17]">Dream Wedding</span>
+
+            {/* Tagline */}
+          {/* <span className="text-gray-300 text-lg mt-5">
+            Find the best wedding vendors with thousands of trusted reviews
+          </span> */}
           </p>
 
           {/* Mobile Search Button */}
           <CustomButton
             leftIcon={<GoSearch size={20} className="text-white" />}
             text="Search"
-            className="w-1/2 lg:hidden bg-primary px-10 py-2 rounded text-white md:ms-[-50px] lg-ms-0 "
+            className="w-1/2 lg:hidden bg-primary px-10 py-2 rounded text-white md:ml-[-50px] lg:ml-0"
             onClick={handleNavigate}
           >
             Discover
@@ -210,15 +192,11 @@ export default function Home() {
         </div>
 
         {/* Search Section */}
-        <section
-          className="hidden z-50 py-12 absolute bottom-0 w-full 
-  lg:flex items-center justify-center flex-col gap-4 
-  bg-gradient-to-t from-black bg-opacity-50"
-        >
+        <section className="hidden z-50 absolute bottom-0 w-full lg:flex items-center justify-center flex-col gap-1 bg-gradient-to-t from-white bg-opacity-70">
           {/* Input Group */}
-          <div className="flex gap-4 relative">
+          <div className="flex gap-4 bg-white p-6 rounded-lg shadow-lg ">
             {/* Vendor Input */}
-            <div className="relative w-[400px]">
+            <div className="w-[400px]">
               <CustomInput
                 type="text"
                 placeholder="Select Vendor"
@@ -229,10 +207,7 @@ export default function Home() {
                 leftIcon={<GoSearch size={20} />}
               />
               {showSuggestions && suggestions.length > 0 && (
-                <ul
-                  className="absolute bg-white border border-gray-300 
-          rounded w-full shadow-lg mt-1 z-20 overflow-auto max-h-[200px]"
-                >
+                <ul className="absolute bg-white border border-gray-300 rounded w-[400px] shadow-lg mt-1 z-20 overflow-auto max-h-[200px]">
                   {suggestions.map((category, index) => (
                     <li
                       key={index}
@@ -258,10 +233,7 @@ export default function Home() {
                 leftIcon={<GoLocation size={20} />}
               />
               {showlocationSuggestions && locationSuggestions.length > 0 && (
-                <ul
-                  className="absolute bg-white border border-gray-300 
-          rounded w-full shadow-lg mt-1 z-20 overflow-auto max-h-[200px]"
-                >
+                <ul className="absolute bg-white border border-gray-300 rounded w-full shadow-lg mt-1 z-20 overflow-auto max-h-[200px]">
                   {locationSuggestions.map((c, index) => (
                     <li
                       key={index}
@@ -285,10 +257,7 @@ export default function Home() {
             </CustomButton>
           </div>
 
-          {/* Tagline */}
-          <span className="text-white text-xl">
-            Vendors and Couples trust us.
-          </span>
+          
         </section>
       </div>
 

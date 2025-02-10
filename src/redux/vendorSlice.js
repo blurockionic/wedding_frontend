@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-
 export const vendorApi = createApi({
   reducerPath: "vendorApi",
   baseQuery: fetchBaseQuery({
@@ -39,21 +38,43 @@ export const vendorApi = createApi({
     }),
 
     vendorChangePassword: builder.mutation({
-      query: ({token ,confirmPassword}) => ({
+      query: ({ token, confirmPassword }) => ({
         url: `/reset-password?token=${token}`,
         method: "POST",
-        body: {confirmPassword},
+        body: { confirmPassword },
       }),
     }),
 
+    vendorUpdate: builder.mutation({
+      query: (data) => ({
+        url: `/update`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+    dashboardChangePassword: builder.mutation({
+      query: ({ pass }) => ({
+        url: `/change-password`,
+        method: "PATCH",
+        body:{pass}
+      })
+    }),
+    vendorDeleteAccount: builder.mutation({
+      query: () => ({
+        url: `/delete`,
+        method: "DELETE"
+      }),
+    }),
   }),
 });
 
-
-export const { 
-  useVendorSignupMutation ,
+export const {
+  useVendorSignupMutation,
+  useDashboardChangePasswordMutation,
+  useVendorDeleteAccountMutation,
   useVendorLoginMutation,
   useVendorLogoutMutation,
+  useVendorUpdateMutation,
   useVendorForgotPasswordMutation,
   useVendorChangePasswordMutation,
 } = vendorApi;

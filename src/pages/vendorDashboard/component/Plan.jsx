@@ -15,7 +15,7 @@ export default function Plan({ displayRazorpay }) {
     );
 
   return (
-    <div className="container mx-auto py-8 max-w-6xl">
+    <div className="container mx-auto py-8 max-w-7xl">
       <h2 className="text-3xl font-montserrat text-primary mb-6">
         Available Plans
       </h2>

@@ -5,9 +5,13 @@ import Accordion from "../components/Accordion";
 import { IoCall } from "react-icons/io5";
 import { BsWhatsapp } from "react-icons/bs";
 import { useSelector } from "react-redux";
-import { useGetServiceByIdQuery, useUpdateLeadStatusMutation } from "../redux/serviceSlice";
+import {
+  useGetServiceByIdQuery,
+  useUpdateLeadStatusMutation,
+} from "../redux/serviceSlice";
 import ImageGallery from "../components/gallery/ImageGallery";
 import FeedbackForm from "../components/feedbackform/FeedbackForm";
+import ReactMarkdown from "react-markdown";
 
 // Mock data and API call simulation
 const mockServiceData = (id) => ({
@@ -70,18 +74,17 @@ function ServiceDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const [updateLead] = useUpdateLeadStatusMutation()
-  const {data, refetch} = useGetServiceByIdQuery(id)
-  const [isLoading, setIsLoading] = useState(false)
+  const [updateLead] = useUpdateLeadStatusMutation();
+  const { data, refetch } = useGetServiceByIdQuery(id);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetchServiceDetail(id);
-      
-            
-        if(data){
-        setRealService(data?.service)
+
+        if (data) {
+          setRealService(data?.service);
         }
         setService(response);
       } catch {
@@ -94,31 +97,19 @@ function ServiceDetail() {
     fetchData();
   }, [data, id]);
 
-
-  useEffect(()=>{
+  useEffect(() => {
     try {
-      refetch()
+      refetch();
     } catch (error) {
-      console.error(error)
-    }finally{
-      setIsLoading(false)
+      console.error(error);
+    } finally {
+      setIsLoading(false);
     }
-  },[isLoading, refetch])
+  }, [isLoading, refetch]);
 
   const handleLoginRedirect = () => {
     navigate("/login", { state: { from: location.pathname } });
   };
-
-  console.log(service)
-
-
-  
-    
-    
-
-  
-
-  
 
   if (loading) return <div className="text-center">Loading...</div>;
   if (error)
@@ -131,17 +122,14 @@ function ServiceDetail() {
       </div>
     );
 
-
-    const leadHandler = async () => {
-      try {
-         const res = await updateLead(id).unwrap()
-         console.log(res);
-      } catch (error) {
-        console.error(error);
-      }
+  const leadHandler = async () => {
+    try {
+      const res = await updateLead(id).unwrap();
+      console.log(res);
+    } catch (error) {
+      console.error(error);
     }
-
-    
+  };
 
   return (
     <>
@@ -154,43 +142,43 @@ function ServiceDetail() {
                 <h1 className="text-4xl font-bold text-slate-DEFAULT mb-4 capitalize">
                   {realService?.service_name}
                 </h1>
-                <p className="text-lg text-slate-light mb-4">
+
+                <ReactMarkdown className="prose prose-lg text-lg text-slate-light mb-4 text-gray-800">
                   {realService?.description}
-                </p>
+                </ReactMarkdown>
                 <Rating rating={realService?.rating} />
                 <p className="mt-4 text-slate-DEFAULT">
-                  Price Range: {realService?.min_price} - {realService?.max_price || realService?.min_price + 20000}
+                  Price Range: {realService?.min_price} -{" "}
+                  {realService?.max_price || realService?.min_price + 20000}
                 </p>
                 <p className="text-slate-DEFAULT capitalize ">
-                  Service Type:  <span className="font-semibold">{realService?.service_type}</span>
+                  Service Type:{" "}
+                  <span className="font-semibold">
+                    {realService?.service_type}
+                  </span>
                 </p>
               </div>
 
               {/* Right Section */}
               <div>
-                
-                {
-                    realService?.media.length > 0 ? (
-                        <ImageGallery images={realService.media[0].image_urls}/>
-                    ):(
-                      <>
-                      <div className="grid grid-cols-2 gap-4">
+                {realService?.media.length > 0 ? (
+                  <ImageGallery images={realService.media[0].image_urls} />
+                ) : (
+                  <>
+                    <div className="grid grid-cols-2 gap-4">
                       <img
-                          src={"https://dummyjson.com/image/500x300"}
-                          alt={`Service Image`}
-                          className="w-full h-40 object-cover rounded-lg shadow-md"
-                        />
-                        <img
-                          src={"https://dummyjson.com/image/500x300"}
-                          alt={`Service Image`}
-                          className="w-full h-40 object-cover rounded-lg shadow-md"
-                        />
-                        </div>
-                      </>
-                    )
-                  }
-                  
-                
+                        src={"https://dummyjson.com/image/500x300"}
+                        alt={`Service Image`}
+                        className="w-full h-40 object-cover rounded-lg shadow-md"
+                      />
+                      <img
+                        src={"https://dummyjson.com/image/500x300"}
+                        alt={`Service Image`}
+                        className="w-full h-40 object-cover rounded-lg shadow-md"
+                      />
+                    </div>
+                  </>
+                )}
 
                 {/* Vendor Details Section */}
                 <div className="bg-[#f9f9f9] p-6 rounded-lg mt-6 shadow-lg">
@@ -198,7 +186,10 @@ function ServiceDetail() {
                     Vendor Details
                   </h2>
                   <p className="text-lg text-slate-600 mb-4 capitalize cursor-pointer ">
-                    <strong>Name:</strong> <span className="hover:underline hover:text-primary">{realService?.vendor?.name}</span>
+                    <strong>Name:</strong>{" "}
+                    <span className="hover:underline hover:text-primary">
+                      {realService?.vendor?.name}
+                    </span>
                   </p>
 
                   <div className="flex flex-col space-y-4 mt-4">
@@ -206,7 +197,7 @@ function ServiceDetail() {
                     {isLoggedIn ? (
                       <div className="flex space-x-4">
                         <a
-                        onClick={leadHandler}
+                          onClick={leadHandler}
                           href={`tel:${service?.vendor?.phone}`}
                           className="bg-green-500 text-white flex justify-center items-center gap-2 px-5 py-3 rounded-lg hover:bg-green-700 transition"
                           aria-label={`Call ${service.vendor.name}`}
@@ -214,7 +205,7 @@ function ServiceDetail() {
                           Call <IoCall />
                         </a>
                         <a
-                        onClick={leadHandler}
+                          onClick={leadHandler}
                           href={`https://wa.me/${service?.vendor?.phone}`}
                           className="bg-green-500 text-white flex justify-center items-center gap-2 px-5 py-3 rounded-lg hover:bg-green-600 transition"
                           aria-label={`WhatsApp ${service.vendor.name}`}
@@ -252,7 +243,7 @@ function ServiceDetail() {
                   </div>
                 ))}
               </div>
-              <FeedbackForm serviceId ={id} setIsLoading={setIsLoading}/>
+              <FeedbackForm serviceId={id} setIsLoading={setIsLoading} />
             </div>
 
             {/* FAQ Section */}
@@ -280,9 +271,9 @@ function ServiceDetail() {
                 <h1 className="text-4xl font-bold text-slate-900 mb-4">
                   {service.service_name}
                 </h1>
-                <p className="text-lg text-slate-600 mb-4">
-                  {service.description}
-                </p>
+                <ReactMarkdown className="prose prose-lg text-gray-800">
+                  {service?.description}
+                </ReactMarkdown>
                 <Rating rating={service.rating} />
                 <p className="mt-4 text-slate-900">
                   Price Range: {service.min_price} - {service.max_price}
@@ -379,12 +370,12 @@ function ServiceDetail() {
             </div>
 
             {/* Background Overlay */}
-          
+
             <div
-            className={`absolute w-full inset-0 bg-black bg-opacity-50 transition-opacity duration-300 
+              className={`absolute w-full inset-0 bg-black bg-opacity-50 transition-opacity duration-300 
               opacity-100 backdrop-blur-md
             z-10`}
-          />
+            />
           </div>
 
           {/* Conditional Modal */}

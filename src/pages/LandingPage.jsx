@@ -16,7 +16,7 @@ export default function LandingPage() {
       {/* <LazySection id="about" Component={About} /> */}
       {/* <LazySection id="gallery" Component={WeddingEvent} /> */}
       <LazySection id="topServiceSliderSection" Component={TopServiceSliderSection} />
-      <LazySection id="contact" Component={Contact} />
+      {/* <LazySection id="contact" Component={Contact} /> */}
      
       <LazySection id="footer" Component={Footer} />
      
