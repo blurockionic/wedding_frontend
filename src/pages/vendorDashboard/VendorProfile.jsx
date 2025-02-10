@@ -1,20 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useVendorUpdateMutation } from "../../redux/vendorSlice";
 import { userUpdate } from "../../redux/authSlice";
-import { useNavigate } from "react-router-dom";
+import { data, useNavigate } from "react-router-dom";
 import CustomButton from "../../components/global/button/CustomButton";
 import { FaRegThumbsDown, FaRegThumbsUp } from "react-icons/fa";
+import { useUplMutation } from "../../redux/uploadSlice";
 
 const VendorProfile = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const vendorData = useSelector((state) => state?.auth?.user);
 
-  const vendorData = useSelector((state) => state.auth.user);
-
-  if (vendorData.role !== "vendor") {
+  if (vendorData?.role !== "vendor") {
     navigate("/");
     return null;
   }
@@ -24,91 +24,98 @@ const VendorProfile = () => {
   const [previewLogoUrl, setPreviewLogoUrl] = useState(
     vendorData?.logo_url || ""
   );
-
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadedData, setUploadedData] = useState();
+  const [uploadMutation] = useUplMutation();
   const [updateVendor, { isLoading }] = useVendorUpdateMutation();
 
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
+    getValues,
     formState: { errors },
   } = useForm({
-    defaultValues: {
-      name: vendorData.name || "",
-      business_name: vendorData.business_name || "",
-      business_category: vendorData.business_category || "",
-      license_number: vendorData.license_number || "",
-      service_type: vendorData.service_type || [],
-      description: vendorData.description || "",
-      email: vendorData.email || "",
-      phone_number: vendorData.phone_number || "",
-      social_networks: vendorData.social_networks || "",
-      country: vendorData.country || "",
-      state: vendorData.state || "",
-      city: vendorData.city || "",
-      latitude: vendorData.latitude || "",
-      longitude: vendorData.longitude || "",
-    },
+    defaultValues: useMemo(
+      () => ({
+        name: vendorData.name || "",
+        business_name: vendorData.business_name || "",
+        business_category: vendorData.business_category || "",
+        license_number: vendorData.license_number || "",
+        description: vendorData.description || "",
+        email: vendorData.email || "",
+        phone_number: vendorData.phone_number || "",
+        social_networks: vendorData.social_networks || {},
+        country: vendorData.country || "",
+        city: vendorData.city || "",
+        logo_url: vendorData.logo_url || {},
+        latitude: vendorData.latitude || "",
+        longitude: vendorData.longitude || "",
+      }),
+      [vendorData]
+    ), // Ensures re-initialization only when vendorData changes
   });
 
-  const handleFileChange = (e) => {
+  const handleFileChange = useCallback((e) => {
     const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        toast.error("File size exceeds 5MB. Please select a smaller file.");
-        return;
-      }
-      if (!file.type.startsWith("image/")) {
-        toast.error("Invalid file type. Please upload an image file.");
-        return;
-      }
-      setSelectedLogo(file);
-      const url = URL.createObjectURL(file);
-      setPreviewLogoUrl(url);
-    }
-  };
+    if (!file) return;
 
-  const onSubmit = async (data) => {
-    const formData = new FormData();
-    for (const key in data) {
-      formData.append(key, data[key]);
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("File size exceeds 5MB. Please select a smaller file.");
+      return;
     }
-    if (selectedLogo) {
-      formData.append("logo_url", selectedLogo);
+    if (!file.type.startsWith("image/")) {
+      toast.error("Invalid file type. Please upload an image file.");
+      return;
+    }
+
+    setSelectedLogo(file);
+    setPreviewLogoUrl(URL.createObjectURL(file));
+  }, []);
+
+
+  const onSubmit = useCallback(async (data) => {
+    const formData = new FormData();
+
+    const notIncluded = ["service_type", "logo_url"];
+
+    for (const key in data) {
+      const val = data[key];
+      if (notIncluded.includes(key)) continue;
+
+      if(key === "social_networks") {
+        formData.append(key, JSON.stringify(val));
+        continue;}
+        formData.append(key, val);
+       
     }
 
     try {
+      if (selectedLogo) {
+        formData.append("logo_url", selectedLogo); 
+      }
+
       const updatedData = await updateVendor(formData).unwrap();
 
       if (updatedData.success) {
         toast.success(updatedData.message);
-        try {
-          dispatch(userUpdate(updatedData.vendor));
-        } catch (error) {
-          console.error("Dispatch error:", error);
-          toast.error("Failed to update vendor data in the store.");
-        }
+        dispatch(userUpdate(updatedData.vendor));
       }
     } catch (error) {
-      toast.error(error.data.message || "Failed to update vendor.");
+      toast.error(error.data?.message || "Failed to update vendor.");
     } finally {
       setIsEditing(false);
+      reset();
     }
-  };
+  }, [selectedLogo, data, updateVendor, dispatch, reset]);
 
-  const handleCancel = () => {
+  const handleCancel = useCallback(() => {
     reset();
     setIsEditing(false);
-  };
-  
-    const handleImgcancel=()=>{
-      setPreviewLogoUrl("")
-      setSelectedLogo(null)
+  }, [reset]);
 
-
-    }
-
-  const renderVendorInfo = () => {
+  const renderVendorInfo = useMemo(() => {
     const fields = [
       "name",
       "business_name",
@@ -117,14 +124,10 @@ const VendorProfile = () => {
       "description",
       "phone_number",
       "email",
-      "social_networks",
       "country",
-      "state",
+      
       "city",
-     
     ];
-
-
 
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -135,11 +138,9 @@ const VendorProfile = () => {
             </label>
             <input
               id={field}
-              autoFocus={isEditing && field === "name"}
               {...register(field, {
                 required:
-                  field !== "email" &&
-                  field !== "license_number" &&
+                  !["email", "description", "license_number"].includes(field) &&
                   "This field is required",
                 pattern:
                   field === "email"
@@ -160,24 +161,26 @@ const VendorProfile = () => {
         ))}
       </div>
     );
-  };
-
+  }, [register, errors, isEditing]);
 
   return (
     <div className="w-full max-w-6xl mx-auto p-6 rounded-lg">
-      <div className="flex gap-5 justify-start items-center  ">
-        <div className=" h-full gap-3  bg-white  rounded-lg p-5 border border-pink-200 flex flex-col justify-center items-center">
+      <div className="flex gap-5 justify-start items-center">
+        <div className="h-full gap-3 bg-white rounded-lg p-5 border border-pink-200 flex flex-col justify-center items-center">
           <img
-            src={isEditing ? previewLogoUrl : vendorData?.logo_url}
+            src={isEditing ? previewLogoUrl : vendorData?.logo_url?.path}
             alt="Logo"
             className="h-24 w-full object-cover"
           />
-
           {isEditing && (
-            <div className="">
-              
-              {previewLogoUrl!=(null||"") ? (
-                <button className="py-1 px-4 text-muted bg-primary rounded" onClick={handleImgcancel}>cancel</button>
+            <div>
+              {previewLogoUrl ? (
+                <button
+                  className="py-1 px-4 text-muted bg-primary rounded"
+                  onClick={() => setPreviewLogoUrl("")}
+                >
+                  Cancel
+                </button>
               ) : (
                 <input
                   id="logo"
@@ -193,7 +196,7 @@ const VendorProfile = () => {
             </div>
           )}
         </div>
-        <div className="text-start  mb-8">
+        <div className="text-start mb-8">
           <h1 className="text-2xl sm:text-4xl font-serif font-bold text-pink-700 mb-2">
             {isEditing ? "Edit Vendor Profile" : "Vendor Profile"}
           </h1>
@@ -205,21 +208,14 @@ const VendorProfile = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-1 mt-2  gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-1 mt-2 gap-6">
         <div
           className={`w-full col-span-2 ${
             isEditing ? "bg-green-100 border-dashed border-4" : "bg-white"
           } rounded-lg p-6 border border-pink-200`}
         >
-          <div className="text-xl flex justify-between sm:text-2xl font-serif text-pink-600 mb-4">
-            <span>Business Information</span>
-            <span className="flex">
-              Verified: {"  "}
-              {vendorData.is_verified ? <FaRegThumbsUp /> : <FaRegThumbsDown />}
-            </span>
-          </div>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {renderVendorInfo()}
+            {renderVendorInfo}
             <div className="flex justify-end space-x-4 mt-6">
               {isEditing ? (
                 <>
@@ -234,14 +230,17 @@ const VendorProfile = () => {
                     type="submit"
                     className="px-6 py-2 text-sm font-semibold text-white bg-pink-600 rounded hover:bg-pink-700"
                   >
-                    {isLoading ? "Updating..." : "Save Changes"}
+                    {isLoading || isUploading ? "Updating..." : "Save Changes"}
                   </button>
                 </>
               ) : (
                 <CustomButton
-                  onClick={() => setIsEditing(true)}
+                  onClick={() => {
+                    setIsEditing(true);
+                    setPreviewLogoUrl(vendorData?.logo_url?.path);
+                  }}
                   text="Edit Profile"
-                  className={`px-6 py-2 text-sm font-semibold text-white bg-pink-600 rounded hover:bg-pink-700`}
+                  className="px-6 py-2 text-sm font-semibold text-white bg-pink-600 rounded hover:bg-pink-700"
                 />
               )}
             </div>

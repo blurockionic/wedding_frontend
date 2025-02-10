@@ -10,6 +10,7 @@ import {
 } from "../../redux/vendorSlice";
 import { toast } from "react-toastify";
 import { userlogout } from "../../redux/authSlice";
+import { useDispatch } from "react-redux";
 
 const vendorSettingSchema = z
   .object({
@@ -30,6 +31,8 @@ export default function VendorsSetting() {
   } = useForm({
     resolver: zodResolver(vendorSettingSchema),
   });
+
+  const dispatch = useDispatch();
 
   const [changePassword, { isLoading: isChangingPassword }] = useDashboardChangePasswordMutation();
   const [deleteVendor, { isLoading: isDeleting }] = useVendorDeleteAccountMutation();
@@ -63,7 +66,8 @@ export default function VendorsSetting() {
       toast.success(deleteRes.message);
       setMessage("Account successfully deleted!");
       setConfirmDelete(""); 
-      userlogout()
+      dispatch( userlogout())
+     
       
     } catch (error) {
       toast.error(error?.data?.message || "Failed to delete account.");

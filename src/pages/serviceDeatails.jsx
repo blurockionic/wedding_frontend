@@ -148,7 +148,7 @@ function ServiceDetail() {
                 </ReactMarkdown>
                 <Rating rating={realService?.rating} />
                 <p className="mt-4 text-slate-DEFAULT">
-                  Price Range: {realService?.min_price} -{" "}
+                  Price: {realService?.min_price} -{" "}
                   {realService?.max_price || realService?.min_price + 20000}
                 </p>
                 <p className="text-slate-DEFAULT capitalize ">
@@ -276,7 +276,7 @@ function ServiceDetail() {
                 </ReactMarkdown>
                 <Rating rating={service.rating} />
                 <p className="mt-4 text-slate-900">
-                  Price Range: {service.min_price} - {service.max_price}
+                  Price: {service.min_price} - {service.max_price}
                 </p>
                 <p className="text-slate-900">
                   Service Type: {service.service_type}

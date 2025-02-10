@@ -72,7 +72,7 @@ const Sidebar = React.memo(({ searchType, searchLocation, onFilterChange }) => {
           customStyles="bg-primary text-white hover:bg-primary focus:bg-primary"
         />
 
-        {/* Price Range Filter */}
+        {/* Price Filter */}
         <div className=" flex space-x-4">
           <InputField
             id="minPrice"

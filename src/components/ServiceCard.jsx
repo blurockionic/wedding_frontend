@@ -77,12 +77,15 @@ const ServiceCard = React.memo(({ service}) => {
 
       {/* Content Section */}
       <div className="p-4">
-        <h3
+       <div className="flex justify-between items-center">
+       <h3
           className="text-lg font-semibold text-gray-800 truncate capitalize"
           title={service.service_name}
         >
           {service.service_name}
         </h3>
+        <span className="text-sm text-gray-500">⭐ {service.rating}</span>
+       </div>
         <div className="flex items-center justify-between text-sm text-gray-500 mt-1">
           <span>
             <strong className="font-thin">Vendor:</strong> <span className="capitalize">{service.vendor.name}</span>
@@ -92,9 +95,9 @@ const ServiceCard = React.memo(({ service}) => {
           </span> */}
         </div>
         <div className="mt-2 flex items-center justify-between">
-          <span className="text-sm text-gray-500">⭐ {service.rating}</span>
+         
           <span className="text-sm text-gray-700 font-semibold">
-            ₹{service.min_price}
+            Price:₹{service?.min_price}/{service?.service_unit}
           </span>
         </div>
       </div>
