@@ -97,4 +97,4 @@ const HeapServices = () => {
     );
 };
 
-export default HeapServices
+export default HeapServices;
