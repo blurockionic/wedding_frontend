@@ -35,6 +35,61 @@ function Navbar() {
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
+  const groomsCategories = [
+    {
+      title: "Attire",
+      items: ["Sherwanis", "Suits", "Indo-Western", "Kurtas", "Dhotis", "Tailoring"],
+    },
+    {
+      title: "Accessories",
+      items: ["Safas", "Mojaris", "Brooches", "Cufflinks", "Watches", "Stoles"],
+    },
+    {
+      title: "Services",
+      items: ["Makeup", "Skincare", "Stylists", "Fitness Plans", "Grooming"],
+    },
+  ];
+  
+  const weddingVenueCategories = [
+    {
+      title: "Luxury Venues",
+      items: ["5-Star Hotels", "Resorts & Villas", "Banquet Halls", "Royal Palaces"],
+    },
+    {
+      title: "Outdoor & Destination",
+      items: ["Garden Venues", "Beachfront Weddings", "Mountain Venues", "Lakefront Venues"],
+    },
+    {
+      title: "Traditional & Budget",
+      items: ["Community Halls", "Temple Weddings", "Budget Banquets", "Farmhouses"],
+    },
+    {
+      title: "Special Theme Venues",
+      items: ["Vintage Style", "Boho Chic", "Rustic Barns", "Eco-Friendly Venues"],
+    },
+  ];
+  
+
+  const weddingVendorCategories = [
+    {
+      title: "Planning & Decor",
+      items: ["Wedding Planners", "Decorators", "Caterers", "Venues", "Event Rentals"],
+    },
+    {
+      title: "Photography & Beauty",
+      items: ["Photographers", "Makeup Artists", "Mehendi Artists", "Entertainment", "DJ & Music"],
+    },
+  ];
+  
+  const brideCategories = [
+    { title: "Attire", items: ["Lehengas", "Sarees", "Gowns", "Dresses"] },
+    { title: "Accessories", items: ["Jewelry", "Footwear", "Handbags", "Hairpieces"] },
+    { title: "Beauty", items: ["Makeup", "Skincare", "Mehendi", "Nail Art"] },
+  ];
+  
+  
+  
+  
   return (
     <>
         <div className={`${(location.pathname === "/vendorLogin") ||
@@ -137,131 +192,148 @@ function Navbar() {
                   onMouseEnter={() => setDropdown("wedding venue")}
                   onMouseLeave={() => setDropdown("")}
                 >
-                  <span className="cursor-pointer hover:text-dustyRose">
+                  <span className="cursor-pointer hover:text-dustyRose font-medium">
                     Wedding Venue
                   </span>
                   {dropdown === "wedding venue" && (
-                    <div className="absolute left-0 top-full bg-white shadow-lg w-48 py-4 z-40">
-                      <ul className="grid grid-cols-1">
-                        {weddingVenues.map((item, index) => (
-                          <li
-                            key={index}
-                            className="px-4 py-2 hover:text-dustyRose border-b border-gray-200 last:border-0"
-                          >
-                            <button
-                              onClick={() => handleNavigate(item)}
-                              className="block text-left w-full"
-                            >
-                              {item}
-                            </button>
-                          </li>
+                    <div className="absolute left-0 mt-1 top-full bg-white shadow-lg w-[600px] py-4 px-5 z-50 rounded-lg border border-gray-200">
+                      <div className="grid grid-cols-2 gap-6">
+                        {weddingVenueCategories.map((category, index) => (
+                          <div key={index} className="space-y-2">
+                            {/* Category Title */}
+                            <h3 className="text-base font-semibold text-rose-600 border-b border-rose-300 pb-1">
+                              {category.title}
+                            </h3>
+                            <ul className="space-y-1 text-gray-700 text-sm">
+                              {category.items.map((item, i) => (
+                                <li key={i}>
+                                  <button
+                                    onClick={() => handleNavigate(item)}
+                                    className="block w-full text-left hover:text-rose-500 hover:bg-gray-100 transition duration-200 p-1 rounded-md"
+                                  >
+                                    {item}
+                                  </button>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
                         ))}
-                      </ul>
+                      </div>
                     </div>
                   )}
                 </li>
 
+
+
                   {/* wedding vendor  */} 
-                    <li
-                    className="relative lg:inline-block"
-                    onMouseEnter={() => setDropdown("wedding vendor")}
-                    onMouseLeave={() => setDropdown("")}
-                  >
-                    <span className="cursor-pointer hover:text-dustyRose">
-                      Wedding Vendor
-                    </span>
-                    {dropdown === "wedding vendor" && (
-                      <div className="absolute left-0 top-full bg-white shadow-lg w-96 py-4 z-40">
-                        <ul className="grid grid-cols-2 gap-4 px-4">
-                          {weddingVendors.map((item, index) => {
-                            // Calculate the total number of rows.
-                            const totalRows = Math.ceil(weddingVendors.length / 2);
-                            // Determine the current row of this item.
-                            const currentRow = Math.floor(index / 2) + 1;
-                            // Determine if this item is in the left or right column.
-                            const isLeftColumn = index % 2 === 0;
-                            return (
-                              <li
-                                key={index}
-                                className={`px-4 py-2 hover:text-dustyRose border-gray-200 
-                                  ${currentRow < totalRows ? "border-b" : ""} 
-                                  ${isLeftColumn ? "border-r" : "border-l"}`}
-                              >
-                                <button
-                                  onClick={() => handleNavigate(item)}
-                                  className="block text-left w-full"
-                                >
-                                  {item}
-                                </button>
-                              </li>
-                            );
-                          })}
-                        </ul>
+                  <li
+                  className="relative lg:inline-block"
+                  onMouseEnter={() => setDropdown("wedding vendor")}
+                  onMouseLeave={() => setDropdown("")}
+                >
+                  <span className="cursor-pointer hover:text-dustyRose font-medium">
+                    Wedding Vendor
+                  </span>
+                  {dropdown === "wedding vendor" && (
+                    <div className="absolute left-0 mt-1 top-full bg-white shadow-lg w-[500px] py-3 px-4 z-50 rounded-md border border-gray-200">
+                      <div className="grid grid-cols-2 gap-4">
+                        {weddingVendorCategories.map(({ title, items }, index) => (
+                          <div key={index}>
+                            <h3 className="text-sm font-semibold text-rose-600 border-b pb-1">
+                              {title}
+                            </h3>
+                            <ul className="text-sm text-gray-700 space-y-1">
+                              {items.map((item, i) => (
+                                <li key={i}>
+                                  <button
+                                    onClick={() => handleNavigate(item)}
+                                    className="w-full text-left hover:text-rose-500 hover:bg-gray-100 p-1 rounded-md transition"
+                                  >
+                                    {item}
+                                  </button>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
                       </div>
-                    )}
-                  </li>
+                    </div>
+                  )}
+                </li>
+
 
 
                   {/* Brides Dropdown */}
                   <li
-                    className="relative lg:inline-block"
-                    onMouseEnter={() => setDropdown("brides")}
-                    onMouseLeave={() => setDropdown("")}
-                  >
-                    <span className="cursor-pointer hover:text-dustyRose">
-                      Brides
-                    </span>
-                    {dropdown === "brides" && (
-                      <div className="absolute left-0 top-full bg-white shadow-lg w-48 py-4 z-40">
-                        <ul className="grid grid-cols-1">
-                          {brides.map((item, index) => (
-                            <li
-                              key={index}
-                              className="px-4 py-2 hover:text-dustyRose border-b border-gray-200 last:border-0"
-                            >
-                              <button
-                                onClick={() => handleNavigate(item)}
-                                className="block text-left w-full"
-                              >
-                                {item}
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
+                  className="relative lg:inline-block"
+                  onMouseEnter={() => setDropdown("bride")}
+                  onMouseLeave={() => setDropdown("")}
+                >
+                  <span className="cursor-pointer hover:text-rose-600 font-medium transition">
+                    Bride
+                  </span>
+                  {dropdown === "bride" && (
+                    <div className="absolute left-0 mt-2 top-full bg-white shadow-lg w-[400px] py-3 px-4 z-50 rounded-lg border border-gray-200">
+                      <div className="grid grid-cols-2 gap-4 text-sm text-gray-700">
+                        {brideCategories.map(({ title, items }, index) => (
+                          <div key={index}>
+                            <h3 className="font-semibold text-rose-600 border-b pb-1">{title}</h3>
+                            <ul className="pt-1">
+                              {items.map((item, i) => (
+                                <li key={i}>
+                                  <button
+                                    onClick={() => handleNavigate(item)}
+                                    className="w-full text-left hover:text-rose-500 py-1 transition"
+                                  >
+                                    {item}
+                                  </button>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
                       </div>
-                    )}
-                  </li>
+                    </div>
+                  )}
+                </li>
+
+
 
 
                   {/* Grooms Dropdown */}
                   <li
-                  className="relative lg:inline-block"
-                  onMouseEnter={() => setDropdown("grooms")}
-                  onMouseLeave={() => setDropdown("")}
-                >
-                  <span className="cursor-pointer hover:text-dustyRose">
-                    Grooms
-                  </span>
-                  {dropdown === "grooms" && (
-                    <div className="absolute left-0 top-full bg-white shadow-lg w-48 py-4 z-40">
-                      <ul className="grid grid-cols-1">
-                        {grooms.map((item, index) => (
-                          <li
-                            key={index}
-                            className="px-4 py-2 hover:text-dustyRose border-b border-gray-200 last:border-0"
-                          >
-                            <button
-                              onClick={() => handleNavigate(item)}
-                              className="block text-left w-full"
-                            >
-                              {item}
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </li>
+                    className="relative lg:inline-block"
+                    onMouseEnter={() => setDropdown("grooms")}
+                    onMouseLeave={() => setDropdown("")}
+                  >
+                    <span className="cursor-pointer hover:text-rose-600 font-medium transition">
+                      Grooms
+                    </span>
+                    {dropdown === "grooms" && (
+                      <div className="absolute left-0 mt-1 top-full bg-white shadow-lg w-[400px] py-3 px-4 z-50 rounded-lg border border-gray-200">
+                        <div className="grid grid-cols-2 gap-4 text-sm text-gray-700">
+                          {groomsCategories.map(({ title, items }, index) => (
+                            <div key={index}>
+                              <h3 className="font-semibold text-rose-600 border-b pb-1">{title}</h3>
+                              <ul className="pt-1">
+                                {items.map((item, i) => (
+                                  <li key={i}>
+                                    <button
+                                      onClick={() => handleNavigate(item)}
+                                      className="w-full text-left hover:text-rose-500 py-1 transition"
+                                    >
+                                      {item}
+                                    </button>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </li>
+
 
 
                   {!isLoggedIn ? (
