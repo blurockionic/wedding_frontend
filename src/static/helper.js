@@ -12,9 +12,16 @@ export const getRemainingDays = (dateString) => {
 };
 
 export const formatPrice = (price) => {
+
+  const numPrice = Number(price);
+
+
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: "INR",
     maximumFractionDigits: 0,
-  }).format(price);
+  }).format(numPrice);
 };
+export const dateFormats = (date) => {
+  return new Date(date).toLocaleDateString('en-IN');
+}

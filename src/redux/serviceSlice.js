@@ -26,6 +26,7 @@ export const serviceApi = createApi({
 
         return queryStr;
       },
+      
     }),
 
     // Get service by ID

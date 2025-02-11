@@ -1,4 +1,5 @@
 import { useGetPaymentHistoryQuery } from "../../../redux/payment";
+import { dateFormats } from "../../../static/helper";
 
 export default function Payments() {
   const { data, isLoading, isError, error } = useGetPaymentHistoryQuery();
@@ -45,7 +46,7 @@ export default function Payments() {
                   </td>
                   <td className="py-2 px-4 border">{payment.payment_method || "N/A"}</td>
                   <td className="py-2 px-4 border text-sm text-gray-500">
-                    {new Date(payment.created_at).toLocaleString()} {/* Format date and time */}
+                    {dateFormats(payment.created_at)} {/* Format date and time */}
                   </td>
                 </tr>
               ))
