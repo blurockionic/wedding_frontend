@@ -56,8 +56,13 @@ const FavoriteListPage = lazy(() =>
 const VendorProfile = lazy(() =>
   import("./pages/vendorDashboard/VendorProfile.jsx")
 );
-const Category = lazy(() => import("./pages/service-category/ServiceCategoriesPage.jsx"));
-
+const AllCategories = lazy(() => import("./pages/service-category/ServiceCategoriesPage.jsx"));
+const Category = lazy(() => import("./pages/service-category/category/Category.jsx"));
+const SubCategories = lazy(() => import("./pages/service-category/sub-category/SubCategories.jsx"));
+const CategoryByState = lazy(() => import("./pages/service-category/category-by-state/CategoryByState.jsx"));
+const CategoryByCity = lazy(() => import("./pages/service-category/category-by-city/CategoryByCity.jsx"));
+const VenderBiodata = lazy(()=> import("./pages/service-category/vendor-details/VendorDetails.jsx"))
+ 
 const Payments = lazy(() => import("./pages/vendorDashboard/component/Payments.jsx"));
 const AboutPage = lazy(() => import("./pages/section/About.jsx")); // Import the About page
 
@@ -80,7 +85,15 @@ const router = createBrowserRouter([
       { path: "/login", element: wrapWithSuspense(Login) },
       { path: "/contactus", element: wrapWithSuspense(ContactUs) },
       { path: "/checklist", element: wrapWithSuspense(Checklist) },
-      { path: "/category", element: wrapWithSuspense(Category) },
+      // dynamic route for category
+      { path: "/all", element: wrapWithSuspense(AllCategories) },
+      { path: "/all/:category", element: wrapWithSuspense(Category) },
+      { path: "/all/:category/:subcategory", element: wrapWithSuspense(SubCategories) },
+      { path: "/all/:category/:subcategory/:state", element: wrapWithSuspense(CategoryByState) },
+      { path: "/all/:category/:subcategory/:state/:city", element: wrapWithSuspense(CategoryByCity) },
+      { path: "/all/:category/:subcategory/:state/:city/:vendorname", element: wrapWithSuspense(VenderBiodata) },
+
+
       { path: "/about", element: wrapWithSuspense(AboutPage) }, // Add the About page route
       {
         path: "/user-forgot-password",

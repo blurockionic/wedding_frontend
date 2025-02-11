@@ -1,22 +1,18 @@
-import React from "react";
+import React, { memo } from "react";
 import { useForm } from "react-hook-form";
-import {
-  brides,
-  grooms,
-  weddingVendors,
-  weddingVenues,
-} from "../static/static";
+import { brides, grooms, weddingVendors, weddingVenues } from "../static/static";
 import { InputField } from "./global/inputfield/InputField";
 import { SelectField } from "./global/select/SelectField";
 
+// Ensure categories exist and are valid strings
 export const allCategories = [
-  ...weddingVenues,
-  ...weddingVendors,
-  ...brides,
-  ...grooms,
+  ...weddingVenues.map((venue) => venue?.name || venue),
+  ...weddingVendors.map((vendor) => vendor?.name || vendor),
+  ...brides.map((bride) => bride?.name || bride),
+  ...grooms.map((groom) => groom?.name || groom),
 ];
 
-const Sidebar = React.memo(({ searchType, searchLocation, onFilterChange }) => {
+const Sidebar = memo(({ searchType, searchLocation, onFilterChange }) => {
   const {
     register,
     handleSubmit,
@@ -29,27 +25,31 @@ const Sidebar = React.memo(({ searchType, searchLocation, onFilterChange }) => {
     },
   });
 
-  // Function to handle filter submission
+  // Handle filter changes
   const handleFilterChange = (data) => {
     const filters = {};
 
     if (data.location) filters.location = data.location;
     if (data.service_type) filters.service_type = data.service_type;
 
-    if (data.minPrice) filters.minPrice = `${parseFloat(data.minPrice)}`;
-    if (data.maxPrice) filters.maxPrice = `${parseFloat(data.maxPrice)}`;
+    if (data.minPrice && !isNaN(data.minPrice)) {
+      filters.minPrice = parseFloat(data.minPrice).toFixed(2);
+    }
+    if (data.maxPrice && !isNaN(data.maxPrice)) {
+      filters.maxPrice = parseFloat(data.maxPrice).toFixed(2);
+    }
 
     if (data.rating) filters.rating = data.rating;
     if (data.sort_by) filters.sort_by = data.sort_by;
     if (data.sort_order) filters.sort_order = data.sort_order;
 
-    // Pass the formatted filters to the parent for validation and processing
     onFilterChange(filters);
   };
 
   return (
-    <div className="w-full h-screen bg-muted p-4 ">
+    <div className="w-full h-screen bg-muted p-4">
       <form onSubmit={handleSubmit(handleFilterChange)} className="space-y-5">
+        
         {/* Location Filter */}
         <InputField
           id="location"
@@ -60,20 +60,19 @@ const Sidebar = React.memo(({ searchType, searchLocation, onFilterChange }) => {
           placeholder="Enter location"
         />
 
+        {/* Service Type Filter */}
         <SelectField
           id="service_type"
           label="Service Type"
-          options={[
-            ...allCategories.map((type) => ({ value: type, label: type })),
-          ]}
+          options={allCategories.map((type) => ({ value: type, label: type }))}
           register={register}
           error={errors.service_type}
           placeholder="All"
           customStyles="bg-primary text-white hover:bg-primary focus:bg-primary"
         />
 
-        {/* Price Range Filter */}
-        <div className=" flex space-x-4">
+        {/* Price Range */}
+        <div className="flex space-x-4">
           <InputField
             id="minPrice"
             type="number"
@@ -102,12 +101,11 @@ const Sidebar = React.memo(({ searchType, searchLocation, onFilterChange }) => {
           placeholder="Rating"
         />
 
+        {/* Sort By */}
         <SelectField
           id="sort_by"
           label="Sort By"
-          customStyles={
-            "bg-primary text-white hover:bg-primary focus:bg-primary"
-          }
+          customStyles="bg-primary text-white hover:bg-primary focus:bg-primary"
           options={[
             { value: "created_at", label: "Newest First" },
             { value: "min_price", label: "Lowest Price First" },
@@ -118,9 +116,10 @@ const Sidebar = React.memo(({ searchType, searchLocation, onFilterChange }) => {
           placeholder="Sort By"
         />
 
+        {/* Sort Order */}
         <SelectField
-          label={"Sort Order"}
           id="sort_order"
+          label="Sort Order"
           options={[
             { value: "asc", label: "Low to High" },
             { value: "desc", label: "High to Low" },
@@ -130,8 +129,8 @@ const Sidebar = React.memo(({ searchType, searchLocation, onFilterChange }) => {
           placeholder="Sort Order"
         />
 
-        {/* Filter and Reset Buttons */}
-        <div className=" gap-2 justify-center items-center flex ">
+        {/* Buttons */}
+        <div className="flex gap-2 justify-center items-center">
           <button
             type="submit"
             className="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded"
@@ -144,7 +143,7 @@ const Sidebar = React.memo(({ searchType, searchLocation, onFilterChange }) => {
               reset();
               onFilterChange({});
             }}
-            className="w-full  bg-gray-300 text-gray-700 py-2 rounded"
+            className="w-full bg-gray-300 text-gray-700 py-2 rounded"
           >
             Reset
           </button>

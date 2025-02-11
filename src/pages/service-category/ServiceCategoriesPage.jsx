@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ServiceCategoriesCard from "../../components/servicecatogories/ServiceCatogoriesCard";
-import SubCategory from "../../components/sub-category/SubCategory";
+// import SubCategory from "../../components/sub-category/SubCategory";
 import { useNavigate } from "react-router-dom";
 
  const weddingVenues = [
@@ -58,7 +58,7 @@ const ServiceCategoriesPage = () => {
   const [title, setTitle] = useState("");
   const navigate =  useNavigate()
 
-  const handleOnSubCategory = (title) => {
+  const handleOnPlusBtn = (title) => {
     setIsActive(!isActive);
     setTitle(title);
   };
@@ -115,13 +115,20 @@ const ServiceCategoriesPage = () => {
     },
   ];
 
-  const handleNavigate =(value)=>{
-    console.log(value);
-    const queryParams = new URLSearchParams({
-      search: value,
-      location:''
-    }).toString();
-    navigate(`/services?${queryParams}`);
+  const handleOnSubCategoryNavigate =(category, subCategory)=>{
+    // const queryParams = new URLSearchParams({
+    //   category,
+    //   subCategory
+    // }).toString();
+    navigate(`/all/${category}/${subCategory}`);
+  }
+
+  //handle on category
+  const handleOnCategory = (category) => {
+    // const queryParams = new URLSearchParams({
+    //   category
+    // }).toString();
+    navigate(`/all/${category}`);
   }
 
   return (
@@ -130,6 +137,7 @@ const ServiceCategoriesPage = () => {
         {categories.map((category, index) => (
           <div
             key={index}
+            // onClick={() => handleOnCategory(category.title)}
             className={` transition-all duration-300 ${
               isActive && title !== category.title
                 ? "opacity-50 blur-xs "
@@ -140,23 +148,24 @@ const ServiceCategoriesPage = () => {
               title={category.title}
               description={category.description}
               image={category.image}
-              handleOnSubCategory={handleOnSubCategory}
+              handleOnPlusBtn={handleOnPlusBtn}
+              handleOnCategory={handleOnCategory}
             />
 
             {/* SubCategory Component Opens Just Below Active Card */}
             {isActive && title === category.title && (
               <div 
-              className="absolute left-0  w-full mt-4 bg-white z-10 px-5 md:px-20">
+              className="absolute left-0  w-full mt-4 bg-white z-10 px-5 md:px-20 ">
                 {/* Display Subcategories */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 px-4 py-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 px-4 py-5 border border-gray-200 rounded-lg shadow-lg">
                   {category.subcategories.map((sub, subIndex) => (
                     <div
                       key={subIndex}
-              onClick={()=>handleNavigate(sub.name)}
+              onClick={()=>handleOnSubCategoryNavigate(category.title, sub.name )}
 
                       className="  items-center bg-white rounded-lg p-4 "
                     >
-                      <div className="relative w-full h-40 bg-gray-200 rounded-lg mb-3 flex justify-center items-center overflow-hidden">
+                      <div className="relative w-full h-40 bg-gray-200 rounded-lg mb-3 flex justify-center items-center overflow-hidden cursor-pointer">
                         <img
                           src={sub.image}
                           alt={sub.name}
