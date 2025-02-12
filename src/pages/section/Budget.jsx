@@ -70,10 +70,7 @@ const Home = () => {
         }
       } catch (error) {
         console.error("Error parsing API response:", error);
-        append({
-          role: "assistant",
-          content: "Sorry, there was an error processing your request. Please try again.",
-        });
+        append({ role: "assistant", content: "An error occurred. Please try again." });
       }
     }
   });
@@ -117,8 +114,7 @@ const Home = () => {
         <div className="w-[70vw] py-4">
           <h1 className="text-left text-3xl my-4">Plan your budget for your dream wedding with MV AI</h1>
           <p className="text-left">
-            Find the perfect service for your wedding needs. Connect with trusted vendors and plan your dream wedding
-            seamlessly according to your budgets and need.
+            Find the perfect service for your wedding needs. Connect with trusted vendors and plan your dream wedding seamlessly according to your budget.
           </p>
         </div>
         <div className="p-5 w-[70vw] h-[80vh] flex items-center flex-col justify-between text-center bg-[#ffdf6d] rounded-2xl">
@@ -143,13 +139,12 @@ const Home = () => {
                 </div>
               )}
             </section>
+
           </div>
-          <form
-            className="h-14 w-full pt-[20px] overflow-hidden flex justify-evenly mx-2"
-            onSubmit={handleFormSubmit}
-          >
-            <input
-              className="w-[80%] p-[10px] text-[15px] border-none focus:outline-[#F8BFDA] rounded-lg"
+
+          {/* Input Form */}
+          <form className="h-14 w-full pt-[20px] overflow-hidden flex justify-evenly mx-2" onSubmit={handleFormSubmit}>
+            <input className="w-[80%] p-[10px] text-[15px] border-none rounded-lg"
               type="text"
               onChange={handleInputChange}
               value={input}
@@ -157,8 +152,10 @@ const Home = () => {
             />
             <SubmitButton />
           </form>
+
         </div>
       </section>
+
       <Footer />
     </>
   );
