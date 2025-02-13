@@ -74,41 +74,44 @@ const VendorProfile = () => {
     setPreviewLogoUrl(URL.createObjectURL(file));
   }, []);
 
+  const onSubmit = useCallback(
+    async (data) => {
+      const formData = new FormData();
 
-  const onSubmit = useCallback(async (data) => {
-    const formData = new FormData();
+      const notIncluded = ["service_type", "logo_url"];
 
-    const notIncluded = ["service_type", "logo_url"];
+      for (const key in data) {
+        const val = data[key];
+        if (notIncluded.includes(key)) continue;
 
-    for (const key in data) {
-      const val = data[key];
-      if (notIncluded.includes(key)) continue;
-
-      if(key === "social_networks") {
-        formData.append(key, JSON.stringify(val));
-        continue;}
+        if (key === "social_networks") {
+          formData.append(key, JSON.stringify(val));
+          continue;
+        }
         formData.append(key, val);
-       
-    }
-
-    try {
-      if (selectedLogo) {
-        formData.append("logo_url", selectedLogo); 
       }
 
-      const updatedData = await updateVendor(formData).unwrap();
+      try {
+        if (selectedLogo) {
+          formData.append("logo_url", selectedLogo);
+        }
 
-      if (updatedData.success) {
-        toast.success(updatedData.message);
-        dispatch(userUpdate(updatedData.vendor));
+        const updatedData = await updateVendor(formData).unwrap();
+
+        if (updatedData.success) {
+          toast.success(updatedData.message);
+
+          dispatch(userUpdate(updatedData.vendor));
+
+          setIsEditing(false);
+          reset(updatedData.vendor); 
+        }
+      } catch (error) {
+        toast.error(error.data?.message || "Failed to update vendor.");
       }
-    } catch (error) {
-      toast.error(error.data?.message || "Failed to update vendor.");
-    } finally {
-      setIsEditing(false);
-      reset();
-    }
-  }, [selectedLogo, data, updateVendor, dispatch, reset]);
+    },
+    [selectedLogo, updateVendor, dispatch, reset]
+  );
 
   const handleCancel = useCallback(() => {
     reset();
@@ -125,7 +128,7 @@ const VendorProfile = () => {
       "phone_number",
       "email",
       "country",
-      
+
       "city",
     ];
 
