@@ -4,7 +4,6 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
 import { useVendorLogoutMutation } from "../../redux/vendorSlice";
-import { HiOutlineLanguage } from "react-icons/hi2";
 import { userlogout } from "../../redux/authSlice";
 
 const VendorHeader = () => {
@@ -13,24 +12,7 @@ const VendorHeader = () => {
   const [vendorLogout] = useVendorLogoutMutation();
 
   // handle on logout
-  const handleOnLogout = async () => {
-    try {
-      const response = await vendorLogout();
-      const { success, message } = response.data;
-      if (success) {
-        toast.success(message);
-      
-        navigate("/vendorLogin");
-      }
-    } catch (error) {
-      // console.error("Logout failed:", error);
-      // toast.error("Logout failed. Please try again.");
-      toast.success("Logout successful")
-    }
-    finally{
-      dispatch(userlogout());
-    }
-  };
+  
 
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef(null);
@@ -51,6 +33,25 @@ const VendorHeader = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  const handleOnLogout = async () => {
+    try {
+      const response = await vendorLogout();
+      const { success, message } = response.data;
+      if (success) {
+        toast.success(message);
+        dispatch(userlogout());
+        navigate("/vendorLogin");
+        return;
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+      toast.error(error?.data?.message);
+    }
+    finally{
+      dispatch(userlogout());
+    }
+  };
 
   
 

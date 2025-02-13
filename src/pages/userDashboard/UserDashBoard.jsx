@@ -4,10 +4,7 @@ import { useDispatch } from "react-redux";
 import { userlogout } from "../../redux/authSlice";
 import { toast } from "react-toastify";
 
-
 const UserDashBoard = () => {
-
-
   const location = useLocation(); // Get the current location
   const navigate = useNavigate();
   const [logout] = useLogoutMutation();
@@ -21,26 +18,25 @@ const UserDashBoard = () => {
     { name: "Settings", path: "settings" },
   ];
 
-  // Function to handle logout
   const handleLogout = async () => {
-    console.log("Logout clicked");
     try {
-      const response = await logout().unwrap();
-      const {success,message} = response;
-      console.log("Hello", success,message);
-
+      const response = await logout();
+      const { success, message } = response.data;
       if (success) {
-        dispatch(userlogout());
         toast.success(message);
+        dispatch(userlogout());
         navigate("/", { replace: true });
         return;
       }
-      toast.error(message);
     } catch (error) {
       console.error("Logout failed:", error);
-      toast.error("Logout failed. Please try again.");
+      toast.error(error?.data?.message);
+    } finally {
+      dispatch(userlogout());
     }
   };
+
+ 
 
   return (
     <div className="bg-gradient-to-r h-screen from-pink-50 via-white to-pink-100">
@@ -70,7 +66,7 @@ const UserDashBoard = () => {
           </ul>
           <button
             onClick={() => handleLogout()}
-            className="w-full px-4 py-3 text-sm bg-pink-500 rounded-md hover:bg-pink-600 focus:outline-none z-50"
+            className="w-full px-4 py-3 text-muted text-sm bg-pink-500 rounded-md hover:bg-pink-600 focus:outline-none z-50"
           >
             Logout
           </button>

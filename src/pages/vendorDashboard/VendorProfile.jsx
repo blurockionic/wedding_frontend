@@ -25,8 +25,7 @@ const VendorProfile = () => {
     vendorData?.logo_url || ""
   );
   const [isUploading, setIsUploading] = useState(false);
-  const [uploadedData, setUploadedData] = useState();
-  const [uploadMutation] = useUplMutation();
+
   const [updateVendor, { isLoading }] = useVendorUpdateMutation();
 
   const {
