@@ -9,19 +9,35 @@ import { getRemainingDays } from "../../static/helper";
 const VendorSidebar = ({ footer, setIsOpen, isOpen }) => {
   const location = useLocation();
   const currentPath = location.pathname.split("/")[2] || "";
-  
+
   const [activeTab, setActiveTab] = useState(currentPath);
-  const { data, isLoading: subLoading, isError } = useGetSubscriptionQuery();
+  const {
+    data,
+    isLoading: subLoading,
+    isError,
+    refetch,
+  } = useGetSubscriptionQuery();
   const [activeSubscription, setActiveSubscription] = useState(null);
 
   useEffect(() => {
     if (data?.subscriptions?.length > 0) {
-      setActiveSubscription(data.subscriptions[0]);
+      const mostRecentActiveSubscription = data.subscriptions
+        .filter((sub) => sub.status === "ACTIVE")
+        .sort((a, b) => new Date(b.end_date) - new Date(a.end_date))[0];
+
+      if (mostRecentActiveSubscription) {
+        setActiveSubscription(mostRecentActiveSubscription);
+      } else {
+        const pendingSubscription = data.subscriptions.find(
+          (sub) => sub.status === "PENDING"
+        );
+        setActiveSubscription(pendingSubscription || null);
+      }
+    } else {
+      setActiveSubscription(null);
+      refetch();
     }
   }, [data]);
-
-
-  
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -101,53 +117,74 @@ const VendorSidebar = ({ footer, setIsOpen, isOpen }) => {
               </li>
             ))}
           </ul>
-         
         </nav>
-            <div className="h-1 bg-white"></div>
+        <div className="h-1 bg-white"></div>
         <div className="text-center">
-            {subLoading ? (
-              <p className="text-sm text-gray-500">Loading subscription...</p>
-            ) : isError || !activeSubscription ? (
-              <li className="group m-2">
-                <Link
-                  to="Plan"
-                  className={`flex items-center gap-4 p-3 hover:bg-primary hover:text-foreground rounded-md ${
-                    activeTab === "Plan"
-                      ? "bg-primary text-background"
-                      : "text-foreground"
-                  }`}
-                  onClick={() => {
-                    setIsOpen(false);
-                    handleOnActive("Plan");
-                  }}
-                >
-                  <FaMoneyBillWave
-                    className={`h-6 w-6 ${
-                      activeTab === "Plan" ? "text-background" : ""
-                    }`}
-                  />
-                  <span className="text-sm">Get Plan</span>
-                </Link>
-              </li>
-            ) : (
+          {subLoading ? (
+            <p className="text-sm text-gray-500">Loading subscription...</p>
+          ) : isError || !activeSubscription ? (
+            <li className="group m-2">
               <Link
-                className="group cursor-pointer gap-4 p-3 hover:bg-primary hover:text-foreground m-2 h-14 text-sm text-white font-semibold bg-gradient-to-r from-green-300 via-blue-400 to-purple-600 bg-[length:200%_200%] animate-gradient-move flex items-center justify-center rounded-md shadow-md"
                 to="Plan"
+                className={`flex items-center gap-4 p-3 hover:bg-primary hover:text-foreground rounded-md ${
+                  activeTab === "Plan"
+                    ? "bg-primary text-background"
+                    : "text-foreground"
+                }`}
                 onClick={() => {
                   setIsOpen(false);
                   handleOnActive("Plan");
                 }}
               >
-                {+(getRemainingDays(
-                  activeSubscription?.is_trial
-                    ? activeSubscription?.trial_end_date
-                    : activeSubscription?.end_date
-                ))}{" "}
-                days remaining
+                <FaMoneyBillWave
+                  className={`h-6 w-6 ${
+                    activeTab === "Plan" ? "text-background" : ""
+                  }`}
+                />
+                <span className="text-sm">Get Plan</span>
               </Link>
-            )}
-          </div>
-        {footer && <div className="p-4 flex justify-center items-center">{footer}</div>}
+            </li>
+          ) : (
+            <Link
+              className="group cursor-pointer gap-4 p-3 hover:bg-primary hover:text-foreground m-2 h-14 text-sm text-white font-semibold bg-gradient-to-r from-green-300 via-blue-400 to-purple-600 bg-[length:200%_200%] animate-gradient-move flex items-center justify-center rounded-md shadow-md"
+              to="Plan"
+              onClick={() => {
+                setIsOpen(false);
+                handleOnActive("Plan");
+              }}
+            >
+              {activeSubscription?.status === "PENDING" ? (
+                <p>Subscription Pending</p> // Use <p> tag for better structure
+              ) : (
+                <p>
+                  {" "}
+                  {/* Enclose the content in a <p> tag */}
+                  {activeSubscription?.is_trial ? (
+                    <>
+                      Trial{" "}
+                      {getRemainingDays(activeSubscription?.trial_end_date) > 0
+                        ? `ends in ${getRemainingDays(
+                            activeSubscription?.trial_end_date
+                          )} days` // Removed unnecessary +
+                        : "has ended"}
+                    </>
+                  ) : (
+                    <>
+                      {getRemainingDays(activeSubscription?.end_date) > 0
+                        ? `${getRemainingDays(
+                            activeSubscription?.end_date
+                          )} days remaining` // Removed unnecessary +
+                        : "Subscription has ended"}
+                    </>
+                  )}
+                </p>
+              )}
+            </Link>
+          )}
+        </div>
+        {footer && (
+          <div className="p-4 flex justify-center items-center">{footer}</div>
+        )}
       </div>
     </>
   );

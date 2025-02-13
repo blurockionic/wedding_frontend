@@ -10,3 +10,18 @@ export const getRemainingDays = (dateString) => {
 
   return diffDays > 0 ? diffDays : 0; 
 };
+
+export const formatPrice = (price) => {
+
+  const numPrice = Number(price);
+
+
+  return new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
+  }).format(numPrice);
+};
+export const dateFormats = (date) => {
+  return new Date(date).toLocaleDateString('en-IN');
+}

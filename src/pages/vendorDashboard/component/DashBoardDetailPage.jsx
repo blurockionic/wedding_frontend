@@ -203,7 +203,7 @@ const DashBoardDetailPage = () => {
             {service?.service_type}
           </p>
           <p className="text-gray-600 capitalize dark:text-white">
-            <span className="font-semibold">Price Range:</span> ₹
+            <span className="font-semibold">Price:</span> ₹
             {service?.min_price}/{service?.service_unit}
           </p>
 

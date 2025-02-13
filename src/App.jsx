@@ -62,9 +62,11 @@ const SubCategories = lazy(() => import("./pages/service-category/sub-category/S
 const CategoryByState = lazy(() => import("./pages/service-category/category-by-state/CategoryByState.jsx"));
 const CategoryByCity = lazy(() => import("./pages/service-category/category-by-city/CategoryByCity.jsx"));
 const VenderBiodata = lazy(()=> import("./pages/service-category/vendor-details/VendorDetails.jsx"))
+const  ServiceDetails  = lazy(()=>import("./pages/service-category/service-details/ServiceDetails.jsx")) ;
  
 const Payments = lazy(() => import("./pages/vendorDashboard/component/Payments.jsx"));
-const AboutPage = lazy(() => import("./pages/section/About.jsx")); // Import the About page
+const AboutPage = lazy(() => import("./pages/section/About.jsx")); 
+const VendorSetting = lazy(()=>import ("./pages/vendorDashboard/VendorsSetting.jsx"))
 
 function wrapWithSuspense(Component) {
   return (
@@ -91,8 +93,8 @@ const router = createBrowserRouter([
       { path: "/all/:category/:subcategory", element: wrapWithSuspense(SubCategories) },
       { path: "/all/:category/:subcategory/:state", element: wrapWithSuspense(CategoryByState) },
       { path: "/all/:category/:subcategory/:state/:city", element: wrapWithSuspense(CategoryByCity) },
-      { path: "/all/:category/:subcategory/:state/:city/:vendorname", element: wrapWithSuspense(VenderBiodata) },
-
+      { path: "/all/:category/:subcategory/:state/:city/:id", element: wrapWithSuspense(ServiceDetails) },
+      { path: "/:location/:vendorname", element: wrapWithSuspense(VenderBiodata) },
 
       { path: "/about", element: wrapWithSuspense(AboutPage) }, // Add the About page route
       {
@@ -151,7 +153,7 @@ const router = createBrowserRouter([
           { path: "vendor-profile", element: wrapWithSuspense(VendorProfile) },
           {path: "payments", element: wrapWithSuspense(Payments)},
           {path: "Plan", element: wrapWithSuspense(Subscription)},
-          // {path:"plan-details",element:wrapWithSuspense()},
+          {path:"vendor-setting",element:wrapWithSuspense(VendorSetting)},
           {
             path: "service-details/:serviceId",
             element: wrapWithSuspense(DashBoardDetailPage),

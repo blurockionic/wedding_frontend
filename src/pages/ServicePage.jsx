@@ -105,7 +105,7 @@ function ServicesPage() {
           ) : (
             <>
               {/* naviagtion  */}
-              <div className="px-10 py-2">
+              {/* <div className="px-10 py-2">
                 <span>
                   <Link>Home &gt; Wedding Venue &gt; Hotel</Link>
                 </span>
@@ -113,7 +113,7 @@ function ServicesPage() {
               <div className="p-10">
                 <h1 className="text-3xl">{`${"Wedding venue "} in ${"Ranchi"}`}</h1>
                 <p>{`Showing ${"23232 "} results as per your search criteria`}</p>
-              </div>
+              </div> */}
               {/* Scrollable Service List */}
               <div className="overflow-y-auto h-[90%] pb-20">
                 <ServiceList services={data?.ServiceResult || []} />

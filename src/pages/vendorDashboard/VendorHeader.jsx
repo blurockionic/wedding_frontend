@@ -63,8 +63,7 @@ const VendorHeader = () => {
 
       {/* Right: Action Buttons */}
       <div className="flex items-center space-x-4">
-        <HiOutlineLanguage className="text-4xl cursor-pointer transition duration-200 ease-in-out p-2 hover:bg-primary hover:text-background rounded-full text-foreground" />
-        <GoBell className="text-4xl cursor-pointer transition duration-200 ease-in-out p-2 hover:bg-primary hover:text-background rounded-full text-foreground" />
+       
         <GoPerson
             onClick={handleProfileOpen}
             
@@ -84,7 +83,7 @@ const VendorHeader = () => {
                 Profile
               </Link>
               <Link
-                to="/settings"
+                to="vendor-setting"
                 className="block px-4 py-2 text-sm text-foreground hover:text-white hover:bg-primary"
               >
                 Settings

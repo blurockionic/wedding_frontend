@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Footer from "../Footer";
-import { FaCheckCircle, FaPlus, FaTimes, FaSave, FaTrash } from "react-icons/fa";
+import { FaCheckCircle, FaPlus, FaTimes, FaSave, FaTrash, FaCalendarAlt } from "react-icons/fa";
 import { BiBell, BiBellPlus } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
@@ -86,14 +86,14 @@ const ChecklistCategory = ({ title, items }) => {
         date: dateString,
       })
     );
-    closeModal();
+    // closeModal();
   };
 
   const handleRemoveDate = (index) => {
     dispatch(
       setScheduleDate({ categoryTitle: title, itemIndex: index, date: null })
     );
-    closeModal();
+    // closeModal();
   };
 
   const openModal = (index) => {
@@ -240,73 +240,94 @@ const ChecklistCategory = ({ title, items }) => {
       
       {/* Render Modal Conditionally */}
       {scheduleIndex !== null && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center"
-          onClick={closeModal}
-        >
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
           <div
             ref={modalRef}
-            className="bg-white rounded-xl shadow-2xl w-full max-w-md"
+            className="bg-white rounded-xl shadow-2xl w-full max-w-md p-6"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-between items-start p-6 pb-3">
+            {/* Header */}
+            <div className="flex justify-between items-start pb-3">
               <div>
-                <h2 className="text-2xl font-bold text-pink-600 mb-1">
-                  Schedule Task
-                </h2>
-                <p className="text-gray-500 text-sm">
-                  (Select a task completion date.)
-                </p>
+                <h2 className="text-2xl font-bold text-pink-600 mb-1">Schedule Task</h2>
+                <p className="text-gray-500 text-sm">(Select a completion date)</p>
               </div>
               <button
                 type="button"
-                className="text-gray-300 hover:text-pink-600 rounded-full focus:outline-none transition-all duration-300 ease-in-out"
+                className="text-gray-400 hover:text-pink-600 transition-all duration-300"
                 onClick={closeModal}
               >
-                <FaTimes size={20} />
+                <FaTimes size={22} />
               </button>
             </div>
 
-            <div className="mx-6 p-3"> 
-              <h3 className="px-3 text-xl font-bold mb-1">
+            {/* Task Name & Date */}
+            <div className="px-4 py-3">
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">
                 {items[scheduleIndex]?.name}
               </h3>
-              <div className="mb-4 bg-gray-100 p-3 mx-3 rounded-md border border-gray-300">
+              <div className="bg-gray-100 p-3 rounded-lg border border-gray-300">
                 <p className="text-gray-700">
                   Complete by:{" "}
-                  {(items[scheduleIndex]?.scheduleDate) ? (
-                  <span className="font-semibold text-pink-600">
-                    {new Date(items[scheduleIndex].scheduleDate).toLocaleDateString()}
-                  </span>) : <span className="font-semibold text-pink-600">NA</span>}
+                  {items[scheduleIndex]?.scheduleDate ? (
+                    <span className="font-semibold text-pink-600">
+                      {new Date(items[scheduleIndex].scheduleDate).toLocaleDateString()}
+                    </span>
+                  ) : (
+                    <span className="font-semibold text-gray-500">Not Set</span>
+                  )}
                 </p>
               </div>
-              <div className="w-full flex justify-center">
-                <Calendar
-                  onChange={(date) => handleDateChange(date, scheduleIndex)}
-                  value={
-                    items[scheduleIndex]?.scheduleDate
-                      ? new Date(items[scheduleIndex].scheduleDate)
-                      : null
-                  }
-                  className="w-full"
-                />
-              </div>
             </div>
-            <div className="mt-6 flex items-center gap-4 p-6 pt-0">
-              {/* Remove Date Button - Conditional Rendering */}
+
+            {/* Calendar Picker */}
+            <div className="flex justify-center my-4">
+              <Calendar
+                onChange={(date) => handleDateChange(date, scheduleIndex)} // Ensure this doesn't close modal
+                value={items[scheduleIndex]?.scheduleDate ? new Date(items[scheduleIndex].scheduleDate) : null}
+                className="w-full border rounded-lg p-2"
+              />
+            </div>
+
+            {/* Google Calendar Button */}
+            {items[scheduleIndex]?.scheduleDate && (
+              <div className="flex justify-center my-4">
+                <a
+                    href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
+                      items[scheduleIndex].name
+                    )}&details=${encodeURIComponent(
+                      `Reminder to complete your task: "${items[scheduleIndex].name}"\n\nMake sure to finish it before the deadline!`
+                    )}&dates=${new Date(items[scheduleIndex].scheduleDate)
+                      .toISOString()
+                      .replace(/[-:]/g, "")
+                      .split(".")[0]}Z/${new Date(items[scheduleIndex].scheduleDate)
+                      .toISOString()
+                      .replace(/[-:]/g, "")
+                      .split(".")[0]}Z`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 flex items-center justify-center shadow-md"
+                  >
+                    <FaCalendarAlt className="mr-2" /> Set Reminder on Google Calendar
+                  </a>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex justify-between items-center mt-6">
               {items[scheduleIndex]?.scheduleDate && (
                 <button
                   type="button"
-                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md flex items-center transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-400"
+                  className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-md flex items-center gap-2 transition-all"
                   onClick={() => handleRemoveDate(scheduleIndex)}
                 >
-                  <FaTrash className="mr-2" /> Remove Date
+                  <FaTrash /> Remove Date
                 </button>
               )}
 
               <button
                 type="button"
-                className="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-6 rounded-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-pink-400 ml-auto"
+                className="bg-pink-600 hover:bg-pink-700 text-white font-medium py-2 px-6 rounded-md transition-all ml-auto"
                 onClick={closeModal}
               >
                 Close
@@ -315,6 +336,8 @@ const ChecklistCategory = ({ title, items }) => {
           </div>
         </div>
       )}
+
+
 
       {/* Add new item Form */}
       <div className="mt-4">
@@ -387,8 +410,6 @@ const Checklist = () => {
   const [totalTasks, setTotalTasks] = useState(0);
   const [completedTasks, setCompletedTasks] = useState(0);
 
-  console.log(checklistData);
-
   const {
     register: registerCategory,
     handleSubmit: handleCategorySubmit,
@@ -429,24 +450,27 @@ const Checklist = () => {
 
   const handleSave = async (isUpdate) => {
     try {
-      const payload = { checklistItems: checklistData };
-      const resultAction = await saveChecklistApi(payload);
-      toast.dismiss();
+      
+      if (!isLoading){     
+        const payload = { checklistItems: checklistData };
+        const resultAction = await saveChecklistApi(payload);
+        toast.dismiss();
 
-      if (resultAction.error) {
-        console.error("Error saving checklist:", resultAction.error);
-        toast.error(
-          `Error saving checklist: ${
-            resultAction.error.data?.message || "Unknown error"
-          }`,
-          {
-            position: "top-right",
-            autoClose: 5000,
-            theme: "light",
-          }
-        );
-      } else if (!isUpdate) {
-        toast.success("Checklist saved successfully!");
+        if (resultAction.error) {
+          console.error("Error saving checklist:", resultAction.error);
+          toast.error(
+            `Error saving checklist: ${
+              resultAction.error.data?.message || "Unknown error"
+            }`,
+            {
+              position: "top-right",
+              autoClose: 5000,
+              theme: "light",
+            }
+          );
+        } else if (!isUpdate) {
+          toast.success("Checklist saved successfully!");
+        }
       }
     } catch (error) {
       console.error("Error during save process:", error);

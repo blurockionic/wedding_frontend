@@ -1,5 +1,6 @@
 import React from 'react';
 import { useGetSubscriptionQuery } from '../../redux/payment';
+import {dateFormats} from "../../static/helper.js"
 
 export default function ActiveSubscription() {
   const { data, isLoading: subLoading, isError, error } = useGetSubscriptionQuery();
@@ -26,6 +27,18 @@ export default function ActiveSubscription() {
     );
   }
 
+  const statuscolor = (status )=>{
+    status = status.toLowerCase();
+    
+    if(status === 'active'){
+      return 'text-green-500';
+    }else if(status === 'expired'){
+      return 'text-red-500';
+    }else{
+      return 'text-yellow-500';
+    }
+  }
+
   return (
     <div className=" mx-auto bg-white rounded-xl p-6 ">
       <h2 className="text-2xl font-bold text-gray-800 mb-4 ">Active Subscriptions</h2>
@@ -38,6 +51,7 @@ export default function ActiveSubscription() {
             <th className="py-2 px-4 border">Start Date</th>
             <th className="py-2 px-4 border">End Date</th>
             <th className="py-2 px-4 border">Auto Renew</th>
+            <th className="py-2 px-4 border">Status</th>
           </tr>
         </thead>
         <tbody>
@@ -45,11 +59,12 @@ export default function ActiveSubscription() {
             <tr key={subscription.id} className="hover:bg-gray-50">
               <td className="py-2 px-4 border">{subscription.plan?.name || 'N/A'}</td>
               <td className="py-2 px-4 border">{subscription.plan?.price || 'N/A'}</td>
-              <td className="py-2 px-4 border">{new Date(subscription.start_date).toLocaleDateString()}</td>
+              <td className="py-2 px-4 border">{dateFormats(subscription.start_date)}</td>
               <td className="py-2 px-4 border">
-                {subscription.end_date ? new Date(subscription.end_date).toLocaleDateString() : 'N/A'}
+                {subscription.end_date ? dateFormats(subscription.end_date) : 'N/A'}
               </td>
               <td className="py-2 px-4 border">{subscription.auto_renew ? 'Yes' : 'No'}</td>
+              <td className={`py-2 font-bold px-4 border ${statuscolor(subscription.status)}`}>{subscription.status}</td>
             </tr>
           ))}
         </tbody>

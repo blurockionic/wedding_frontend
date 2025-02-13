@@ -56,7 +56,7 @@ function Subscription() {
 
             // Validate payment using fetch
             const validateResponse = await fetch(
-              `https://wedd-backend.onrender.com/api/v1/subscribe/verify-payment`, 
+              `http://localhost:4000/api/v1/subscribe/verify-payment`, 
               {
                 method: "POST",
                 headers: {
@@ -109,15 +109,14 @@ function Subscription() {
   }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1 className="text-2xl font-bold text-primary mb-4">Select a Plan</h1>
+    <div className="  ">
+      <header className="">
         {isLoading ? (
           <div>Loading...</div>
         ) : error ? (
           <div className="text-red-500">Error: {error.message}</div> // Display API error
         ) : (
-          <Plan displayRazorpay={displayRazorpay} /> // Pass `displayRazorpay` as a prop to `Plan`
+          <Plan displayRazorpay={displayRazorpay} /> 
         )}
       </header>
     </div>

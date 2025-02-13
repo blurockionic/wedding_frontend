@@ -6,14 +6,13 @@ const Step3 = () => {
   const {
     register,
     formState: { errors },
-    setValue,
     watch,
+    setValue,
   } = useFormContext();
   const [states, setStates] = React.useState([]);
   const [cities, setCities] = React.useState([]);
   const [selectedStateCode, setSelectedStateCode] = React.useState("");
 
-  // Fetch all states of India on initial load
   useEffect(() => {
     const india = Country.getCountryByCode("IN");
     if (india) {
@@ -21,28 +20,26 @@ const Step3 = () => {
     }
   }, []);
 
-  // Fetch cities when a state is selected
   useEffect(() => {
     if (selectedStateCode) {
       const cityList = City.getCitiesOfState("IN", selectedStateCode);
       setCities(cityList);
+    } else {
+      setCities([]); // Clear cities if no state is selected
     }
-  }, [selectedStateCode, setValue]);
+  }, [selectedStateCode]);
 
-  // Watch selected fields
-  const state = watch("state");
-
-  // Handle city selection and set address data into React Hook Form
   const handleCityChange = (e) => {
-    const selectedCityName = e.target.value.toLowerCase(); 
+    const selectedCityName = e.target.value.toLowerCase();
     const selectedCity = cities.find((c) => c.name.toLowerCase() === selectedCityName);
-  
+
     if (selectedCity) {
-      setValue("country", "india"); 
-      setValue("city", selectedCity.name.toLowerCase())
+      const selectedState = states.find(s => s.isoCode === selectedStateCode);
+      setValue("country", "india");
+      setValue("city", selectedCity.name.toLowerCase());
       setValue("latitude", String(selectedCity.latitude || "").toLowerCase());
-      setValue("longitude", String(selectedCity.longitude || "").toLowerCase()); 
-      setValue("state", String(state).toLowerCase()); 
+      setValue("longitude", String(selectedCity.longitude || "").toLowerCase());
+      setValue("state", selectedState?.name?.toLowerCase() || ""); // Set state name, handle undefined
     }
   };
 
@@ -52,14 +49,18 @@ const Step3 = () => {
         Business Details
       </h2>
 
-      {/* State Selection */}
       <div className="mb-6">
         <label className="block text-lg font-medium text-gray-700">
           State <span className="text-red-500">*</span>
         </label>
         <select
           className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-dustyRose-light"
-          onChange={(e) => setSelectedStateCode(e.target.value)}
+          onChange={(e) => {
+            setSelectedStateCode(e.target.value);
+            const selectedState = states.find(s => s.isoCode === e.target.value);
+            setValue("state", selectedState?.name?.toLowerCase() || ""); // Set state name immediately
+          }}
+          value={selectedStateCode} // Important: Add this to control the select
         >
           <option value="">Select State</option>
           {states.map((state) => (
@@ -75,7 +76,6 @@ const Step3 = () => {
         )}
       </div>
 
-      {/* City Selection */}
       <div className="mb-6">
         <label className="block text-lg font-medium text-gray-700">
           City <span className="text-red-500">*</span>
@@ -83,6 +83,7 @@ const Step3 = () => {
         <select
           className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-dustyRose-light"
           onChange={handleCityChange}
+          value={cities.find(c => c.name.toLowerCase() === watch("city"))?.name || ""} // Control city select
         >
           <option value="">Select City</option>
           {cities.map((city) => (
@@ -98,7 +99,6 @@ const Step3 = () => {
         )}
       </div>
 
-      {/* License Number Field */}
       <div className="mb-6">
         <label className="block text-lg font-medium text-gray-700">
           License Number
