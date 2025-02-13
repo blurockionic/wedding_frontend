@@ -5,6 +5,7 @@ import { BsHeartFill as HeartFilled } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { useToggleCartMutation } from "../redux/serviceSlice";
 import { toggleFavorite } from "../redux/favoriteSlice";
+import { toast } from "react-toastify";
 
 const ServiceCard = React.memo(({ service}) => {
   const [toggleCart] = useToggleCartMutation();
@@ -27,18 +28,18 @@ const ServiceCard = React.memo(({ service}) => {
     navigate(`/service/${service.id}`);
   };
 
-  // Handle favorite toggle
   const handleFavoriteClick = async (e, id) => {
     e.stopPropagation(); 
-
+  
     try {
       const response = await toggleCart(id).unwrap();
+  
       if (response.success) {
-      }
-      dispatch(toggleFavorite(id));
-
+        dispatch(toggleFavorite(id));
+        toast.success(response.message || "Added to favorites!");
+      } 
     } catch (error) {
-      console.error("Failed to toggle favorite:", error);
+      toast.error(error?.data?.message||"Failed to update favorite status. Please try again.");
     }
   };
 

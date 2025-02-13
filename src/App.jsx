@@ -90,7 +90,7 @@ const router = createBrowserRouter([
       // dynamic route for category
       { path: "/all", element: wrapWithSuspense(AllCategories) },
       { path: "/all/:category", element: wrapWithSuspense(Category) },
-      { path: "/all/:category/:subcategory", element: wrapWithSuspense(SubCategories) },
+      { path: "/all/:category/:subCategory", element: wrapWithSuspense(SubCategories) },
       { path: "/all/:category/:subcategory/:state", element: wrapWithSuspense(CategoryByState) },
       { path: "/all/:category/:subcategory/:state/:city", element: wrapWithSuspense(CategoryByCity) },
       { path: "/all/:category/:subcategory/:state/:city/:id", element: wrapWithSuspense(ServiceDetails) },

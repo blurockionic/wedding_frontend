@@ -2,8 +2,9 @@ import { useState } from "react";
 import ServiceCategoriesCard from "../../components/servicecatogories/ServiceCatogoriesCard";
 // import SubCategory from "../../components/sub-category/SubCategory";
 import { useNavigate } from "react-router-dom";
+import ServiceList from "../../components/ServiceList";
 
- const weddingVenues = [
+const weddingVenues = [
   { name: "Wedding Lawns Farmhouse", image: "/images/wedding-lawns.png" },
   { name: "Hotel", image: "/images/hotel.png" },
   { name: "Banquet Halls", image: "/images/banquet-halls.png" },
@@ -12,7 +13,7 @@ import { useNavigate } from "react-router-dom";
   { name: "Wedding Resorts", image: "/images/wedding-resorts.png" },
 ];
 
- const weddingVendors = [
+const weddingVendors = [
   { name: "Caterers", image: "/images/caterers.png" },
   { name: "Wedding Invitation", image: "/images/wedding-invitation.png" },
   { name: "Wedding Decor", image: "/images/wedding-decor.png" },
@@ -39,7 +40,7 @@ import { useNavigate } from "react-router-dom";
   { name: "Astrologers", image: "/images/astrologers.png" },
 ];
 
- const brides = [
+const brides = [
   { name: "Bridal Lahenga", image: "/images/bridal-lahenga.png" },
   { name: "Bridal Jewellery", image: "/images/bridal-jewellery.png" },
   { name: "Bridal Makeup Artist", image: "/images/bridal-makeup.png" },
@@ -47,7 +48,7 @@ import { useNavigate } from "react-router-dom";
   { name: "Makeup Salon", image: "/images/makeup-salon.png" },
 ];
 
- const grooms = [
+const grooms = [
   { name: "Sherwani", image: "/images/sherwani.png" },
   { name: "Men's Grooming", image: "/images/mens-grooming.png" },
   { name: "Men's Accessories", image: "/images/mens-accessories.png" },
@@ -56,7 +57,7 @@ import { useNavigate } from "react-router-dom";
 const ServiceCategoriesPage = () => {
   const [isActive, setIsActive] = useState(false);
   const [title, setTitle] = useState("");
-  const navigate =  useNavigate()
+  const navigate = useNavigate();
 
   const handleOnPlusBtn = (title) => {
     setIsActive(!isActive);
@@ -115,29 +116,34 @@ const ServiceCategoriesPage = () => {
     },
   ];
 
-  const handleOnSubCategoryNavigate =(category, subCategory)=>{
+  const [category, setCategory] = useState();
+
+  const handleOnSubCategoryNavigate = (category, subCategory) => {
     // const queryParams = new URLSearchParams({
     //   category,
     //   subCategory
     // }).toString();
+
     navigate(`/all/${category}/${subCategory}`);
-  }
+  };
 
   //handle on category
-  const handleOnCategory = (category) => {
-    // const queryParams = new URLSearchParams({
-    //   category
-    // }).toString();
-    navigate(`/all/${category}`);
-  }
+  const handleOnCategory = (c) => {
+    // // const queryParams = new URLSearchParams({
+    // //   category
+    // // }).toString();
+    // navigate(`/all/${category}`);
+    setCategory(c);
+  };
 
   return (
     <div className="w-full flex items-center justify-center">
+    
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-20 py-5 md:py-10">
         {categories.map((category, index) => (
           <div
             key={index}
-            // onClick={() => handleOnCategory(category.title)}
+            onClick={() => handleOnCategory(category.title)}
             className={` transition-all duration-300 ${
               isActive && title !== category.title
                 ? "opacity-50 blur-xs "
@@ -154,15 +160,15 @@ const ServiceCategoriesPage = () => {
 
             {/* SubCategory Component Opens Just Below Active Card */}
             {isActive && title === category.title && (
-              <div 
-              className="absolute left-0  w-full mt-4 bg-white z-10 px-5 md:px-20 ">
+              <div className="absolute left-0  w-full mt-4 bg-white z-10 px-5 md:px-20 ">
                 {/* Display Subcategories */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 px-4 py-5 border border-gray-200 rounded-lg shadow-lg">
                   {category.subcategories.map((sub, subIndex) => (
                     <div
                       key={subIndex}
-              onClick={()=>handleOnSubCategoryNavigate(category.title, sub.name )}
-
+                      onClick={() =>
+                        handleOnSubCategoryNavigate(category.title, sub.name)
+                      }
                       className="  items-center bg-white rounded-lg p-4 "
                     >
                       <div className="relative w-full h-40 bg-gray-200 rounded-lg mb-3 flex justify-center items-center overflow-hidden cursor-pointer">

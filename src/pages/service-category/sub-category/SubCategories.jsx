@@ -4,11 +4,32 @@ import Select from "react-select";
 import { City, State } from "country-state-city";
 import Footer from "../../Footer";
 import ServiceCard from "../component/ServiceCard";
-import { brides, grooms, weddingVendors, weddingVenues } from "../../../static/static";
+import {
+  brides,
+  grooms,
+  weddingVendors,
+  weddingVenues,
+} from "../../../static/static";
+import { useGetServicesQuery } from "../../../redux/serviceSlice";
+import { useSelector } from "react-redux";
+import ServiceList from "../../../components/ServiceList";
 
 const SubCategories = () => {
-  const { category, subcategory } = useParams();
+  const { category, subCategory } = useParams();
   const navigate = useNavigate();
+
+  const location = useSelector(
+    (state) => state.auth.user.wedding_location || state.auth.user.city
+  );
+
+  const filters = {
+    service_type: subCategory || "",
+  location
+   
+  };
+
+  const { data, error, isLoading } = useGetServicesQuery(filters);
+
 
   // Static data
   const categoryOptions = [
@@ -76,12 +97,9 @@ const SubCategories = () => {
     },
   ];
 
-
-
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
-
 
   // Handle navigation when both are selected
   const handleNavigate = () => {
@@ -92,7 +110,9 @@ const SubCategories = () => {
     }
   };
 
-  const indianStates = State.getStatesOfCountry("IN").map(state => state.name);
+  const indianStates = State.getStatesOfCountry("IN").map(
+    (state) => state.name
+  );
 
   // Sample top venues by state
   const topVenues = {
@@ -116,9 +136,7 @@ const SubCategories = () => {
 
   // Handle state selection
   const handleStateClick = (state) => {
-    navigate(
-      `/all/${category}/${subcategory}/${state}`
-    );
+    navigate(`/all/${category}/${subCategory}/${state}`);
   };
 
   // filter the data according to the selected category and location
@@ -128,17 +146,17 @@ const SubCategories = () => {
       {/* navigation */}
       <span className="px-16 text-sm">
         <Link to={`/all`}>Wedding</Link> &gt;
-         <Link to={`/all/${category}`}>{category}</Link> &gt;
-         <Link to={`/all/${category}/${subcategory}`}>{subcategory}</Link> 
-          </span>
-      <h1 className="px-16 text-2xl font-semibold">Search for {subcategory}</h1>
+        <Link to={`/all/${category}`}>{category}</Link> &gt;
+        <Link to={`/all/${category}/${subCategory}`}>{subCategory}</Link>
+      </span>
+      <h1 className="px-16 text-2xl font-semibold">Search for {subCategory}</h1>
       {/* <div className="px-16 py-4">
         <p className="mt-2">Find the best listings for {category}.</p>
 
         {/* Selectable Search Bars */}
-        {/* <div className="mt-4 flex flex-col md:flex-row gap-4">
-          {/* Category Select */}
-          {/* <Select
+      {/* <div className="mt-4 flex flex-col md:flex-row gap-4">
+          {/* Category Select */}.
+      {/* <Select
             options={categoryOptions}
             placeholder="Select a category..."
             value={selectedCategory}
@@ -147,76 +165,91 @@ const SubCategories = () => {
             className="w-full md:w-1/2"
           /> */}
 
-          {/* Location Select */}
-          {/* <Select
+      {/* Location Select */}
+      {/* <Select
             options={locationOptions}
             placeholder="Select a location..."
             value={selectedLocation}
             onChange={setSelectedLocation}
             className="w-full md:w-1/2"
           /> */}
-        {/* </div> */}
+      {/* </div> */}
 
-        {/* Navigate Button */}
-        {/* <button
+      {/* Navigate Button */}
+      {/* <button
           onClick={handleNavigate}
           disabled={!selectedCategory || !selectedLocation}
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
         >
           Search
         </button> */}
-      {/* </div> */} 
+      {/* </div> */}
 
       {/* Horizontal Scroll for States */}
       <div className="px-16 py-4">
-        <h2 className="text-xl font-semibold">{`Select ${subcategory} by region `}</h2>
+        <h2 className="text-xl font-semibold">{`Select ${subCategory} by region `}</h2>
       </div>
 
       <div className="px-16  mt-4 overflow-x-auto whitespace-nowrap flex gap-4 py-2 scrollbar-hide">
         {indianStates.map((state) => (
-          <>
-            <div className="flex flex-col items-center gap-2">
-              <span className="w-40 h-40 bg-gray-50 rounded-full shadow-md"></span>
-              <p
-                key={state}
-                onClick={() => handleStateClick(state)}
-                // className={`px-4 py-2 rounded-full transition ${
-                //   selectedCategory
-                //     ? "bg-gray-200 hover:bg-blue-500 hover:text-white"
-                //     : "bg-gray-300 cursor-not-allowed"
-                // }`}
-                className={`px-4 py-2 text-md rounded-full transition cursor-pointer`}
-                // disabled={!selectedCategory}
-              >
-                {state}
-              </p>
-              <span className="text-xs">{`1223 ${subcategory}`}</span>
-            </div>
-          </>
+          <div key={state} className="flex flex-col items-center gap-2">
+            <span className="w-40 h-40 bg-gray-50 rounded-full shadow-md"></span>
+            <p
+              key={state}
+              onClick={() => handleStateClick(state)}
+              // className={`px-4 py-2 rounded-full transition ${
+              //   selectedCategory
+              //     ? "bg-gray-200 hover:bg-blue-500 hover:text-white"
+              //     : "bg-gray-300 cursor-not-allowed"
+              // }`}
+              className={`px-4 py-2 text-md rounded-full transition cursor-pointer`}
+              // disabled={!selectedCategory}
+            >
+              {state}
+            </p>
+            <span className="text-xs">{`1223 ${subCategory}`}</span>
+          </div>
         ))}
       </div>
 
+
       {/* Top Venues by Selected State */}
 
+        <div className="my-10 mx-5">
+        <ServiceList services={data?.ServiceResult || []} />
+        </div>
+
+
       <div className="mt-6 px-16 py-4">
-        <h2 className="text-xl font-semibold">{`Top ${subcategory} in Delhi`}</h2>
+
+      
+
+        <h2 className="text-xl font-semibold">{`Top ${subCategory} in Delhi`}</h2>
         <ul className="mt-2 space-y-2 flex items-center gap-2">
           {topVenues.delhi.map((venue, index) => (
             <li key={index} className=" p-2 rounded-lg">
-              
-              <ServiceCard image={""} title={venue} rate={"20002"} rating={2.5}/>
-              
+              <ServiceCard
+                image={""}
+                title={venue}
+                rate={"20002"}
+                rating={2.5}
+              />
             </li>
           ))}
         </ul>
       </div>
 
       <div className="mt-6 px-16 py-4">
-        <h2 className="text-xl font-semibold">{`Top ${subcategory} in Karnataka`}</h2>
+        <h2 className="text-xl font-semibold">{`Top ${subCategory} in Karnataka`}</h2>
         <ul className="mt-2 space-y-2 flex itesm-center gap-2">
           {topVenues.maharashtra.map((venue, index) => (
             <li key={index} className=" p-2 rounded-lg">
-              <ServiceCard image={""} title={venue} rate={"20002"} rating={2.5}/>
+              <ServiceCard
+                image={""}
+                title={venue}
+                rate={"20002"}
+                rating={2.5}
+              />
             </li>
           ))}
         </ul>
@@ -227,13 +260,18 @@ const SubCategories = () => {
         <ul className="mt-2 space-y-2 flex items-center gap-2">
           {topVenues.karnataka.map((venue, index) => (
             <li key={index} className=" p-2 rounded-lg">
-              <ServiceCard image={""} title={venue} rate={"20002"} rating={2.5}/>
+              <ServiceCard
+                image={""}
+                title={venue}
+                rate={"20002"}
+                rating={2.5}
+              />
             </li>
           ))}
         </ul>
       </div>
 
-      <Footer/>
+      <Footer />
     </>
   );
 };
