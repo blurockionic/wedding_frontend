@@ -2,11 +2,24 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { City, State } from "country-state-city";
 import Footer from "../../Footer";
 import ServiceCard from "../component/ServiceCard";
+import { useGetServicesQuery } from "../../../redux/serviceSlice";
 
 const CategoryByState = () => {
   const { category, subcategory, state } = useParams();
   const navigate = useNavigate();
 
+  // const location = useSelector(
+  //   (state) => state?.auth?.user?.wedding_location || state?.auth?.user?.city
+  // );
+
+  const filters = {
+    service_type: subcategory || "",
+    state
+  };
+
+  const { data, error, isLoading } = useGetServicesQuery(filters);
+
+  console.log(data)
   // Convert state name to state ISO code
   const selectedState = State.getStatesOfCountry("IN").find(
     (s) => s.name.toLowerCase() === state.toLowerCase()
@@ -16,6 +29,14 @@ const CategoryByState = () => {
   const cities = selectedState
     ? City.getCitiesOfState("IN", selectedState.isoCode).map((city) => city.name)
     : [];
+
+    const stateServiceCount = data?.ServiceResult.reduce((acc, service) => {
+      const state = service?.vendor?.state;
+      if (state) {
+        acc[state] = (acc[state] || 0) + 1;
+      }
+      return acc;
+    }, {});
 
 
   // Sample top venues by state (dynamic state selection)
