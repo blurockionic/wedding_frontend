@@ -44,13 +44,16 @@ export default function Plan({ displayRazorpay }) {
               <h4 className="text-lg font-medium text-primary-foreground">
                 Features
               </h4>
-              <ul className="list-disc pl-6 text-muted-foreground">
-                {Object.entries(plan.features).map(([key, value]) => (
-                  <li key={key}>{`${
-                    key.charAt(0).toUpperCase() + key.slice(1)
-                  }: ${value}`}</li>
-                ))}
-              </ul>
+              
+              {plan.features && Object.keys(plan.features).length > 0 && (
+                <ul className="list-disc pl-6 text-muted-foreground">
+                  {Object.entries(plan.features).map(([key, value]) => (
+                    <li key={key}>{`${
+                      key.charAt(0).toUpperCase() + key.slice(1)
+                    }: ${value}`}</li>
+                  ))}
+                </ul>
+              )}
             </div>
 
             <button
