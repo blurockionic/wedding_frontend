@@ -21,47 +21,53 @@ export default function Plan({ displayRazorpay }) {
         Available Plans
       </h2>
 
-      <div className="flex justify-center items-center">
+      <div
+        className={`grid gap-5 grid-cols-1 md:grid-cols-2 ustify-center"  ${
+          data?.plan.length >= 3 ? "lg:grid-cols-3" : "lg:grid-cols-2"
+        }`}
+      >
         {data?.plan?.map((plan) => (
-          <div
-            key={plan.id}
-            className="bg-card p-6 lg:w-1/2 md:w-1/2 max-w-1/2 py-10 rounded-lg shadow-custom shadow-pink-400 mb-6"
-          >
-            <h3 className="text-2xl text-center font-bold text-primary-foreground mb-4">
-              {plan.name}
-            </h3>
-            <p className="text-muted-foreground   mb-4">{plan.description}</p>
-            <div className="flex justify-between items-center mb-4">
-              <span className="text-lg font-semibold text-muted-foreground">
-                {`${formatPrice(plan.price)} / ${plan.duration}`}
-              </span>
-              <span className="text-muted-foreground text-sm">
-                Trial: {plan.trial_period} days
-              </span>
-            </div>
-
-            <div className="mb-4">
-              <h4 className="text-lg font-medium text-primary-foreground">
-                Features
-              </h4>
-              
-              {plan.features && Object.keys(plan.features).length > 0 && (
-                <ul className="list-disc pl-6 text-muted-foreground">
-                  {Object.entries(plan.features).map(([key, value]) => (
-                    <li key={key}>{`${
-                      key.charAt(0).toUpperCase() + key.slice(1)
-                    }: ${value}`}</li>
-                  ))}
-                </ul>
-              )}
-            </div>
-
-            <button
-              onClick={() => displayRazorpay(plan.id)}
-              className="w-full hover:bg-primary text-primary-foreground py-2 rounded-lg mt-4 bg-accent focus:outline-none focus:ring-2 focus:ring-primary"
+          <div className="flex justify-center items-center">
+            <div
+              key={plan.id}
+              className="bg-card p-6 max-w-xs  h-fit py-10 rounded-lg shadow-custom shadow-pink-400 mb-6"
             >
-              Subscribe Now
-            </button>
+              <h3 className="text-2xl text-center font-bold text-primary-foreground mb-4">
+                {plan.name}
+              </h3>
+              <p className="text-muted-foreground   mb-4">{plan.description}</p>
+              <div className="flex justify-between items-center mb-4">
+                <span className="text-lg font-semibold text-muted-foreground">
+                  {`${formatPrice(plan.price)} / ${plan.duration}`}
+                </span>
+                <span className="text-muted-foreground text-sm">
+                  Trial: {plan.trial_period} days
+                </span>
+              </div>
+
+              <div className="mb-4">
+                <h4 className="text-lg font-medium text-primary-foreground">
+                  Features
+                </h4>
+
+                {plan.features && Object.keys(plan.features).length > 0 && (
+                  <ul className="list-disc pl-6 text-muted-foreground">
+                    {Object.entries(plan.features).map(([key, value]) => (
+                      <li key={key}>{`${
+                        key.charAt(0).toUpperCase() + key.slice(1)
+                      }: ${value}`}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
+              <button
+                onClick={() => displayRazorpay(plan.id)}
+                className="w-full hover:bg-primary text-primary-foreground py-2 rounded-lg mt-4 bg-accent focus:outline-none focus:ring-2 focus:ring-primary"
+              >
+                Subscribe Now
+              </button>
+            </div>
           </div>
         ))}
       </div>
