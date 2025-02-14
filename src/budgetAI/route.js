@@ -214,7 +214,7 @@ export async function handler(req, res) {
   } catch (error) {
     console.error("API Error:", error);
     return res.status(500).json({
-      content: "Our wedding planning services are currently unavailable. Please try again later.",
+      content: "Our wedding planning services are currently unavailable. Please try again later in some time.",
       vendors: [],
     });
   }
