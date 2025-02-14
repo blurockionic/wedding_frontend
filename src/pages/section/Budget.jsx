@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { useChat } from 'ai/react';
+import { useChat } from '@ai-sdk/react';
 import Bubble from '../../components/budget/Bubble';
 import PromptSuggestionsRow from '../../components/budget/PromptSuggestionsRows';
 import LoadingBubble from '../../components/budget/LoadingBubble';

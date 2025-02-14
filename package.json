@@ -24,6 +24,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "flowbite": "^2.5.2",
+    "langchain": "^0.3.15",
     "lucide-react": "^0.472.0",
     "mongodb": "^6.13.0",
     "prisma": "^6.2.1",

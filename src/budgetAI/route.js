@@ -23,6 +23,11 @@ const llm = new ChatGroq({
   model: "llama-3.2-90b-vision-preview",
   temperature: 0,
 });
+const llm2 = new ChatGroq({
+  apiKey: GROQ_API_KEY,
+  model: "llama-3.2-90b-vision-preview",
+  temperature: 0.7,
+});
 
 const SERVICE_TYPES = [
   "wedding lawns farmhouse", "hotel", "banquet halls", "marriage garden",
@@ -122,7 +127,8 @@ export async function handler(req, res) {
 
     if (serviceTypes.includes("other")) {
       return res.status(200).json({
-        content: "Which specific service are you looking for? (e.g., catering, venue, photography)"
+        content: "Which specific service are you looking for? (e.g., catering, venue, photography)",
+        vendors: [],
       });
     }
 
@@ -141,32 +147,75 @@ export async function handler(req, res) {
 
     if (!vendors.length) {
       return res.status(200).json({
-        content: `No ${serviceTypes.join(", ")} vendors found matching your criteria.`
+        content: `No ${serviceTypes.join(", ")} vendors found matching your criteria.`,
+        vendors: [],
       });
     }
 
-    // Generate structured response using Groq
-    const response = await streamText({
-      model: llm,
-      system: `Format vendor results like this:
-      1. **Vendor Name** - 💰 Price: ₹[min_price] | ⭐ Rating: [rating]
-      2. Service: [service_type]
-      3. Rating: [rating]
-      Format multiple vendors in a numbered list.`,
+    const responseStream = await streamText({
+      model: llm2,
+      system: `You are an intelligent wedding planner assistant. Always respond in JSON format.
+    
+      Example Response Format:
+      {
+        "message": "Generated response here",
+        "vendors": [
+          {
+            "name": "Vendor Name",
+            "rating": 4.5,
+            "price_range": "₹10000 - ₹20000",
+            "service_type": "Catering"
+          }
+        ]
+      }`,
       messages: [{
         role: "user",
-        content: `List the best ${serviceTypes.join(", ")} options: ${JSON.stringify(vendors)}`
+        content: `User Query: ${userMessage}
+        Available Services: ${serviceTypes.join(", ")}
+        Vendors: ${JSON.stringify(vendors)}`
       }]
     });
-
-    return res.status(200).json({
-      content: response.content,
-      vendors
-    });
+    
+    let llmResponse = "";
+    for await (const chunk of responseStream) {
+      llmResponse += chunk;
+    }
+    
+    console.log("Raw LLM Response:", llmResponse);
+    
+    try {
+      const structuredResponse = JSON.parse(llmResponse);
+    
+      const filteredVendors = vendors.map(vendor => {
+        const { embedding, ...rest } = vendor;
+        return rest;
+      });
+      
+    
+      // Sort vendors by rating (descending) and price (ascending)
+      filteredVendors.sort((a, b) => {
+        if (b.rating !== a.rating) return b.rating - a.rating;
+        return a.min_price - b.min_price;
+      });
+    
+      return res.status(200).json({
+        content: structuredResponse,
+        vendors: filteredVendors
+      });
+    } catch (error) {
+      console.error("LLM response is not valid JSON:", error);
+    
+      return res.status(500).json({
+        error: "Invalid response from AI",
+        vendors: []
+      });
+    }
+       
   } catch (error) {
     console.error("API Error:", error);
     return res.status(500).json({
-      content: "Our wedding planning services are currently unavailable. Please try again later."
+      content: "Our wedding planning services are currently unavailable. Please try again later.",
+      vendors: [],
     });
   }
 }
