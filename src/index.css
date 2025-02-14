@@ -156,9 +156,9 @@ html {
   }
 }
 
-  .animate-gradient-move {
-    animation: gradient-move 5s infinite linear;
-  }
+.animate-gradient-move {
+  animation: gradient-move 5s infinite linear;
+}
 .bubble.user {
   border-radius: 20px 20px 0 20px;
   background-color: rgb(95, 146, 176);
