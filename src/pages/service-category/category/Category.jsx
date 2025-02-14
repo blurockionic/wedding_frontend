@@ -117,9 +117,13 @@ const Category = () => {
   // Handle state selection
   const handleStateClick = (state) => {
     navigate(
-      `/all/${category}/${state.toLowerCase()}`
+      `/all/${category}/${state}`
     );
   };
+
+  // key_id = rzp_live_xNk4evjTjQGwAn
+
+  // secret_id=gWO3zY8HcMw1sQrtAVklYBt0
 
   // filter the data according to the selected category and location
   const filteredData = categories.filter((item) => item.title === category)[0];
