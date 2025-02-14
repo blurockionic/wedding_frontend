@@ -17,6 +17,7 @@ const VendorRegistration = lazy(() =>
 import VendorDashboard from "./pages/vendorDashboard/Dashboard.jsx";
 const Subscription =lazy(()=>import("./pages/Subscription.jsx")) 
 import { HelmetProvider } from "react-helmet-async";
+import HeapServices from "./pages/HeapServices.jsx";
 
 const Billing = lazy(()=>import("./pages/vendorDashboard/Billing.jsx"))
 
@@ -67,6 +68,8 @@ const  ServiceDetails  = lazy(()=>import("./pages/service-category/service-detai
 const Payments = lazy(() => import("./pages/vendorDashboard/component/Payments.jsx"));
 const AboutPage = lazy(() => import("./pages/section/About.jsx")); 
 const VendorSetting = lazy(()=>import ("./pages/vendorDashboard/VendorsSetting.jsx"))
+// Import the About page
+const Budget = lazy(() => import("./pages/section/Budget.jsx"));
 
 function wrapWithSuspense(Component) {
   return (
@@ -97,6 +100,8 @@ const router = createBrowserRouter([
       { path: "/:location/:vendorname", element: wrapWithSuspense(VenderBiodata) },
 
       { path: "/about", element: wrapWithSuspense(AboutPage) }, // Add the About page route
+      { path: "/budget", element: wrapWithSuspense(Budget) },
+      { path: "/heapService", element: wrapWithSuspense(HeapServices) },
       {
         path: "/user-forgot-password",
         element: wrapWithSuspense(UserForgotPassword),
