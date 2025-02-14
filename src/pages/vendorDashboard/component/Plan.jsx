@@ -45,10 +45,11 @@ export default function Plan({ displayRazorpay }) {
                 Features
               </h4>
               <ul className="list-disc pl-6 text-muted-foreground">
-                <li>{`Storage: ${plan.features.storage}`}</li>
-                <li>{`Support: ${plan.features.support}`}</li>
-                <li>{`Access: ${plan.features.access}`}</li>
-                <li>{`Users: ${plan.features.users}`}</li>
+                {Object.entries(plan.features).map(([key, value]) => (
+                  <li key={key}>{`${
+                    key.charAt(0).toUpperCase() + key.slice(1)
+                  }: ${value}`}</li>
+                ))}
               </ul>
             </div>
 
