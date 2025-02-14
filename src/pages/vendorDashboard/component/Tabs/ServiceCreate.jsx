@@ -23,6 +23,7 @@ import { z } from "zod"; // Using Zod for validation
 import { zodResolver } from "@hookform/resolvers/zod";
 import { InputField } from "../../../../components/global/inputfield/InputField";
 import CustomText from "../../../../components/global/text/CustomText";
+import { Country, State, City } from "country-state-city";
 
 // Zod validation schema for form
 export const serviceValidate = z.object({
@@ -31,6 +32,8 @@ export const serviceValidate = z.object({
   min_price: z.string(),
   service_type: z.string().optional(),
   service_unit: z.string().optional(),
+  city:z.string().optional(),
+  state:z.string().optional(),
 });
 
 const ServiceCreate = ({ onClose, serviceData }) => {
@@ -47,6 +50,7 @@ const ServiceCreate = ({ onClose, serviceData }) => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedService, setSelectedService] = useState("");
   const [selectedUnit, setSelectedUnit] = useState("");
+
   const navigate = useNavigate();
 
   const {
@@ -55,9 +59,48 @@ const ServiceCreate = ({ onClose, serviceData }) => {
     formState: { errors },
     setValue,
     getValues,
+    watch,
   } = useForm({
     resolver: zodResolver(serviceValidate),
   });
+
+  const [states, setStates] = React.useState([]);
+  const [cities, setCities] = React.useState([]);
+  const [selectedStateCode, setSelectedStateCode] = React.useState("");
+
+  useEffect(() => {
+    const india = Country.getCountryByCode("IN");
+    if (india) {
+      setStates(State.getStatesOfCountry(india.isoCode));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (selectedStateCode) {
+      const cityList = City.getCitiesOfState("IN", selectedStateCode);
+      setCities(cityList);
+    } else {
+      setCities([]);
+    }
+  }, [selectedStateCode]);
+
+  const handleCityChange = (e) => {
+    const selectedCityName = e.target.value.toLowerCase();
+    const selectedCity = cities.find(
+      (c) => c.name.toLowerCase() === selectedCityName
+    );
+
+    if (selectedCity) {
+      const selectedState = states.find((s) => s.isoCode === selectedStateCode);
+      console.log(selectedState);
+      
+      setValue("country", "india");
+      setValue("city", selectedCity.name.toLowerCase());
+      setValue("latitude", String(selectedCity.latitude || "").toLowerCase());
+      setValue("longitude", String(selectedCity.longitude || "").toLowerCase());
+      setValue("state", selectedState?.name?.toLowerCase() || ""); 
+    }
+  };
 
   const onSubmit = async (data) => {
     console.log(data);
@@ -66,7 +109,6 @@ const ServiceCreate = ({ onClose, serviceData }) => {
       const preparedData = {
         ...data,
         min_price: Number(data.min_price),
-
       };
 
       let res;
@@ -155,12 +197,11 @@ const ServiceCreate = ({ onClose, serviceData }) => {
       service_unit: dataFromUseForm.service_unit || serviceData?.service_unit,
     };
     if (
-      !serviceData && (
-        !initialData.service_name ||
+      !serviceData &&
+      (!initialData.service_name ||
         !initialData.min_price ||
         !initialData.service_type ||
-        !initialData.service_unit
-      )
+        !initialData.service_unit)
     ) {
       toast.error(
         "Missing required data: service_name, min_price, or service_type."
@@ -265,12 +306,68 @@ const ServiceCreate = ({ onClose, serviceData }) => {
             <InputField
               id="min_price"
               type="text"
-              
               label={`Min Price${selectedUnit ? ` (${selectedUnit})` : ""}`}
               register={register}
               error={errors.min_price}
               placeholder="min_price"
             />
+          </div>
+
+          <div className="flex justify-center flex-col md:flex-row items-center gap-5">
+            <div className="mb-6 w-full">
+              <label className="block text-lg font-medium text-gray-700">
+                State <span className="text-red-500">*</span>
+              </label>
+              <select
+                className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-dustyRose-light"
+                onChange={(e) => {
+                  setSelectedStateCode(e.target.value);
+                  const selectedState = states.find(
+                    (s) => s.isoCode === e.target.value
+                  );
+                  setValue("state", selectedState?.name?.toLowerCase() || ""); // Set state name immediately
+                }}
+                value={selectedStateCode} // Important: Add this to control the select
+              >
+                <option value="">Select State</option>
+                {states.map((state) => (
+                  <option key={state.isoCode} value={state.isoCode}>
+                    {state.name}
+                  </option>
+                ))}
+              </select>
+              {errors.state && (
+                <span className="text-red-500 text-sm mt-1">
+                  {errors.state.message}
+                </span>
+              )}
+            </div>
+
+            <div className="w-full mb-6">
+              <label className="block text-lg font-medium text-gray-700">
+                City <span className="text-red-500">*</span>
+              </label>
+              <select
+                className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-dustyRose-light"
+                onChange={handleCityChange}
+                value={
+                  cities.find((c) => c.name.toLowerCase() === watch("city"))
+                    ?.name || ""
+                } // Control city select
+              >
+                <option value="">Select City</option>
+                {cities.map((city) => (
+                  <option key={city.name} value={city.name}>
+                    {city.name}
+                  </option>
+                ))}
+              </select>
+              {errors.city && (
+                <span className="text-red-500 text-sm mt-1">
+                  {errors.city.message}
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Service Type Field */}
