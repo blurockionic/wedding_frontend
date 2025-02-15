@@ -9,7 +9,8 @@ const CategoryByCity = () => {
 
   // State for Filters
   const [filters, setFilters] = useState({
-    location: city || state || "",
+    city: city || "",
+    state:state ,
     service_type: subCategory || "",
     status: "active",
     rating: "",
