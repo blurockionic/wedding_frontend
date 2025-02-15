@@ -156,12 +156,22 @@ export const serviceApi = createApi({
       }),
     }),
 
+    getMostViewdServices:builder.query({
+      query:()=>({
+        url:`services/getMostViewedServices`,
+        method:"GET"
+
+      })
+
+    })
+
 
   }),
 });
 
 // Export hooks for each endpoint
 export const {
+ useGetMostViewdServicesQuery,
   useGetServicesQuery,
   useSwitchServiceMutation,
   useGetServiceByIdQuery,

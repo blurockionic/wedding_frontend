@@ -1,6 +1,6 @@
 import ServiceCard from "../ServiceCard";
 
-const MostBookedService = ({ services }) => {
+const TopRated = ({ services }) => {
   if (!services.length) {
     return (
       <div className="f flex items-center justify-center">
@@ -25,4 +25,4 @@ const MostBookedService = ({ services }) => {
   );
 };
 
-export default MostBookedService;
+export default TopRated;

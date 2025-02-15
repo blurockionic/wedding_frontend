@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import CustomButton from "../../components/global/button/CustomButton";
 import CustomInput from "../../components/global/inputfield/CustomInput";
 import { GoLocation, GoSearch } from "react-icons/go";
-import Discover from "../../components/home/home-discover/Discover";
+import Discover from "../../components/home/home-discover/Discover.jsx";
 import { Helmet } from "react-helmet-async";
 import { allCategories } from "../../components/Sidebar";
 import { Country, State, City } from "country-state-city";
