@@ -37,12 +37,9 @@ const CategoryByState = () => {
     }, {});
 
 
-
-
-
   // Handle navigation when state is selected
   const handleStateClick = (city) => {
-    navigate(`/all/${category.toLowerCase()}/${subcategory.toLowerCase()}/${state.toLowerCase()}/${city.toLowerCase()}`);
+    navigate(`/all/${category}/${subcategory}/${state}/${city}`);
   };
   
 
@@ -53,7 +50,7 @@ const CategoryByState = () => {
         <Link to={`/all`}>Wedding</Link> &gt;
         <Link to={`/all/${category}`}>{category}</Link> &gt;
         <Link to={`/all/${category}/${subcategory}`}>{subcategory}</Link> &gt;
-        <Link to={`/all/${category}/${subcategory}/${state}`}>{state}</Link>
+        <Link to={`/all/${category}/${subcategory}/${state}`} className="capitalize">{state}</Link>
       </span>
       <h1 className="px-16 text-2xl font-semibold">
         Search for {subcategory} in {state}

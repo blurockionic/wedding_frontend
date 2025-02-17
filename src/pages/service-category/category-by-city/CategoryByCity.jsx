@@ -11,10 +11,9 @@ const CategoryByCity = () => {
 
   // State for Filters
   const [filters, setFilters] = useState({
-    state:  state ,
-    service_type: subcategory ,
+    city: city || "",
+    state:state ,
     status: "active",
-    city: city
   });
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -44,7 +43,6 @@ const CategoryByCity = () => {
   // Fetch Data
   const { data, error, isLoading } = useGetServicesQuery(memoizedFilters);
 
-  // console.log(data)
 
   // Handle Filter Changes
   const handleFilterChange = (e) => {
@@ -103,14 +101,14 @@ const CategoryByCity = () => {
       <div className="w-3/4">
         <span className="text-sm">
           <Link to={`/all`}>Wedding</Link> &gt;
-          <Link to={`/all/${category}`}>{category}</Link> &gt;
-          <Link to={`/all/${category}/${subcategory}`}>{subcategory}</Link> &gt;
-          <Link to={`/all/${category}/${subcategory}/${state}`}>{state}</Link> &gt;
-          <Link to={`/all/${category}/${subcategory}/${state}/${city}`}>{city}</Link>
+          <Link to={`/all/${category}`}> {category}</Link> &gt;
+          <Link to={`/all/${category}/${subcategory}`}> {subcategory}</Link> &gt;
+          <Link to={`/all/${category}/${subcategory}/${state}`} className="capitalize"> {state}</Link> &gt;
+          <Link to={`/all/${category}/${subcategory}/${state}/${city}`} className="capitalize"> {city}</Link>
         </span>
 
         <h1 className="text-2xl font-bold">
-          {subcategory} in {city}, {state}
+         <span className="capitalize"> {subcategory}</span> in <span className="capitalize">{city}</span>, <span className="capitalize">{state}</span>
         </h1>
         <p className="mt-2">
           Here you will find all listings for {subcategory} in {city}.
@@ -118,7 +116,8 @@ const CategoryByCity = () => {
 
         {/* Service Listings Grid */}
         <div className="my-10">
-          <ServiceList services={data?.ServiceResult || []} />
+          <ServiceList services={data?.ServiceResult || []} category={category}  
+        state={state} subCategory={subcategory} city={city}/>
         </div>
       </div>
     </div>

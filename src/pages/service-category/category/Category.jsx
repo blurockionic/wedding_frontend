@@ -1,7 +1,4 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { useState } from "react";
-import Select from "react-select";
-import { City, State } from "country-state-city";
 import Footer from "../../Footer";
 import ServiceCard from "../component/ServiceCard";
 import { brides, grooms, weddingVendors, weddingVenues } from "../../../static/static";
@@ -10,19 +7,7 @@ const Category = () => {
   const { category } = useParams();
   const navigate = useNavigate();
 
-  // Static data
-  const categoryOptions = [
-    { value: "lawns", label: "Lawns" },
-    { value: "farmhouses", label: "Farmhouses" },
-    { value: "hotels", label: "Hotels" },
-  ];
-
-  const locationOptions = [
-    { value: "jharkhand", label: "Jharkhand" },
-    { value: "maharashtra", label: "Maharashtra" },
-    { value: "delhi", label: "Delhi" },
-    { value: "karnataka", label: "Karnataka" },
-  ];
+ 
 
   const categories = [
     {
@@ -78,21 +63,9 @@ const Category = () => {
 
 
 
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedLocation, setSelectedLocation] = useState(null);
-  const [selectedState, setSelectedState] = useState(null);
 
 
-  // Handle navigation when both are selected
-  const handleNavigate = () => {
-    if (selectedCategory && selectedLocation) {
-      navigate(
-        `/all/${category}/${selectedCategory.value}/${selectedLocation.value}`
-      );
-    }
-  };
 
-  // const indianStates = State.getStatesOfCountry("IN").map(state => state.name);
 
   // Sample top venues by state
   const topVenues = {
@@ -133,41 +106,7 @@ const Category = () => {
       {/* navigation */}
       <span className="px-16 text-sm"><Link to={`/all`}>Wedding</Link> &gt; <Link to={`/all/${category}`}>{category}</Link>  </span>
       <h1 className="px-16 text-2xl font-semibold">{category}</h1>
-      {/* <div className="px-16 py-4">
-        <p className="mt-2">Find the best listings for {category}.</p>
-
-        {/* Selectable Search Bars */}
-        {/* <div className="mt-4 flex flex-col md:flex-row gap-4">
-          {/* Category Select */}
-          {/* <Select
-            options={categoryOptions}
-            placeholder="Select a category..."
-            value={selectedCategory}
-            defaultInputValue={category}
-            onChange={setSelectedCategory}
-            className="w-full md:w-1/2"
-          /> */}
-
-          {/* Location Select */}
-          {/* <Select
-            options={locationOptions}
-            placeholder="Select a location..."
-            value={selectedLocation}
-            onChange={setSelectedLocation}
-            className="w-full md:w-1/2"
-          /> */}
-        {/* </div> */}
-
-        {/* Navigate Button */}
-        {/* <button
-          onClick={handleNavigate}
-          disabled={!selectedCategory || !selectedLocation}
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
-        >
-          Search
-        </button> */}
-      {/* </div> */} 
-
+     
       {/* Horizontal Scroll for States */}
       <div className="px-16 py-4">
         <h2 className="text-xl font-semibold">{`Select ${category} by category `}</h2>

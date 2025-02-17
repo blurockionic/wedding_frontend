@@ -98,3 +98,11 @@ export const servicesUnit = {
   "Men's Grooming": ["Per Session", "Groom Package"],
   "Men's Accessories": ["Per Item", "Per Set"],
 };
+
+
+export const allCategories = {
+  "Wedding Venue": (weddingVenues || []).map((venue) => venue?.name || venue),
+  "Wedding Vendor": (weddingVendors || []).map((vendor) => vendor?.name || vendor),
+  "Bride": (brides || []).map((bride) => bride?.name || bride),
+  "Groom":(grooms || []).map((groom) => groom?.name || groom),
+};

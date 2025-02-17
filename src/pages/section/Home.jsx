@@ -7,9 +7,8 @@ import CustomInput from "../../components/global/inputfield/CustomInput";
 import { GoLocation, GoSearch } from "react-icons/go";
 import Discover from "../../components/home/home-discover/Discover";
 import { Helmet } from "react-helmet-async";
-import { allCategories } from "../../components/Sidebar";
-import { Country, State, City } from "country-state-city";
-import FeatureService from "../../components/featuredservices/FeatureService";
+import { allCategories } from "../../static/static";
+import { useGetServicesQuery } from "../../redux/serviceSlice";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -17,73 +16,103 @@ export default function Home() {
   const [location, setLocation] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [locationSuggestions, setLocationSuggestions] = useState([]);
-  const [states, setStates] = useState([]);
-  const [allCities, setAllCities] = useState([]);
+  const [locationSuggestions, setLocationSuggestions] = useState({});
   const [showlocationSuggestions, setShowlocationSuggestions] = useState(false);
+  const [expandedStates, setExpandedStates] = useState({});
+  const [originalLocationData, setOriginalLocationData] = useState({});
+
+  const { data, error, isLoading } = useGetServicesQuery();
 
   useEffect(() => {
     Aos.init({
       duration: 1000,
     });
-    fetchStatesAndCities();
+    // fetchStatesAndCities();
   }, []);
 
+  //handle on change vendors
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearch(value);
-
     if (value) {
-      const filtered = allCategories.filter((category) =>
-        category.toLowerCase().includes(value.toLowerCase())
-      );
+      const filtered = Object.entries(allCategories)
+        .map(([category, subcategories]) => ({
+          category,
+          subcategories: subcategories.filter((sub) =>
+            sub.toLowerCase().includes(value.toLowerCase())
+          ),
+        }))
+        .filter((item) => item.subcategories.length > 0);
+
       setSuggestions(filtered);
       setShowSuggestions(true);
     } else {
       setShowSuggestions(false);
     }
   };
-  const handleSuggestionClick = (category) => {
-    setSearch(category);
+
+  useEffect(() => {
+    console.log(data?.ServiceResult);
+
+    if (!data?.ServiceResult) return;
+
+    const filterData = data.ServiceResult.reduce((acc, service) => {
+      if (service.state) {
+        acc[service.state] = acc[service.state] || [];
+        acc[service.state].push(service.city);
+      }
+      return acc;
+    }, {});
+
+    //set data
+    setOriginalLocationData(filterData); // Store original data
+    setLocationSuggestions(filterData);
+  }, [data]);
+
+  const toggleState = (state) => {
+    setExpandedStates((prev) => ({
+      ...prev,
+      [state]: !prev[state],
+    }));
+  };
+
+  // set value on input field
+  const handleSuggestionClick = (category, subcategory) => {
+    setSearch(subcategory);
     setShowSuggestions(false);
   };
 
+
+  //handle on location 
   const handleSearchLocationChange = (e) => {
     const searchLocation = e.target.value;
+    setLocation(searchLocation);
+  
     if (searchLocation) {
-      const filteredLocation = allCities
-        .filter((item) => {
-          return item.name
-            .toLowerCase()
-            .startsWith(searchLocation.toLowerCase());
-        })
-        .map((item) => item.name);
-
+      const filteredLocation = Object.entries(originalLocationData)
+        .reduce((acc, [state, cities]) => {
+          const filteredCities = cities.filter((city) =>
+            city.toLowerCase().startsWith(searchLocation.toLowerCase())
+          );
+  
+          if (filteredCities.length > 0) {
+            acc[state] = filteredCities;
+          }
+          return acc;
+        }, {});
+  
       setLocationSuggestions(filteredLocation);
-      setShowlocationSuggestions(true);
+      setShowlocationSuggestions(Object.keys(filteredLocation).length > 0);
     } else {
       setShowlocationSuggestions(false);
+      setLocationSuggestions(originalLocationData); // Reset to original data
     }
-    setLocation(searchLocation);
   };
 
+  //set wedding location
   const handleLocationClick = (c) => {
     setLocation(c);
     setShowlocationSuggestions(false);
-  };
-
-  const fetchStatesAndCities = async () => {
-    const india = Country.getCountryByCode("IN");
-    if (india) {
-      const statesList = State.getStatesOfCountry(india.isoCode);
-      setStates(statesList);
-      let cityCollection = [];
-      statesList.map((state) => {
-        const cities = City.getCitiesOfState(india.isoCode, state.isoCode);
-        cityCollection = [...cityCollection, ...cities];
-      });
-      setAllCities(cityCollection.flat());
-    }
   };
 
   const handleNavigate = () => {
@@ -94,6 +123,7 @@ export default function Home() {
     navigate(`/services?${queryParams}`);
   };
 
+  console.log(locationSuggestions);
   return (
     <>
       {/* SEO Optimization */}
@@ -175,7 +205,7 @@ export default function Home() {
             <span className="text-[#fecd17]">Dream Wedding</span>
 
             {/* Tagline */}
-          {/* <span className="text-gray-300 text-lg mt-5">
+            {/* <span className="text-gray-300 text-lg mt-5">
             Find the best wedding vendors with thousands of trusted reviews
           </span> */}
           </p>
@@ -208,13 +238,20 @@ export default function Home() {
               />
               {showSuggestions && suggestions.length > 0 && (
                 <ul className="absolute bg-white border border-gray-300 rounded w-[400px] shadow-lg mt-1 z-20 overflow-auto max-h-[200px]">
-                  {suggestions.map((category, index) => (
-                    <li
-                      key={index}
-                      className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
-                      onClick={() => handleSuggestionClick(category)}
-                    >
+                  {suggestions.map(({ category, subcategories }, index) => (
+                    <li key={index} className="px-4 py-2  cursor-pointer">
                       {category}
+                      <ul className="pl-5 text-sm grid grid-cols-1 md:grid-cols-2 gap-2">
+                        {subcategories.map((sub, index) => (
+                          <li
+                            key={index}
+                            className="text-gray-700 hover:bg-gray-200"
+                            onClick={() => handleSuggestionClick(category, sub)}
+                          >
+                            {sub}
+                          </li>
+                        ))}
+                      </ul>
                     </li>
                   ))}
                 </ul>
@@ -232,19 +269,40 @@ export default function Home() {
                 onChange={handleSearchLocationChange}
                 leftIcon={<GoLocation size={20} />}
               />
-              {showlocationSuggestions && locationSuggestions.length > 0 && (
-                <ul className="absolute bg-white border border-gray-300 rounded w-full shadow-lg mt-1 z-20 overflow-auto max-h-[200px]">
-                  {locationSuggestions.map((c, index) => (
-                    <li
-                      key={index}
-                      className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
-                      onClick={() => handleLocationClick(c)}
-                    >
-                      {c}
-                    </li>
-                  ))}
-                </ul>
-              )}
+              {showlocationSuggestions &&
+                Object.keys(locationSuggestions).length > 0 && (
+                  <ul className="absolute bg-white border border-gray-300 rounded w-full shadow-lg mt-1 z-20 overflow-auto max-h-[300px]">
+                    {Object.entries(locationSuggestions).map(
+                      ([state, cities]) => (
+                        <li key={state} className="border-b border-gray-200">
+                          {/* State Button */}
+                          <button
+                            className="w-full text-left px-4 py-2 font-semibold bg-gray-100 hover:bg-gray-200 cursor-pointer flex justify-between capitalize"
+                            onClick={() => toggleState(state)}
+                          >
+                            {state}
+                            <span>{expandedStates[state] ? "▲" : "▼"}</span>
+                          </button>
+
+                          {/* Collapsible Cities List */}
+                          {expandedStates[state] && (
+                            <ul className="pl-4 bg-white">
+                              {cities.map((city, index) => (
+                                <li
+                                  key={index}
+                                  className="px-4 py-2 hover:bg-gray-200 cursor-pointer capitalize"
+                                  onClick={() => handleLocationClick(city)}
+                                >
+                                  {city}
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </li>
+                      )
+                    )}
+                  </ul>
+                )}
             </div>
 
             {/* Discover Button */}
@@ -256,8 +314,6 @@ export default function Home() {
               Discover
             </CustomButton>
           </div>
-
-          
         </section>
       </div>
 

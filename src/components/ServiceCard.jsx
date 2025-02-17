@@ -7,7 +7,7 @@ import { useToggleCartMutation } from "../redux/serviceSlice";
 import { toggleFavorite } from "../redux/favoriteSlice";
 import { toast } from "react-toastify";
 
-const ServiceCard = React.memo(({ service}) => {
+const ServiceCard = React.memo(({ service,category, state, subCategory, city}) => {
   const [toggleCart] = useToggleCartMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -25,7 +25,7 @@ const ServiceCard = React.memo(({ service}) => {
 
   // Navigate to service details
   const handleCardClick = () => {
-    navigate(`/service/${service.id}`);
+    navigate(`/all/${category}/${subCategory}/${state}/${city}/${service.id}`);
   };
 
   const handleFavoriteClick = async (e, id) => {

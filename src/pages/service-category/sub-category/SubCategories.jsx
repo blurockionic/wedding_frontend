@@ -34,12 +34,6 @@ const SubCategories = () => {
     (detail) => detail.state === location
   ).sort((a, b) => b.rating - a.rating);
 
-  // console.log(topInYourLocation);
-
-  // const indianStates = State.getStatesOfCountry("IN").map((state) => state.name);
-
-  //filter out the sevice availabel  state
-  // const availableStates = [...new Set(data?.ServiceResult.map(service => service?.vendor?.state))];
 
   const stateServiceCount = data?.ServiceResult.reduce((acc, service) => {
     const state = service?.state;
@@ -49,27 +43,7 @@ const SubCategories = () => {
     return acc;
   }, {});
 
-  // console.log(stateServiceCount);
-
-  // Sample top venues by state
-  // const topVenues = {
-  //   jharkhand: [
-  //     "Ranchi Lawn",
-  //     "Hazaribagh Farmhouse",
-  //     "Jamshedpur Banquet Hall",
-  //   ],
-  //   maharashtra: [
-  //     "Mumbai Grand Hotel",
-  //     "Pune Club Lawn",
-  //     "Nagpur Wedding Resort",
-  //   ],
-  //   delhi: ["Taj Delhi", "Leela Palace", "The Imperial Banquet"],
-  //   karnataka: [
-  //     "Bangalore Garden Lawn",
-  //     "Mysore Wedding Hall",
-  //     "Coorg Farmhouse",
-  //   ],
-  // };
+  
 
   // Handle state selection
   const handleStateClick = (state) => {
