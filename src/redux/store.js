@@ -10,6 +10,7 @@ import { uploadSlice } from "./uploadSlice";
 import { vendorApi } from "./vendorSlice";
 import { paymentApi } from "./payment";
 import { checklistApiSlice } from "./checklistApiSlice"; 
+import { adminApiSlice } from "./adminApiSlice";
 
 // Combine Reducers
 const rootReducer = combineReducers({
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   [vendorApi.reducerPath]: vendorApi.reducer,
   [paymentApi.reducerPath]: paymentApi.reducer,
   [checklistApiSlice.reducerPath]: checklistApiSlice.reducer,
+  [adminApiSlice.reducerPath]: adminApiSlice.reducer,
 });
 
 // Configure Persist
@@ -46,7 +48,8 @@ export const store = configureStore({
       uploadSlice.middleware,
       vendorApi.middleware,
       paymentApi.middleware,
-      checklistApiSlice.middleware
+      checklistApiSlice.middleware,
+      adminApiSlice.middleware
     ),
 });
 

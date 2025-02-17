@@ -406,10 +406,11 @@ const Checklist = () => {
     isError,
   } = useGetChecklistQuery();
   const checklistData = useSelector((state) => state.checklist);
+  const testData = useSelector((state) => state.auth.user);
   const [progress, setProgress] = useState(0);
   const [totalTasks, setTotalTasks] = useState(0);
   const [completedTasks, setCompletedTasks] = useState(0);
-
+  console.log(testData);
   const {
     register: registerCategory,
     handleSubmit: handleCategorySubmit,

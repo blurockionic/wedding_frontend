@@ -59,7 +59,13 @@ export default function Login() {
         toast.success(message);
 
         const from = location.state?.from || "/";
-        navigate(from);
+        if (user.role == "ADMIN" || user.role == "SUPER_ADMIN"){
+          navigate("/admin");
+        }
+        else{
+          navigate(from);
+        }
+        
       }
     } catch (error) {
       const errorMessage =
