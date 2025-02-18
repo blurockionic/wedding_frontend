@@ -238,7 +238,28 @@ function Navbar() {
                     )}
                   </li>
 
-                  {( user?.role!=="USER" ) ? (
+                  {(user?.role!=="ADMIN" && user?.role!=="SUPER_ADMIN") ? (
+                    <>
+                    </>
+                  ) : (
+                    <>
+                    <li className="lg:inline-block">
+                        <NavLink
+                          to="/admin"
+                          onClick={() => setIsMenuOpen(false)}
+                          className={({ isActive }) =>
+                            isActive
+                              ? "text-primary px-3 py-1 border border-primary  rounded-md"
+                              : "px-3 py-1 text-primary border border-primary rounded-md"
+                          }
+                        >
+                          ADMIN
+                        </NavLink>
+                      </li>
+                    </>
+                  )}
+
+                  {( user?.role!=="USER" && user?.role!=="ADMIN" && user?.role!=="SUPER_ADMIN" ) ? (
                     <>
                       <li className="lg:inline-block">
                         <NavLink
