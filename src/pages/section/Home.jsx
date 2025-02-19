@@ -124,9 +124,9 @@ export default function Home() {
     if(search && location){
       navigate(`/all/${search}/${location}`);
     }else if(location){
-      navigate(`/all/india/all/${location}`)
+      navigate(`/all/India/All/${location}`)
     }else if(search){
-      navigate(`/all/${search}/india/all`)
+      navigate(`/all/${search}/India/All`)
     }
     else{
       navigate(`/all`);
