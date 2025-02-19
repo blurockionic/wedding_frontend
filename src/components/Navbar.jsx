@@ -237,6 +237,11 @@ function Navbar() {
                       </div>
                     )}
                   </li>
+                  <li>
+                  <NavLink to="/templates" className="cursor-pointer hover:text-dustyRose">
+                      Invitation
+                  </NavLink>
+                  </li>
 
                   {!isLoggedIn ? (
                     <>
