@@ -39,7 +39,7 @@ function Payment() {
     let config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: "http://localhost:4000/orders",
+      url: `${import.meta.env.VITE_API_URL}/orders`,
       headers: {
         "Content-Type": "application/json",
       },
