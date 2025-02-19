@@ -11,6 +11,7 @@ const CustomInput = (props) => {
     disabled = false,
     leftIcon = null,
     rightIcon = null,
+    
   } = props;
 
   return (

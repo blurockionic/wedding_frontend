@@ -5,10 +5,12 @@ import { useNavigate } from "react-router-dom";
 import CustomButton from "../../components/global/button/CustomButton";
 import CustomInput from "../../components/global/inputfield/CustomInput";
 import { GoLocation, GoSearch } from "react-icons/go";
-import Discover from "../../components/home/home-discover/Discover";
+import Discover from "../../components/home/home-discover/Discover.jsx";
 import { Helmet } from "react-helmet-async";
 import { allCategories } from "../../static/static";
 import { useGetServicesQuery } from "../../redux/serviceSlice";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import CustomInputForSearch from "../../components/global/inputfield/CustomInputForSearchBar.jsx";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -78,29 +80,31 @@ export default function Home() {
 
   // set value on input field
   const handleSuggestionClick = (category, subcategory) => {
-    setSearch(subcategory);
+    console.log(category, subcategory)
+    setSearch(`${category}/${subcategory}`);
     setShowSuggestions(false);
   };
 
-
-  //handle on location 
+  //handle on location
   const handleSearchLocationChange = (e) => {
     const searchLocation = e.target.value;
     setLocation(searchLocation);
-  
+
     if (searchLocation) {
-      const filteredLocation = Object.entries(originalLocationData)
-        .reduce((acc, [state, cities]) => {
+      const filteredLocation = Object.entries(originalLocationData).reduce(
+        (acc, [state, cities]) => {
           const filteredCities = cities.filter((city) =>
             city.toLowerCase().startsWith(searchLocation.toLowerCase())
           );
-  
+
           if (filteredCities.length > 0) {
             acc[state] = filteredCities;
           }
           return acc;
-        }, {});
-  
+        },
+        {}
+      );
+
       setLocationSuggestions(filteredLocation);
       setShowlocationSuggestions(Object.keys(filteredLocation).length > 0);
     } else {
@@ -110,17 +114,23 @@ export default function Home() {
   };
 
   //set wedding location
-  const handleLocationClick = (c) => {
-    setLocation(c);
+  const handleLocationClick = (state, city) => {
+    setLocation(`${state}/${city}`);
     setShowlocationSuggestions(false);
   };
 
+  // navigate to specific services 
   const handleNavigate = () => {
-    const queryParams = new URLSearchParams({
-      search,
-      location,
-    }).toString();
-    navigate(`/services?${queryParams}`);
+    if(search && location){
+      navigate(`/all/${search}/${location}`);
+    }else if(location){
+      navigate(`/all/india/all/${location}`)
+    }else if(search){
+      navigate(`/all/${search}/india/all`)
+    }
+    else{
+      navigate(`/all`);
+    }
   };
 
   console.log(locationSuggestions);
@@ -234,8 +244,14 @@ export default function Home() {
                 aria-label="Select Vendor"
                 value={search}
                 onChange={handleSearchChange}
+                onFocus={() => setShowSuggestions(true)} 
+                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
                 leftIcon={<GoSearch size={20} />}
               />
+              {/* <CustomInputForSearch  placeholder="Enter name"
+  value={""}
+  onChange={""}
+  suggestions={["Alice", "Bob", "Charlie", "David"]}/> */}
               {showSuggestions && suggestions.length > 0 && (
                 <ul className="absolute bg-white border border-gray-300 rounded w-[400px] shadow-lg mt-1 z-20 overflow-auto max-h-[200px]">
                   {suggestions.map(({ category, subcategories }, index) => (
@@ -267,6 +283,7 @@ export default function Home() {
                 className="w-full outline-none focus:border-white bg-white"
                 aria-label="Location"
                 onChange={handleSearchLocationChange}
+               
                 leftIcon={<GoLocation size={20} />}
               />
               {showlocationSuggestions &&
@@ -281,7 +298,13 @@ export default function Home() {
                             onClick={() => toggleState(state)}
                           >
                             {state}
-                            <span>{expandedStates[state] ? "▲" : "▼"}</span>
+                            <span>
+                              {expandedStates[state] ? (
+                                <ChevronUp />
+                              ) : (
+                                <ChevronDown />
+                              )}
+                            </span>
                           </button>
 
                           {/* Collapsible Cities List */}
@@ -291,7 +314,7 @@ export default function Home() {
                                 <li
                                   key={index}
                                   className="px-4 py-2 hover:bg-gray-200 cursor-pointer capitalize"
-                                  onClick={() => handleLocationClick(city)}
+                                  onClick={() => handleLocationClick(state,city)}
                                 >
                                   {city}
                                 </li>

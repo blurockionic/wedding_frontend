@@ -62,11 +62,6 @@ const Category = () => {
   ];
 
 
-
-
-
-
-
   // Sample top venues by state
   const topVenues = {
     jharkhand: [
@@ -100,7 +95,6 @@ const Category = () => {
 
   // filter the data according to the selected category and location
   const filteredData = categories.filter((item) => item.title === category)[0];
-  console.log(filteredData)
   return (
     <>
       {/* navigation */}
