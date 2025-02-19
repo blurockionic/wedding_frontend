@@ -5,12 +5,9 @@ import { InputField } from "./global/inputfield/InputField";
 import { SelectField } from "./global/select/SelectField";
 
 // Ensure categories exist and are valid strings
-export const allCategories = [
-  ...weddingVenues.map((venue) => venue?.name || venue),
-  ...weddingVendors.map((vendor) => vendor?.name || vendor),
-  ...brides.map((bride) => bride?.name || bride),
-  ...grooms.map((groom) => groom?.name || groom),
-];
+
+
+
 
 const Sidebar = memo(({ searchType, searchLocation, onFilterChange }) => {
   const {
