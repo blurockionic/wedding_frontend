@@ -11,6 +11,7 @@ const Signup = lazy(() => import("./pages/auth/Signup.jsx"));
 const Login = lazy(() => import("./pages/auth/Login.jsx"));
 const ServicesPage = lazy(() => import("./pages/ServicePage.jsx"));
 const ServiceDetail = lazy(() => import("./pages/serviceDeatails.jsx"));
+
 const VendorRegistration = lazy(() =>
   import("./pages/auth/vendor _auth/VendorSignup.jsx")
 );
@@ -67,6 +68,16 @@ const  ServiceDetails  = lazy(()=>import("./pages/service-category/service-detai
 const Payments = lazy(() => import("./pages/vendorDashboard/component/Payments.jsx"));
 const AboutPage = lazy(() => import("./pages/section/About.jsx")); 
 const VendorSetting = lazy(()=>import ("./pages/vendorDashboard/VendorsSetting.jsx"))
+const Template = lazy(() => import("./pages/Template.jsx"));
+const View = lazy(() => import("./pages/View.jsx"));
+const View_1 = lazy(() => import("./pages/View_1.jsx"));
+const Payment = lazy(() => import("./pages/Payment.jsx"));
+const Preview = lazy(() => import("./pages/Preview.jsx"));
+const Preview_1 = lazy(() => import("./pages/Preview_1.jsx"));
+const Card = lazy(() => import("./pages/Card.jsx"));
+const Guest = lazy(() => import("./pages/Guest.jsx"));
+const Modify = lazy(() => import("./pages/Modify.jsx"));
+const Modify_1 = lazy(() => import("./pages/Modify_1.jsx"));
 
 function wrapWithSuspense(Component) {
   return (
@@ -84,6 +95,16 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: wrapWithSuspense(LandingPage) },
       { path: "/signup", element: wrapWithSuspense(Signup) },
+      { path: "/templates", element: wrapWithSuspense(Template) },
+      { path: "/card", element: wrapWithSuspense(Card) },
+      { path: "/guests", element: wrapWithSuspense(Guest) },
+      { path: "/guests/see-template/template", element: wrapWithSuspense(Modify) },
+      { path: "/guests/see-template/template1", element: wrapWithSuspense(Modify_1) },
+      { path: "/payment", element: wrapWithSuspense(Payment) },
+      { path: "/preview", element: wrapWithSuspense(Preview) },
+      { path: "/preview_1", element: wrapWithSuspense(Preview_1) },
+      { path: "/view", element: wrapWithSuspense(View) },
+      { path: "/view_1", element: wrapWithSuspense(View_1) },
       { path: "/login", element: wrapWithSuspense(Login) },
       { path: "/contactus", element: wrapWithSuspense(ContactUs) },
       { path: "/checklist", element: wrapWithSuspense(Checklist) },
