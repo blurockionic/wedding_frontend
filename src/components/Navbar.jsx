@@ -35,20 +35,14 @@ function Navbar() {
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
+
   const groomsCategories = [
-    {
-      title: "Attire",
-      items: ["Sherwanis", "Suits", "Indo-Western", "Kurtas", "Dhotis", "Tailoring"],
-    },
-    {
-      title: "Accessories",
-      items: ["Safas", "Mojaris", "Brooches", "Cufflinks", "Watches", "Stoles"],
-    },
-    {
-      title: "Services",
-      items: ["Makeup", "Skincare", "Stylists", "Fitness Plans", "Grooming"],
-    },
+    { title: "Attire", icon: "/navimage/attire.png", items: ["Sherwanis", "Suits", "Indo-Western"] },
+    { title: "Accessories", icon: "/icons/accessories.svg", items: ["Footwear", "Safas", "Jewelry"] },
+    { title: "Grooming", icon: "/icons/grooming.svg", items: ["Hair & Beard", "Skincare", "Makeup"] },
+    { title: "Wellness", icon: "/icons/wellness.svg", items: ["Fitness", "Spa", "Stylists"] },
   ];
+  
   
   const weddingVenueCategories = [
     {
@@ -302,37 +296,41 @@ function Navbar() {
 
                   {/* Grooms Dropdown */}
                   <li
-                    className="relative lg:inline-block"
-                    onMouseEnter={() => setDropdown("grooms")}
-                    onMouseLeave={() => setDropdown("")}
-                  >
-                    <span className="cursor-pointer hover:text-rose-600 font-medium transition">
-                      Grooms
-                    </span>
-                    {dropdown === "grooms" && (
-                      <div className="absolute left-0 mt-1 top-full bg-white shadow-lg w-[400px] py-3 px-4 z-50 rounded-lg border border-gray-200">
-                        <div className="grid grid-cols-2 gap-4 text-sm text-gray-700">
-                          {groomsCategories.map(({ title, items }, index) => (
-                            <div key={index}>
-                              <h3 className="font-semibold text-rose-600 border-b pb-1">{title}</h3>
-                              <ul className="pt-1">
-                                {items.map((item, i) => (
-                                  <li key={i}>
-                                    <button
-                                      onClick={() => handleNavigate(item)}
-                                      className="w-full text-left hover:text-rose-500 py-1 transition"
-                                    >
-                                      {item}
-                                    </button>
-                                  </li>
-                                ))}
-                              </ul>
+                        className="relative lg:inline-block"
+                        onMouseEnter={() => setDropdown("grooms")}
+                        onMouseLeave={() => setDropdown("")}
+                      >
+                        <span className="cursor-pointer hover:text-rose-600 font-medium transition">
+                          Grooms
+                        </span>
+                        {dropdown === "grooms" && (
+                          <div className="absolute left-0 mt-1 top-full bg-white shadow-lg w-[400px] py-3 px-4 z-50 rounded-lg border border-gray-200">
+                            <div className="grid grid-cols-2 gap-4 text-sm text-gray-700">
+                              {groomsCategories.map(({ title, items, icon }, index) => (
+                                <div key={index}>
+                                  <div className="flex items-center gap-2 border-b pb-1">
+                                    <img src={icon} alt={title} className="w-5 h-5" />
+                                    <h3 className="font-semibold text-rose-600">{title}</h3>
+                                  </div>
+                                  <ul className="pt-1">
+                                    {items.map((item, i) => (
+                                      <li key={i}>
+                                        <button
+                                          onClick={() => handleNavigate(item)}
+                                          className="w-full text-left hover:text-rose-500 py-1 transition"
+                                        >
+                                          {item}
+                                        </button>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              ))}
                             </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </li>
+                          </div>
+                        )}
+                      </li>
+
 
 
 
