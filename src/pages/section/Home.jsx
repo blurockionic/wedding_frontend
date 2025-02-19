@@ -133,7 +133,6 @@ export default function Home() {
     }
   };
 
-  console.log(locationSuggestions);
   return (
     <>
       {/* SEO Optimization */}
