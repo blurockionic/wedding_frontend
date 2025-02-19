@@ -243,7 +243,7 @@ function Navbar() {
                   </NavLink>
                   </li>
 
-                  {!isLoggedIn ? (
+                  {( user?.role!=="USER" ) ? (
                     <>
                       <li className="lg:inline-block">
                         <NavLink
