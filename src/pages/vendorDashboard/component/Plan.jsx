@@ -14,7 +14,12 @@ export default function Plan({ displayRazorpay }) {
         {error?.message || "An error occurred while fetching plans"}
       </div>
     );
-
+    if (!data?.plan || data.plan.length === 0)
+      return (
+        <div className=" flex justify-center items-center ">
+         <p className="text-center text-7xl text-gray-500  font-bold"> No plans available yet.</p>
+        </div>
+      );
   return (
     <div className="mx-auto flex justify-center items-center flex-col p-4">
       <h2 className="text-3xl text-center font-montserrat text-primary mb-6">
@@ -23,7 +28,7 @@ export default function Plan({ displayRazorpay }) {
 
       <div
         className={`grid gap-5 grid-cols-1 md:grid-cols-2 ustify-center"  ${
-          data?.plan.length >= 3 ? "lg:grid-cols-3" : "lg:grid-cols-2"
+          data?.plan?.length >= 3 ? "lg:grid-cols-3" : "lg:grid-cols-2"
         }`}
       >
         {data?.plan?.map((plan) => (
