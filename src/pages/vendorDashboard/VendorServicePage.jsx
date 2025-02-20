@@ -30,6 +30,7 @@ const VendorServicesPage = () => {
 
   // Fetch services
   const { data, isLoading, error, refetch } = useGetServicesQuery(filters);
+
   useEffect(() => {
     refetch(); // Fetch fresh data when filter changes
   }, [selectedFilter, refetch]);
@@ -51,11 +52,11 @@ const VendorServicesPage = () => {
     }
   }, [data, selectedFilter]);
 
-  // Handle search input
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(1);
-  };
+  // // Handle search input
+  // const handleSearch = (e) => {
+  //   setSearchTerm(e.target.value);
+  //   setCurrentPage(1);
+  // };
 
   // Handle page change
   const handlePageChange = (page) => {
@@ -157,7 +158,7 @@ const VendorServicesPage = () => {
             {isLoading ? (
               <div>Loading...</div>
             ) : error ? (
-              <div>Error loading services</div>
+              <div>No service created </div>
             ) : (
               <VendorServiceList services={filteredServices} />
             )}

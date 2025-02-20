@@ -11,6 +11,7 @@ const Signup = lazy(() => import("./pages/auth/Signup.jsx"));
 const Login = lazy(() => import("./pages/auth/Login.jsx"));
 const ServicesPage = lazy(() => import("./pages/ServicePage.jsx"));
 const ServiceDetail = lazy(() => import("./pages/serviceDeatails.jsx"));
+
 const VendorRegistration = lazy(() =>
   import("./pages/auth/vendor _auth/VendorSignup.jsx")
 );
@@ -56,11 +57,27 @@ const FavoriteListPage = lazy(() =>
 const VendorProfile = lazy(() =>
   import("./pages/vendorDashboard/VendorProfile.jsx")
 );
-const Category = lazy(() => import("./pages/service-category/ServiceCategoriesPage.jsx"));
-
+const AllCategories = lazy(() => import("./pages/service-category/ServiceCategoriesPage.jsx"));
+const Category = lazy(() => import("./pages/service-category/category/Category.jsx"));
+const SubCategories = lazy(() => import("./pages/service-category/sub-category/SubCategories.jsx"));
+const CategoryByState = lazy(() => import("./pages/service-category/category-by-state/CategoryByState.jsx"));
+const CategoryByCity = lazy(() => import("./pages/service-category/category-by-city/CategoryByCity.jsx"));
+const VenderBiodata = lazy(()=> import("./pages/service-category/vendor-details/VendorDetails.jsx"))
+const  ServiceDetails  = lazy(()=>import("./pages/service-category/service-details/ServiceDetails.jsx")) ;
+ 
 const Payments = lazy(() => import("./pages/vendorDashboard/component/Payments.jsx"));
 const AboutPage = lazy(() => import("./pages/section/About.jsx")); 
 const VendorSetting = lazy(()=>import ("./pages/vendorDashboard/VendorsSetting.jsx"))
+const Template = lazy(() => import("./pages/Template.jsx"));
+const View = lazy(() => import("./pages/View.jsx"));
+const View_1 = lazy(() => import("./pages/View_1.jsx"));
+const Payment = lazy(() => import("./pages/Payment.jsx"));
+const Preview = lazy(() => import("./pages/Preview.jsx"));
+const Preview_1 = lazy(() => import("./pages/Preview_1.jsx"));
+const Card = lazy(() => import("./pages/Card.jsx"));
+const Guest = lazy(() => import("./pages/Guest.jsx"));
+const Modify = lazy(() => import("./pages/Modify.jsx"));
+const Modify_1 = lazy(() => import("./pages/Modify_1.jsx"));
 
 function wrapWithSuspense(Component) {
   return (
@@ -78,10 +95,28 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: wrapWithSuspense(LandingPage) },
       { path: "/signup", element: wrapWithSuspense(Signup) },
+      { path: "/templates", element: wrapWithSuspense(Template) },
+      { path: "/card", element: wrapWithSuspense(Card) },
+      { path: "/guests", element: wrapWithSuspense(Guest) },
+      { path: "/guests/see-template/template", element: wrapWithSuspense(Modify) },
+      { path: "/guests/see-template/template1", element: wrapWithSuspense(Modify_1) },
+      { path: "/payment", element: wrapWithSuspense(Payment) },
+      { path: "/preview", element: wrapWithSuspense(Preview) },
+      { path: "/preview_1", element: wrapWithSuspense(Preview_1) },
+      { path: "/view", element: wrapWithSuspense(View) },
+      { path: "/view_1", element: wrapWithSuspense(View_1) },
       { path: "/login", element: wrapWithSuspense(Login) },
       { path: "/contactus", element: wrapWithSuspense(ContactUs) },
       { path: "/checklist", element: wrapWithSuspense(Checklist) },
-      { path: "/category", element: wrapWithSuspense(Category) },
+      // dynamic route for category
+      { path: "/all", element: wrapWithSuspense(AllCategories) },
+      { path: "/all/:category", element: wrapWithSuspense(Category) },
+      { path: "/all/:category/:subCategory", element: wrapWithSuspense(SubCategories) },
+      { path: "/all/:category/:subcategory/:state", element: wrapWithSuspense(CategoryByState) },
+      { path: "/all/:category/:subcategory/:state/:city", element: wrapWithSuspense(CategoryByCity) },
+      { path: "/all/:category/:subcategory/:state/:city/:id", element: wrapWithSuspense(ServiceDetails) },
+      { path: "/:location/:vendorname", element: wrapWithSuspense(VenderBiodata) },
+
       { path: "/about", element: wrapWithSuspense(AboutPage) }, // Add the About page route
       {
         path: "/user-forgot-password",

@@ -12,7 +12,7 @@ export const serviceApi = createApi({
     getServices: builder.query({
       query: (filters) => {
         let queryStr = "/services";
-
+        console.log(filters)
         // Check if filters are provided
         if (filters && Object.keys(filters).length > 0) {
           // Filter out undefined or empty values
@@ -26,6 +26,7 @@ export const serviceApi = createApi({
 
         return queryStr;
       },
+      
     }),
 
     // Get service by ID
@@ -155,12 +156,22 @@ export const serviceApi = createApi({
       }),
     }),
 
+    getMostViewdServices:builder.query({
+      query:()=>({
+        url:`services/getMostViewedServices`,
+        method:"GET"
+
+      })
+
+    })
+
 
   }),
 });
 
 // Export hooks for each endpoint
 export const {
+ useGetMostViewdServicesQuery,
   useGetServicesQuery,
   useSwitchServiceMutation,
   useGetServiceByIdQuery,

@@ -5,11 +5,12 @@ import { useNavigate } from "react-router-dom";
 import CustomButton from "../../components/global/button/CustomButton";
 import CustomInput from "../../components/global/inputfield/CustomInput";
 import { GoLocation, GoSearch } from "react-icons/go";
-import Discover from "../../components/home/home-discover/Discover";
+import Discover from "../../components/home/home-discover/Discover.jsx";
 import { Helmet } from "react-helmet-async";
-import { allCategories } from "../../components/Sidebar";
-import { Country, State, City } from "country-state-city";
-import FeatureService from "../../components/featuredservices/FeatureService";
+import { allCategories } from "../../static/static";
+import { useGetServicesQuery } from "../../redux/serviceSlice";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import CustomInputForSearch from "../../components/global/inputfield/CustomInputForSearchBar.jsx";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -17,81 +18,118 @@ export default function Home() {
   const [location, setLocation] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [locationSuggestions, setLocationSuggestions] = useState([]);
-  const [states, setStates] = useState([]);
-  const [allCities, setAllCities] = useState([]);
+  const [locationSuggestions, setLocationSuggestions] = useState({});
   const [showlocationSuggestions, setShowlocationSuggestions] = useState(false);
+  const [expandedStates, setExpandedStates] = useState({});
+  const [originalLocationData, setOriginalLocationData] = useState({});
+
+  const { data, error, isLoading } = useGetServicesQuery();
 
   useEffect(() => {
     Aos.init({
       duration: 1000,
     });
-    fetchStatesAndCities();
+    // fetchStatesAndCities();
   }, []);
 
+  //handle on change vendors
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearch(value);
-
     if (value) {
-      const filtered = allCategories.filter((category) =>
-        category.toLowerCase().includes(value.toLowerCase())
-      );
+      const filtered = Object.entries(allCategories)
+        .map(([category, subcategories]) => ({
+          category,
+          subcategories: subcategories.filter((sub) =>
+            sub.toLowerCase().includes(value.toLowerCase())
+          ),
+        }))
+        .filter((item) => item.subcategories.length > 0);
+
       setSuggestions(filtered);
       setShowSuggestions(true);
     } else {
       setShowSuggestions(false);
     }
   };
-  const handleSuggestionClick = (category) => {
-    setSearch(category);
+
+  useEffect(() => {
+
+    if (!data?.ServiceResult) return;
+
+    const filterData = data.ServiceResult.reduce((acc, service) => {
+      if (service.state) {
+        acc[service.state] = acc[service.state] || [];
+        acc[service.state].push(service.city);
+      }
+      return acc;
+    }, {});
+
+    //set data
+    setOriginalLocationData(filterData); // Store original data
+    setLocationSuggestions(filterData);
+  }, [data]);
+
+  const toggleState = (state) => {
+    setExpandedStates((prev) => ({
+      ...prev,
+      [state]: !prev[state],
+    }));
+  };
+
+  // set value on input field
+  const handleSuggestionClick = (category, subcategory) => {
+    console.log(category, subcategory)
+    setSearch(`${category}/${subcategory}`);
     setShowSuggestions(false);
   };
 
+  //handle on location
   const handleSearchLocationChange = (e) => {
     const searchLocation = e.target.value;
+    setLocation(searchLocation);
+
     if (searchLocation) {
-      const filteredLocation = allCities
-        .filter((item) => {
-          return item.name
-            .toLowerCase()
-            .startsWith(searchLocation.toLowerCase());
-        })
-        .map((item) => item.name);
+      const filteredLocation = Object.entries(originalLocationData).reduce(
+        (acc, [state, cities]) => {
+          const filteredCities = cities.filter((city) =>
+            city.toLowerCase().startsWith(searchLocation.toLowerCase())
+          );
+
+          if (filteredCities.length > 0) {
+            acc[state] = filteredCities;
+          }
+          return acc;
+        },
+        {}
+      );
 
       setLocationSuggestions(filteredLocation);
-      setShowlocationSuggestions(true);
+      setShowlocationSuggestions(Object.keys(filteredLocation).length > 0);
     } else {
       setShowlocationSuggestions(false);
+      setLocationSuggestions(originalLocationData); // Reset to original data
     }
-    setLocation(searchLocation);
   };
 
-  const handleLocationClick = (c) => {
-    setLocation(c);
+  //set wedding location
+  const handleLocationClick = (state, city) => {
+    setLocation(`${state}/${city}`);
     setShowlocationSuggestions(false);
   };
 
-  const fetchStatesAndCities = async () => {
-    const india = Country.getCountryByCode("IN");
-    if (india) {
-      const statesList = State.getStatesOfCountry(india.isoCode);
-      setStates(statesList);
-      let cityCollection = [];
-      statesList.map((state) => {
-        const cities = City.getCitiesOfState(india.isoCode, state.isoCode);
-        cityCollection = [...cityCollection, ...cities];
-      });
-      setAllCities(cityCollection.flat());
-    }
-  };
-
+  // navigate to specific services 
   const handleNavigate = () => {
-    const queryParams = new URLSearchParams({
-      search,
-      location,
-    }).toString();
-    navigate(`/services?${queryParams}`);
+    if(search && location){
+      navigate(`/all/${search}/${location}`);
+    }else if(location){
+      navigate(`/all/India/All/${location}`)
+    }else if(search){
+      navigate(`/all/${search}`)
+    }
+    else{
+      navigate(`/all`);
+    }
   };
 
   return (
@@ -105,7 +143,7 @@ export default function Home() {
         />
         <meta
           name="keywords"
-          content="Wedding vendors, Wedding planners, Bridal makeup artists, Wedding photographers, Wedding florists, Wedding venues, Wedding decorators, Wedding caterers, Wedding cake designers, Bridal dresses, Wedding bands, Wedding DJs, Wedding transportation, Wedding videographers, Destination wedding planners, Wedding invitations, Wedding favors, Wedding rentals, Bridal hairstylists, Wedding coordinators, Wedding photographers near me, Wedding dresses online, Best wedding planners, Affordable wedding vendors, Luxury wedding vendors, Wedding services near me, Outdoor wedding venues, Indoor wedding venues, Best wedding photographers, Wedding planner in Ludhiana, Wedding makeup services, Wedding accessories, Wedding photographers in Ludhiana, Pre-wedding shoot vendors, Wedding organizers, Traditional wedding planners, Custom wedding cakes, Bridal boutique, Wedding rental services, Wedding cake near me, Wedding photography packages, Wedding decoration services, Bridal shower planners, Wedding jewelry designers, Bridal party attire, Wedding videography packages, Event stylists for weddings, Wedding favors suppliers, Professional wedding planners, Unique wedding venues, Wedding food caterers, Wedding entertainment services, Wedding dress designers, Wedding planners in Ludhiana, Wedding coordinators in Ludhiana, Wedding lighting services, Wedding bar services, Wedding limo rentals, Wedding photo booths, Wedding dessert tables, Wedding florist in Ludhiana, Wedding rentals online, Destination wedding photographers, Vintage wedding vendors, Elegant wedding decorations, Wedding budget planners, Wedding reception venues, Bridal hair and makeup services, Custom wedding invitations, Wedding planners for small weddings, Wedding videographers in Ludhiana, Luxury bridal accessories, Wedding flower arrangements, Wedding photographers for hire, Top wedding caterers, Local wedding vendors, Budget wedding vendors, Indian wedding vendors, Wedding planners for destination weddings, Wedding hair stylists near me, Wedding cake delivery, Wedding catering services near me, Wedding lighting designers, Wedding planners for budget weddings, Eco-friendly wedding vendors, Outdoor wedding decorators, Beach wedding vendors, Wedding planners for large weddings, Wedding event management companies, Wedding photography albums, Best wedding cake designers, Wedding venues with accommodation, DIY wedding vendors, Wedding videography services near me, Custom wedding bouquets, Wedding dress alterations, Wedding photography services in Ludhiana, Wedding floral designers, Wedding band booking, Wedding planning tips."
+          content="Marriage Vendors, Marriage Vendors planners, Bridal makeup artists Marriage Vendors, Marriage Vendors photographers, Marriage Vendors florists, Marriage Vendors venues, Marriage Vendors decorators, Marriage Vendors caterers, Marriage Vendors cake designers, Bridal dresses Marriage Vendors, Marriage Vendors bands, Marriage Vendors DJs, Marriage Vendors transportation, Marriage Vendors videographers, Destination Marriage Vendors planners, Marriage Vendors invitations, Marriage Vendors favors, Marriage Vendors rentals, Bridal hairstylists Marriage Vendors, Marriage Vendors coordinators, Marriage Vendors photographers near me, Marriage Vendors dresses online, Best Marriage Vendors planners, Affordable Marriage Vendors, Luxury Marriage Vendors, Marriage Vendors services near me, Outdoor Marriage Vendors venues, Indoor Marriage Vendors venues, Best Marriage Vendors photographers, Marriage Vendors planner in Ludhiana, Marriage Vendors makeup services, Marriage Vendors accessories, Marriage Vendors photographers in Ludhiana, Pre-Marriage Vendors shoot vendors, Marriage Vendors organizers, Traditional Marriage Vendors planners, Custom Marriage Vendors cakes, Bridal boutique Marriage Vendors, Marriage Vendors rental services, Marriage Vendors cake near me, Marriage Vendors photography packages, Marriage Vendors decoration services, Bridal shower planners Marriage Vendors, Marriage Vendors jewelry designers, Bridal party attire Marriage Vendors, Marriage Vendors videography packages, Event stylists for Marriage Vendors, Marriage Vendors favors suppliers, Professional Marriage Vendors planners, Unique Marriage Vendors venues, Marriage Vendors food caterers, Marriage Vendors entertainment services, Marriage Vendors dress designers, Marriage Vendors planners in Ludhiana, Marriage Vendors coordinators in Ludhiana, Marriage Vendors lighting services, Marriage Vendors bar services, Marriage Vendors limo rentals, Marriage Vendors photo booths, Marriage Vendors dessert tables, Marriage Vendors florist in Ludhiana, Marriage Vendors rentals online, Destination Marriage Vendors photographers, Vintage Marriage Vendors, Elegant Marriage Vendors decorations, Marriage Vendors budget planners, Marriage Vendors reception venues, Bridal hair and makeup services Marriage Vendors, Custom Marriage Vendors invitations, Marriage Vendors planners for small weddings, Marriage Vendors videographers in Ludhiana, Luxury bridal accessories Marriage Vendors, Marriage Vendors flower arrangements, Marriage Vendors photographers for hire, Top Marriage Vendors caterers, Local Marriage Vendors, Budget Marriage Vendors, Indian Marriage Vendors, Marriage Vendors planners for destination weddings, Marriage Vendors hair stylists near me, Marriage Vendors cake delivery, Marriage Vendors catering services near me, Marriage Vendors lighting designers, Marriage Vendors planners for budget weddings, Eco-friendly Marriage Vendors, Outdoor Marriage Vendors decorators, Beach Marriage Vendors, Marriage Vendors planners for large weddings, Marriage Vendors event management companies, Marriage Vendors photography albums, Best Marriage Vendors cake designers, Marriage Vendors venues with accommodation, DIY Marriage Vendors, Marriage Vendors videography services near me, Custom Marriage Vendors bouquets, Marriage Vendors dress alterations, Marriage Vendors photography services in Ludhiana, Marriage Vendors floral designers, Marriage Vendors band booking, Marriage Vendors planning tips."
         />
         <meta name="author" content="Wedding Planner Team" />
         <meta name="robots" content="index, follow" />
@@ -175,7 +213,7 @@ export default function Home() {
             <span className="text-[#fecd17]">Dream Wedding</span>
 
             {/* Tagline */}
-          {/* <span className="text-gray-300 text-lg mt-5">
+            {/* <span className="text-gray-300 text-lg mt-5">
             Find the best wedding vendors with thousands of trusted reviews
           </span> */}
           </p>
@@ -204,17 +242,30 @@ export default function Home() {
                 aria-label="Select Vendor"
                 value={search}
                 onChange={handleSearchChange}
+                onFocus={() => setShowSuggestions(true)} 
+                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
                 leftIcon={<GoSearch size={20} />}
               />
+              {/* <CustomInputForSearch  placeholder="Enter name"
+  value={""}
+  onChange={""}
+  suggestions={["Alice", "Bob", "Charlie", "David"]}/> */}
               {showSuggestions && suggestions.length > 0 && (
                 <ul className="absolute bg-white border border-gray-300 rounded w-[400px] shadow-lg mt-1 z-20 overflow-auto max-h-[200px]">
-                  {suggestions.map((category, index) => (
-                    <li
-                      key={index}
-                      className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
-                      onClick={() => handleSuggestionClick(category)}
-                    >
+                  {suggestions.map(({ category, subcategories }, index) => (
+                    <li key={index} className="px-4 py-2  cursor-pointer">
                       {category}
+                      <ul className="pl-5 text-sm grid grid-cols-1 md:grid-cols-2 gap-2">
+                        {subcategories.map((sub, index) => (
+                          <li
+                            key={index}
+                            className="text-gray-700 hover:bg-gray-200"
+                            onClick={() => handleSuggestionClick(category, sub)}
+                          >
+                            {sub}
+                          </li>
+                        ))}
+                      </ul>
                     </li>
                   ))}
                 </ul>
@@ -230,21 +281,49 @@ export default function Home() {
                 className="w-full outline-none focus:border-white bg-white"
                 aria-label="Location"
                 onChange={handleSearchLocationChange}
+               
                 leftIcon={<GoLocation size={20} />}
               />
-              {showlocationSuggestions && locationSuggestions.length > 0 && (
-                <ul className="absolute bg-white border border-gray-300 rounded w-full shadow-lg mt-1 z-20 overflow-auto max-h-[200px]">
-                  {locationSuggestions.map((c, index) => (
-                    <li
-                      key={index}
-                      className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
-                      onClick={() => handleLocationClick(c)}
-                    >
-                      {c}
-                    </li>
-                  ))}
-                </ul>
-              )}
+              {showlocationSuggestions &&
+                Object.keys(locationSuggestions).length > 0 && (
+                  <ul className="absolute bg-white border border-gray-300 rounded w-full shadow-lg mt-1 z-20 overflow-auto max-h-[300px]">
+                    {Object.entries(locationSuggestions).map(
+                      ([state, cities]) => (
+                        <li key={state} className="border-b border-gray-200">
+                          {/* State Button */}
+                          <button
+                            className="w-full text-left px-4 py-2 font-semibold bg-gray-100 hover:bg-gray-200 cursor-pointer flex justify-between capitalize"
+                            onClick={() => toggleState(state)}
+                          >
+                            {state}
+                            <span>
+                              {expandedStates[state] ? (
+                                <ChevronUp />
+                              ) : (
+                                <ChevronDown />
+                              )}
+                            </span>
+                          </button>
+
+                          {/* Collapsible Cities List */}
+                          {expandedStates[state] && (
+                            <ul className="pl-4 bg-white">
+                              {cities.map((city, index) => (
+                                <li
+                                  key={index}
+                                  className="px-4 py-2 hover:bg-gray-200 cursor-pointer capitalize"
+                                  onClick={() => handleLocationClick(state,city)}
+                                >
+                                  {city}
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </li>
+                      )
+                    )}
+                  </ul>
+                )}
             </div>
 
             {/* Discover Button */}
@@ -256,8 +335,6 @@ export default function Home() {
               Discover
             </CustomButton>
           </div>
-
-          
         </section>
       </div>
 

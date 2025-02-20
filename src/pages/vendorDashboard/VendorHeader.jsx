@@ -4,7 +4,6 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
 import { useVendorLogoutMutation } from "../../redux/vendorSlice";
-import { HiOutlineLanguage } from "react-icons/hi2";
 import { userlogout } from "../../redux/authSlice";
 
 const VendorHeader = () => {
@@ -13,24 +12,7 @@ const VendorHeader = () => {
   const [vendorLogout] = useVendorLogoutMutation();
 
   // handle on logout
-  const handleOnLogout = async () => {
-    try {
-      const response = await vendorLogout();
-      const { success, message } = response.data;
-      if (success) {
-        toast.success(message);
-      
-        navigate("/vendorLogin");
-      }
-    } catch (error) {
-      // console.error("Logout failed:", error);
-      // toast.error("Logout failed. Please try again.");
-      toast.success("Logout successful")
-    }
-    finally{
-      dispatch(userlogout());
-    }
-  };
+  
 
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef(null);
@@ -52,29 +34,43 @@ const VendorHeader = () => {
     };
   }, []);
 
+  const handleOnLogout = async () => {
+    try {
+      const response = await vendorLogout();
+      const { success, message } = response.data;
+      if (success) {
+        toast.success(message);
+        dispatch(userlogout());
+        navigate("/vendorLogin");
+        return;
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+      toast.error(error?.data?.message);
+    }
+    finally{
+      dispatch(userlogout());
+    }
+  };
+
   
 
   return (
-    <nav className=" bg-background shadow-md px-6 py-3 flex items-center justify-between lg:rounded-md">
+    <nav className=" bg-white px-6 py-3 flex items-center justify-between lg:rounded-md">
       {/* Left: Brand Name */}
       <Link to="/VendorDashboard" className="font-bold text-2xl ml-10 m-0 text-primary">
-        Dashboard
+        Overview
       </Link>
 
       {/* Right: Action Buttons */}
-      <div className="flex items-center space-x-4">
-        <HiOutlineLanguage className="text-4xl cursor-pointer transition duration-200 ease-in-out p-2 hover:bg-primary hover:text-background rounded-full text-foreground" />
-        <GoBell className="text-4xl cursor-pointer transition duration-200 ease-in-out p-2 hover:bg-primary hover:text-background rounded-full text-foreground" />
+      <div className="flex items-center space-x-4 border border-primary rounded-full">
         <GoPerson
             onClick={handleProfileOpen}
-            
-            className="text-3xl cursor-pointer transition duration-200 ease-in-out p-2 hover:bg-primary hover:text-background rounded-full text-foreground"
+            className="text-primary text-3xl cursor-pointer transition duration-200 ease-in-out p-2 hover:bg-primary hover:text-background rounded-full"
             size={40}
           />
         {/* Profile Dropdown */}
         <div className="absolute right-4 top-20 " ref={profileRef} >
-
-          
           {profileOpen && (
             <div className="w-48 bg-background  rounded-md shadow-lg overflow-hidden z-50">
               <Link

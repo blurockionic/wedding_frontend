@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -14,19 +14,19 @@ const UserProfile = () => {
 
   const userData = useSelector((state) => state.auth.user);
 
-  if (userData.role !== "USER") {
-    navigate("/");
-    return;
-  }
-
-  console.log(userData)
+ 
 
   const [isEditing, setIsEditing] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(userData?.profile_pic || "");
 
   const [updateUser, { isLoading }] = useUpdateUserMutation();
-  console.log(userData.wedding_date)
+
+  useEffect(() => {
+    if (userData?.role !== "USER") {
+      navigate("/");
+    }
+  }, [userData, navigate]);
 
   const {
     register,
@@ -35,14 +35,14 @@ const UserProfile = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      user_name: userData.user_name || "",
-      email: userData.email || "",
-      phone_number: userData.phone_number || "",
+      user_name: userData?.user_name || "",
+      email: userData?.email || "",
+      phone_number: userData?.phone_number || "",
       wedding_date: userData?.wedding_date
-        ? new Date(userData.wedding_date).toISOString().split("T")[0]
+        ? new Date(userData?.wedding_date).toISOString().split("T")[0]
         : "",
-      wedding_location: userData.wedding_location || "",
-      profile_photo: userData.profile_photo || "",
+      wedding_location: userData?.wedding_location || "",
+      profile_photo: userData?.profile_photo || "",
     },
   });
 
@@ -85,7 +85,7 @@ const UserProfile = () => {
     try {
       const updatedData = await updateUser(formData).unwrap();
 
-      toast.success(updatedData.message);
+      toast.success(updatedData?.message);
 
       try {
         dispatch(userUpdate(updatedData.user));
@@ -207,7 +207,7 @@ const UserProfile = () => {
             <span className="flex">
               {" "}
               Verified: {"  "}
-              {userData.is_verified ? (
+              {userData?.is_verified ? (
                 <FaRegThumbsUp />
               ) : (
                 <FaRegThumbsDown />

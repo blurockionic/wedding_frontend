@@ -3,8 +3,9 @@ import { useForm } from "react-hook-form";
 import { useCreateFeedbackMutation } from "../../redux/serviceSlice";
 import { toast } from "react-toastify";
 
-const FeedbackForm = ({ serviceId , setIsLoading}) => {
-  const [creatFeedback] = useCreateFeedbackMutation();
+const FeedbackForm = ({ serviceId, setIsLoading }) => {
+  const [createFeedback, { isLoading }] = useCreateFeedbackMutation();
+  const [rating, setRating] = useState(0);
 
   const {
     register,
@@ -12,24 +13,27 @@ const FeedbackForm = ({ serviceId , setIsLoading}) => {
     formState: { errors },
     reset,
   } = useForm();
-  const [rating, setRating] = useState(0);
 
   const onSubmit = async (data) => {
+    if (!rating) {
+      toast.error("Please select a rating");
+      return;
+    }
+
     const feedbackData = { ...data, rating };
-    console.log("Feedback Submitted:", feedbackData);
 
     try {
-      const res = await creatFeedback({ id: serviceId, data: feedbackData });
-      console.log(res);
-      const {message, success} = res.data
-      if(success){
-        reset(); 
-        setRating(0); 
-        toast.success(message)
-        setIsLoading(true)
+      const res = await createFeedback({ id: serviceId, data: feedbackData }).unwrap();
+      if (res.success) {
+        toast.success(res.message);
+        reset();
+        setRating(0);
+        setIsLoading(true);
+      } else {
+        toast.error(res.message || "Failed to submit feedback");
       }
     } catch (error) {
-      console.log(error);
+      toast.error(error?.data?.message || "Something went wrong");
     }
   };
 
@@ -38,7 +42,7 @@ const FeedbackForm = ({ serviceId , setIsLoading}) => {
   };
 
   return (
-    <div className="w-full md:w-1/2  p-4 rounded-lg shadow-md mt-5 border border-ring">
+    <div className="w-full md:w-1/2 p-4 rounded-lg shadow-md mt-5 border border-ring">
       <h2 className="text-2xl font-bold mb-4 text-center">Feedback</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Star Rating */}
@@ -64,9 +68,7 @@ const FeedbackForm = ({ serviceId , setIsLoading}) => {
               </svg>
             ))}
           </div>
-          {!rating && (
-            <p className="text-red-500 text-sm mt-1">Please select a rating</p>
-          )}
+          {!rating && <p className="text-red-500 text-sm mt-1">Please select a rating</p>}
         </div>
 
         {/* Feedback Field */}
@@ -80,11 +82,7 @@ const FeedbackForm = ({ serviceId , setIsLoading}) => {
             rows="4"
             className="w-full px-3 py-2 border border-input rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-pink-200"
           ></textarea>
-          {errors.feedback && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.comment.message}
-            </p>
-          )}
+          {errors.comment && <p className="text-red-500 text-sm mt-1">{errors.comment.message}</p>}
         </div>
 
         {/* Submit Button */}
@@ -92,9 +90,9 @@ const FeedbackForm = ({ serviceId , setIsLoading}) => {
           <button
             type="submit"
             className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-pink-600 focus:outline-none focus:ring focus:ring-blue-200"
-            disabled={!rating}
+            disabled={isLoading || !rating}
           >
-            Submit Feedback
+            {isLoading ? "Submitting..." : "Submit Feedback"}
           </button>
         </div>
       </form>

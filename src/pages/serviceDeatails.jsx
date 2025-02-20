@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Rating from "../components/Rating";
 import Accordion from "../components/Accordion";
@@ -148,8 +148,7 @@ function ServiceDetail() {
                 </ReactMarkdown>
                 <Rating rating={realService?.rating} />
                 <p className="mt-4 text-slate-DEFAULT">
-                  Price Range: {realService?.min_price} -{" "}
-                  {realService?.max_price || realService?.min_price + 20000}
+                  Price: {realService?.min_price} 
                 </p>
                 <p className="text-slate-DEFAULT capitalize ">
                   Service Type:{" "}
@@ -276,7 +275,7 @@ function ServiceDetail() {
                 </ReactMarkdown>
                 <Rating rating={service.rating} />
                 <p className="mt-4 text-slate-900">
-                  Price Range: {service.min_price} - {service.max_price}
+                  Price: {service.min_price} - {service.max_price}
                 </p>
                 <p className="text-slate-900">
                   Service Type: {service.service_type}

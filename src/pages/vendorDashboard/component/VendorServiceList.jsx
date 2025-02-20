@@ -1,15 +1,13 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { formatPrice } from "../../../static/helper";
 
 const VendorServiceList = ({ services }) => {
-
   const navigate = useNavigate(); // Initialize navigate hook
 
-  
   const handleCardClick = (serviceId) => {
-    navigate(`service-details/${serviceId}`); 
+    navigate(`service-details/${serviceId}`);
   };
-
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-2 md:p-6">
@@ -26,24 +24,24 @@ const VendorServiceList = ({ services }) => {
                 {service.service_name}
               </h3>
               <p className="text-sm text-gray-500 capitalize">
-               <span className="font-thin text-xs"> Service Type:</span> <span className="font-bold">{service.service_type || "N/A"}</span>
+                <span className="font-thin text-xs"> Service Type:</span>{" "}
+                <span className="font-bold">{service.service_type || "N/A"}</span>
               </p>
             </div>
 
             {/* Card Content */}
             <div className="p-4 flex flex-col space-y-2">
-              {/* <p className="text-sm text-gray-600">
-                {service.description || "No description available."}
-              </p> */}
               <div className="text-sm text-gray-500">
                 <p>
-                 <span className="text-sm font-thin"> Price Range:</span>{" "}
+                  <span className="text-sm font-thin"> Price:</span>{" "}
                   <span className="font-medium text-gray-800">
-                    ${service.min_price || "N/A"} - ${service.max_price || "N/A"}
+                    {service.min_price
+                      ? `${formatPrice(service.min_price)}/${service.service_unit || "unit"}`
+                      : "Price not available"}
                   </span>
                 </p>
                 <p>
-                <span className="text-sm font-thin">  Rating:</span>
+                  <span className="text-sm font-thin"> Rating:</span>
                   <span className="font-medium text-gray-800">
                     {service.rating || 0} ⭐
                   </span>
@@ -52,7 +50,7 @@ const VendorServiceList = ({ services }) => {
             </div>
 
             {/* Card Footer */}
-            <div className=" flex justify-between p-2 bg-gray-100 border-t border-gray-300 rounded-bl-lg rounded-br-lg">
+            <div className="flex justify-between p-2 bg-gray-100 border-t border-gray-300 rounded-bl-lg rounded-br-lg">
               <p className="text-sm text-gray-500">
                 Vendor:{" "}
                 <span className="font-medium capitalize text-gray-800">
