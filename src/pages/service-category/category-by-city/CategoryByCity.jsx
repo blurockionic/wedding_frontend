@@ -1,13 +1,11 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import { useGetServicesQuery } from "../../../redux/serviceSlice";
 import ServiceList from "../../../components/ServiceList";
 
 const CategoryByCity = () => {
   const { category, subcategory, state, city } = useParams();
-  const navigate = useNavigate();
-
-  // console.log(subcategory)
+  // const navigate = useNavigate();
 
   // State for Filters
   const [filters, setFilters] = useState({
@@ -54,10 +52,10 @@ const CategoryByCity = () => {
   };
 
   // Handle Card Click
-  const handleOnCard = (item) => {
-    console.log("Card Clicked", item);
-    navigate(`/all/${category}/${subcategory}/${state}/${city}/${item}`);
-  };
+  // const handleOnCard = (item) => {
+  //   console.log("Card Clicked", item);
+  //   navigate(`/all/${category}/${subcategory}/${state}/${city}/${item}`);
+  // };
 
   return (
     <div className="flex  px-16 py-4 gap-6">

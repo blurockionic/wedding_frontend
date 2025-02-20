@@ -146,8 +146,6 @@ const ServiceDetails = () => {
     }
   };
 
-
-
   return (
     <>
     {

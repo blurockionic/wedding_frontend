@@ -34,7 +34,6 @@ const SubCategories = () => {
     (detail) => detail.state === location
   ).sort((a, b) => b.rating - a.rating);
 
-
   const stateServiceCount = data?.ServiceResult.reduce((acc, service) => {
     const state = service?.state;
     if (state) {
@@ -42,8 +41,6 @@ const SubCategories = () => {
     }
     return acc;
   }, {});
-
-  
 
   // Handle state selection
   const handleStateClick = (state) => {
@@ -66,37 +63,43 @@ const SubCategories = () => {
       </div>
 
       <div className="px-16 mt-4 overflow-x-auto whitespace-nowrap flex gap-4 py-2 scrollbar-hide">
-        {Object.entries(stateServiceCount || {}).map(([state, count]) => (
-          <div key={state} className="flex flex-col items-center gap-2">
-            <span className="w-40 h-40 bg-gray-50 rounded-full shadow-md"></span>
-            <p
-              onClick={() => handleStateClick(state)}
-              className="px-4 py-2 text-md rounded-full transition cursor-pointer capitalize"
-            >
-              {state}
-            </p>
-            <span className="text-xs">{`(${count}) ${subCategory}`}</span>
+        {Object.keys(stateServiceCount || {}).length > 0 ? (
+          Object.entries(stateServiceCount).map(([state, count]) => (
+            <div key={state} className="flex flex-col items-center gap-2">
+              <span className="w-40 h-40 bg-gray-50 rounded-full shadow-md"></span>
+              <p
+                onClick={() => handleStateClick(state)}
+                className="px-4 py-2 text-md rounded-full transition cursor-pointer capitalize"
+              >
+                {state}
+              </p>
+              <span className="text-xs">{`(${count}) ${subCategory}`}</span>
+            </div>
+          ))
+        ) : (
+          <div className="w-full flex items-center justify-center">
+            <p className="text-foreground text-8xl">No search found.</p>
           </div>
-        ))}
+        )}
       </div>
 
       {/* Top Venues by Selected State */}
 
-      {topInYourLocation?.length > 0  && (
+      {/* {topInYourLocation?.length > 0 && (
         <div className="mt-6 px-16 py-4">
           <h2 className="text-xl font-semibold">{`Top ${subCategory} in ${location}`}</h2>
           <div>
             <ServiceList services={topInYourLocation || []} />
           </div>
         </div>
-      )}
+      )} */}
 
-      <div className="mt-6 px-16 py-4">
+      {/* <div className="mt-6 px-16 py-4">
         <h2 className="text-xl font-semibold">{`Top ${subCategory} in Delhi`}</h2>
         <div>
           <ServiceList services={topInDehli || []} />
         </div>
-      </div>
+      </div> */}
 
       {/* <div className="mt-6 px-16 py-4">
         <h2 className="text-xl font-semibold">{`Top ${subCategory} in Karnataka`}</h2>

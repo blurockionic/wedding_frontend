@@ -54,7 +54,6 @@ export default function Home() {
   };
 
   useEffect(() => {
-    console.log(data?.ServiceResult);
 
     if (!data?.ServiceResult) return;
 
@@ -126,7 +125,7 @@ export default function Home() {
     }else if(location){
       navigate(`/all/India/All/${location}`)
     }else if(search){
-      navigate(`/all/${search}/India/All`)
+      navigate(`/all/${search}`)
     }
     else{
       navigate(`/all`);

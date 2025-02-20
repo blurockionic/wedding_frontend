@@ -62,7 +62,8 @@ const CategoryByState = () => {
       </div>
 
       <div className="px-16 mt-4 overflow-x-auto whitespace-nowrap flex gap-4 py-2 scrollbar-hide">
-        {Object.entries(cityServiceCount || {}).map(([city, count]) => (
+        {
+        Object.entries(cityServiceCount || {}).map(([city, count]) => (
           <div key={city} className="flex flex-col items-center gap-2">
             <span className="w-40 h-40 bg-gray-50 rounded-full shadow-md"></span>
             <p

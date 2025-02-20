@@ -67,8 +67,8 @@ const VendorSidebar = ({ footer, setIsOpen, isOpen }) => {
 
       <div
         className={`my-2 lg:my-2 lg:mx-2 fixed h-[98vh] rounded-md inset-y-0 
-          left-0 z-50 flex flex-col border border-primary  text-gray-100 
-          bg-gradient-to-br from-white via-pink-50 to-pink-300
+          left-0 z-50 flex flex-col text-gray-100 
+          bg-gray-50 border-r 
           shadow-xl transform ${
             isOpen ? "translate-x-0" : "-translate-x-full"
           } lg:translate-x-0 lg:static lg:shadow-none transition-transform duration-300 ease-in-out`}
@@ -97,7 +97,7 @@ const VendorSidebar = ({ footer, setIsOpen, isOpen }) => {
               <li key={index} className="group m-2">
                 <Link
                   to={link.href}
-                  className={`flex items-center gap-4 p-3 hover:bg-primary hover:text-foreground rounded-md ${
+                  className={`flex items-center gap-4 p-3 hover:bg-primary  rounded-md ${
                     activeTab === link.href
                       ? "bg-primary text-background"
                       : "text-foreground"
