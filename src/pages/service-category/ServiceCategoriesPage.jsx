@@ -97,9 +97,8 @@ const ServiceCategoriesPage = () => {
         "Planners, decorators, caterers & more for a seamless wedding!",
       image: "/discover/wedding-services.png",
       subcategories: [
-        { name: "Wedding Planners", image: "/public/weddingservices/planner.webp" },
-        { name: "Decorators", image: "/public/weddingservices/decorator.jpg" },
-        { name: "Caterers", image: "/public/weddingservices/caterers.jpg"},
+        { name: "Wedding Planners", image: "/weddingservices/planner.webp" },
+        { name: "Decorators", image: "/weddingservices/decorator.jpg" },
       ],
     },
     {
@@ -108,9 +107,9 @@ const ServiceCategoriesPage = () => {
         "Entertainment, transport, and extras for a flawless celebration!",
       image: "/discover/other.png",
       subcategories: [
-        { name: "Live Bands", image: "/public/otherimages/band.webp" },
-        { name: "Luxury Transport", image: "/public/otherimages/transport.jpeg" },
-        { name: "Fireworks & Effects", image: "/public/otherimages/fireworks.jpeg" },
+        { name: "Live Bands", image: "/otherimages/band.webp" },
+        { name: "Luxury Transport", image: "/otherimages/transport.jpeg" },
+        { name: "Fireworks & Effects", image: "/otherimages/fireworks.jpeg" },
       ],
     },
   ];
