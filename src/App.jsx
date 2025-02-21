@@ -26,6 +26,7 @@ const Checklist = lazy(() => import("./pages/userDashboard/checklist/Checklist.j
 const Setting = lazy(() => import("./pages/vendorDashboard/Setting.jsx"));
 const ContactUs = lazy(() => import("./pages/contactus/ContactUs.jsx"));
 const Analytics = lazy(() => import("./pages/vendorDashboard/Analytics.jsx"));
+const WeddingBudgetCalculator  = lazy(()=> import("./pages/userDashboard/budget-calculator/WeddingBudgetCalculator.jsx"))
 const VendorServicesPage = lazy(() =>
   import("./pages/vendorDashboard/VendorServicePage.jsx")
 );
