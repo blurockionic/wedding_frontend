@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { FaCircleArrowLeft } from "react-icons/fa6";
 import {toast} from 'react-toastify';
 import { Link } from "react-router-dom";
-function Preview() {
+function Preview_1() {
   const [brideName, setBrideName] = useState('');
   const handleBrideNameChange = (e) => setBrideName(e.target.value);
   const [groomName, setGroomName] = useState('');
@@ -45,10 +45,10 @@ function Preview() {
       if (response.ok) {
         toast.success('Data saved to MongoDB!');
       } else {
-        toast.error('Failed to save data to MongoDB.');
+        console.error('Failed to save data to MongoDB.');
       }
     } catch (error) {
-      toast.error('Error saving data to MongoDB:', error);
+      console.error('Error saving data to MongoDB:', error);
     }
   };
 
@@ -61,7 +61,7 @@ function Preview() {
             <div className="prev_sec_5">
               <div className="preview_1">
                 <div className="sec_52">
-                  <div className="prev_sec_53">
+                  <div className="prev_sec_53_1">
                     <div className="pre_1">
                       <div className="pre_2">{title1 || 'WE INVITE YOU'}</div>
                       <div className="pre_3">{title2 || 'TO CELEBRATE OUR WEDDING'}</div>
@@ -121,8 +121,8 @@ function Preview() {
                   </div>
                   
                   <div className="sec_54">
-                  <Link className="sec_56" to="/card?template=template">
-                    <div className="sec_55">Choose</div>
+                  <Link className="sec_56" to="/card?template=template1">
+                    <div className="">Choose</div>
                   </Link>
                     <div className="sec_56" onClick={handleSave}>Save</div>
                   </div>
@@ -213,5 +213,4 @@ function Preview() {
   )
 }
 
-export default Preview
-
+export default Preview_1

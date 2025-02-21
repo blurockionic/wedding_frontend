@@ -41,11 +41,11 @@ const weddingVendors = [
 ];
 
 const brides = [
-  { name: "Bridal Lahenga", image: "/images/bridal-lahenga.png" },
-  { name: "Bridal Jewellery", image: "/images/bridal-jewellery.png" },
-  { name: "Bridal Makeup Artist", image: "/images/bridal-makeup.png" },
-  { name: "Mehndi Artist", image: "/images/mehndi-artist.png" },
-  { name: "Makeup Salon", image: "/images/makeup-salon.png" },
+  { name: "Bridal Lahenga", image: "/bride/bridal_lengha.png" },
+  { name: "Bridal Jewellery", image: "/bride/bridal_jewellery.png" },
+  { name: "Bridal Makeup Artist", image: "/bride/bridal_makeup_artists.png" },
+  { name: "Mehndi Artist", image: "/bride/mehdi_artist.jpg" },
+  { name: "Makeup Salon", image: "/bride/bridal_makeup_salon.png" },
 ];
 
 const grooms = [
@@ -162,7 +162,7 @@ const ServiceCategoriesPage = () => {
             {isActive && title === category.title && (
               <div className="absolute left-0  w-full mt-4 bg-white z-10 px-5 md:px-20 ">
                 {/* Display Subcategories */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 px-4 py-5 border border-gray-200 rounded-lg shadow-lg">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 px-4 py-5 border border-gray-200 rounded-lg shadow-lg">
                   {category.subcategories.map((sub, subIndex) => (
                     <div
                       key={subIndex}
@@ -175,9 +175,9 @@ const ServiceCategoriesPage = () => {
                         <img
                           src={sub.image}
                           alt={sub.name}
-                          className="object-cover w-full h-full rounded-lg blur-sm"
+                          className="object-cover w-full h-full rounded-lg "
                         />
-                        <span className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-foreground text-sm font-semibold  px-2 py-1 rounded">
+                        <span className="bg-white absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-foreground text-sm font-semibold  px-2 py-1 rounded">
                           {sub.name}
                         </span>
                       </div>
