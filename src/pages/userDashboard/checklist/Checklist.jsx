@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import Footer from "../Footer";
 import { FaCheckCircle, FaPlus, FaTimes, FaSave, FaTrash, FaCalendarAlt } from "react-icons/fa";
 import { BiBell, BiBellPlus } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
@@ -13,15 +12,16 @@ import {
   addCategory,
   removeCategory,
   setScheduleDate,
-} from "../../redux/checklistSlice";
+} from "../../../redux/checklistSlice";
 import {
   useSaveChecklistMutation,
   useGetChecklistQuery,
-} from "../../redux/checklistApiSlice";
+} from "../../../redux/checklistApiSlice";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import Footer from "../../Footer";
 
 // Custom hook to detect screen size (no changes)
 const useMediaQuery = (query) => {
@@ -563,7 +563,7 @@ const Checklist = () => {
               </p>
             )}
 
-            <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6 mt-6">
+            <div className="columns-1 sm:columns-2 lg:columns-2 gap-6 space-y-6 mt-6">
               {checklistData.map((category, index) => (
                 <ChecklistCategory
                   key={index}
@@ -576,7 +576,6 @@ const Checklist = () => {
         )}
       </div>
 
-      <Footer />
     </div>
   );
 };

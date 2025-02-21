@@ -21,7 +21,7 @@ import { HelmetProvider } from "react-helmet-async";
 
 const Billing = lazy(()=>import("./pages/vendorDashboard/Billing.jsx"))
 
-const Checklist = lazy(() => import("./pages/checklist/Checklist.jsx"));
+const Checklist = lazy(() => import("./pages/userDashboard/checklist/Checklist.jsx"));
 
 const Setting = lazy(() => import("./pages/vendorDashboard/Setting.jsx"));
 const ContactUs = lazy(() => import("./pages/contactus/ContactUs.jsx"));
@@ -64,6 +64,7 @@ const CategoryByState = lazy(() => import("./pages/service-category/category-by-
 const CategoryByCity = lazy(() => import("./pages/service-category/category-by-city/CategoryByCity.jsx"));
 const VenderBiodata = lazy(()=> import("./pages/service-category/vendor-details/VendorDetails.jsx"))
 const  ServiceDetails  = lazy(()=>import("./pages/service-category/service-details/ServiceDetails.jsx")) ;
+const WeddingBudgetCalculator =  lazy(()=>import("./pages/userDashboard/budget-calculator/WeddingBudgetCalculator.jsx"))
  
 const Payments = lazy(() => import("./pages/vendorDashboard/component/Payments.jsx"));
 const AboutPage = lazy(() => import("./pages/section/About.jsx")); 
@@ -107,7 +108,6 @@ const router = createBrowserRouter([
       { path: "/view_1", element: wrapWithSuspense(View_1) },
       { path: "/login", element: wrapWithSuspense(Login) },
       { path: "/contactus", element: wrapWithSuspense(ContactUs) },
-      { path: "/checklist", element: wrapWithSuspense(Checklist) },
       // dynamic route for category
       { path: "/all", element: wrapWithSuspense(AllCategories) },
       { path: "/all/:category", element: wrapWithSuspense(Category) },
@@ -146,10 +146,13 @@ const router = createBrowserRouter([
             component={() => wrapWithSuspense(UserDashboard)}
             allowedRoles={["user", "admin"]}
           />
-        ), // Protected route
+        ), 
+        // Protected route
         children: [
           { path: "", index: true, element: wrapWithSuspense(UserProfile) },
           { path: "favoriteList", element: wrapWithSuspense(FavoriteListPage) },
+          { path: "checklist", element: wrapWithSuspense(Checklist) },
+          { path: "weddingbudget", element: wrapWithSuspense(WeddingBudgetCalculator)}
         ],
       },
 

@@ -1,8 +1,6 @@
 
 import { MdDesignServices, MdOutlineAnalytics, MdOutlinePayment } from "react-icons/md";
 
-import { FcServices } from "react-icons/fc";
-
 export const sectorTypes = [
   "Wedding Venue",
   "Wedding Vendor",
