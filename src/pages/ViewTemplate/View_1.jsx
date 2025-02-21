@@ -34,7 +34,7 @@ function View_1() {
     localStorage.setItem("invitationTemplate", JSON.stringify(templateData));
 
     try {
-      const response = await fetch('http://localhost:4000/api/templates', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/templates`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

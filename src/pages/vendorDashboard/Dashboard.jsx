@@ -26,7 +26,7 @@ const VendorDashboard = () => {
         } min-h-screen`}
       >
         {/* Header */}
-        <div className="sticky top-0 z-40  md:px-5 px-0 md:pt-2">
+        <div className="sticky top-0 z-40  md:px-5 px-0">
           <VendorHeader isOpen={isOpen} />
         </div>
 
