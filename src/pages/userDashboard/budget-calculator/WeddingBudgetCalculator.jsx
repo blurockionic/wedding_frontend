@@ -86,7 +86,7 @@ const WeddingBudgetCalculator = () => {
       cutout: 50, // 0 for full pie, increase for donut effect
       radius: "20%", // Adjust the pie chart size
       legend: {
-        position: "top",
+        position: "bottom",
       },
       datalabels: {
         color: "white",
@@ -122,7 +122,7 @@ const WeddingBudgetCalculator = () => {
         ))}
       </div>
       <button
-        className="bg-blue-500 text-white px-4 py-2 rounded w-full"
+        className="bg-primary text-white px-4 py-2 rounded w-full"
         onClick={calculateBudget}
       >
         Calculate
@@ -134,11 +134,11 @@ const WeddingBudgetCalculator = () => {
             ₹{result.minBudget.toFixed(2)} - ₹{result.maxBudget.toFixed(2)}
           </p>
           <div className="flex">
-            <div className="mt-4 w-3/4">
+            <div className="mt-4 w-1/2">
               <h3 className="font-semibold">Budget Distribution:</h3>
               <Pie data={pieData} options={pieOptions} />
             </div>
-            <div className="w-1/4">
+            <div className="w-1/2">
               <h3 className="font-semibold mt-2">Service Breakdown:</h3>
               <ul className="list-disc pl-4">
                 {result.breakdown.map((item, index) => (

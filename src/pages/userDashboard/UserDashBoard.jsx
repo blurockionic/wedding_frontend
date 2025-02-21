@@ -67,7 +67,7 @@ const UserDashBoard = () => {
           </ul>
           <button
             onClick={() => handleLogout()}
-            className="w-full mt-4 px-4 py-3 text-muted text-sm bg-pink-500 rounded-md hover:bg-pink-600 focus:outline-none z-50"
+            className="w-full mt-4 px-4 py-3 text-muted text-sm bg-primary rounded-md hover:bg-pink-600 focus:outline-none z-50"
           >
             Logout
           </button>
