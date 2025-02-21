@@ -50,7 +50,7 @@ const brides = [
 const grooms = [
   { name: "Sherwani", image: "/groom/Sherwani.avif" },
   { name: "Men's Grooming", image: "/groom/groom.webp" },
-  { name: "Men's Accessories", image: "/groom/Aceeroes.jpg" },
+  { name: "Men's Accessories", image: "/groom/aceeroes.jpg" },
 ];
 
 const ServiceCategoriesPage = () => {
