@@ -4,14 +4,14 @@ import { IoIosLock } from "react-icons/io";
 import { FaLock } from "react-icons/fa";
 import { IoShieldCheckmarkOutline } from "react-icons/io5";
 import { MdOutlineCreditScore } from "react-icons/md";
-import { useNavigate } from "react-router-dom"; // Make sure it's imported
+import { useNavigate } from "react-router-dom"; 
 
 function Payment() {
   const [responseId, setResponseId] = React.useState("");
   const [responseState, setResponseState] = React.useState([]);
   const [paymentSuccess, setPaymentSuccess] = React.useState(false);
 
-  const navigate = useNavigate(); // Initialize the navigate hook
+  const navigate = useNavigate(); 
 
   const loadScript = (src) => {
     return new Promise((resolve) => {
