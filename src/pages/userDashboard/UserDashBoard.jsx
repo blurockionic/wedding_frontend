@@ -13,9 +13,10 @@ const UserDashBoard = () => {
   // Array of links and their paths
   const navItems = [
     { name: "Profile", path: "" }, // Use "/" for the default route
-    { name: "History", path: "history" },
+    { name: "Checklist", path: "checklist" },
+    { name: "Budget", path: "weddingbudget" },
     { name: "FavoriteList", path: "favoriteList" },
-    { name: "Settings", path: "settings" },
+    // { name: "Settings", path: "settings" },
   ];
 
   const handleLogout = async () => {
@@ -39,7 +40,7 @@ const UserDashBoard = () => {
  
 
   return (
-    <div className="bg-gradient-to-r h-screen from-pink-50 via-white to-pink-100">
+    <div className=" h-screen ">
       <div className="container mx-auto flex flex-col lg:flex-row gap-8 px-4  py-6">
         {/* Sidebar */}
         <div className="w-full   lg:w-1/4 shadow-lg rounded-lg p-6 border border-pink-200 bg-white">
@@ -66,7 +67,7 @@ const UserDashBoard = () => {
           </ul>
           <button
             onClick={() => handleLogout()}
-            className="w-full px-4 py-3 text-muted text-sm bg-pink-500 rounded-md hover:bg-pink-600 focus:outline-none z-50"
+            className="w-full mt-4 px-4 py-3 text-muted text-sm bg-primary rounded-md hover:bg-pink-600 focus:outline-none z-50"
           >
             Logout
           </button>

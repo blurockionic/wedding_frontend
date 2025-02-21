@@ -21,11 +21,12 @@ import { HelmetProvider } from "react-helmet-async";
 
 const Billing = lazy(() => import("./pages/vendorDashboard/Billing.jsx"));
 
-const Checklist = lazy(() => import("./pages/checklist/Checklist.jsx"));
+const Checklist = lazy(() => import("./pages/userDashboard/checklist/Checklist.jsx"));
 
 const Setting = lazy(() => import("./pages/vendorDashboard/Setting.jsx"));
 const ContactUs = lazy(() => import("./pages/contactus/ContactUs.jsx"));
 const Analytics = lazy(() => import("./pages/vendorDashboard/Analytics.jsx"));
+const WeddingBudgetCalculator  = lazy(()=> import("./pages/userDashboard/budget-calculator/WeddingBudgetCalculator.jsx"))
 const VendorServicesPage = lazy(() =>
   import("./pages/vendorDashboard/VendorServicePage.jsx")
 );
@@ -131,7 +132,6 @@ const router = createBrowserRouter([
       { path: "/view_1", element: wrapWithSuspense(View_1) },
       { path: "/login", element: wrapWithSuspense(Login) },
       { path: "/contactus", element: wrapWithSuspense(ContactUs) },
-      { path: "/checklist", element: wrapWithSuspense(Checklist) },
       // dynamic route for category
       { path: "/all", element: wrapWithSuspense(AllCategories) },
       { path: "/all/:category", element: wrapWithSuspense(Category) },
@@ -185,10 +185,13 @@ const router = createBrowserRouter([
             component={() => wrapWithSuspense(UserDashboard)}
             allowedRoles={["user", "admin"]}
           />
-        ), // Protected route
+        ), 
+        // Protected route
         children: [
           { path: "", index: true, element: wrapWithSuspense(UserProfile) },
           { path: "favoriteList", element: wrapWithSuspense(FavoriteListPage) },
+          { path: "checklist", element: wrapWithSuspense(Checklist) },
+          { path: "weddingbudget", element: wrapWithSuspense(WeddingBudgetCalculator)}
         ],
       },
 
