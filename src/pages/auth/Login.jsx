@@ -33,6 +33,7 @@ export default function Login() {
   const [isShowPassword, setIsShowPassword] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const [isBuyClicked, setIsBuyClicked] = useState(false);
 
   const {
     register,
@@ -58,8 +59,14 @@ export default function Login() {
         reset();
         toast.success(message);
 
-        const from = location.state?.from || "/";
-        navigate(from);
+        if (location.state?.isBuyClicked && isBuyClicked===true || location.state?.from || "/payment") {
+          navigate("/payment");
+        }
+        else {
+          const from = location.state?.from || "/";
+          navigate(from);  
+        }
+
       }
     } catch (error) {
       const errorMessage =

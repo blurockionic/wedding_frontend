@@ -1,7 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Quote from "./Quote";
+import Quote from "../Quote";
+import Footer from "../Footer";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 function Template() {
+  const navigate = useNavigate();
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn); 
+
+  const handleBuyClick = () => {
+    if (isLoggedIn) {
+      navigate("/payment");
+    } else {
+      navigate("/login", { state: { from: "/payment", isBuyClicked: true } }); 
+    }
+  };
   return (
     <div>
       <div className="">
@@ -13,7 +26,7 @@ function Template() {
               <div className="w-full lg:w-1/2 text-center lg:text-left space-y-8">
                 <div className="space-y-3">
                   <span className="text-pink-600 font-semibold tracking-wider text-sm">
-                    MARRAGE VENDORS INVITATIONS
+                    MARRIAGE VENDORS INVITATIONS
                   </span>
                   <h1 className="font-['Montserrat'] text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
                     Create Beautiful Memories
@@ -85,7 +98,7 @@ function Template() {
               </div>
             </div>
           </div>
-          <Quote/>
+          <Quote />
           <section className="bg-white py-[70px] ">
             <div className="mx-auto px-4 sm:container">
               <div className="border-l-[5px] border-[#ff2f7b] pl-5 ">
@@ -104,35 +117,48 @@ function Template() {
               <div className="sec_5">
                 <div className="sec_51">
                   <div className="sec_52">
-                    <div className="sec_53"></div>
+                    <div className="sec_53">
+                      <div className="h-[30px] w-[30%] popular_1"></div>
+                    </div>
                     <div className="h-[30px] w-[100%] mt-4 text-lg font-bold flex">
                       Bird of Charm
-                      <div className="ms-[32%] text-black">₹100.00</div>
+                      <div className="ms-[38%] text-black">₹100.00</div>
                       <div className="ms-[4%] text-yellow-500">⭐5</div>
                     </div>
                     <div className="sec_54">
                       <Link className="sec_55" to="/view">
-                        <div className="sec_55">Preview</div>
+                        <div className="">Preview</div>
                       </Link>
-                      <Link className="sec_55" to="/payment">
-                        <div className="sec_55">Buy</div>
+                      <Link className="sec_55" to="">
+                        <div>
+                        <button onClick={handleBuyClick}>
+                          Buy
+                        </button>
+                        </div>
                       </Link>
                     </div>
                   </div>
                 </div>
                 <div className="sec_51">
                   <div className="sec_52">
-                    <div className="sec_53_1"></div>
+                    <div className="sec_53_1">
+                      <div className="h-[30px] w-[25%] popular"></div>
+                    </div>
                     <div className="h-[30px] w-[100%] mt-4 text-lg font-bold flex">
                       Aquamarine Peacock
-                      <div className="ms-[43%] text-yellow-500">⭐5</div>
+                      <div className="ms-[25%] text-green-600 text-[15px] bg-slate-200 rounded p-3 flex justify-center items-center">
+                        FREE
+                      </div>
+                      <div className="ms-[4%] text-yellow-500">⭐5</div>
                     </div>
                     <div className="sec_54">
                       <Link className="sec_55" to="/view_1">
-                        <div className="sec_55">Preview</div>
+                        <div className="">Preview</div>
                       </Link>
                       <Link className="sec_55" to="/preview_1">
-                        <div className="sec_55">Edit</div>
+                        <div>
+                          Edit
+                        </div>
                       </Link>
                     </div>
                   </div>
@@ -147,7 +173,7 @@ function Template() {
                     <div className="sec_54">
                       <div className="sec_55">Preview</div>
                       <Link className="sec_55" to="/payment">
-                        <div className="sec_55">Buy</div>
+                        <div className="">Buy</div>
                       </Link>
                     </div>
                   </div>
@@ -164,7 +190,7 @@ function Template() {
                     <div className="sec_54">
                       <div className="sec_55">Preview</div>
                       <Link className="sec_55" to="/payment">
-                        <div className="sec_55">Buy</div>
+                        <div className="">Buy</div>
                       </Link>
                     </div>
                   </div>
@@ -179,7 +205,7 @@ function Template() {
                     <div className="sec_54">
                       <div className="sec_55">Preview</div>
                       <Link className="sec_55" to="/payment">
-                        <div className="sec_55">Buy</div>
+                        <div className="">Buy</div>
                       </Link>
                     </div>
                   </div>
@@ -194,7 +220,7 @@ function Template() {
                     <div className="sec_54">
                       <div className="sec_55">Preview</div>
                       <Link className="sec_55" to="/payment">
-                        <div className="sec_55">Buy</div>
+                        <div className="">Buy</div>
                       </Link>
                     </div>
                   </div>
@@ -219,7 +245,7 @@ function Template() {
                         <div className="sec_55">Preview</div>
                       </Link>
                       <Link className="sec_55" to="/payment">
-                        <div className="sec_55">Buy</div>
+                        <div className="">Buy</div>
                       </Link>
                     </div>
                   </div>
@@ -238,7 +264,7 @@ function Template() {
                     <div className="sec_54">
                       <div className="sec_55">Preview</div>
                       <Link className="sec_55" to="/payment">
-                        <div className="sec_55">Buy</div>
+                        <div className="">Buy</div>
                       </Link>
                     </div>
                   </div>
@@ -247,6 +273,7 @@ function Template() {
             </div>
           </div>
         </div>
+        <Footer />
       </div>
     </div>
   );
