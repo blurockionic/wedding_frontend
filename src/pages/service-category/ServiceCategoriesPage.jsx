@@ -2,42 +2,41 @@ import { useState } from "react";
 import ServiceCategoriesCard from "../../components/servicecatogories/ServiceCatogoriesCard";
 // import SubCategory from "../../components/sub-category/SubCategory";
 import { useNavigate } from "react-router-dom";
-import ServiceList from "../../components/ServiceList";
 
 const weddingVenues = [
-  { name: "Wedding Lawns Farmhouse", image: "/public/weddingvenue/weddingfarm.webp" },
-  { name: "Hotel", image: "/public/weddingvenue/hotel.jpg" },
-  { name: "Banquet Halls", image: "/public/weddingvenue/banquet.jpg" },
-  { name: "Marriage Garden", image: "/public/weddingvenue/gardenn.jpg" },
-  { name: "Wedding Halls", image: "/public/weddingvenue/hall.avif" },
-  { name: "Wedding Resorts", image: "/public/weddingvenue/resort.jpg" },
+  { name: "Wedding Lawns Farmhouse", image: "/weddingvenue/weddingfarm.webp" },
+  { name: "Hotel", image: "/weddingvenue/hotel.jpg" },
+  { name: "Banquet Halls", image: "/weddingvenue/banquet.jpg" },
+  { name: "Marriage Garden", image: "/weddingvenue/gardenn.jpg" },
+  { name: "Wedding Halls", image: "/weddingvenue/hall.avif" },
+  { name: "Wedding Resorts", image: "/weddingvenue/resort.jpg" },
 ];
 
 const weddingVendors = [
-  { name: "Caterers", image: "/public/weddingvendors/cateres.jpg" },
-  { name: "Wedding Invitation", image: "/public/weddingvendors/inviation.jpg" },
-  { name: "Wedding Decor", image: "/public/weddingvendors/decoration.jpg" },
-  { name: "Wedding Gift", image: "/public/weddingvendors/gift.webp" },
-  { name: "Wedding Photographers", image: "/public/weddingvendors/photo.jpg" },
-  { name: "Wedding Coordinators", image: "/public/weddingvendors/cordinator.jpg" },
-  { name: "Wedding Music", image: "/public/weddingvendors/band.jpeg" },
-  { name: "Wedding Videographers", image: "/public/weddingvendors/cateres.jpg" },
+  { name: "Caterers", image: "/weddingvendors/cateres.jpg" },
+  { name: "Wedding Invitation", image: "/weddingvendors/inviation.jpg" },
+  { name: "Wedding Decor", image: "/weddingvendors/decoration.jpg" },
+  { name: "Wedding Gift", image: "/weddingvendors/gift.webp" },
+  { name: "Wedding Photographers", image: "/weddingvendors/photo.jpg" },
+  { name: "Wedding Coordinators", image: "/weddingvendors/cordinator.jpg" },
+  { name: "Wedding Music", image: "/weddingvendors/band.jpeg" },
+  { name: "Wedding Videographers", image: "/weddingvendors/cateres.jpg" },
   {
     name: "Wedding Transportation",
-    image: "/public/weddingvendors/transportt.avif",
+    image: "/weddingvendors/transportt.avif",
   },
-  { name: "Wedding House", image: "/public/weddingvendors/house.jpg" },
-  { name: "Tent House", image: "/public/weddingvendors/tent.jpeg" },
-  { name: "Wedding Entertainment", image: "/public/weddingvendors/game.jpeg" },
-  { name: "Florists", image: "/public/weddingvendors/florist.jpeg" },
-  { name: "Wedding Planner", image: "/public/weddingvendors/planner.jpeg" },
-  { name: "Wedding Decoration", image: "/public/weddingvendors/decoration.jpg" },
-  { name: "Wedding Cakes", image: "/public/weddingvendors/cake.jpg" },
-  { name: "Wedding Agencies", image: "/public/weddingvendors/cordinator.jpg" },
-  { name: "Wedding DJ", image: "/public/weddingvendors/dj.jpg" },
-  { name: "Pandit", image: "/public/weddingvendors/pandit.jpeg" },
-  { name: "Photobooth", image: "/public/weddingvendors/photobooth.jpg" },
-  { name: "Astrologers", image: "/public/weddingvendors/astro.jpg" },
+  { name: "Wedding House", image: "/weddingvendors/house.jpg" },
+  { name: "Tent House", image: "/weddingvendors/tent.jpeg" },
+  { name: "Wedding Entertainment", image: "/weddingvendors/game.jpeg" },
+  { name: "Florists", image: "/weddingvendors/florist.jpeg" },
+  { name: "Wedding Planner", image: "/weddingvendors/planner.jpeg" },
+  { name: "Wedding Decoration", image: "/weddingvendors/decoration.jpg" },
+  { name: "Wedding Cakes", image: "/weddingvendors/cake.jpg" },
+  { name: "Wedding Agencies", image: "/weddingvendors/cordinator.jpg" },
+  { name: "Wedding DJ", image: "/weddingvendors/dj.jpg" },
+  { name: "Pandit", image: "/weddingvendors/pandit.jpeg" },
+  { name: "Photobooth", image: "/weddingvendors/photobooth.jpg" },
+  { name: "Astrologers", image: "/weddingvendors/astro.jpg" },
 ];
 
 const brides = [
@@ -49,9 +48,9 @@ const brides = [
 ];
 
 const grooms = [
-  { name: "Sherwani", image: "/public/groom/Sherwani.avif" },
-  { name: "Men's Grooming", image: "/public/groom/groom.webp" },
-  { name: "Men's Accessories", image: "/public/groom/Aceeroes.jpg" },
+  { name: "Sherwani", image: "/groom/Sherwani.avif" },
+  { name: "Men's Grooming", image: "/groom/groom.webp" },
+  { name: "Men's Accessories", image: "/groom/Aceeroes.jpg" },
 ];
 
 const ServiceCategoriesPage = () => {
