@@ -13,6 +13,7 @@ import FeedbackForm from "../../../components/feedbackform/FeedbackForm";
 import ImageGallery from "../../../components/gallery/ImageGallery";
 import Rating from "../../../components/Rating";
 import Accordion from "../../../components/Accordion";
+import { space } from "postcss/lib/list";
 
 // Mock data and API call simulation
 const mockServiceData = (id) => ({
@@ -87,11 +88,11 @@ const ServiceDetails = () => {
   const [updateLead] = useUpdateLeadStatusMutation();
   const { data, refetch } = useGetServiceByIdQuery(id);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPhone, setShowPhone] =  useState(false);
 
-  const [showPhone, setShowPhone] = useState(false);
   const isDesktop = window.innerWidth > 768; // Check if it's a desktop view
 
-  let vendorPhone = ""; // Sample phone number
+  let vendorPhone = ""; 
    
 
   useEffect(() => {
@@ -137,10 +138,10 @@ const ServiceDetails = () => {
       </div>
     );
 
+    // handle for update the lead details 
   const leadHandler = async () => {
     try {
-      const res = await updateLead(id).unwrap();
-      console.log(res);
+      await updateLead(id).unwrap();
     } catch (error) {
       console.error(error);
     }
@@ -194,18 +195,21 @@ const ServiceDetails = () => {
           {/* Contact Buttons */}
           <div className="mt-4 md:mt-12 flex flex-col gap-2">
             <a
-              href={`tel:${vendorPhone}`}
+              onClick={leadHandler}
+              href={`tel:${data?.service?.vendor?.phone_number}`}
               className="w-full flex items-center justify-center gap-2 bg-blue-500 text-white py-2 px-4 rounded-lg"
             >
               <BiPhone size={18} /> Call Vendor
             </a>
             <a
+              onClick={leadHandler}
               href={`sms:${data?.service?.vendor?.phone_number}`}
               className="w-full flex items-center justify-center gap-2 bg-gray-500 text-white py-2 px-4 rounded-lg"
             >
               <MdMessage size={18} /> Message Vendor
             </a>
             <a
+              onClick={leadHandler}
               href={`https://wa.me/${data?.service?.vendor?.phone_number}`}
               target="_blank"
               rel="noopener noreferrer"
@@ -213,6 +217,15 @@ const ServiceDetails = () => {
             >
               <FaWhatsapp size={18} /> WhatsApp
             </a>
+             {/* Show Phone Number (Only on Desktop) */}
+          {isDesktop && (
+            <button
+              className="w-full mt-4 bg-gray-800 text-white py-2 rounded-lg font-semibold"
+              onClick={() => setShowPhone(true)}
+            >
+              {showPhone ? (<><span>{`+91-${data?.service?.vendor?.phone_number}`}</span></>) : "View Vendor Phone Number"}
+            </button>
+          )}
           </div>
         </div>
       </div>
