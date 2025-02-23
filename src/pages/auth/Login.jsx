@@ -59,13 +59,13 @@ export default function Login() {
         reset();
         toast.success(message);
 
-        if (location.state?.isBuyClicked && isBuyClicked===true || location.state?.from || "/payment") {
-          navigate("/payment");
-        }
-        else {
-          const from = location.state?.from || "/";
-          navigate(from);  
-        }
+        // if (location.state?.isBuyClicked && isBuyClicked===true || location.state?.from || "/payment") {
+        //   navigate("/payment");
+        // }
+        // else {
+        //   const from = location.state?.from || "/";
+        //   navigate(from);  
+        // }
 
       }
     } catch (error) {
