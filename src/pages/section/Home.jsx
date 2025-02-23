@@ -198,14 +198,14 @@ export default function Home() {
         aria-hidden="true"
       >
         {/* Content Section */}
-        <div className="p-12 mt-48 md:pl-24 space-y-6 rounded-lg z-40 flex justify-center items-center flex-col w-full">
+        <div className="p-4 mt-48 md:pl-24 space-y-6 rounded-lg z-40 flex justify-center items-center flex-col w-full">
           <p
             className="text-3xl md:text-6xl lg:text-7xl font-bold text-white flex flex-col items-center text-center"
             data-aos="fade-up"
             data-aos-delay="400"
             data-aos-once="true"
           >
-            <span className="text-2xl md:text-4xl lg:text-[66px] mb-3">
+            <span className="text-4xl md:text-4xl lg:text-[66px] mb-3">
               Your one-stop destination for{" "}
             </span>
             <span className="text-[#fecd17]">Dream Wedding</span>
