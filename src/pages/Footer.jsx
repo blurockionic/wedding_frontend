@@ -142,7 +142,7 @@ export default function Footer() {
         <span className="text-sm text-gray-500">
           Powered by  
           <a
-            href="https://www.blurockionic.com"
+            href="https://www.blurockionic.com/home"
             target="_blank"
             rel="noopener noreferrer"
             className="text-pink-600 font-medium hover:underline ml-1 transition duration-200"
