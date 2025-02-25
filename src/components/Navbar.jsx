@@ -26,8 +26,6 @@ function Navbar() {
   const handleOnProfile = () => {
     navigate("/profile");
   };
-
-  console.log(location.pathname);
   const handleNavigate = (item) => {
     setIsMenuOpen(false);
     navigate(`/services?search=${encodeURIComponent(item)}`);

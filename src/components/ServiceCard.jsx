@@ -22,7 +22,6 @@ const ServiceCard = React.memo(({ service}) => {
     () => favoriteList.includes(service.id),
     [favoriteList, service.id]
   );
-console.log(service);
 
   // Navigate to service details
   const handleCardClick = () => {
