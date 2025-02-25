@@ -1,30 +1,57 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { City, State } from "country-state-city";
 import Footer from "../../Footer";
-import ServiceCard from "../component/ServiceCard";
+import { useGetServicesQuery } from "../../../redux/serviceSlice";
+import ServiceList from "../../../components/ServiceList";
+import img from "../../../../public/destination_wedding/destination_wedding.jpg";
+// Import Random Images
+const randomImages = [
+  "/weddingvendors/house.jpg" ,
+  "/weddingvendors/tent.jpeg" ,
+  "/weddingvendors/game.jpeg" ,
+  "/weddingvendors/florist.jpeg" ,
+ "/weddingvendors/planner.jpeg" ,
+ "/weddingvendors/decoration.jpg" ,
+  "/weddingvendors/cake.jpg" ,
+ "/weddingvendors/cordinator.jpg" ,
+  "/weddingvendors/dj.jpg" ,
+  "/weddingvendors/pandit.jpeg" ,
+  "/weddingvendors/photobooth.jpg" ,
+  "/weddingvendors/astro.jpg"
+];
+
+const getRandomImage = () => {
+ return randomImages[Math.floor(Math.random() * randomImages.length)];
+};
+
 
 const CategoryByState = () => {
   const { category, subcategory, state } = useParams();
   const navigate = useNavigate();
 
-  // Convert state name to state ISO code
-  const selectedState = State.getStatesOfCountry("IN").find(
-    (s) => s.name.toLowerCase() === state.toLowerCase()
-  );
+  // const location = useSelector(
+  //   (state) => state?.auth?.user?.wedding_location || state?.auth?.user?.city
+  // );
+
+  const filters = {
+    service_type: subcategory || "",
+    state: state,
+  };
+
+  const { data, error, isLoading } = useGetServicesQuery(filters);
+
+  // top in your state
+  const topInYourState = data?.ServiceResult.filter(
+    (detail) => detail.state === state
+  ).sort((a, b) => b.rating - a.rating);
 
   // Fetch cities only if state is valid
-  const cities = selectedState
-    ? City.getCitiesOfState("IN", selectedState.isoCode).map((city) => city.name)
-    : [];
-
-
-  // Sample top venues by state (dynamic state selection)
-  const topVenues = {
-    jharkhand: ["Ranchi Lawn", "Hazaribagh Farmhouse", "Jamshedpur Banquet Hall"],
-    maharashtra: ["Mumbai Grand Hotel", "Pune Club Lawn", "Nagpur Wedding Resort"],
-    delhi: ["Taj Delhi", "Leela Palace", "The Imperial Banquet"],
-    karnataka: ["Bangalore Garden Lawn", "Mysore Wedding Hall", "Coorg Farmhouse"],
-  };
+  const cityServiceCount = data?.ServiceResult.reduce((acc, service) => {
+    const city = service?.city;
+    if (city) {
+      acc[city] = (acc[city] || 0) + 1;
+    }
+    return acc;
+  }, {});
 
   // Handle navigation when state is selected
   const handleStateClick = (city) => {
@@ -38,7 +65,12 @@ const CategoryByState = () => {
         <Link to={`/all`}>Wedding</Link> &gt;
         <Link to={`/all/${category}`}>{category}</Link> &gt;
         <Link to={`/all/${category}/${subcategory}`}>{subcategory}</Link> &gt;
-        <Link to={`/all/${category}/${subcategory}/${state}`}>{state}</Link>
+        <Link
+          to={`/all/${category}/${subcategory}/${state}`}
+          className="capitalize"
+        >
+          {state}
+        </Link>
       </span>
       <h1 className="px-16 text-2xl font-semibold">
         Search for {subcategory} in {state}
@@ -50,33 +82,52 @@ const CategoryByState = () => {
       </div>
 
       <div className="px-16 mt-4 overflow-x-auto whitespace-nowrap flex gap-4 py-2 scrollbar-hide">
-        {cities.map((city) => (
+        {Object.entries(cityServiceCount || {}).map(([city, count]) => (
           <div key={city} className="flex flex-col items-center gap-2">
-            <span className="w-40 h-40 bg-gray-50 rounded-full shadow-md"></span>
+            <img
+              src={getRandomImage()}
+              alt="Wedding Venue"
+              className="w-40 h-40 rounded-full object-cover shadow-md"
+            />
             <p
               onClick={() => handleStateClick(city)}
-              className="px-4 py-2 text-md rounded-full transition cursor-pointer"
+              className="px-4 py-2 text-md rounded-full transition cursor-pointer capitalize"
             >
               {city}
             </p>
-            <span className="text-xs">{`1223 ${subcategory}`}</span>
+            <span className="text-xs">{`(${count}) ${subcategory}`}</span>
           </div>
         ))}
       </div>
 
       {/* Top Venues by Selected State */}
-      {topVenues[state.toLowerCase()] && (
-        <div className="mt-6 px-16 py-4">
-          <h2 className="text-xl font-semibold">{`Top ${subcategory} in ${state}`}</h2>
-          <ul className="mt-2 space-y-2 flex items-center gap-2">
-            {topVenues[state.toLowerCase()].map((venue, index) => (
-              <li key={index} className="p-2 rounded-lg">
-                <ServiceCard image={""} title={venue} rate={"20002"} rating={2.5} />
-              </li>
-            ))}
-          </ul>
+      <div className="mt-6 px-16 py-4">
+        <h2 className="text-xl font-semibold ">{`Top ${subcategory} in ${state}`}</h2>
+        <div className="mt-5">
+          <ServiceList services={topInYourState || []} />
         </div>
-      )}
+      </div>
+
+      {/* 🌟 Destination Wedding Banner (Above Footer) */}
+      <div
+        className="relative w-full h-64 lg:h-96 bg-cover bg-center mt-10"
+        style={{ backgroundImage: `url(${img})` }} // Replace with your image URL
+      >
+        <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center text-center text-white px-6">
+          <h1 className="text-3xl lg:text-5xl font-bold">
+            Plan Your Dream Destination Wedding
+          </h1>
+          <p className="mt-2 text-lg lg:text-xl">
+            Explore the best venues & services in {state}
+          </p>
+          <a
+            href="tel:+916200932331"
+            className="mt-4 px-6 py-2 bg-white text-black font-semibold rounded-full shadow-lg hover:bg-gray-200 transition"
+          >
+            📞 +91 6200932331
+          </a>
+        </div>
+      </div>
 
       <Footer />
     </>

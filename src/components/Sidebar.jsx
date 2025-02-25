@@ -1,18 +1,9 @@
 import React, { memo } from "react";
 import { useForm } from "react-hook-form";
-import { brides, grooms, weddingVendors, weddingVenues } from "../static/static";
 import { InputField } from "./global/inputfield/InputField";
 import { SelectField } from "./global/select/SelectField";
 
-// Ensure categories exist and are valid strings
-export const allCategories = [
-  ...weddingVenues.map((venue) => venue?.name || venue),
-  ...weddingVendors.map((vendor) => vendor?.name || vendor),
-  ...brides.map((bride) => bride?.name || bride),
-  ...grooms.map((groom) => groom?.name || groom),
-];
-
-const Sidebar = memo(({ searchType, searchLocation, onFilterChange }) => {
+const Sidebar = memo(({ state, city, onFilterChange }) => {
   const {
     register,
     handleSubmit,
@@ -20,24 +11,27 @@ const Sidebar = memo(({ searchType, searchLocation, onFilterChange }) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      location: searchLocation || "",
-      service_type: searchType || "",
+      city: city || "",
+      state: state || "",
+      minPrice: "",
+      maxPrice: "",
+      rating: "",
+      sort_by: "",
+      sort_order: "",
     },
   });
 
-  // Handle filter changes
   const handleFilterChange = (data) => {
     const filters = {};
 
-    if (data.location) filters.location = data.location;
-    if (data.service_type) filters.service_type = data.service_type;
+    if (data.city) filters.city = data.city;
+    if (data.state) filters.state = data.state;
 
-    if (data.minPrice && !isNaN(data.minPrice)) {
-      filters.minPrice = parseFloat(data.minPrice).toFixed(2);
-    }
-    if (data.maxPrice && !isNaN(data.maxPrice)) {
-      filters.maxPrice = parseFloat(data.maxPrice).toFixed(2);
-    }
+    const minPrice = parseFloat(data.minPrice);
+    const maxPrice = parseFloat(data.maxPrice);
+
+    if (!isNaN(minPrice)) filters.minPrice = minPrice.toFixed(2);
+    if (!isNaN(maxPrice)) filters.maxPrice = maxPrice.toFixed(2);
 
     if (data.rating) filters.rating = data.rating;
     if (data.sort_by) filters.sort_by = data.sort_by;
@@ -47,30 +41,8 @@ const Sidebar = memo(({ searchType, searchLocation, onFilterChange }) => {
   };
 
   return (
-    <div className="w-full h-screen bg-muted p-4">
+    <div className="w-full p-4">
       <form onSubmit={handleSubmit(handleFilterChange)} className="space-y-5">
-        
-        {/* Location Filter */}
-        <InputField
-          id="location"
-          type="text"
-          label="Location"
-          register={register}
-          error={errors.location}
-          placeholder="Enter location"
-        />
-
-        {/* Service Type Filter */}
-        <SelectField
-          id="service_type"
-          label="Service Type"
-          options={allCategories.map((type) => ({ value: type, label: type }))}
-          register={register}
-          error={errors.service_type}
-          placeholder="All"
-          customStyles="bg-primary text-white hover:bg-primary focus:bg-primary"
-        />
-
         {/* Price Range */}
         <div className="flex space-x-4">
           <InputField
@@ -98,14 +70,13 @@ const Sidebar = memo(({ searchType, searchLocation, onFilterChange }) => {
           label="Rating"
           register={register}
           error={errors.rating}
-          placeholder="Rating"
+          placeholder="Rating (1-5)"
         />
 
         {/* Sort By */}
         <SelectField
           id="sort_by"
           label="Sort By"
-          customStyles="bg-primary text-white hover:bg-primary focus:bg-primary"
           options={[
             { value: "created_at", label: "Newest First" },
             { value: "min_price", label: "Lowest Price First" },

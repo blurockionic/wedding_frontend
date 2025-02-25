@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import Footer from "../Footer";
 import { FaCheckCircle, FaPlus, FaTimes, FaSave, FaTrash, FaCalendarAlt } from "react-icons/fa";
 import { BiBell, BiBellPlus } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
@@ -13,15 +12,16 @@ import {
   addCategory,
   removeCategory,
   setScheduleDate,
-} from "../../redux/checklistSlice";
+} from "../../../redux/checklistSlice";
 import {
   useSaveChecklistMutation,
   useGetChecklistQuery,
-} from "../../redux/checklistApiSlice";
+} from "../../../redux/checklistApiSlice";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import Footer from "../../Footer";
 
 // Custom hook to detect screen size (no changes)
 const useMediaQuery = (query) => {
@@ -120,6 +120,77 @@ const ChecklistCategory = ({ title, items }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [scheduleIndex]);
+
+  const Checklist = () => {
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type": "Checklist",
+      "name": "Wedding Planning Checklist",
+      "description": "Comprehensive wedding planning checklist to organize your tasks and manage vendors for your perfect wedding.",
+      "author": {
+        "@type": "Organization",
+        "name": "Marriage Vendors",
+        "url": "https://www.marriagevendors.com"
+      },
+      "image": "https://www.marriagevendors.com/images/wedding-checklist.jpg",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Marriage Vendors",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.marriagevendors.com/logo.png"
+        }
+      },
+      "datePublished": "2024-01-01",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://www.marriagevendors.com/checklist"
+      },
+      "itemListOrder": "Unordered",
+      "itemListElement": [
+        "Venue Booking",
+        "Catering Selection",
+        "Photographer Hiring",
+        "Wedding Attire",
+        "Guest List Management",
+        "Vendor Coordination"
+      ]
+    };
+  
+    return (
+      <div>
+        <Helmet>
+          <title>Wedding Planning Checklist | Marriage Vendors</title>
+          <meta
+            name="description"
+            content="Organize your wedding planning with our comprehensive checklist. Track tasks, manage vendors, and ensure nothing is missed for your perfect wedding day."
+          />
+          <meta name="keywords" content="wedding checklist, wedding planning, wedding tasks, marriage vendors, wedding organization" />
+          <meta name="author" content="Marriage Vendors" />
+          <link rel="canonical" href="https://www.marriagevendors.com/checklist" />
+          
+          {/* Open Graph / Facebook */}
+          <meta property="og:type" content="website" />
+          <meta property="og:url" content="https://www.marriagevendors.com/checklist" />
+          <meta property="og:title" content="Wedding Planning Checklist | Marriage Vendors" />
+          <meta property="og:description" content="Organize your wedding planning with our comprehensive checklist. Track tasks, manage vendors, and ensure nothing is missed for your perfect wedding day." />
+          <meta property="og:image" content="https://www.marriagevendors.com/images/wedding-checklist-social.jpg" />
+  
+          {/* Twitter */}
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:url" content="https://www.marriagevendors.com/checklist" />
+          <meta name="twitter:title" content="Wedding Planning Checklist | Marriage Vendors" />
+          <meta name="twitter:description" content="Organize your wedding planning with our comprehensive checklist. Track tasks, manage vendors, and ensure nothing is missed for your perfect wedding day." />
+          <meta name="twitter:image" content="https://www.marriagevendors.com/images/wedding-checklist-social.jpg" />
+  
+          {/* Structured Data */}
+          <script type="application/ld+json">
+            {JSON.stringify(structuredData)}
+          </script>
+        </Helmet>
+      </div>
+    );
+  };
 
   return (
     <div
@@ -563,7 +634,7 @@ const Checklist = () => {
               </p>
             )}
 
-            <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6 mt-6">
+            <div className="columns-1 sm:columns-2 lg:columns-2 gap-6 space-y-6 mt-6">
               {checklistData.map((category, index) => (
                 <ChecklistCategory
                   key={index}
@@ -576,7 +647,6 @@ const Checklist = () => {
         )}
       </div>
 
-      <Footer />
     </div>
   );
 };

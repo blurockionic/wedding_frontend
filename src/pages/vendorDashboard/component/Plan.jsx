@@ -40,9 +40,9 @@ export default function Plan({ displayRazorpay }) {
                 <span className="text-lg font-semibold text-muted-foreground">
                   {`${formatPrice(plan.price)} / ${plan.duration}`}
                 </span>
-                <span className="text-muted-foreground text-sm">
+                {/* <span className="text-muted-foreground text-sm">
                   Trial: {plan.trial_period} days
-                </span>
+                </span> */}
               </div>
 
               <div className="mb-4">

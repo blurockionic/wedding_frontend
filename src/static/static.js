@@ -1,8 +1,6 @@
 
 import { MdDesignServices, MdOutlineAnalytics, MdOutlinePayment } from "react-icons/md";
 
-import { FcServices } from "react-icons/fc";
-
 export const sectorTypes = [
   "Wedding Venue",
   "Wedding Vendor",
@@ -53,7 +51,7 @@ export const grooms = ["Sherwani", "Men's Grooming", "Men's Accessories"];
 export const links = [
   { label: "Dashboard", href: "analytics", icon: MdOutlineAnalytics },
   { label: "Services", href: "", icon:  MdDesignServices },
-  { label: "Bills", href: "bookings", icon:MdOutlinePayment },
+  { label: "Payment", href: "bookings", icon:MdOutlinePayment },
 ];
 
 
@@ -97,4 +95,12 @@ export const servicesUnit = {
   "Sherwani": ["Per Outfit", "Per Rental Period"],
   "Men's Grooming": ["Per Session", "Groom Package"],
   "Men's Accessories": ["Per Item", "Per Set"],
+};
+
+
+export const allCategories = {
+  "Wedding Venue": (weddingVenues || []).map((venue) => venue?.name || venue),
+  "Wedding Vendor": (weddingVendors || []).map((vendor) => vendor?.name || vendor),
+  "Bride": (brides || []).map((bride) => bride?.name || bride),
+  "Groom":(grooms || []).map((groom) => groom?.name || groom),
 };
