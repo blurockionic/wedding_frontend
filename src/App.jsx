@@ -114,6 +114,7 @@ const router = createBrowserRouter([
     element: <OutletPage />,
     children: [
       { path: "/", element: wrapWithSuspense(LandingPage) },
+      { path: "/admin", element: wrapWithSuspense(Admin) },
       { path: "/signup", element: wrapWithSuspense(Signup) },
       { path: "/templates", element: wrapWithSuspense(Template) },
       { path: "/card", element: wrapWithSuspense(Card) },
