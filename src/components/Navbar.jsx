@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import NavbarRoutesConfig from "../assets/NavabarRouteConfig";
 import { useSelector, useDispatch } from "react-redux";
 import { useLogoutMutation } from "../redux/apiSlice.auth";
 import {
+  allCategories,
   brides,
   grooms,
   weddingVendors,
@@ -12,7 +13,7 @@ import {
 import TopNavbar from "./topnavbar/TopNavbar";
 import CustomText from "./global/text/CustomText";
 import Avatar from "../../public/user.png";
-import brandlogo  from "../../public/logo/brandlogo.png"
+import brandlogo from "../../public/logo/brandlogo.png";
 
 function Navbar() {
   const { isLoggedIn, user } = useSelector((state) => state.auth);
@@ -23,76 +24,89 @@ function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [weddingVenue, setWeddingVenue] = useState(null);
+
   const handleOnProfile = () => {
     navigate("/profile");
   };
 
-  console.log(location.pathname);
-  const handleNavigate = (item) => {
+  const handleNavigate = (category, subcategories) => {
     setIsMenuOpen(false);
-    navigate(`/services?search=${encodeURIComponent(item)}`);
+    navigate(`/all/${category}/${subcategories}`);
   };
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
+  console.log(allCategories);
+
   return (
     <>
-        <div className={`${(location.pathname === "/vendorLogin") ||
-        (location.pathname === "/vendorSignup") ? "hidden" : "block"}`}>
+      <div
+        className={`${
+          location.pathname === "/vendorLogin" ||
+          location.pathname === "/vendorSignup"
+            ? "hidden"
+            : "block"
+        }`}
+      >
         <>
-            <TopNavbar />
-            <nav className="w-full bg-white top-0 px-4 lg:px-16 z-50 shadow-sm">
-              <div className="w-full flex justify-between items-center py-4">
-                <div className="text-2xl font-bold text-primary cursor-pointer">
-                  <NavLink to="/" className="flex items-center gap-3 cursor-pointer">
-                   <img src={brandlogo} alt="brandlogo" className="w-10 h-10"/>
-                   <div className="flex flex-col justify-start">
-                   <span className="text-primary text-2xl">Marriage Vendors</span>
-                   {/* <span className="text-primary text-xs">Wedding Orgniser</span> */}
-
-                   </div>
-                  </NavLink>
-                </div>
-
-                <button
-                  className="block lg:hidden text-gray-800"
-                  onClick={toggleMenu}
+          <TopNavbar />
+          <nav className="w-full bg-white top-0 px-4 lg:px-16 z-50 shadow-sm">
+            <div className="w-full flex justify-between items-center py-4">
+              <div className="text-2xl font-bold text-primary cursor-pointer">
+                <NavLink
+                  to="/"
+                  className="flex items-center gap-3 cursor-pointer"
                 >
-                  {!isMenuOpen ? (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      className="h-6 w-6"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M4 6h16M4 12h16M4 18h16"
-                      />
-                    </svg>
-                  ) : (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      className="h-6 w-6"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  )}
-                </button>
+                  <img src={brandlogo} alt="brandlogo" className="w-10 h-10" />
+                  <div className="flex flex-col justify-start">
+                    <span className="text-primary text-2xl">
+                      Marriage Vendors
+                    </span>
+                    {/* <span className="text-primary text-xs">Wedding Orgniser</span> */}
+                  </div>
+                </NavLink>
+              </div>
 
-                <ul
-                  className={`
+              <button
+                className="block lg:hidden text-gray-800"
+                onClick={toggleMenu}
+              >
+                {!isMenuOpen ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    className="h-6 w-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
+                  </svg>
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    className="h-6 w-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                )}
+              </button>
+
+              <ul
+                className={`
               flex flex-col lg:flex-row lg:gap-8 gap-4
               absolute lg:relative z-50
               rounded-lg m-2
@@ -103,145 +117,180 @@ function Navbar() {
               duration-300 ease-in-out ${
                 isMenuOpen ? "translate-x-0" : "-translate-x-full"
               } lg:translate-x-0`}
+              >
+                <div className="text-2xl block lg:hidden font-bold text-primary cursor-pointer my-7 ">
+                  <NavLink
+                    to="/"
+                    className="flex items-center gap-3 cursor-pointer"
+                  >
+                    <img
+                      src={brandlogo}
+                      alt="brandlogo"
+                      className="w-10 h-10"
+                    />
+                    <div className="flex flex-col justify-start">
+                      <span className="text-primary text-lg">
+                        Marriage Vendors
+                      </span>
+                      {/* <span className="text-primary text-xs">Wedding Orgniser</span> */}
+                    </div>
+                  </NavLink>
+                </div>
+
+                {NavbarRoutesConfig.map((route) => (
+                  <li key={route.path} className="lg:inline-block">
+                    <NavLink
+                      to={route.path}
+                      onClick={() => setIsMenuOpen(false)}
+                      className={({ isActive }) =>
+                        isActive
+                          ? "text-dustyRose-dark border-b-2 border-primary pb-1"
+                          : "hover:text-dustyRose"
+                      }
+                    >
+                      {route.name}
+                    </NavLink>
+                  </li>
+                ))}
+
+                {/* Wedding Venues */}
+                <li
+                  className="relative lg:inline-block"
+                  onMouseEnter={() => setDropdown("wedding venue")}
+                  onMouseLeave={() => setDropdown("")}
                 >
-                  <div className="text-2xl block lg:hidden font-bold text-primary cursor-pointer my-7 ">
-                  <NavLink to="/" className="flex items-center gap-3 cursor-pointer">
-                   <img src={brandlogo} alt="brandlogo" className="w-10 h-10"/>
-                   <div className="flex flex-col justify-start">
-                   <span className="text-primary text-lg">Marriage Vendors</span>
-                   {/* <span className="text-primary text-xs">Wedding Orgniser</span> */}
+                  <span className="cursor-pointer hover:text-dustyRose">
+                    Wedding Venue
+                  </span>
+                  {dropdown === "wedding venue" && (
+                    <div className="absolute left-0 top-full bg-white shadow-lg w-48 py-4 z-40">
+                      <ul className="grid grid-cols-1 gap-4 px-4">
+                        {Object.entries(allCategories)
+                          .filter(([category]) => category === "Wedding Venue")
+                          .flatMap(([category, subcategories]) =>
+                            subcategories.map((subcategory, index) => (
+                              <li key={index} className="hover:text-dustyRose">
+                                <button
+                                  onClick={() =>
+                                    handleNavigate(category, subcategory)
+                                  }
+                                  className="block text-left w-full"
+                                >
+                                  {subcategory}
+                                </button>
+                              </li>
+                            ))
+                          )}
+                      </ul>
+                    </div>
+                  )}
+                </li>
+                {/* wedding vendor  */}
+                <li
+                  className="relative lg:inline-block"
+                  onMouseEnter={() => setDropdown("wedding vendor")}
+                  onMouseLeave={() => setDropdown("")}
+                >
+                  <span className="cursor-pointer hover:text-dustyRose">
+                    Wedding Vendor
+                  </span>
+                  {dropdown === "wedding vendor" && (
+                    <div className="absolute left-0 top-full bg-white shadow-lg w-96 py-4 z-40">
+                      <ul className="grid grid-cols-2 gap-4 px-4">
+                        {Object.entries(allCategories)
+                          .filter(([category]) => category === "Wedding Vendor")
+                          .flatMap(([category, subcategories]) =>
+                            subcategories.map((subcategory, index) => (
+                              <li key={index} >
+                                <button
+                                  onClick={() =>
+                                    handleNavigate(category, subcategory)
+                                  }
+                                  className="block text-left w-full"
+                                >
+                                  {subcategory}
+                                </button>
+                              </li>
+                            ))
+                          )}
+                      </ul>
+                    </div>
+                  )}
+                </li>
 
-                   </div>
+                {/* Brides Dropdown */}
+                <li
+                  className="relative lg:inline-block"
+                  onMouseEnter={() => setDropdown("brides")}
+                  onMouseLeave={() => setDropdown("")}
+                >
+                  <span className="cursor-pointer hover:text-dustyRose">
+                    Brides
+                  </span>
+                  {dropdown === "brides" && (
+                    <div className="absolute left-0 top-full bg-white shadow-lg w-48 py-4 z-40">
+                      <ul className="grid grid-cols-1 gap-4 px-4">
+                        {Object.entries(allCategories)
+                          .filter(([category]) => category === "Bride")
+                          .flatMap(([category, subcategories]) =>
+                            subcategories.map((subcategory, index) => (
+                              <li key={index} >
+                                <button
+                                  onClick={() =>
+                                    handleNavigate(category, subcategory)
+                                  }
+                                  className="block text-left w-full"
+                                >
+                                  {subcategory}
+                                </button>
+                              </li>
+                            ))
+                          )}
+                      </ul>
+                    </div>
+                  )}
+                </li>
+
+                {/* Grooms Dropdown */}
+                <li
+                  className="relative lg:inline-block"
+                  onMouseEnter={() => setDropdown("grooms")}
+                  onMouseLeave={() => setDropdown("")}
+                >
+                  <span className="cursor-pointer hover:text-dustyRose">
+                    Grooms
+                  </span>
+                  {dropdown === "grooms" && (
+                    <div className="absolute left-0 top-full bg-white shadow-lg w-48 py-4 z-40">
+                      <ul className="grid grid-cols-1 gap-4 px-4">
+                        {Object.entries(allCategories)
+                          .filter(([category]) => category === "Groom")
+                          .flatMap(([category, subcategories]) =>
+                            subcategories.map((subcategory, index) => (
+                              <li key={index} >
+                                <button
+                                  onClick={() =>
+                                    handleNavigate(category, subcategory)
+                                  }
+                                  className="block text-left w-full"
+                                >
+                                  {subcategory}
+                                </button>
+                              </li>
+                            ))
+                          )}
+                      </ul>
+                    </div>
+                  )}
+                </li>
+                <li>
+                  <NavLink
+                    to="/templates"
+                    className="cursor-pointer hover:text-dustyRose"
+                  >
+                    Invitation
                   </NavLink>
-                  </div>
-
-                  {NavbarRoutesConfig.map((route) => (
-                    <li key={route.path} className="lg:inline-block">
-                      <NavLink
-                        to={route.path}
-                        onClick={() => setIsMenuOpen(false)}
-                        className={({ isActive }) =>
-                          isActive
-                            ? "text-dustyRose-dark border-b-2 border-primary pb-1"
-                            : "hover:text-dustyRose"
-                        }
-                      >
-                        {route.name}
-                      </NavLink>
-                    </li>
-                  ))}
-
-                  {/* Wedding Venues */}
-                  <li
-                    className="relative lg:inline-block"
-                    onMouseEnter={() => setDropdown("wedding venue")}
-                    onMouseLeave={() => setDropdown("")}
-                  >
-                    <span className="cursor-pointer hover:text-dustyRose">
-                      Wedding Venue
-                    </span>
-                    {dropdown === "wedding venue" && (
-                      <div className="absolute left-0 top-full bg-white shadow-lg w-48 py-4 z-40">
-                        <ul className="grid grid-cols-1 gap-4 px-4">
-                          {weddingVenues.map((item, index) => (
-                            <li key={index} className="hover:text-dustyRose">
-                              <button
-                                onClick={() => handleNavigate(item)}
-                                className="block text-left w-full"
-                              >
-                                {item}
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </li>
-                  {/* wedding vendor  */}
-                  <li
-                    className="relative lg:inline-block"
-                    onMouseEnter={() => setDropdown("wedding vendor")}
-                    onMouseLeave={() => setDropdown("")}
-                  >
-                    <span className="cursor-pointer hover:text-dustyRose">
-                      Wedding Vendor
-                    </span>
-                    {dropdown === "wedding vendor" && (
-                      <div className="absolute left-0 top-full bg-white shadow-lg w-96 py-4 z-40">
-                        <ul className="grid grid-cols-2 gap-4 px-4">
-                          {weddingVendors.map((item, index) => (
-                            <li key={index} className="hover:text-dustyRose">
-                              <button
-                                onClick={() => handleNavigate(item)}
-                                className="block text-left w-full"
-                              >
-                                {item}
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </li>
-
-                  {/* Brides Dropdown */}
-                  <li
-                    className="relative lg:inline-block"
-                    onMouseEnter={() => setDropdown("brides")}
-                    onMouseLeave={() => setDropdown("")}
-                  >
-                    <span className="cursor-pointer hover:text-dustyRose">
-                      Brides
-                    </span>
-                    {dropdown === "brides" && (
-                      <div className="absolute left-0 top-full bg-white shadow-lg w-48 py-4 z-40">
-                        <ul className="grid grid-cols-1 gap-4 px-4">
-                          {brides.map((item, index) => (
-                            <li key={index} className="hover:text-dustyRose">
-                              <button
-                                onClick={() => handleNavigate(item)}
-                                className="block text-left w-full"
-                              >
-                                {item}
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </li>
-
-                  {/* Grooms Dropdown */}
-                  <li
-                    className="relative lg:inline-block"
-                    onMouseEnter={() => setDropdown("grooms")}
-                    onMouseLeave={() => setDropdown("")}
-                  >
-                    <span className="cursor-pointer hover:text-dustyRose">
-                      Grooms
-                    </span>
-                    {dropdown === "grooms" && (
-                      <div className="absolute left-0 top-full bg-white shadow-lg w-48 py-4 z-40">
-                        <ul className="grid grid-cols-1 gap-4 px-4">
-                          {grooms.map((item, index) => (
-                            <li key={index} className="hover:text-dustyRose">
-                              <button
-                                onClick={() => handleNavigate(item)}
-                                className="block text-left w-full"
-                              >
-                                {item}
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </li>
-                  <li>
-                  <NavLink to="/templates" className="cursor-pointer hover:text-dustyRose">
-                      Invitation
-                  </NavLink>
-                  </li>
+                </li>
 
                   {(user?.role!=="ADMIN" && user?.role!=="SUPER_ADMIN") ? (
                     <>

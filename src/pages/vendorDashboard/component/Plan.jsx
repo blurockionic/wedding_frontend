@@ -23,7 +23,7 @@ export default function Plan({ displayRazorpay }) {
 
       <div
         className={`grid gap-5 grid-cols-1 md:grid-cols-2 ustify-center"  ${
-          data?.plan.length >= 3 ? "lg:grid-cols-3" : "lg:grid-cols-2"
+          data?.plan?.length >= 3 ? "lg:grid-cols-3" : "lg:grid-cols-2"
         }`}
       >
         {data?.plan?.map((plan) => (
@@ -40,9 +40,9 @@ export default function Plan({ displayRazorpay }) {
                 <span className="text-lg font-semibold text-muted-foreground">
                   {`${formatPrice(plan.price)} / ${plan.duration}`}
                 </span>
-                <span className="text-muted-foreground text-sm">
+                {/* <span className="text-muted-foreground text-sm">
                   Trial: {plan.trial_period} days
-                </span>
+                </span> */}
               </div>
 
               <div className="mb-4">

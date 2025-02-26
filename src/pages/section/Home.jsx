@@ -9,8 +9,7 @@ import Discover from "../../components/home/home-discover/Discover.jsx";
 import { Helmet } from "react-helmet-async";
 import { allCategories } from "../../static/static";
 import { useGetServicesQuery } from "../../redux/serviceSlice";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import CustomInputForSearch from "../../components/global/inputfield/CustomInputForSearchBar.jsx";
+import { toast } from "react-toastify";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -20,8 +19,9 @@ export default function Home() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [locationSuggestions, setLocationSuggestions] = useState({});
   const [showlocationSuggestions, setShowlocationSuggestions] = useState(false);
-  const [expandedStates, setExpandedStates] = useState({});
   const [originalLocationData, setOriginalLocationData] = useState({});
+  const [categroy, setCategory] = useState("")
+  const [searchLocation, setSearchLocation] = useState("")
 
   const { data, error, isLoading } = useGetServicesQuery();
 
@@ -54,7 +54,6 @@ export default function Home() {
   };
 
   useEffect(() => {
-    console.log(data?.ServiceResult);
 
     if (!data?.ServiceResult) return;
 
@@ -71,17 +70,13 @@ export default function Home() {
     setLocationSuggestions(filterData);
   }, [data]);
 
-  const toggleState = (state) => {
-    setExpandedStates((prev) => ({
-      ...prev,
-      [state]: !prev[state],
-    }));
-  };
 
   // set value on input field
   const handleSuggestionClick = (category, subcategory) => {
-    console.log(category, subcategory)
-    setSearch(`${category}/${subcategory}`);
+    // console.log(category, subcategory)
+    setSearch(`${subcategory}`);
+    // this for search
+    setCategory(`${category}/${subcategory}`)
     setShowSuggestions(false);
   };
 
@@ -115,18 +110,20 @@ export default function Home() {
 
   //set wedding location
   const handleLocationClick = (state, city) => {
-    setLocation(`${state}/${city}`);
+    setLocation(`${city}`);
+    //this is for search
+    setSearchLocation(`${state}/${city}`)
     setShowlocationSuggestions(false);
   };
 
   // navigate to specific services 
   const handleNavigate = () => {
-    if(search && location){
-      navigate(`/all/${search}/${location}`);
-    }else if(location){
-      navigate(`/all/India/All/${location}`)
-    }else if(search){
-      navigate(`/all/${search}/India/All`)
+    if(categroy && searchLocation){
+      navigate(`/all/${categroy}/${searchLocation}`);
+    }else if(searchLocation){
+      toast.error("Please select vendor")
+    }else if(categroy){
+      navigate(`/all/${categroy}`)
     }
     else{
       navigate(`/all`);
@@ -201,22 +198,17 @@ export default function Home() {
         aria-hidden="true"
       >
         {/* Content Section */}
-        <div className="p-12 mt-48 md:pl-24 space-y-6 rounded-lg z-40 flex justify-center items-center flex-col w-full">
+        <div className="p-4 mt-48 md:pl-24 space-y-6 rounded-lg z-40 flex justify-center items-center flex-col w-full">
           <p
             className="text-3xl md:text-6xl lg:text-7xl font-bold text-white flex flex-col items-center text-center"
             data-aos="fade-up"
             data-aos-delay="400"
             data-aos-once="true"
           >
-            <span className="text-2xl md:text-4xl lg:text-[66px] mb-3">
+            <span className="text-4xl md:text-4xl lg:text-[66px] mb-3">
               Your one-stop destination for{" "}
             </span>
             <span className="text-[#fecd17]">Dream Wedding</span>
-
-            {/* Tagline */}
-            {/* <span className="text-gray-300 text-lg mt-5">
-            Find the best wedding vendors with thousands of trusted reviews
-          </span> */}
           </p>
 
           {/* Mobile Search Button */}
@@ -247,20 +239,17 @@ export default function Home() {
                 onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
                 leftIcon={<GoSearch size={20} />}
               />
-              {/* <CustomInputForSearch  placeholder="Enter name"
-  value={""}
-  onChange={""}
-  suggestions={["Alice", "Bob", "Charlie", "David"]}/> */}
+            
               {showSuggestions && suggestions.length > 0 && (
                 <ul className="absolute bg-white border border-gray-300 rounded w-[400px] shadow-lg mt-1 z-20 overflow-auto max-h-[200px]">
                   {suggestions.map(({ category, subcategories }, index) => (
                     <li key={index} className="px-4 py-2  cursor-pointer">
-                      {category}
-                      <ul className="pl-5 text-sm grid grid-cols-1 md:grid-cols-2 gap-2">
+                      {/* {category} */}
+                      <ul className=" text-sm grid grid-cols-1  gap-2">
                         {subcategories.map((sub, index) => (
                           <li
                             key={index}
-                            className="text-gray-700 hover:bg-gray-200"
+                            className="text-gray-700 hover:bg-gray-200 p-2 rounded-md"
                             onClick={() => handleSuggestionClick(category, sub)}
                           >
                             {sub}
@@ -279,7 +268,7 @@ export default function Home() {
                 type="text"
                 value={location}
                 placeholder="In Location"
-                className="w-full outline-none focus:border-white bg-white"
+                className="w-full outline-none focus:border-white bg-white "
                 aria-label="Location"
                 onChange={handleSearchLocationChange}
                
@@ -291,24 +280,9 @@ export default function Home() {
                     {Object.entries(locationSuggestions).map(
                       ([state, cities]) => (
                         <li key={state} className="border-b border-gray-200">
-                          {/* State Button */}
-                          <button
-                            className="w-full text-left px-4 py-2 font-semibold bg-gray-100 hover:bg-gray-200 cursor-pointer flex justify-between capitalize"
-                            onClick={() => toggleState(state)}
-                          >
-                            {state}
-                            <span>
-                              {expandedStates[state] ? (
-                                <ChevronUp />
-                              ) : (
-                                <ChevronDown />
-                              )}
-                            </span>
-                          </button>
-
-                          {/* Collapsible Cities List */}
-                          {expandedStates[state] && (
-                            <ul className="pl-4 bg-white">
+                          
+                          
+                            <ul className=" bg-white">
                               {cities.map((city, index) => (
                                 <li
                                   key={index}
@@ -319,7 +293,8 @@ export default function Home() {
                                 </li>
                               ))}
                             </ul>
-                          )}
+                         
+                          
                         </li>
                       )
                     )}

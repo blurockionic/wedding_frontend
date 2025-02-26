@@ -43,6 +43,8 @@ const Discover = () => {
   const { data: topDjData } = useGetServicesQuery(topDJFilters);
   const { data: mostViewed } = useGetMostViewdServicesQuery();
 
+  console.log(topRatededData)
+
   return (
     <>
       {/* Most Booked Services */}
