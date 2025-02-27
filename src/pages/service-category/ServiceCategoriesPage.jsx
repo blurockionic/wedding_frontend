@@ -2,6 +2,7 @@ import { useState } from "react";
 import ServiceCategoriesCard from "../../components/servicecatogories/ServiceCatogoriesCard";
 // import SubCategory from "../../components/sub-category/SubCategory";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 const weddingVenues = [
   { name: "Wedding Lawns Farmhouse", image: "/weddingvenue/weddingfarm.webp" },
