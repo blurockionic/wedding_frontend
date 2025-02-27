@@ -92,7 +92,7 @@ const ServiceDetails = () => {
 
   const isDesktop = window.innerWidth > 768; // Check if it's a desktop view
 
-  let vendorPhone = ""; 
+
    
 
   useEffect(() => {
@@ -146,6 +146,8 @@ const ServiceDetails = () => {
       console.error(error);
     }
   };
+
+  console.log(data?.service?.vendor.phone_number)
 
   return (
     <>
