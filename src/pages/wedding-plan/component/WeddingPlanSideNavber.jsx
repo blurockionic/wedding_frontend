@@ -47,7 +47,7 @@ const WeddingPlanSideNavber = () => {
   };
 
   return (
-    <aside className="hidden md:block w-96 h-auto  border-r text-primary p-4">
+    <aside className="hidden md:block w-1/4  h-auto  border-r text-black p-4">
       <h2 className="text-xl font-semibold mb-4">Wedding Plan</h2>
 
       {/* Search Bar */}
@@ -77,10 +77,10 @@ const WeddingPlanSideNavber = () => {
       {/* Sub-Events List */}
       {selectedReligion && subEvents[selectedReligion] && (
         <div className="mt-4">
-          <h3 className="text-lg font-semibold mb-2">Events ({selectedReligion})</h3>
+          <h3 className="text-lg font-semibold mb-2">Suggested Events ({selectedReligion})</h3>
           <ul className="bg-gray-50 p-2 rounded-md">
             {subEvents[selectedReligion].map((subEvent, index) => (
-              <li key={index} className="p-1 border-b border-gray-200 last:border-none cursor-pointer">
+              <li key={index} className=" border-primary w-full my-1 cursor-pointer inline-flex items-center justify-center gap-2 ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-white hover:bg-[#F5F5F5] hover:text-primary h-9 rounded-md px-3 group text-lg">
                 {subEvent}
               </li>
             ))}
