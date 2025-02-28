@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 const HeadingCard = () => {
   return (
-    <section className=" w-full flex items-center">
+    <section className=" p-1 w-full flex items-center">
       <motion.div
         className="relative w-full p-8 rounded-2xl overflow-hidden shadow-lg text-white flex flex-col justify-center items-center "
         initial={{ opacity: 0 }}
@@ -28,9 +28,8 @@ const HeadingCard = () => {
 
         {/* Content */}
         <div className="relative z-10 text-center ">
-            <h1 className="text-5xl p-2">Hi, Biruly</h1>
-          <h1 className="text-2xl font-bold">Plan your dream wedding with family ❤️</h1>
-          <p className="text-sm opacity-80">Welcome to the wedding planning tool!</p>
+            <h1 className="text-5xl font-semibold p-2">Hi, Biruly</h1>
+          <h1 className="text-2xl font-semibold">Plan your dream wedding with family ❤️</h1>
         </div>
       </motion.div>
     </section>

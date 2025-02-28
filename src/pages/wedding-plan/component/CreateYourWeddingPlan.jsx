@@ -12,14 +12,14 @@ const CreateYourWeddingPlan = () => {
   };
 
   return (
-    <div className=" p-6 mt-10 rounded-md">
-       <h1 className="text-3xl px-3 ">Create your wedding event</h1>
+    <div className=" p-2 mt-10 rounded-md border-yellow">
+       <h1 className="text-3xl p-3">Create Your Event</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="mb-4 p-4 rounded-md relative group mt-10">
+        <div className="mb-1 p-4 rounded-md relative group mt-4">
           <div className="flex flex-wrap gap-4 items-center">
             {/* Event Name */}
             <div className="flex flex-col w-full">
-              <p className="font-semibold text-xs px-1">
+              <p className="text-md px-1">
                 Event Name <span className="text-red-500">*</span>
               </p>
               <input
@@ -31,14 +31,14 @@ const CreateYourWeddingPlan = () => {
                 placeholder="Event Name"
               />
               {errors.eventName && (
-                <span className="text-red-500 text-xs">
+                <span className="text-red-500 text-md">
                   {errors.eventName.message}
                 </span>
               )}
             </div>
             {/* Event Name */}
             <div className="flex flex-col w-full">
-              <p className="font-semibold text-xs px-1">
+              <p className="text-md px-1">
                 Event budget <span className="text-red-500">*</span>
               </p>
               <input
@@ -50,7 +50,7 @@ const CreateYourWeddingPlan = () => {
                 placeholder="Event Budget"
               />
               {errors.eventBudget && (
-                <span className="text-red-500 text-xs">
+                <span className="text-red-500 text-md">
                   {errors.eventBudget.message}
                 </span>
               )}
@@ -59,7 +59,7 @@ const CreateYourWeddingPlan = () => {
             {/* Date, Start Time, End Time */}
 
             <div className="flex flex-col w-full">
-              <p className="font-semibold text-xs px-1">
+              <p className="text-md px-1">
                 Event Date <span className="text-red-500">*</span>
               </p>
               <input
@@ -70,13 +70,13 @@ const CreateYourWeddingPlan = () => {
                 type="date"
               />
               {errors.eventDate && (
-                <span className="text-red-500 text-xs">
+                <span className="text-red-500 text-md">
                   {errors.eventDate.message}
                 </span>
               )}
             </div>
             <div className="flex flex-col w-full">
-              <p className="font-semibold text-xs px-1">
+              <p className="text-md px-1">
                 Start From <span className="text-red-500">*</span>
               </p>
               <input
@@ -87,13 +87,13 @@ const CreateYourWeddingPlan = () => {
                 type="time"
               />
               {errors.startTime && (
-                <span className="text-red-500 text-xs">
+                <span className="text-red-500 text-md">
                   {errors.startTime.message}
                 </span>
               )}
             </div>
             <div className="flex flex-col w-full">
-              <p className="font-semibold text-xs px-1">
+              <p className="text-md px-1">
                 End At <span className="text-red-500">*</span>
               </p>
               <input
@@ -102,7 +102,7 @@ const CreateYourWeddingPlan = () => {
                 type="time"
               />
               {errors.endTime && (
-                <span className="text-red-500 text-xs">
+                <span className="text-red-500 text-md">
                   {errors.endTime.message}
                 </span>
               )}
@@ -110,7 +110,7 @@ const CreateYourWeddingPlan = () => {
 
             {/* Event Description */}
             <div className="flex flex-col w-full">
-              <p className="font-semibold text-xs px-1">
+              <p className="text-md  px-1">
                 Event Description <span className="text-red-500">*</span>
               </p>
               <textarea
@@ -132,7 +132,7 @@ const CreateYourWeddingPlan = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="px-5 py-2 bg-primary rounded-md w-full text-white mt-10"
+            className="px-5 py-2 font-semibold text-[20px] bg-primary rounded-md w-full text-white mt-10"
           >
             Submit
           </button>

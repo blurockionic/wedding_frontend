@@ -37,17 +37,21 @@ const handleOnAddVendor = ()=>{
 
 
   return (
-    <div className="flex relative">
-      <WeddingPlanSideNavber />
-      <section className="p-6 w-full">
-        <HeadingCard />
-        <ActionHeader handleOnEventActive={handleOnActive} />
-        <WeddingMindMap 
-        data={sampleData} 
-        handleOnAddSubEvent={handleOnAddSubEvent}
-        handleOnAddTask={handleOnAddTask}
-        handleOnAddVendor={handleOnAddVendor}
-        />
+    <div className="flex-col relative">
+      <HeadingCard />
+      
+      <section className="p-6 w-full flex ">
+        <WeddingPlanSideNavber />
+        <div className="ml-[3rem]">
+          <ActionHeader handleOnEventActive={handleOnActive} />
+          <WeddingMindMap
+            data={sampleData} 
+            handleOnAddSubEvent={handleOnAddSubEvent}
+            handleOnAddTask={handleOnAddTask}
+            handleOnAddVendor={handleOnAddVendor}
+          />
+        </div>
+
       </section>
 
       {/* Backdrop Blur Effect */}
@@ -57,9 +61,9 @@ const handleOnAddVendor = ()=>{
 
       {/* Sliding Form for event */}
       <div
-        className={`fixed top-0 right-0 h-full w-96 bg-white shadow-lg  transform ${
-          isActiveWeddingPlanForm ? "translate-x-0" : "translate-x-full"
-        } transition-transform duration-300 ease-in-out z-50`}
+         className={`fixed top-1/2 left-1/2 w-[700px] bg-white shadow-lg rounded-lg p-6 
+        transform -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-in-out 
+        ${isActiveWeddingPlanForm ? "opacity-100 scale-100" : "opacity-0 scale-0"} z-50`}
       >
         <button
           className="absolute top-4 right-4 text-gray-500 hover:text-red-500"
@@ -73,9 +77,9 @@ const handleOnAddVendor = ()=>{
 
        {/* Sliding Form for sub-event */}
        <div
-        className={`fixed top-0 right-0 h-full w-96 bg-white shadow-lg  transform ${
-          isActiveSubEvent ? "translate-x-0" : "translate-x-full"
-        } transition-transform duration-300 ease-in-out z-50`}
+        className={`fixed top-1/2 left-1/2 w-[500px] bg-white shadow-lg rounded-lg p-6 
+        transform -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-in-out 
+        ${isActiveSubEvent ? "opacity-100 scale-100" : "opacity-0 scale-0"} z-50`}       
       >
         <button
           className="absolute top-4 right-4 text-gray-500 hover:text-red-500"
@@ -89,9 +93,9 @@ const handleOnAddVendor = ()=>{
 
       {/* Sliding Form for task */}
       <div
-        className={`fixed top-0 right-0 h-full w-96 bg-white shadow-lg  transform ${
-          isActiveTask ? "translate-x-0" : "translate-x-full"
-        } transition-transform duration-300 ease-in-out z-50`}
+         className={`fixed top-1/2 left-1/2 w-[500px] bg-white shadow-lg rounded-lg p-6 
+        transform -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-in-out 
+        ${isActiveTask ? "opacity-100 scale-100" : "opacity-0 scale-0"} z-50`}
       >
         <button
           className="absolute top-4 right-4 text-gray-500 hover:text-red-500"
@@ -105,21 +109,23 @@ const handleOnAddVendor = ()=>{
       </div>
 
 
-      {/* Sliding Form for vendor */}
+     {/* Pop-out Form for Vendor */}
       <div
-        className={`fixed top-0 right-0 h-full w-[700px] bg-white shadow-lg  transform ${
-          isActiveVendor ? "translate-x-0" : "translate-x-full"
-        } transition-transform duration-300 ease-in-out z-50`}
+        className={`fixed top-1/2 left-1/2 w-[700px] bg-white shadow-lg rounded-lg p-3  
+        transform -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-in-out 
+        ${isActiveVendor ? "opacity-100 scale-100" : "opacity-0 scale-0"} z-50`}
       >
+        {/* Close Button */}
         <button
           className="absolute top-4 right-4 text-gray-500 hover:text-red-500"
           onClick={() => setIsActiveVendor(false)}
         >
           <X/>
         </button>
-       
+
+        {/* Vendor Form */}
         <AddVevdors />
-      </div>
+      </div> 
     </div>
   );
 };
