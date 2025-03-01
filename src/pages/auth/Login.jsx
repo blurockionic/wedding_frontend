@@ -58,13 +58,13 @@ export default function Login() {
         dispatch(hydrateFavorites(allCart));
         reset();
         toast.success(message);
-
-        if (location.state?.isBuyClicked && isBuyClicked===true || location.state?.from || "/payment") {
-          navigate("/payment");
-        }
-        else {
-          const from = location.state?.from || "/";
+        
+        const from = location.state?.from || "/";
+        if (from === "/"){
           navigate(from);  
+        }
+        if ( isBuyClicked===true) {
+          navigate("/payment");
         }
 
       }

@@ -10,6 +10,8 @@ import { uploadSlice } from "./uploadSlice";
 import { vendorApi } from "./vendorSlice";
 import { paymentApi } from "./payment";
 import { checklistApiSlice } from "./checklistApiSlice"; 
+import { apiGuestSlice } from "./apiSlice.guest";
+import { TemplateSlice } from "./TemplateSlice";
 
 // Combine Reducers
 const rootReducer = combineReducers({
@@ -22,6 +24,8 @@ const rootReducer = combineReducers({
   [vendorApi.reducerPath]: vendorApi.reducer,
   [paymentApi.reducerPath]: paymentApi.reducer,
   [checklistApiSlice.reducerPath]: checklistApiSlice.reducer,
+  [apiGuestSlice.reducerPath]:apiGuestSlice.reducer,
+  [TemplateSlice.reducerPath]:TemplateSlice.reducer,
 });
 
 // Configure Persist

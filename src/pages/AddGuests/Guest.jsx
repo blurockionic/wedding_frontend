@@ -9,6 +9,10 @@ import { GrView } from "react-icons/gr";
 import { FaCircleArrowLeft } from "react-icons/fa6";
 import { Link ,useLocation} from "react-router-dom";
 import {toast} from 'react-toastify';
+import { useGetGuestsQuery } from '../../redux/apiSlice.guest';
+import { useAddGuestMutation } from '../../redux/apiSlice.guest';
+import { useUpdateGuestStatusMutation } from '../../redux/apiSlice.guest';
+import { useDeleteGuestMutation } from '../../redux/apiSlice.guest';
 const Guest = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -21,69 +25,12 @@ const Guest = () => {
   const [guests, setGuests] = useState([]);
   const [status, setStatus] = useState('Not invited');
 
-  const addGuest = async () => {
-    try {
-      const response = await axios.post('http://localhost:4000/api/guests/add', {
-        name,
-        phone,
-        status: status ||"not invited"
-      });
-      
-      setName('');
-      setPhone('');
-      setStatus("Not invited");
-      toast.success("Guest added successfully");
-    } catch (error) {
-      console.error('Error adding guest:', error);
-      toast.error("Fill details");
-    }
+  const [addGuest , {isError , isLoading, data} ] =  useAddGuestMutation ();
+
+  const addGuestHandler = async() =>{
+      const response = await addGuest({name ,phone, status}).unwrap()
   };
-
-  const getGuests = async () => {
-    try {
-      const response = await axios.get('http://localhost:4000/api/guests');
-      setGuests(response.data.guests);
-    } catch (error) {
-      console.error('Error fetching guests:', error);
-    }
-  };
-  useEffect(() => {
-    if (window.innerWidth < 768) {
-      getGuests();
-    }
-  }, []);
-
-  const updateStatus = async (guestId, currentStatus) => {
-    const newStatus = currentStatus === 'Not invited' ? 'Invited' : 'Not invited';
-    try {
-      await axios.put(`http://localhost:4000/api/guests/update-status/${guestId}`, {
-        status: newStatus,
-      });
-
-      // Update status in frontend list
-      setGuests(guests.map(guest =>
-        guest._id === guestId ? { ...guest, status: newStatus } : guest
-      ));
-      toast.success("Status updated successfully");
-    } catch (error) {
-      console.error('Error updating status:', error);
-      toast.error("Error updating status");
-    }
-  };
-
-  const deleteGuest = async (guestId) => {
-    try {
-      await axios.delete(`http://localhost:4000/api/guests/delete/${guestId}`);
-
-      // Remove the guest from the local state
-      setGuests(guests.filter(guest => guest._id !== guestId));
-      toast.success("Guest deleted successfully");
-    } catch (error) {
-      console.error('Error deleting guest:', error);
-      toast.error("Error deleting guest");
-    }
-  };
-
+  
   const handleCopyLink = () => {
     const templateUrl = window.location.origin + `/guests/see-template/${template}`; 
     navigator.clipboard.writeText(templateUrl)
@@ -116,7 +63,7 @@ const Guest = () => {
             </div>
           </div>
           <div className="flex justify-center items-center gap-4 mt-10 ">
-            <button className="btn_1 gap-3" onClick={addGuest}><IoPersonAddSharp />Add Guests</button>
+            <button className="btn_1 gap-3" onClick={addGuestHandler}><IoPersonAddSharp />Add Guests</button>
             <button className="btn_2 gap-3"onClick={getGuests}><span className="text-[35px]"><FaUsersViewfinder /></span>View Guests</button>
             <Link to={`/guests/see-template/${template}`}>
               <button className="btn_2 gap-3"><span className="text-[20px] mt-1"><GrView /></span>View Template</button>
