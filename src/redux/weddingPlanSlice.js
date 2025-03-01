@@ -31,11 +31,49 @@ export const weddingPlanForEventApi = createApi({
           eventDescription: data.eventDescription
         }
       })
-    })
+    }),
+
+    //delete event 
+    deleteEvent : builder.mutation({
+      query: (eventId) => ({
+          url: `/${eventId}`,
+          method: 'DELETE'
+      })
+    }),
+
+    //create sub event of event
+    createSubEvent: builder.mutation({
+      query: (data, eventId) => ({
+        url: `/${eventId}/subevent`,
+        method: 'POST',
+        body: {
+          subEventName: data.subEventName,
+          subEventDate: new Date(data.subEventDate).toISOString(),
+          subEventBudget: data.subEventBudget,
+          subEventStartTime: new Date(`${data.subEventDate}T${data.subEventStartTime}`).toISOString(),
+          subEventEndTime: new Date(`${data.subEventDate}T${data.subEventEndTime}`).toISOString(),
+          subEventDescription: data.subEventDescription
+        }
+      })
+    }),
+
+    //add service on event
+    addService: builder.mutation({
+      query: ({ serviceId, eventId }) => ({
+        url: `/${eventId}/vendors`,
+        method: "POST",
+        body: { serviceId },
+      }),
+    }),
+    
+
   }),
 });
 
 export const { 
   useGetWeddingPlanQuery,
   useCreateEventMutation,
+  useDeleteEventMutation,
+  useCreateSubEventMutation,
+  useAddServiceMutation
 } = weddingPlanForEventApi;

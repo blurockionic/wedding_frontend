@@ -29,7 +29,7 @@ const HeadingCard = () => {
         {/* Content */}
         <div className="relative z-10 text-center ">
             <h1 className="text-5xl font-semibold p-2">Hi, Biruly</h1>
-          <h1 className="text-2xl font-semibold">Plan your dream wedding with family ❤️</h1>
+          <h1 className="text-2xl font-semibold">Plan your dream wedding with Marriage Vendors ❤️</h1>
         </div>
       </motion.div>
     </section>

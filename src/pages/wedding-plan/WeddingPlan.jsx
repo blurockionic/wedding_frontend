@@ -5,7 +5,7 @@ import HeadingCard from "./component/HeadingCard";
 import WeddingEventList from "./component/WeddingEventList";
 import WeddingPlanSideNavber from "./component/WeddingPlanSideNavber";
 import { X } from "lucide-react";
-import CreateSubEvent from "./component/CreateSubEvent";
+// import CreateSubEvent from "./component/CreateSubEvent";
 import CreateTaskForm from "./component/CreateTaskForm";
 import AddVevdors from "./component/AddVevdors";
 import { useGetWeddingPlanQuery } from "../../redux/weddingPlanSlice";
@@ -20,9 +20,14 @@ const WeddingPlan = () => {
 
   const [isRefetchData, setIsRefetchData] =  useState(false)
 
+  const [eventId, setEventId] =  useState(null)
+
 
   useEffect(()=>{
-    refetch()
+    if(refetch){
+      refetch() //refetch the event 
+      setIsRefetchData(false)
+    }
   },[isRefetchData, refetch])
 
   const handleOnActive = () => {
@@ -39,19 +44,17 @@ const WeddingPlan = () => {
     setIsActiveTask((prev) => !prev);
   };
   //handle to add vendor
-  const handleOnAddVendor = () => {
+  const handleOnAddVendor = (serviceId) => {
+    console.log(serviceId)
+    setEventId(serviceId)
     setIsActiveVendor((prev) => !prev);
   };
 
- 
-
-  
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error fetching wedding plans.</p>;
 
  
-
   return (
     <div className="flex-col relative">
       <section className="p-3 w-full flex ">
@@ -89,11 +92,11 @@ const WeddingPlan = () => {
           <X />
         </button>
 
-        <CreateYourWeddingPlan setRefetch={()=>setIsRefetchData(true)}/>
+        <CreateYourWeddingPlan setRefetch={setIsRefetchData}/>
       </div>
 
       {/* Sliding Form for sub-event */}
-      <div
+      {/* <div
         className={`fixed top-0 right-0 h-full w-[500px] bg-white shadow-lg p-6 transform ${
           isActiveSubEvent ? "translate-x-0" : "translate-x-full"
         } transition-transform duration-300 ease-in-out z-50`}
@@ -106,7 +109,7 @@ const WeddingPlan = () => {
         </button>
 
         <CreateSubEvent />
-      </div>
+      </div> */}
 
       {/* Sliding Form for task */}
       <div
@@ -139,7 +142,7 @@ const WeddingPlan = () => {
         </button>
 
         {/* Vendor Form */}
-        <AddVevdors />
+        <AddVevdors eventId={eventId}/>
       </div>
     </div>
   );
