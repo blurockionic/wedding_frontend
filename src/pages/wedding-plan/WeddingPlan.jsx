@@ -10,20 +10,19 @@ import CreateTaskForm from "./component/CreateTaskForm";
 import AddVevdors from "./component/AddVevdors";
 import { useGetWeddingPlanQuery } from "../../redux/weddingPlanSlice";
 
-
 const WeddingPlan = () => {
   const { data, error, isLoading, refetch } = useGetWeddingPlanQuery();
   const [isActiveWeddingPlanForm, setIsActiveWeddingPlanForm] = useState(false);
   const [isActiveSubEvent, setIsActiveSubEvent] = useState(false);
   const [isActiveTask, setIsActiveTask] = useState(false);
   const [isActiveVendor, setIsActiveVendor] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
-  const [isRefetchData, setIsRefetchData] =  useState(false)
+  const [isRefetchData, setIsRefetchData] = useState(false);
 
-
-  useEffect(()=>{
-    refetch()
-  },[isRefetchData, refetch])
+  useEffect(() => {
+    refetch();
+  }, [isRefetchData, refetch]);
 
   const handleOnActive = () => {
     setIsActiveWeddingPlanForm((prev) => !prev); // Toggle the state
@@ -35,22 +34,18 @@ const WeddingPlan = () => {
   };
 
   //handle to add task
-  const handleOnAddTask = () => {
+  const handleOnAddTask = (eventId, eventTitle) => {
+    setSelectedEvent({ id: eventId, title: eventTitle });
     setIsActiveTask((prev) => !prev);
   };
+  
   //handle to add vendor
   const handleOnAddVendor = () => {
     setIsActiveVendor((prev) => !prev);
   };
 
- 
-
-  
-
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error fetching wedding plans.</p>;
-
- 
 
   return (
     <div className="flex-col relative">
@@ -89,7 +84,7 @@ const WeddingPlan = () => {
           <X />
         </button>
 
-        <CreateYourWeddingPlan setRefetch={()=>setIsRefetchData(true)}/>
+        <CreateYourWeddingPlan setRefetch={() => setIsRefetchData(true)} />
       </div>
 
       {/* Sliding Form for sub-event */}
@@ -112,16 +107,24 @@ const WeddingPlan = () => {
       <div
         className={`fixed top-0 right-0 h-full w-[500px] bg-white shadow-lg p-6 transform ${
           isActiveTask ? "translate-x-0" : "translate-x-full"
-        } transition-transform duration-300 ease-in-out z-50`}
+        } transition-transform duration-300 ease-in-out z-50 overflow-y-auto`}
       >
         <button
           className="absolute top-4 right-4 text-gray-500 hover:text-red-500"
-          onClick={() => setIsActiveTask(false)}
+          onClick={() => {
+            setIsActiveTask(false);
+            setSelectedEvent(null);
+          }}
         >
           <X />
         </button>
 
-        <CreateTaskForm />
+        {isActiveTask && selectedEvent && (
+          <CreateTaskForm 
+            eventId={selectedEvent.id} 
+            eventTitle={selectedEvent.title} 
+          />
+        )}
       </div>
 
       {/* Pop-out Form for Vendor */}
@@ -133,7 +136,7 @@ const WeddingPlan = () => {
         {/* Close Button */}
         <button
           className="absolute top-4 right-4 text-gray-500 hover:text-red-500"
-          onClick={() => setIsActiveVendor(false)} // Updated function
+          onClick={() => setIsActiveVendor(false)}
         >
           <X />
         </button>
