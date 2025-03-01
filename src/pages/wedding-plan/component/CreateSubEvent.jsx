@@ -12,21 +12,21 @@ const CreateSubEvent = () => {
   };
 
   return (
-    <div className=" p-6 mt-10 rounded-md">
+    <div className=" p-3 mt-10 rounded-md">
        <h1 className="text-3xl px-3 ">Add Sub Event on</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="mb-4 p-4 rounded-md relative group mt-10">
+        <div className="mb-4 p-2 rounded-md relative group mt-10">
           <div className="flex flex-wrap gap-4 items-center">
             {/* Event Name */}
             <div className="flex flex-col w-full">
-              <p className="font-semibold text-xs px-1">
+              <p className=" text-xs px-1">
                 Sub-Event Name <span className="text-red-500">*</span>
               </p>
               <input
                 {...register("subEventName", {
                   required: "Sub-Event Name is required",
                 })}
-                className="mt-1 border rounded p-3"
+                className="mt-1 border rounded p-2"
                 type="text"
                 placeholder="Sub-Event Name"
               />
@@ -38,14 +38,14 @@ const CreateSubEvent = () => {
             </div>
             {/* Sub Event Budget */}
             <div className="flex flex-col w-full">
-              <p className="font-semibold text-xs px-1">
+              <p className=" text-xs px-1">
                 Sub-Event Name <span className="text-red-500">*</span>
               </p>
               <input
                 {...register("subEventBudget", {
                   required: "Sub-Event Name is required",
                 })}
-                className="mt-1 border rounded p-3"
+                className="mt-1 border rounded p-2"
                 type="text"
                 placeholder="Sub-Event Budget"
               />
@@ -59,14 +59,14 @@ const CreateSubEvent = () => {
             {/* Date, Start Time, End Time */}
 
             <div className="flex flex-col w-full">
-              <p className="font-semibold text-xs px-1">
+              <p className=" text-xs px-1">
               Sub-Event Date <span className="text-red-500">*</span>
               </p>
               <input
                 {...register("eventDate", {
                   required: "Event Date is required",
                 })}
-                className="mt-1 border rounded p-3"
+                className="mt-1 border rounded p-2"
                 type="date"
               />
               {errors.subEventDate && (
@@ -76,14 +76,14 @@ const CreateSubEvent = () => {
               )}
             </div>
             <div className="flex flex-col w-full">
-              <p className="font-semibold text-xs px-1">
+              <p className=" text-xs px-1">
                 Start From <span className="text-red-500">*</span>
               </p>
               <input
                 {...register("subEventStartTime", {
                   required: "Start time is required",
                 })}
-                className="mt-1 border rounded p-3"
+                className="mt-1 border rounded p-2"
                 type="time"
               />
               {errors.subEventStartTime && (
@@ -93,12 +93,12 @@ const CreateSubEvent = () => {
               )}
             </div>
             <div className="flex flex-col w-full">
-              <p className="font-semibold text-xs px-1">
+              <p className=" text-xs px-1">
                 End At <span className="text-red-500">*</span>
               </p>
               <input
                 {...register("subEventEndTime", { required: "End time is required" })}
-                className="mt-1 border rounded p-3"
+                className="mt-1 border rounded p-2"
                 type="time"
               />
               {errors.subEventEndTime && (
@@ -110,14 +110,14 @@ const CreateSubEvent = () => {
 
             {/* Event Description */}
             <div className="flex flex-col w-full">
-              <p className="font-semibold text-xs px-1">
+              <p className=" text-xs px-1">
               Sub-Event Description <span className="text-red-500">*</span>
               </p>
               <textarea
                 {...register("subEventDescription", {
                   required: "Sub-Event Description is required",
                 })}
-                className="mt-1 border rounded p-3"
+                className="mt-1 border rounded p-2"
                 cols={10}
                 placeholder="Sub-Event Description"
               />

@@ -1,131 +1,146 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ActionHeader from "./component/ActionHeader";
 import CreateYourWeddingPlan from "./component/CreateYourWeddingPlan";
 import HeadingCard from "./component/HeadingCard";
-import sampleData from "./component/SampleDate";
-import WeddingMindMap from "./component/WeddingMindMap";
+import WeddingEventList from "./component/WeddingEventList";
 import WeddingPlanSideNavber from "./component/WeddingPlanSideNavber";
 import { X } from "lucide-react";
 import CreateSubEvent from "./component/CreateSubEvent";
 import CreateTaskForm from "./component/CreateTaskForm";
 import AddVevdors from "./component/AddVevdors";
+import { useGetWeddingPlanQuery } from "../../redux/weddingPlanSlice";
+
 
 const WeddingPlan = () => {
+  const { data, error, isLoading, refetch } = useGetWeddingPlanQuery();
   const [isActiveWeddingPlanForm, setIsActiveWeddingPlanForm] = useState(false);
+  const [isActiveSubEvent, setIsActiveSubEvent] = useState(false);
+  const [isActiveTask, setIsActiveTask] = useState(false);
+  const [isActiveVendor, setIsActiveVendor] = useState(false);
 
-  const [isActiveSubEvent, setIsActiveSubEvent] = useState(false)
-  const [isActiveTask, setIsActiveTask] = useState(false)
-  const [isActiveVendor, setIsActiveVendor] = useState(false)
+  const [isRefetchData, setIsRefetchData] =  useState(false)
 
-const handleOnActive = () => {
-  setIsActiveWeddingPlanForm((prev) => !prev); // Toggle the state
-};
 
-//handle add sub event 
-const handleOnAddSubEvent = ()=>{
-  setIsActiveSubEvent((prev)=> !prev)
-}
+  useEffect(()=>{
+    refetch()
+  },[isRefetchData, refetch])
 
-//handle to add task
-const handleOnAddTask = ()=>{
-  setIsActiveTask((prev)=> !prev)
-}
-//handle to add vendor
-const handleOnAddVendor = ()=>{
-  setIsActiveVendor((prev)=> !prev)
-}
+  const handleOnActive = () => {
+    setIsActiveWeddingPlanForm((prev) => !prev); // Toggle the state
+  };
 
+  //handle add sub event
+  const handleOnAddSubEvent = () => {
+    setIsActiveSubEvent((prev) => !prev);
+  };
+
+  //handle to add task
+  const handleOnAddTask = () => {
+    setIsActiveTask((prev) => !prev);
+  };
+  //handle to add vendor
+  const handleOnAddVendor = () => {
+    setIsActiveVendor((prev) => !prev);
+  };
+
+ 
+
+  
+
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error fetching wedding plans.</p>;
+
+ 
 
   return (
     <div className="flex-col relative">
-      <HeadingCard />
-      
-      <section className="p-6 w-full flex ">
+      <section className="p-3 w-full flex ">
         <WeddingPlanSideNavber />
-        <div className="ml-[3rem]">
+        <div className="w-full p-3">
+          <HeadingCard />
           <ActionHeader handleOnEventActive={handleOnActive} />
-          <WeddingMindMap
-            data={sampleData} 
+          <WeddingEventList
+            data={data.events}
             handleOnAddSubEvent={handleOnAddSubEvent}
             handleOnAddTask={handleOnAddTask}
             handleOnAddVendor={handleOnAddVendor}
           />
         </div>
-
       </section>
 
       {/* Backdrop Blur Effect */}
-      {(isActiveWeddingPlanForm || isActiveSubEvent || isActiveTask || isActiveVendor) && (
+      {(isActiveWeddingPlanForm ||
+        isActiveSubEvent ||
+        isActiveTask ||
+        isActiveVendor) && (
         <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm transition-opacity z-40"></div>
       )}
 
       {/* Sliding Form for event */}
       <div
-         className={`fixed top-1/2 left-1/2 w-[700px] bg-white shadow-lg rounded-lg p-6 
-        transform -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-in-out 
-        ${isActiveWeddingPlanForm ? "opacity-100 scale-100" : "opacity-0 scale-0"} z-50`}
+        className={`fixed top-0 right-0 h-full w-[500px] bg-white shadow-lg p-6 transform ${
+          isActiveWeddingPlanForm ? "translate-x-0" : "translate-x-full"
+        } transition-transform duration-300 ease-in-out z-50`}
       >
         <button
           className="absolute top-4 right-4 text-gray-500 hover:text-red-500"
           onClick={() => setIsActiveWeddingPlanForm(false)}
         >
-          <X/>
+          <X />
         </button>
-       
-        <CreateYourWeddingPlan />
+
+        <CreateYourWeddingPlan setRefetch={()=>setIsRefetchData(true)}/>
       </div>
 
-       {/* Sliding Form for sub-event */}
-       <div
-        className={`fixed top-1/2 left-1/2 w-[500px] bg-white shadow-lg rounded-lg p-6 
-        transform -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-in-out 
-        ${isActiveSubEvent ? "opacity-100 scale-100" : "opacity-0 scale-0"} z-50`}       
+      {/* Sliding Form for sub-event */}
+      <div
+        className={`fixed top-0 right-0 h-full w-[500px] bg-white shadow-lg p-6 transform ${
+          isActiveSubEvent ? "translate-x-0" : "translate-x-full"
+        } transition-transform duration-300 ease-in-out z-50`}
       >
         <button
           className="absolute top-4 right-4 text-gray-500 hover:text-red-500"
           onClick={() => setIsActiveSubEvent(false)}
         >
-          <X/>
+          <X />
         </button>
-       
+
         <CreateSubEvent />
       </div>
 
       {/* Sliding Form for task */}
       <div
-         className={`fixed top-1/2 left-1/2 w-[500px] bg-white shadow-lg rounded-lg p-6 
-        transform -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-in-out 
-        ${isActiveTask ? "opacity-100 scale-100" : "opacity-0 scale-0"} z-50`}
+        className={`fixed top-0 right-0 h-full w-[500px] bg-white shadow-lg p-6 transform ${
+          isActiveTask ? "translate-x-0" : "translate-x-full"
+        } transition-transform duration-300 ease-in-out z-50`}
       >
         <button
           className="absolute top-4 right-4 text-gray-500 hover:text-red-500"
           onClick={() => setIsActiveTask(false)}
         >
-          <X/>
+          <X />
         </button>
-       
-        <CreateTaskForm />
 
+        <CreateTaskForm />
       </div>
 
-
-     {/* Pop-out Form for Vendor */}
+      {/* Pop-out Form for Vendor */}
       <div
-        className={`fixed top-1/2 left-1/2 w-[700px] bg-white shadow-lg rounded-lg p-3  
-        transform -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-in-out 
-        ${isActiveVendor ? "opacity-100 scale-100" : "opacity-0 scale-0"} z-50`}
+        className={`fixed top-0 right-0 h-full w-full bg-white shadow-lg p-6 transform ${
+          isActiveVendor ? "translate-x-0" : "translate-x-full"
+        } transition-transform duration-300 ease-in-out z-50`}
       >
         {/* Close Button */}
         <button
           className="absolute top-4 right-4 text-gray-500 hover:text-red-500"
-          onClick={() => setIsActiveVendor(false)}
+          onClick={() => setIsActiveVendor(false)} // Updated function
         >
-          <X/>
+          <X />
         </button>
 
         {/* Vendor Form */}
         <AddVevdors />
-      </div> 
+      </div>
     </div>
   );
 };

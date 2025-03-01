@@ -47,7 +47,7 @@ const WeddingPlanSideNavber = () => {
   };
 
   return (
-    <aside className="hidden md:block w-1/4  h-auto  border-r text-black p-4">
+    <aside className="hidden md:block w-[20%]  h-auto  border-r text-black p-4">
       <h2 className="text-xl font-semibold mb-4">Wedding Plan</h2>
 
       {/* Search Bar */}
