@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Footer from "../../Footer";
-import { FiPlus, FiTrash2, FiEdit, FiSearch, FiBarChart, FiUsers, FiSettings, FiHome, FiFolder, FiTag, FiCalendar, FiEye, FiClock, FiFilter, FiCheck, FiX } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiEdit, FiSearch, FiBarChart, FiUsers, FiSettings, FiHome, FiFolder, FiCalendar, FiEye, FiShare2, FiArchive, FiArrowUp } from 'react-icons/fi';
 
 function BlogDashboard() {
   const navigate = useNavigate();
+  const [currentDateTime, setCurrentDateTime] = useState(new Date().toISOString());
+
   // Update the datetime every minute
   useEffect(() => {
     const interval = setInterval(() => {
@@ -17,9 +19,9 @@ function BlogDashboard() {
 
   // Sample blog post data
   const [blogPosts, setBlogPosts] = useState([
-    { id: 1, title: 'First Blog Post', content: 'This is the content of the first blog post.', date: '2023-10-01', category: 'Technology', status: 'published', views: 1250, author: 'rohitRanjanGIT' },
-    { id: 2, title: 'Second Blog Post', content: 'This is the content of the second blog post.', date: '2023-10-05', category: 'Lifestyle', status: 'published', views: 850, author: 'rohitRanjanGIT' },
-    { id: 3, title: 'Third Blog Post', content: 'This is the content of the third blog post.', date: '2023-10-10', category: 'Travel', status: 'draft', views: 0, author: 'rohitRanjanGIT' },
+    { id: 1, title: 'First Blog Post', content: 'This is the content of the first blog post.', date: '2023-10-01', status: 'published', views: 1250, author: 'rohitRanjanGIT' },
+    { id: 2, title: 'Second Blog Post', content: 'This is the content of the second blog post.', date: '2023-10-05', status: 'published', views: 850, author: 'rohitRanjanGIT' },
+    { id: 3, title: 'Third Blog Post', content: 'This is the content of the third blog post.', date: '2023-10-10', status: 'draft', views: 0, author: 'rohitRanjanGIT' },
   ]);
 
   const [showAddModal, setShowAddModal] = useState(false);
@@ -36,16 +38,14 @@ function BlogDashboard() {
   const [newPost, setNewPost] = useState({
     title: '',
     content: '',
-    category: 'Technology',
     status: 'draft'
   });
 
   // Categories with counts
   const categories = [
-    { name: 'All', count: blogPosts.length },
-    { name: 'Technology', count: blogPosts.filter(post => post.category === 'Technology').length },
-    { name: 'Lifestyle', count: blogPosts.filter(post => post.category === 'Lifestyle').length },
-    { name: 'Travel', count: blogPosts.filter(post => post.category === 'Travel').length },
+    { count: blogPosts.length },
+    { count: blogPosts.filter(post => post.status === 'published').length },
+    { count: blogPosts.filter(post => post.status === 'draft').length },
   ];
 
   // Function to handle "Add Blog" button click
@@ -63,7 +63,6 @@ function BlogDashboard() {
     setNewPost({
       title: post.title,
       content: post.content,
-      category: post.category,
       status: post.status
     });
     setShowAddModal(true);
@@ -94,7 +93,7 @@ function BlogDashboard() {
         ...newPost,
         date: currentDateTime.split(' ')[0],
         views: 0,
-        author: currentUser
+        author: 'admin' // Replace with actual user
       }]);
     }
     setShowAddModal(false);
@@ -102,7 +101,6 @@ function BlogDashboard() {
     setNewPost({
       title: '',
       content: '',
-      category: 'Technology',
       status: 'draft'
     });
   };
@@ -120,6 +118,18 @@ function BlogDashboard() {
       setSortBy(field);
       setSortOrder('asc');
     }
+  };
+
+  const handleArchiveClick = (id, newStatus) => {
+    setBlogPosts(blogPosts.map(post =>
+      post.id === id ? { ...post, status: newStatus } : post
+    ));
+  };
+
+  const handleShareClick = (post) => {
+    const shareUrl = `${window.location.origin}/blog/${post.id}`;
+    navigator.clipboard.writeText(shareUrl);
+    alert('Blog URL copied to clipboard!');
   };
 
   const filteredPosts = blogPosts
@@ -150,7 +160,6 @@ function BlogDashboard() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-
       <div className="flex flex-1">
         {/* Sidebar */}
         <aside className="w-64 bg-white border-r border-gray-200 hidden md:block">
@@ -202,12 +211,11 @@ function BlogDashboard() {
                 Settings
               </div>
             </nav>
-
           </div>
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 p-8 h-[90vh] ">
+        <main className="flex-1 p-8 h-[90vh]">
           {activeTab === 'dashboard' && (
             <div className="space-y-8">
               <h2 className="text-2xl font-semibold text-gray-800">Dashboard Overview</h2>
@@ -259,7 +267,7 @@ function BlogDashboard() {
                     <div key={post.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                       <div>
                         <h4 className="text-lg font-medium text-gray-800">{post.title}</h4>
-                        <p className="text-sm text-gray-600">{post.category} • {post.status}</p>
+                        <p className="text-sm text-gray-600">{post.status}</p>
                       </div>
                       <div className="flex items-center space-x-4">
                         <button
@@ -286,7 +294,7 @@ function BlogDashboard() {
             <div className="space-y-8">
               <h2 className="text-2xl font-semibold text-gray-800">Manage Posts</h2>
 
-              {/* Filters and Sorting */}
+              {/* Filters, Sorting, and Search Bar */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
                   <select
@@ -297,9 +305,21 @@ function BlogDashboard() {
                     <option value="All">All Statuses</option>
                     <option value="published">Published</option>
                     <option value="draft">Draft</option>
+                    <option value="archived">Archived</option>
                   </select>
                 </div>
                 <div className="flex items-center space-x-4">
+                  {/* Search Bar */}
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="Search posts..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                    />
+                    <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  </div>
                   <button
                     onClick={() => handleSort('date')}
                     className="flex items-center text-sm text-gray-600 hover:text-gray-800"
@@ -324,7 +344,8 @@ function BlogDashboard() {
                     <div key={post.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                       <div>
                         <h4 className="text-lg font-medium text-gray-800">{post.title}</h4>
-                        <p className="text-sm text-gray-600">{post.category} • {post.status}</p>
+                        <p className="text-sm text-gray-600">{post.status}</p>
+                        <p className="text-sm text-gray-600">Views: {post.views} • Comments: {post.comments || 0}</p>
                       </div>
                       <div className="flex items-center space-x-4">
                         <button
@@ -338,6 +359,18 @@ function BlogDashboard() {
                           className="text-red-600 hover:text-red-800"
                         >
                           <FiTrash2 className="h-5 w-5" />
+                        </button>
+                        <button
+                          onClick={() => handleArchiveClick(post.id, post.status === 'archived' ? 'published' : 'archived')}
+                          className={`text-yellow-600 hover:text-yellow-800 ${post.status === 'archived' ? 'text-green-600 hover:text-green-800' : ''}`}
+                        >
+                          {post.status === 'archived' ? <FiArrowUp className="h-5 w-5" /> : <FiArchive className="h-5 w-5" />}
+                        </button>
+                        <button
+                          onClick={() => handleShareClick(post)}
+                          className="text-blue-600 hover:text-blue-800"
+                        >
+                          <FiShare2 className="h-5 w-5" />
                         </button>
                       </div>
                     </div>
