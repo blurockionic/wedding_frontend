@@ -23,6 +23,10 @@ const Billing = lazy(() => import("./pages/vendorDashboard/Billing.jsx"));
 
 const Checklist = lazy(() => import("./pages/userDashboard/checklist/Checklist.jsx"));
 
+const BlogDashboard = lazy(() => import("./pages/blog-section/admin-section/BlogDashboard.jsx"));
+const NewBlogPost = lazy(() => import("./pages/blog-section/admin-section/NewBlogPost.jsx"));
+
+
 const Setting = lazy(() => import("./pages/vendorDashboard/Setting.jsx"));
 const ContactUs = lazy(() => import("./pages/contactus/ContactUs.jsx"));
 const Analytics = lazy(() => import("./pages/vendorDashboard/Analytics.jsx"));
@@ -114,19 +118,16 @@ const router = createBrowserRouter([
     path: "/",
     element: <OutletPage />,
     children: [
+      // const BlogDashboard = lazy(() => import("./pages/blog-section/admin-section/BlogDashboard.jsx"));
+      { path: "/blog_dashboard", element: wrapWithSuspense(BlogDashboard)},
+      { path: "/new-blog-post", element: wrapWithSuspense(NewBlogPost)},
       { path: "/", element: wrapWithSuspense(LandingPage) },
       { path: "/signup", element: wrapWithSuspense(Signup) },
       { path: "/templates", element: wrapWithSuspense(Template) },
       { path: "/card", element: wrapWithSuspense(Card) },
       { path: "/guests", element: wrapWithSuspense(Guest) },
-      {
-        path: "/guests/see-template/template",
-        element: wrapWithSuspense(Modify),
-      },
-      {
-        path: "/guests/see-template/template1",
-        element: wrapWithSuspense(Modify_1),
-      },
+      { path: "/guests/see-template/template", element: wrapWithSuspense(Modify) },
+      { path: "/guests/see-template/template1", element: wrapWithSuspense(Modify_1) },
       { path: "/payment", element: wrapWithSuspense(Payment) },
       { path: "/preview", element: wrapWithSuspense(Preview) },
       { path: "/preview_1", element: wrapWithSuspense(Preview_1) },
@@ -159,7 +160,7 @@ const router = createBrowserRouter([
         element: wrapWithSuspense(VenderBiodata),
       },
 
-      { path: "/about", element: wrapWithSuspense(AboutPage) }, // Add the About page route
+      { path: "/about", element: wrapWithSuspense(AboutPage) }, 
       {
         path: "/user-forgot-password",
         element: wrapWithSuspense(UserForgotPassword),
@@ -181,6 +182,8 @@ const router = createBrowserRouter([
       },
       { path: "/services", element: wrapWithSuspense(ServicesPage) },
       { path: "/service/:id", element: wrapWithSuspense(ServiceDetail) },
+
+      // Protect user admin routes
       {
         path: "/profile",
         element: (
