@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async"; // SEO with Helmet
 import { Link, useNavigate } from "react-router-dom";
-import { useSignupMutation } from "../../redux/apiSlice.auth";
+import { useGoogleLoginMutation, useSignupMutation } from "../../redux/apiSlice.auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
@@ -14,12 +14,14 @@ import { PasswordField } from "../../components/global/inputfield/PasswordField"
 import { InputField } from "../../components/global/inputfield/InputField";
 import { userSchema } from "../../validationSchema/userRegistrationSchema";
 import useProtectAfterLogin from "../../hooks/useProtectAfterLogin";
+import { handleGoogleLogin } from "./Login";
 
 export default function Signup() {
   useProtectAfterLogin(["user"], "/"); // Protect users already logged in
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isShowPasswordCon, setIsShowPasswordCon] = useState(false);
   const navigate = useNavigate();
+   const [googleLoginMutation, ] = useGoogleLoginMutation();
 
   const {
     register,
@@ -62,6 +64,27 @@ export default function Signup() {
       );
     }
   };
+
+    const handleGoogleLogin = async () => {
+      const { googleUser } = await signInWithGoogle();
+    
+      const token = await googleUser.getIdToken();
+    
+      if (googleUser) {
+        const { success, user, message } = await googleLoginMutation({
+          googleUid: googleUser.uid,
+          email: googleUser.email,
+          displayName: googleUser.displayName,
+          photoURL: googleUser.photoURL,
+          googleIdToken: token,
+        }).unwrap();
+    
+        if (success) {
+          dispatch(login(user));
+          toast.success(message);
+        }
+      }
+    };
 
   return (
     <div className="min-h-screen flex items-center justify-center md:py-10">
@@ -236,6 +259,7 @@ export default function Signup() {
             </button>
 
             <CustomButton
+              onClick={handleGoogleLogin}
               type="button"
               text="Login with Google"
               leftIcon={<FaGoogle size={20} className="text-red-500" />}

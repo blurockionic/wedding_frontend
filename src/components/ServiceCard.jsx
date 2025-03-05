@@ -45,21 +45,28 @@ console.log(service);
   };
 
   const imageUrl = useMemo(() => {
-    if (service && service.media && service.media.length > 0 && service.media[0] && service.media[0].image_urls && service.media[0].image_urls.length > 0 && service.media[0].image_urls[0].path) {
+    if (
+      service?.media?.length > 0 &&
+      service.media[0]?.image_urls?.length > 0 &&
+      service.media[0].image_urls[0]?.path
+    ) {
       return service.media[0].image_urls[0].path;
-    } else {
-      return `https://via.placeholder.com/300x200?text=${service?.service_type || "No Image"}`; // Provide a default or placeholder
     }
+  
+   
+    return `https://via.placeholder.com/300x200?text=${encodeURIComponent(
+      service?.service_type || "No Image"
+    )}`;
   }, [service]);
 
   return (
     <div
-      className="group relative bg-white rounded shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
+      className="group relative w-[250px] bg-white  md:w-[300px] border border-gray-400 p-3 bg-muted rounded shadow-lg overflow-hidden transform transition-all duration-300  hover:shadow-xl"
       onClick={handleCardClick}
       aria-label={`View details of ${service?.service_name}`}
     >
       {/* Image Section */}
-      <div className="relative h-48 truncate bg-gray-200">
+      <div className="relative rounded-md h-52 truncate bg-gray-200">
         <img
           src={imageUrl}
           alt={service?.service_name}
@@ -83,10 +90,10 @@ console.log(service);
       </div>
 
       {/* Content Section */}
-      <div className="p-4">
+      <div className="my-2">
        <div className="flex justify-between items-center">
        <h3
-          className="text-lg font-semibold text-gray-800 truncate capitalize"
+          className="text-lg font-bold text-gray-800 truncate capitalize"
           title={service?.service_name}
         >
           {service?.service_name}
@@ -95,7 +102,7 @@ console.log(service);
        </div>
         <div className="flex items-center justify-between text-sm text-gray-500 mt-1">
           <span>
-            <strong className="font-thin">Vendor:</strong> <span className="capitalize">{service?.vendor?.name}</span>
+            <strong className="font-semibold capitalize">location:</strong> <span className="capitalize">{service?.vendor?.city}</span>
           </span>
           {/* <span className="capitalize">
             {service.vendor.business_name || "No business name available"}

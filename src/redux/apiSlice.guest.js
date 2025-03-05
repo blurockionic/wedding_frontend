@@ -19,16 +19,16 @@ export const apiGuestSlice = createApi({
       query: (guestData) => ({
         url: "/",
         method: "POST",
-        body: guestData,
+        body: {...guestData},
       }),
     }),
 
 
     updateGuestStatus: builder.mutation({
-      query: ({ guestId, status }) => ({
+      query: ({ guestId,guestInputDAta }) => ({
         url: `/${guestId}`,
         method: "PUT",
-        body: { status },
+        body: { guestInputDAta },
       }),
     }),
 

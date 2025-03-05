@@ -18,11 +18,15 @@ import { PasswordField } from "../../components/global/inputfield/PasswordField"
 import { useGetCartMutation } from "../../redux/serviceSlice";
 import { hydrateFavorites } from "../../redux/favoriteSlice";
 import useProtectAfterLogin from "../../hooks/useProtectAfterLogin";
+import { signInWithGoogle } from "../../utils/googleAuthProvider";
+import { useGoogleLoginMutation } from "../../redux/apiSlice.auth";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters long."),
 });
+
+
 
 export default function Login() {
   useProtectAfterLogin(["user"], "/");
@@ -34,6 +38,7 @@ export default function Login() {
   const location = useLocation();
   const navigate = useNavigate();
   const [isBuyClicked, setIsBuyClicked] = useState(false);
+  const [googleLoginMutation, { isLoading }] = useGoogleLoginMutation();
 
   const {
     register,
@@ -58,19 +63,20 @@ export default function Login() {
         dispatch(hydrateFavorites(allCart));
         reset();
         toast.success(message);
-        
+
         const from = location.state?.from || "/";
-        if (from === "/"){
-          navigate(from);  
+        if (from === "/") {
+          navigate(from);
         }
-        if ( isBuyClicked===true) {
+        if (isBuyClicked === true) {
           navigate("/payment");
         }
-
       }
     } catch (error) {
       const errorMessage =
-        error?.data?.message || error.message || "An unexpected error occurred.";
+        error?.data?.message ||
+        error.message ||
+        "An unexpected error occurred.";
       toast.error(errorMessage, {
         position: "top-right",
         autoClose: 5000,
@@ -79,12 +85,25 @@ export default function Login() {
     }
   };
 
-  const handleGoogleLogin = () => {
-    toast.info("Google login is not yet implemented.", {
-      position: "top-right",
-      autoClose: 3000,
-      theme: "light",
-    });
+  const handleGoogleLogin = async () => {
+    const { googleUser } = await signInWithGoogle();
+  
+    const token = await googleUser.getIdToken();
+  
+    if (googleUser) {
+      const { success, user, message } = await googleLoginMutation({
+        googleUid: googleUser.uid,
+        email: googleUser.email,
+        displayName: googleUser.displayName,
+        photoURL: googleUser.photoURL,
+        googleIdToken: token,
+      }).unwrap();
+  
+      if (success) {
+        dispatch(login(user));
+        toast.success(message);
+      }
+    }
   };
 
   const structuredData = {
@@ -121,9 +140,14 @@ export default function Login() {
           content="Login to Marriage Vendors to access your couple account, explore vendors, and manage your wedding planning effortlessly."
         />
         <meta property="og:image" content={loginImage} />
-        <meta property="og:url" content="https://www.marriagevendors.com/login" />
+        <meta
+          property="og:url"
+          content="https://www.marriagevendors.com/login"
+        />
         <meta name="twitter:card" content="summary_large_image" />
-        <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
       </Helmet>
       <div className="min-h-screen flex items-center justify-center md:py-10">
         <div className="flex items-center justify-center space-x-10">
@@ -181,9 +205,7 @@ export default function Login() {
                   type="submit"
                   text={loading ? "Logging in..." : "Login"}
                   disabled={loading}
-                  className={`w-full ${
-                    loading ? "text-primary" : "bg-primary"
-                  } 
+                  className={`w-full ${loading ? "text-primary" : "bg-primary"} 
       disabled:cursor-not-allowed cursor-pointer border-2 hover:bg-dustyRose
       text-muted font-bold py-2 px-4 rounded transition`}
                 />
