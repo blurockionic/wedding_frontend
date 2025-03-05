@@ -177,7 +177,7 @@ function Preview_2({ pricing}) {
                         onChange={handleGroomNameChange} className="input input-bordered w-[100%] h-[60px] b_2" />
                     </div>
                     <div className='pre_temp'>
-                      <input type="text" placeholder="Enter Day and Date" value={eventDate}
+                      <input type="date" placeholder="Enter Day and Date" value={eventDate}
                         onChange={handleEventDateChange} className="input input-bordered w-[100%] h-[60px] b_2" />
                     </div>
                     <div className='pre_temp'>

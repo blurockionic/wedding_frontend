@@ -98,7 +98,7 @@ const Preview_2 = lazy(() => import("./pages/EditTemplate/Preview_2.jsx"));
 const Card = lazy(() => import("./pages/InvitationCard/Card.jsx"));
 const Guest = lazy(() => import("./pages/AddGuests/Guest.jsx"));
 const Modify = lazy(() => import("./pages/UpdatedTemplate/Modify.jsx"));
-const Modify_1 = lazy(() => import("./pages/UpdatedTemplate/Modify_1.jsx"));
+
 
 const WeddingDairy  = lazy(()=> import("./pages/wedding-plan/WeddingPlan.jsx"))
 
@@ -123,12 +123,8 @@ const router = createBrowserRouter([
       { path: "/card", element: wrapWithSuspense(Card) },
       { path: "/guests", element: wrapWithSuspense(Guest) },
       {
-        path: "/guests/see-template/template",
+        path: "/guests/see-template/:template",
         element: wrapWithSuspense(Modify),
-      },
-      {
-        path: "/guests/see-template/template1",
-        element: wrapWithSuspense(Modify_1),
       },
       { path: "/payment", element: wrapWithSuspense(Payment) },
       { path: "/preview", element: wrapWithSuspense(Preview) },
