@@ -57,6 +57,8 @@ const Discover = () => {
     queryHook ? queryHook() : useGetServicesQuery(filter)
   );
 
+  console.log(topRatededData)
+
   return (
     <div className="my-10">
       {serviceFilters.map(({ key, title, subtitle, bgColor }, index) => {

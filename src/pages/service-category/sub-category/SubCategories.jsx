@@ -4,7 +4,27 @@ import Footer from "../../Footer";
 
 import { useGetServicesQuery } from "../../../redux/serviceSlice";
 import { useSelector } from "react-redux";
-import ServiceList from "../../../components/ServiceList";
+import img from "../../../../public/destination_wedding/destination_wedding.jpg"
+
+// Import Random Images
+const randomImages = [
+   "/weddingvendors/house.jpg" ,
+   "/weddingvendors/tent.jpeg" ,
+   "/weddingvendors/game.jpeg" ,
+   "/weddingvendors/florist.jpeg" ,
+  "/weddingvendors/planner.jpeg" ,
+  "/weddingvendors/decoration.jpg" ,
+   "/weddingvendors/cake.jpg" ,
+  "/weddingvendors/cordinator.jpg" ,
+   "/weddingvendors/dj.jpg" ,
+   "/weddingvendors/pandit.jpeg" ,
+   "/weddingvendors/photobooth.jpg" ,
+   "/weddingvendors/astro.jpg"
+];
+
+const getRandomImage = () => {
+  return randomImages[Math.floor(Math.random() * randomImages.length)];
+};
 
 const SubCategories = () => {
   const { category, subCategory } = useParams();
@@ -65,10 +85,16 @@ const SubCategories = () => {
       <div className="px-16 mt-4 overflow-x-auto whitespace-nowrap flex gap-4 py-2 scrollbar-hide">
         {Object.keys(stateServiceCount || {}).length > 0 ? (
           Object.entries(stateServiceCount).map(([state, count]) => (
-            <div key={state} className="flex flex-col items-center gap-2">
-              <span className="w-40 h-40 bg-gray-50 rounded-full shadow-md"></span>
+            <div key={state} className="flex flex-col items-center gap-2 cursor-pointer"
+            onClick={() => handleStateClick(state)}
+            >
+             <img
+                src={getRandomImage()}
+                alt="Wedding Venue"
+                className="w-40 h-40 rounded-full object-cover shadow-md"
+              />
               <p
-                onClick={() => handleStateClick(state)}
+                
                 className="px-4 py-2 text-md rounded-full transition cursor-pointer capitalize"
               >
                 {state}
@@ -132,6 +158,19 @@ const SubCategories = () => {
           ))}
         </ul>
       </div> */}
+
+      {/* 🌟 Destination Wedding Banner (Above Footer) */}
+      <div className="relative w-full h-64 lg:h-96 bg-cover bg-center mt-10" 
+        style={{ backgroundImage: `url(${img})` }} 
+      >
+        <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center text-center text-white px-6">
+          <h1 className="text-3xl lg:text-5xl font-bold">Plan Your Dream Destination Wedding</h1>
+          <p className="mt-2 text-lg lg:text-xl ">Explore the best venues & services </p>
+          <a href="tel:+916200932331" className="mt-4 px-6 py-2 bg-white text-black font-semibold rounded-full shadow-lg hover:bg-gray-200 transition">
+            📞 +91 6200932331
+          </a>
+        </div>
+      </div>
 
       <Footer />
     </>

@@ -64,6 +64,7 @@ export default function Login() {
         reset();
         toast.success(message);
 
+<<<<<<< HEAD
         const from = location.state?.from || "/";
         if (from === "/") {
           navigate(from);
@@ -71,6 +72,16 @@ export default function Login() {
         if (isBuyClicked === true) {
           navigate("/payment");
         }
+=======
+        // if (location.state?.isBuyClicked && isBuyClicked===true || location.state?.from || "/payment") {
+        //   navigate("/payment");
+        // }
+        // else {
+        //   const from = location.state?.from || "/";
+        //   navigate(from);  
+        // }
+
+>>>>>>> 6bfe9d9ebf060021d0af372a543d96b668b8849c
       }
     } catch (error) {
       const errorMessage =

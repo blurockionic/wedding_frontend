@@ -100,6 +100,8 @@ const Guest = lazy(() => import("./pages/AddGuests/Guest.jsx"));
 const Modify = lazy(() => import("./pages/UpdatedTemplate/Modify.jsx"));
 const Modify_1 = lazy(() => import("./pages/UpdatedTemplate/Modify_1.jsx"));
 
+const WeddingDairy  = lazy(()=> import("./pages/wedding-plan/WeddingPlan.jsx"))
+
 function wrapWithSuspense(Component) {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -136,6 +138,7 @@ const router = createBrowserRouter([
       { path: "/view_1", element: wrapWithSuspense(View_1) },
       { path: "/login", element: wrapWithSuspense(Login) },
       { path: "/contactus", element: wrapWithSuspense(ContactUs) },
+      { path: "/weddingplan", element: wrapWithSuspense(WeddingDairy) },
       // dynamic route for category
       { path: "/all", element: wrapWithSuspense(AllCategories) },
       { path: "/all/:category", element: wrapWithSuspense(Category) },
