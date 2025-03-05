@@ -1,9 +1,6 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import VendorServiceList from "./component/VendorServiceList";
 import ServiceModel from "./component/ServiceModel";
-import { FiSearch } from "react-icons/fi";
-import SearchBar from "../../components/SearchBar";
-import { GoSearch } from "react-icons/go";
 import { useGetServicesQuery } from "../../redux/serviceSlice";
 import { PiPlus } from "react-icons/pi";
 import { Outlet, useNavigate } from "react-router-dom";
