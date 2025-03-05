@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import Blog from '../blog-section/Blog';
 
 const NewBlogPost = () => {
   const navigate = useNavigate();
@@ -9,9 +10,13 @@ const NewBlogPost = () => {
   const [content, setContent] = useState('');
   const [coverImage, setCoverImage] = useState('');
   const [coverImagePreview, setCoverImagePreview] = useState('');
+  const [hashtags, setHashtags] = useState([]);
+  const [hashtagInput, setHashtagInput] = useState('');
   const [saving, setSaving] = useState(false);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [currentDate] = useState(new Date());
+  const [currentUser] = useState('rohitRanjanGIT');
+  const [currentDateTime] = useState('2025-03-05 09:53:16');
 
   // Custom toolbar options for Quill editor
   const modules = {
@@ -26,7 +31,12 @@ const NewBlogPost = () => {
   const saveDraft = () => {
     setSaving(true);
     // Save draft to localStorage for demo purposes
-    localStorage.setItem('blogDraft', JSON.stringify({ title, content, coverImage: coverImagePreview }));
+    localStorage.setItem('blogDraft', JSON.stringify({ 
+      title, 
+      content, 
+      coverImage: coverImagePreview,
+      hashtags 
+    }));
     setTimeout(() => {
       setSaving(false);
       alert('Draft saved successfully!');
@@ -67,15 +77,45 @@ const NewBlogPost = () => {
     setIsPreviewMode(!isPreviewMode);
   };
 
+  // Add a hashtag
+  const addHashtag = () => {
+    if (hashtagInput.trim() && !hashtags.includes(hashtagInput.trim())) {
+      setHashtags([...hashtags, hashtagInput.trim()]);
+      setHashtagInput('');
+    }
+  };
+
+  // Remove a hashtag
+  const removeHashtag = (tag) => {
+    setHashtags(hashtags.filter(t => t !== tag));
+  };
+
+  // Handle Enter key for adding hashtags
+  const handleHashtagKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addHashtag();
+    }
+  };
+
   // Load draft if exists
   useEffect(() => {
     const savedDraft = localStorage.getItem('blogDraft');
     if (savedDraft) {
-      const { title: savedTitle, content: savedContent, coverImage: savedCoverImage } = JSON.parse(savedDraft);
+      const { 
+        title: savedTitle, 
+        content: savedContent, 
+        coverImage: savedCoverImage,
+        hashtags: savedHashtags 
+      } = JSON.parse(savedDraft);
+      
       setTitle(savedTitle || '');
       setContent(savedContent || '');
       if (savedCoverImage) {
         setCoverImagePreview(savedCoverImage);
+      }
+      if (savedHashtags && savedHashtags.length) {
+        setHashtags(savedHashtags);
       }
     }
   }, []);
@@ -88,12 +128,23 @@ const NewBlogPost = () => {
   });
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div className="flex flex-col h-screen bg-white">
+      {/* User info bar */}
+      <div className="bg-gray-50 py-2 px-6 text-xs text-gray-500 flex justify-end items-center space-x-4 border-b border-gray-200">
+        <span>{currentDateTime} UTC</span>
+        <div className="flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+          </svg>
+          {currentUser}
+        </div>
+      </div>
+
       {/* First level navbar */}
-      <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200 shadow-sm">
+      <div className="flex items-center justify-between px-8 py-5 bg-white border-b border-gray-200 shadow-sm">
         <div className="flex items-center">
           <button 
-            className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors rounded-md hover:bg-gray-50"
+            className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:text-[#f20574] transition-colors rounded-md hover:bg-gray-50"
             onClick={() => navigate('/blog_dashboard')}
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -103,11 +154,11 @@ const NewBlogPost = () => {
           </button>
         </div>
         
-        <div className="flex-grow mx-6">
+        <div className="flex-grow mx-8">
           <input
             type="text"
             placeholder="Blog Title"
-            className="w-full px-4 py-3 text-lg font-medium border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white"
+            className="w-full px-5 py-3.5 text-xl font-medium border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#f20574] focus:border-[#f20574] outline-none transition-all bg-white"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             disabled={isPreviewMode}
@@ -116,23 +167,23 @@ const NewBlogPost = () => {
         
         <div className="flex items-center space-x-3">
           <button 
-            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 
+            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#f20574] 
               ${isPreviewMode ? 
-                'text-blue-600 bg-blue-50 border border-blue-200' : 
+                'text-[#f20574] bg-pink-50 border border-pink-200' : 
                 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'}`}
             onClick={togglePreviewMode}
           >
             {isPreviewMode ? 'Edit Post' : 'Preview'}
           </button>
           <button 
-            className="px-4 py-2 text-sm font-medium text-blue-600 bg-white border border-blue-600 rounded-md hover:bg-blue-50 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+            className="px-4 py-2 text-sm font-medium text-[#f20574] bg-white border border-[#f20574] rounded-md hover:bg-pink-50 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#f20574] disabled:opacity-50"
             onClick={saveDraft} 
             disabled={saving || isPreviewMode}
           >
             {saving ? 'Saving...' : 'Save Draft'}
           </button>
           <button 
-            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-blue-600 rounded-md hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+            className="px-4 py-2 text-sm font-medium text-white bg-[#f20574] border border-[#f20574] rounded-md hover:bg-[#d30062] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#f20574] disabled:opacity-50"
             onClick={savePost} 
             disabled={saving || !title || !content || isPreviewMode}
           >
@@ -140,201 +191,168 @@ const NewBlogPost = () => {
           </button>
         </div>
       </div>
-      
-      {/* Cover image section */}
-      {!isPreviewMode && (
-        <div className="bg-white border-b border-gray-200 px-6 py-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-medium text-gray-700">Cover Image</h2>
-            {coverImagePreview && (
-              <button
-                onClick={removeCoverImage}
-                className="px-3 py-1 text-xs font-medium text-red-600 border border-red-600 rounded-md hover:bg-red-50 transition-colors"
-              >
-                Remove Image
-              </button>
-            )}
-          </div>
-          
-          {!coverImagePreview ? (
-            <div className="mt-3 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg">
-              <div className="space-y-1 text-center">
-                <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                  <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" 
-                    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                <div className="flex text-sm text-gray-600">
-                  <label htmlFor="coverImage" className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
-                    <span>Upload a cover image</span>
-                    <input 
-                      id="coverImage" 
-                      name="coverImage" 
-                      type="file" 
-                      accept="image/*" 
-                      className="sr-only" 
-                      onChange={handleCoverImageChange} 
-                    />
-                  </label>
-                  <p className="pl-1">or drag and drop</p>
+
+      <div className="flex flex-grow">
+        {/* Left sidebar - only visible in edit mode */}
+        {!isPreviewMode && (
+          <div className="w-72 bg-white border-r border-gray-200 flex flex-col overflow-y-auto">
+            <div className="p-6">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Blog Properties</h3>
+              
+              {/* Hashtags section */}
+              <div className="mb-6">
+                <label htmlFor="hashtags" className="block text-sm font-medium text-gray-700 mb-2">
+                  Hashtags
+                </label>
+                <div className="flex flex-wrap gap-2 mb-3 min-h-[40px] border border-gray-200 rounded-md p-2">
+                  {hashtags.map((tag, index) => (
+                    <span 
+                      key={index} 
+                      className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-pink-100 text-[#f20574]"
+                    >
+                      #{tag}
+                      <button 
+                        type="button" 
+                        onClick={() => removeHashtag(tag)} 
+                        className="ml-2 inline-flex items-center justify-center h-4 w-4 rounded-full bg-pink-200 hover:bg-pink-300 focus:outline-none"
+                      >
+                        <svg className="h-2 w-2 text-[#f20574]" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                        </svg>
+                      </button>
+                    </span>
+                  ))}
                 </div>
-                <p className="text-xs text-gray-500">
-                  PNG, JPG, GIF up to 10MB
-                </p>
+                <div className="flex">
+                  <input
+                    type="text"
+                    id="hashtags"
+                    placeholder="Add hashtag..."
+                    className="flex-grow px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-[#f20574] focus:border-[#f20574] text-sm"
+                    value={hashtagInput}
+                    onChange={(e) => setHashtagInput(e.target.value)}
+                    onKeyDown={handleHashtagKeyDown}
+                  />
+                  <button
+                    type="button"
+                    onClick={addHashtag}
+                    className="px-3 py-2 bg-[#f20574] text-white rounded-r-md hover:bg-[#d30062] focus:outline-none focus:ring-2 focus:ring-[#f20574] focus:ring-offset-2"
+                  >
+                    Add
+                  </button>
+                </div>
+                <p className="mt-1 text-xs text-gray-500">Press Enter to add</p>
+              </div>
+
+              {/* Cover image upload section */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Cover Image
+                </label>
+                
+                {!coverImagePreview ? (
+                  <div className="mt-1 border-2 border-gray-300 border-dashed rounded-md px-4 py-4">
+                    <div className="space-y-2 text-center">
+                      <svg className="mx-auto h-10 w-10 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" 
+                          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                      <div className="text-xs text-gray-600">
+                        <label htmlFor="coverImage" className="relative cursor-pointer bg-white rounded-md font-medium text-[#f20574] hover:text-[#d30062] focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[#f20574]">
+                          <span>Upload image</span>
+                          <input 
+                            id="coverImage" 
+                            name="coverImage" 
+                            type="file" 
+                            accept="image/*" 
+                            className="sr-only" 
+                            onChange={handleCoverImageChange} 
+                          />
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="mt-1 relative rounded-md overflow-hidden">
+                    <img
+                      src={coverImagePreview}
+                      alt="Cover preview"
+                      className="w-full h-40 object-cover rounded-md"
+                    />
+                    <button
+                      onClick={removeCoverImage}
+                      className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 shadow-md hover:bg-red-700 focus:outline-none"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
-          ) : (
-            <div className="mt-3 relative h-64 rounded-lg overflow-hidden">
-              <img
-                src={coverImagePreview}
-                alt="Cover preview"
-                className="w-full h-full object-cover"
-              />
-            </div>
-          )}
-        </div>
-      )}
-
-      {!isPreviewMode ? (
-        <>
-          {/* Second level navbar - Quill Toolbar */}
-          <div id="toolbar" className="px-6 py-2 bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
-            {/* Text Formatting */}
-            <span className="ql-formats">
-              <select className="ql-header" defaultValue="">
-                <option value="1">Heading 1</option>
-                <option value="2">Heading 2</option>
-                <option value="3">Heading 3</option>
-                <option value="">Normal</option>
-              </select>
-              <select className="ql-font">
-                <option selected>Sans Serif</option>
-                <option value="serif">Serif</option>
-                <option value="monospace">Monospace</option>
-              </select>
-            </span>
-            
-            {/* Text Style */}
-            <span className="ql-formats">
-              <button className="ql-bold"></button>
-              <button className="ql-italic"></button>
-              <button className="ql-underline"></button>
-              <button className="ql-strike"></button>
-            </span>
-            
-            {/* Text Color */}
-            <span className="ql-formats">
-              <select className="ql-color"></select>
-              <select className="ql-background"></select>
-            </span>
-            
-            {/* Lists */}
-            <span className="ql-formats">
-              <button className="ql-list" value="ordered"></button>
-              <button className="ql-list" value="bullet"></button>
-              <button className="ql-indent" value="-1"></button>
-              <button className="ql-indent" value="+1"></button>
-            </span>
-            
-            {/* Text Alignment */}
-            <span className="ql-formats">
-              <button className="ql-align" value=""></button>
-              <button className="ql-align" value="center"></button>
-              <button className="ql-align" value="right"></button>
-              <button className="ql-align" value="justify"></button>
-            </span>
-            
-            {/* Media */}
-            <span className="ql-formats">
-              <button className="ql-link"></button>
-              <button className="ql-image"></button>
-              <button className="ql-video"></button>
-            </span>
-            
-            {/* Clear Formatting */}
-            <span className="ql-formats">
-              <button className="ql-clean"></button>
-            </span>
           </div>
-          
-          {/* Quill Editor */}
-          <div className="flex-grow p-6 overflow-auto bg-gray-50">
-            <div className="bg-white h-full rounded-lg shadow-sm border border-gray-200">
-              <div className="h-full">
+        )}
+
+        {/* Main content */}
+        <div className={`flex-grow flex flex-col overflow-hidden ${isPreviewMode ? 'bg-gray-50' : ''}`}>
+          {!isPreviewMode ? (
+            <>
+              {/* Quill Toolbar */}
+              <div id="toolbar" className="px-6 py-3 bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
+                <span className="ql-formats">
+                  <select className="ql-header" defaultValue="">
+                    <option value="1">Heading 1</option>
+                    <option value="2">Heading 2</option>
+                    <option value="3">Heading 3</option>
+                    <option value="">Normal</option>
+                  </select>
+                  <button className="ql-bold" />
+                  <button className="ql-italic" />
+                  <button className="ql-underline" />
+                  <button className="ql-strike" />
+                  <button className="ql-blockquote" />
+                  <button className="ql-code-block" />
+                  <button className="ql-link" />
+                  <button className="ql-image" />
+                  <button className="ql-list" value="ordered" />
+                  <button className="ql-list" value="bullet" />
+                  <button className="ql-script" value="sub" />
+                  <button className="ql-script" value="super" />
+                  <button className="ql-indent" value="-1" />
+                  <button className="ql-indent" value="+1" />
+                  <button className="ql-direction" value="rtl" />
+                  <select className="ql-align" />
+                  <select className="ql-color" />
+                  <select className="ql-background" />
+                  <select className="ql-font" />
+                  <select className="ql-size" />
+                </span>
+              </div>
+
+              {/* Quill Editor */}
+              <div className="flex-grow px-6 py-4 overflow-y-auto">
                 <ReactQuill
-                  theme="snow"
                   value={content}
                   onChange={setContent}
                   modules={modules}
-                  placeholder="Write your blog here..."
-                  className="h-full overflow-y-auto"
-                  style={{ border: "none" }}
+                  theme="snow"
+                  placeholder="Write your blog content here..."
+                  className="h-full"
                 />
               </div>
-            </div>
-          </div>
-        </>
-      ) : (
-        /* Preview Mode */
-        <div className="flex-grow overflow-auto bg-gray-100 p-6">
-          <div className="max-w-4xl mx-auto bg-white rounded-lg shadow overflow-hidden">
-            {/* Cover Image Preview */}
-            {coverImagePreview && (
-              <div className="w-full h-80 relative">
-                <img 
-                  src={coverImagePreview} 
-                  alt="Cover" 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            )}
-            
-            {/* Article Content */}
-            <article className="p-8">
-              <header className="mb-8 border-b border-gray-200 pb-6">
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">{title || 'Untitled Blog Post'}</h1>
-                <div className="flex items-center text-gray-500 text-sm">
-                  <span className="mr-4">By {/* User's name - using the provided login */}
-                    <span className="font-medium text-gray-900">rohitRanjanGIT</span>
-                  </span>
-                  <span>{formattedDate}</span>
-                </div>
-              </header>
-              
-              <div 
-                className="prose prose-lg max-w-none"
-                dangerouslySetInnerHTML={{ __html: content }}
-              />
-
-              {/* Add custom Tailwind styles for better prose rendering */}
-              <style jsx global>{`
-                .prose {
-                  max-width: 65ch;
-                  color: #374151;
-                }
-                .prose h1, .prose h2, .prose h3, .prose h4 {
-                  color: #111827;
-                  font-weight: 600;
-                  margin-top: 2em;
-                  margin-bottom: 1em;
-                }
-                .prose h1 { font-size: 2.25em; }
-                .prose h2 { font-size: 1.5em; }
-                .prose h3 { font-size: 1.25em; }
-                .prose p, .prose ul, .prose ol { margin-top: 1.25em; margin-bottom: 1.25em; }
-                .prose a { color: #2563eb; text-decoration: underline; }
-                .prose strong { font-weight: 600; color: #111827; }
-                .prose img { margin: 2em 0; border-radius: 0.375rem; }
-                .prose blockquote {
-                  font-style: italic;
-                  color: #6b7280;
-                  border-left: 4px solid #e5e7eb;
-                  padding-left: 1rem;
-                }
-              `}</style>
-            </article>
-          </div>
+            </>
+          ) : (
+            /* Preview Mode */
+            <Blog
+              title={title}
+              content={content}
+              coverImagePreview={coverImagePreview}
+              hashtags={hashtags}
+            />
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };
