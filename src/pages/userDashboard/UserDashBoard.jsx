@@ -1,8 +1,9 @@
-import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useLogoutMutation } from "../../redux/apiSlice.auth";
 import { useDispatch } from "react-redux";
 import { userlogout } from "../../redux/authSlice";
 import { toast } from "react-toastify";
+
 
 const UserDashBoard = () => {
   const location = useLocation(); // Get the current location
@@ -37,8 +38,6 @@ const UserDashBoard = () => {
     }
   };
 
- 
-
   return (
     <div className=" h-screen ">
       <div className="container mx-auto flex flex-col lg:flex-row gap-8 px-4  py-6">
@@ -47,7 +46,7 @@ const UserDashBoard = () => {
           <h2 className="text-2xl font-serif text-pink-600 mb-6 text-center lg:text-left">
             Dashboard
           </h2>
-          <ul className="space-y-4">
+          <ul className="flex  flex-col space-y-4">
             {navItems.map((item, index) => (
               <li key={index}>
                 <NavLink
@@ -64,13 +63,15 @@ const UserDashBoard = () => {
                 </NavLink>
               </li>
             ))}
+           
           </ul>
           <button
             onClick={() => handleLogout()}
             className="w-full mt-4 px-4 py-3 text-muted text-sm bg-primary rounded-md hover:bg-pink-600 focus:outline-none z-50"
-          >
+              >
             Logout
           </button>
+          
         </div>
 
         {/* Outlet for rendering child components */}
