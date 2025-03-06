@@ -4,7 +4,7 @@ import CreateYourWeddingPlan from "./component/CreateYourWeddingPlan";
 import HeadingCard from "./component/HeadingCard";
 import WeddingEventList from "./component/WeddingEventList";
 import WeddingPlanSideNavber from "./component/WeddingPlanSideNavber";
-import { X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 // import CreateSubEvent from "./component/CreateSubEvent";
 import AddVevdors from "./component/AddVevdors";
 import { useGetWeddingPlanQuery } from "../../redux/weddingPlanSlice";
@@ -46,14 +46,12 @@ const WeddingPlan = () => {
 
   //handle to add task
   const handleOnAddTask = (eventId) => {
-    console.log(eventId)
     setSelectedEvent(eventId);
     setIsActiveTask((prev) => !prev);
   };
   
   //handle to add vendor
   const handleOnAddVendor = (serviceId) => {
-    console.log(serviceId)
     setEventId(serviceId)
     setIsActiveVendor((prev) => !prev);
   };
@@ -81,7 +79,7 @@ const WeddingPlan = () => {
           ["Event Date", moment(event.eventDate).format('DD-MM-YYYY')],
           ["Start Time", moment(event.eventStartTime).format("hh:mm A")],
           ["End Time", moment(event.eventEndTime).format("hh:mm A")],
-          ["Budget", `₹${event.eventBudget}`],
+          ["Budget", `${event.eventBudget}`],
           ["Description", event.eventDescription],
         ],
       });
@@ -90,7 +88,7 @@ const WeddingPlan = () => {
   
       // Vendors Table (if available)
       if (event.eventVendors?.length > 0) {
-        totalExpense = event.eventVendors.reduce((sum, vendor) => sum + vendor.price, 0);
+        totalExpense = event.eventVendors.reduce((sum, vendor) => sum + parseFloat(vendor.price), 0);
   
         doc.text("Vendors", 10, doc.lastAutoTable.finalY + 10);
         autoTable(doc, {
@@ -98,14 +96,14 @@ const WeddingPlan = () => {
           head: [["Vendor Name", "Price", "Unit"]],
           body: event.eventVendors.map((vendor) => [
             vendor.name,
-            `₹${vendor.price}`,
+            `${vendor.price}`,
             vendor.unit,
           ]),
         });
   
         // Display total expense
         doc.text(
-          `Total Expense: ₹${totalExpense}`,
+          `Total Expense: ${totalExpense}`,
           10,
           doc.lastAutoTable.finalY + 10
         );
@@ -128,14 +126,18 @@ const WeddingPlan = () => {
 
   //handle to select suggestion
   const handleToSelectSuggestion =(eventName)=>{
-    console.log(eventName)
     setPreLoadEvent(eventName)
     setIsActiveWeddingPlanForm((prev)=> !prev)
 
   }
 
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error fetching wedding plans.</p>;
+  //handle on share 
+  const handleOnShare =()=>{
+    console.log("clicked share")
+  }
+
+  if (isLoading) return <p className="h-screen flex justify-center items-center gap-3"><Loader2 className="animate-spin"/>Loading</p>;
+  if (error) return <p className="h-screen flex justify-center items-center">Error fetching wedding plans.</p>;
 
  
   return (
@@ -144,7 +146,10 @@ const WeddingPlan = () => {
         <WeddingPlanSideNavber handleToSelectSuggestion={handleToSelectSuggestion}/>
         <div className="w-full p-3">
           <HeadingCard user={user}/>
-          <ActionHeader handleOnEventActive={handleOnActive} handleOnDownloadPlan={()=>handleOnDownloadPlan(data.events)}/>
+          <ActionHeader 
+          handleOnShare={handleOnShare}
+          handleOnEventActive={handleOnActive} 
+          handleOnDownloadPlan={()=>handleOnDownloadPlan(data.events)}/>
           <WeddingEventList
             data={data.events}
             handleOnAddSubEvent={handleOnAddSubEvent}
