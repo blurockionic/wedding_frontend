@@ -6,10 +6,8 @@ import WeddingEventList from "./component/WeddingEventList";
 import WeddingPlanSideNavber from "./component/WeddingPlanSideNavber";
 import { X } from "lucide-react";
 // import CreateSubEvent from "./component/CreateSubEvent";
-import CreateTaskForm from "./component/CreateTaskForm";
 import AddVevdors from "./component/AddVevdors";
 import { useGetWeddingPlanQuery } from "../../redux/weddingPlanSlice";
-import AddTaskOnEvent from "./component/addTaskOnEvent";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import moment from "moment";
@@ -217,7 +215,6 @@ const WeddingPlan = () => {
           {/* //   eventId={selectedEvent.id} 
           //   eventTitle={selectedEvent.title} 
           // /> */}
-          <AddTaskOnEvent eventId={selectedEvent} />
 
 
         {/* )} */}
