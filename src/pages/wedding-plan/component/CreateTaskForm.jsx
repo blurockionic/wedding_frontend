@@ -321,9 +321,8 @@ const CreateTaskForm = ({ eventId, eventTitle, setRefetch }) => {
                       }}
                     />
                   </div>
-                </li>
-              );
-            })}
+              </li>
+            ))}
           </ul>
         )}
       </div>
