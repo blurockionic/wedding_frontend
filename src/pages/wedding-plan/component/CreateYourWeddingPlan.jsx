@@ -2,8 +2,9 @@ import { useForm } from "react-hook-form";
 import { useCreateEventMutation } from "../../../redux/weddingPlanSlice";
 import { Loader2 } from "lucide-react";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
 
-const CreateYourWeddingPlan = ({setRefetch}) => {
+const CreateYourWeddingPlan = ({setRefetch, preLoadEvent}) => {
   
   const [createEvent, { isLoading, error }] = useCreateEventMutation();
 
@@ -11,7 +12,19 @@ const CreateYourWeddingPlan = ({setRefetch}) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+    setValue
+  } = useForm({
+    defaultValues:{
+      eventName: preLoadEvent || "",
+    }
+  });
+
+  // Use effect to update values if preLoadEvent changes
+  useEffect(() => {
+    if (preLoadEvent) {
+      setValue("eventName", preLoadEvent || "");
+    }
+  }, [preLoadEvent, setValue]);
 
   //handle on submit 
   const onSubmit = async(data) => {

@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
-
-const HeadingCard = () => {
+const HeadingCard = ({user}) => {
   return (
     <section className=" p-1 w-full flex items-center">
       <motion.div
@@ -28,7 +27,7 @@ const HeadingCard = () => {
 
         {/* Content */}
         <div className="relative z-10 text-center ">
-            <h1 className="text-5xl font-semibold p-2">Hi, Biruly</h1>
+            <h1 className="text-5xl font-semibold p-2 capitalize">Hi, {user?.user_name}</h1>
           <h1 className="text-2xl font-semibold">Plan your dream wedding with Marriage Vendors ❤️</h1>
         </div>
       </motion.div>

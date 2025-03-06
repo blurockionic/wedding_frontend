@@ -18,7 +18,7 @@ const subEvents = {
   Jainism: ["Lagna Lekhan", "Mangal Pheras"],
 };
 
-const WeddingPlanSideNavber = () => {
+const WeddingPlanSideNavber = ({handleToSelectSuggestion}) => {
   const [query, setQuery] = useState("Hinduism");
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedReligion, setSelectedReligion] = useState("Hinduism");
@@ -80,7 +80,9 @@ const WeddingPlanSideNavber = () => {
           <h3 className="text-lg font-semibold mb-2">Suggested Events ({selectedReligion})</h3>
           <ul className="bg-gray-50 p-2 rounded-md">
             {subEvents[selectedReligion].map((subEvent, index) => (
-              <li key={index} className=" border-primary w-full my-1 cursor-pointer inline-flex items-center justify-center gap-2 ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-white hover:bg-[#F5F5F5] hover:text-primary h-9 rounded-md px-3 group text-lg">
+              <li key={index} 
+              onClick={()=>handleToSelectSuggestion(subEvent)}
+              className=" border-primary w-full my-1 cursor-pointer inline-flex items-center justify-center gap-2 ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-white hover:bg-[#F5F5F5] hover:text-primary h-9 rounded-md px-3 group text-lg">
                 {subEvent}
               </li>
             ))}
