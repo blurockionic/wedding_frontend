@@ -1,11 +1,11 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { FaCheckCircle, FaPlus, FaTimes, FaCalendarAlt, FaTrash } from "react-icons/fa";
 import { BiBell, BiBellPlus } from "react-icons/bi";
 import { useForm } from "react-hook-form";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { Loader2 } from "lucide-react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import { 
   useCreateEventTaskMutation, 
   useGetEventTasksQuery,
@@ -20,7 +20,7 @@ const useMediaQuery = (query) => {
     typeof window !== "undefined" ? window.matchMedia(query).matches : false
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     const media = window.matchMedia(query);
     const listener = () => setMatches(media.matches);
     media.addEventListener("change", listener);
@@ -46,7 +46,9 @@ const CreateTaskForm = ({ eventId, eventTitle, setRefetch }) => {
   const [updateEventTask] = useUpdateEventTaskMutation();
 
   // Access tasks from query result
-  const tasks = taskData || [];
+  const tasks =  [];
+
+  console.log(JSON.stringify(taskData))
 
   const {
     register: registerTask,
@@ -55,6 +57,9 @@ const CreateTaskForm = ({ eventId, eventTitle, setRefetch }) => {
     formState: { errors: taskErrors },
   } = useForm();
 
+  
+
+  //handle for task clicked
   const handleTaskClick = (index) => {
     setClickedIndex(index);
     
@@ -72,6 +77,7 @@ const CreateTaskForm = ({ eventId, eventTitle, setRefetch }) => {
     }, 300);
   };
 
+  // handle for create task 
   const handleAddTask = async (data) => {
     try {
       await createEventTask({
@@ -95,6 +101,7 @@ const CreateTaskForm = ({ eventId, eventTitle, setRefetch }) => {
     }
   };
 
+  //handle for remove task
   const handleRemoveTask = async (index) => {
     const taskId = tasks[index].id;
     try {
@@ -108,6 +115,7 @@ const CreateTaskForm = ({ eventId, eventTitle, setRefetch }) => {
     }
   };
 
+  // handle to change date 
   const handleDateChange = async (date, index) => {
     const taskId = tasks[index].id;
     const dateString = date.toISOString();
@@ -132,6 +140,7 @@ const CreateTaskForm = ({ eventId, eventTitle, setRefetch }) => {
     }
   };
 
+  //handle to update date
   const handleRemoveDate = async (index) => {
     const taskId = tasks[index].id;
     
@@ -258,6 +267,7 @@ const CreateTaskForm = ({ eventId, eventTitle, setRefetch }) => {
       {/* Task List */}
       <div className="mt-4">
         <h4 className="text-lg font-medium text-gray-700 mb-2">Tasks</h4>
+        {/* //todo  */}
         {tasksLoading ? (
           <div className="flex items-center justify-center py-4">
             <Loader2 className="animate-spin text-pink-500" size={24} />
@@ -317,7 +327,7 @@ const CreateTaskForm = ({ eventId, eventTitle, setRefetch }) => {
                     <div className="relative">
                       {task.scheduleDate ? (
                         <BiBell
-                          className="text-pink-500 cursor-pointer hover:text-pink-700 transition-all duration-300 ease-in-out cursor-pointer"
+                          className="text-pink-500  hover:text-pink-700 transition-all duration-300 ease-in-out cursor-pointer"
                           size={18}
                           onClick={(e) => {
                             e.stopPropagation();

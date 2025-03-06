@@ -29,17 +29,55 @@ export const weddingPlanForEventApi = createApi({
           eventStartTime: new Date(`${data.eventDate}T${data.startTime}`).toISOString(),
           eventEndTime: new Date(`${data.eventDate}T${data.endTime}`).toISOString(),
           eventDescription: data.eventDescription
-        }
+        },
+      }),
+      invalidatesTags: ["WeddingPlan"], 
+    }),
+
+    // Delete event 
+    deleteEvent: builder.mutation({
+      query: (eventId) => ({
+        url: `/${eventId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["WeddingPlan"],
+    }),
+
+    // Create sub-event of an event
+    createSubEvent: builder.mutation({
+      query: ({ data, eventId }) => ({
+        url: `/${eventId}/subevent`,
+        method: "POST",
+        body: {
+          subEventName: data.subEventName,
+          subEventDate: new Date(data.subEventDate).toISOString(),
+          subEventBudget: data.subEventBudget,
+          subEventStartTime: new Date(`${data.subEventDate}T${data.subEventStartTime}`).toISOString(),
+          subEventEndTime: new Date(`${data.subEventDate}T${data.subEventEndTime}`).toISOString(),
+          subEventDescription: data.subEventDescription
+        },
+      }),
+      invalidatesTags: ["WeddingPlan"],
+    }),
+
+    // Add service to event
+    addService: builder.mutation({
+      query: ({ serviceId, eventId }) => ({
+        url: `/${eventId}/vendors`,
+        method: "POST",
+        body: { serviceId },
       }),
       invalidatesTags: ["WeddingPlan"],
     }),
 
     // Create event task
     createEventTask: builder.mutation({
-      query: ({data, eventId}) => ({
+      query: ({ tasks, eventId }) => ({
         url: `/task/${eventId}`,
         method: "POST",
-        body: data
+        body: {
+          items: tasks
+        },
       }),
       invalidatesTags: ["EventTask"],
     }),
@@ -55,10 +93,10 @@ export const weddingPlanForEventApi = createApi({
 
     // Update event task
     updateEventTask: builder.mutation({
-      query: ({taskId, data}) => ({
+      query: ({ taskId, data }) => ({
         url: `/task/${taskId}`,
         method: "PUT",
-        body: data
+        body: data,
       }),
       invalidatesTags: ["EventTask"],
     }),
@@ -74,22 +112,34 @@ export const weddingPlanForEventApi = createApi({
 
     // Update task status (complete/incomplete)
     updateTaskStatus: builder.mutation({
-      query: ({taskId, status}) => ({
+      query: ({ taskId, status }) => ({
         url: `/task/status/${taskId}`,
         method: "PATCH",
-        body: { status }
+        body: { status },
       }),
       invalidatesTags: ["EventTask"],
     }),
+
+    //delete event 
+    deleteEventService: builder.mutation({
+      query: ({serviceId, eventId}) => ({
+        url: `/vendor/${eventId}/${serviceId}`,
+        method: "DELETE",
+      })
+    })
   }),
 });
 
 export const {
   useGetWeddingPlanQuery,
   useCreateEventMutation,
+  useDeleteEventMutation,
+  useCreateSubEventMutation,
+  useAddServiceMutation,
   useCreateEventTaskMutation,
   useGetEventTasksQuery,
   useUpdateEventTaskMutation,
   useDeleteEventTaskMutation,
   useUpdateTaskStatusMutation,
+  useDeleteEventServiceMutation,
 } = weddingPlanForEventApi;

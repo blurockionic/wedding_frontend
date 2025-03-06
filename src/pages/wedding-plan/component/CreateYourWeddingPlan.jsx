@@ -1,22 +1,39 @@
 import { useForm } from "react-hook-form";
 import { useCreateEventMutation } from "../../../redux/weddingPlanSlice";
 import { Loader2 } from "lucide-react";
+import { toast } from "react-toastify";
+import { useEffect } from "react";
 
-const CreateYourWeddingPlan = ({setRefetch}) => {
+const CreateYourWeddingPlan = ({setRefetch, preLoadEvent}) => {
+  
   const [createEvent, { isLoading, error }] = useCreateEventMutation();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+    setValue
+  } = useForm({
+    defaultValues:{
+      eventName: preLoadEvent || "",
+    }
+  });
+
+  // Use effect to update values if preLoadEvent changes
+  useEffect(() => {
+    if (preLoadEvent) {
+      setValue("eventName", preLoadEvent || "");
+    }
+  }, [preLoadEvent, setValue]);
 
   //handle on submit 
   const onSubmit = async(data) => {
-    console.log("Form Data:", data);
-    // e.preventDefault();
     try {
-      await createEvent(data).unwrap();
-      alert("Event created successfully!");
+      const response = await createEvent(data).unwrap();
+      const {message, success} =  response
+      if(success){
+        toast.success(message)
+      }
       setRefetch(true)
     } catch (err) {
       console.error("Error creating event:", err);
@@ -145,7 +162,7 @@ const CreateYourWeddingPlan = ({setRefetch}) => {
           <button
             type="submit"
             disabled={isLoading}
-            className="px-5 py-2 font-semibold text-[20px] bg-primary rounded-md w-full text-white mt-10"
+            className="px-5 py-2 flex justify-center items-centerfont-semibold text-[20px] bg-primary rounded-md w-full text-white mt-10"
           >
             {isLoading ? <Loader2 className="animate-spin"/> : "Create Event"}
           </button>

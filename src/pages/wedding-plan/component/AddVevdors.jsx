@@ -5,7 +5,7 @@ import Sidebar from "../../../components/Sidebar";
 import ServiceList from "../../../components/ServiceList";
 import ServiceListForEvent from "./ServiceListForEvent";
 
-function AddVendors() {
+function AddVendors({eventId}) {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const searchType = queryParams.get("search");
@@ -16,6 +16,8 @@ function AddVendors() {
     service_type: searchType,
     status: "active",
   });
+
+  console.log(eventId)
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -118,7 +120,7 @@ function AddVendors() {
               {/* Scrollable Service List */}
               <div className="overflow-y-auto h-[90%] pb-20">
                 {/* <ServiceList services={data?.ServiceResult || []} /> */}
-                <ServiceListForEvent services={data?.ServiceResult || []} />
+                <ServiceListForEvent services={data?.ServiceResult || []} eventId={eventId} />
               </div>
 
               {/* Pagination Controls */}

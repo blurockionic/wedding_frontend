@@ -14,7 +14,9 @@ import { PasswordField } from "../../components/global/inputfield/PasswordField"
 import { InputField } from "../../components/global/inputfield/InputField";
 import { userSchema } from "../../validationSchema/userRegistrationSchema";
 import useProtectAfterLogin from "../../hooks/useProtectAfterLogin";
-import { handleGoogleLogin } from "./Login";
+import { signInWithGoogle } from "../../utils/googleAuthProvider";
+import { useDispatch } from "react-redux";
+import { login } from "../../redux/authSlice";
 
 export default function Signup() {
   useProtectAfterLogin(["user"], "/"); // Protect users already logged in
@@ -22,6 +24,7 @@ export default function Signup() {
   const [isShowPasswordCon, setIsShowPasswordCon] = useState(false);
   const navigate = useNavigate();
    const [googleLoginMutation, ] = useGoogleLoginMutation();
+   const dispatch = useDispatch();
 
   const {
     register,
