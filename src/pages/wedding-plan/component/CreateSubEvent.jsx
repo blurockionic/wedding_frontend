@@ -1,26 +1,40 @@
 import { useForm } from "react-hook-form";
+import { useCreateSubEventMutation } from "../../../redux/weddingPlanSlice";
+import { toast } from "react-toastify";
+import { Loader2 } from "lucide-react";
 
 const CreateSubEvent = () => {
+  const [createSubEvent, {isLoading, error} ] = useCreateSubEventMutation()
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
+  //handle on submit to create sub event
+  const onSubmit = async(data, eventId) => {
     console.log("Form Data:", data);
+    try{
+      const response =  await createSubEvent(data, eventId).unwrap()
+      const {success, message} =  response
+      if(success){
+        toast.success(message)
+      }
+    }catch(error){
+      console.error(error)
+    }
   };
 
   return (
     <div className=" p-3 mt-10 rounded-md">
-       <h1 className="text-3xl px-3 ">Add Sub Event on</h1>
+       <h1 className="text-3xl px-3 ">Create Sub Event</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-4 p-2 rounded-md relative group mt-10">
           <div className="flex flex-wrap gap-4 items-center">
             {/* Event Name */}
             <div className="flex flex-col w-full">
               <p className=" text-xs px-1">
-                Sub-Event Name <span className="text-red-500">*</span>
+                Sub Event Name <span className="text-red-500">*</span>
               </p>
               <input
                 {...register("subEventName", {
@@ -38,15 +52,15 @@ const CreateSubEvent = () => {
             </div>
             {/* Sub Event Budget */}
             <div className="flex flex-col w-full">
-              <p className=" text-xs px-1">
-                Sub-Event Name <span className="text-red-500">*</span>
+              <p className="text-xs px-1">
+                Sub Event Budget <span className="text-red-500">*</span>
               </p>
               <input
                 {...register("subEventBudget", {
-                  required: "Sub-Event Name is required",
+                  required: "Sub-Event budget is required",
                 })}
                 className="mt-1 border rounded p-2"
-                type="text"
+                type="number"
                 placeholder="Sub-Event Budget"
               />
               {errors.subEventBudget && (
@@ -60,7 +74,7 @@ const CreateSubEvent = () => {
 
             <div className="flex flex-col w-full">
               <p className=" text-xs px-1">
-              Sub-Event Date <span className="text-red-500">*</span>
+              Sub Event Date <span className="text-red-500">*</span>
               </p>
               <input
                 {...register("eventDate", {
@@ -111,7 +125,7 @@ const CreateSubEvent = () => {
             {/* Event Description */}
             <div className="flex flex-col w-full">
               <p className=" text-xs px-1">
-              Sub-Event Description <span className="text-red-500">*</span>
+              Sub Event Description <span className="text-red-500">*</span>
               </p>
               <textarea
                 {...register("subEventDescription", {
@@ -132,11 +146,13 @@ const CreateSubEvent = () => {
           {/* Submit Button */}
           <button
             type="submit"
+            disabled={isLoading}
             className="px-5 py-2 bg-primary rounded-md w-full text-white mt-10"
           >
-            Submit
+            {isLoading ? <Loader2 className="animate-spin"/> : "Submit"}
           </button>
         </div>
+        {error && <p className="text-red-500">Error creating sub event</p>}
       </form>
     </div>
   );

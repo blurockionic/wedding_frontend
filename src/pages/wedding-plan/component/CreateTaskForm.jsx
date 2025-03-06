@@ -1,10 +1,10 @@
+import { useState, useRef, useEffect } from "react";
+import { FaCheckCircle, FaPlus, FaTimes, FaCalendarAlt, FaTrash } from "react-icons/fa";
+import { BiBell, BiBellPlus } from "react-icons/bi";
 import { useForm } from "react-hook-form";
 import { FaCheckCircle, FaPlus, FaTimes, FaCalendarAlt } from "react-icons/fa";
 import { Loader2 } from "lucide-react";
-import PropTypes from 'prop-types';
-import { useState } from "react";
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
+import PropTypes from "prop-types";
 import { 
   useCreateEventTaskMutation, 
   useGetEventTasksQuery,
@@ -13,19 +13,29 @@ import {
   useUpdateEventTaskMutation
 } from "../../../redux/weddingPlanSlice";
 
-const TaskForm = ({ eventId, eventTitle }) => {
-  // React Hook Form setup
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      task: "",
-      priority: "Medium"
-    }
-  });
+// Custom hook to detect screen size
+const useMediaQuery = (query) => {
+  const [matches, setMatches] = useState(
+    typeof window !== "undefined" ? window.matchMedia(query).matches : false
+  );
+
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    const listener = () => setMatches(media.matches);
+    media.addEventListener("change", listener);
+    return () => media.removeEventListener("change", listener);
+  }, [query]);
+
+  return matches;
+};
+
+const CreateTaskForm = ({ eventId, eventTitle, setRefetch }) => {
+  const [clickedIndex, setClickedIndex] = useState(null);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [isHovering, setIsHovering] = useState(false);
+  const [scheduleIndex, setScheduleIndex] = useState(null);
+  const isMediumScreenOrSmaller = useMediaQuery("(max-width: 1024px)");
+  const modalRef = useRef(null);
 
   // State for calendar modal
   const [selectedTaskIndex, setSelectedTaskIndex] = useState(null);
@@ -38,8 +48,40 @@ const TaskForm = ({ eventId, eventTitle }) => {
   const [deleteEventTask] = useDeleteEventTaskMutation();
   const [updateEventTask] = useUpdateEventTaskMutation();
 
-  // Handle adding a new task
-  const onSubmit = async (data) => {
+  // Access tasks from query result
+  const taskData =  [];
+
+  console.log(JSON.stringify(taskData))
+
+  const {
+    register: registerTask,
+    handleSubmit: handleTaskSubmit,
+    reset: resetTaskForm,
+    formState: { errors: taskErrors },
+  } = useForm();
+
+  
+
+  //handle for task clicked
+  const handleTaskClick = (index) => {
+    setClickedIndex(index);
+    
+    // Using RTK mutation to toggle status
+    const task = tasks[index];
+    const newStatus = !task.done;
+    
+    updateTaskStatus({
+      taskId: task.id,
+      status: newStatus
+    });
+
+    setTimeout(() => {
+      setClickedIndex(null);
+    }, 300);
+  };
+
+  // handle for create task 
+  const handleAddTask = async (data) => {
     try {
       await createEventTask({
         data: {
@@ -61,24 +103,9 @@ const TaskForm = ({ eventId, eventTitle }) => {
     }
   };
 
-  // Toggle task completion status
-  const handleTaskStatus = async (taskId, currentStatus) => {
-    try {
-      await updateTaskStatus({
-        taskId,
-        status: !currentStatus
-      }).unwrap();
-      
-      refetch();
-    } catch (err) {
-      console.error("Error updating task status:", err);
-    }
-  };
-
-  // Delete a task
-  const handleDeleteTask = async (taskId, e) => {
-    e.stopPropagation(); // Prevent toggling the task status
-    
+  //handle for remove task
+  const handleRemoveTask = async (index) => {
+    const taskId = tasks[index].id;
     try {
       await deleteEventTask(taskId).unwrap();
       refetch();
@@ -87,11 +114,10 @@ const TaskForm = ({ eventId, eventTitle }) => {
     }
   };
 
-  // Update task schedule date
-  const handleSetScheduleDate = async (date) => {
-    if (selectedTaskIndex === null) return;
-    
-    const task = tasks[selectedTaskIndex];
+  // handle to change date 
+  const handleDateChange = async (date, index) => {
+    const taskId = tasks[index].id;
+    const dateString = date.toISOString();
     
     try {
       await updateEventTask({
@@ -111,11 +137,28 @@ const TaskForm = ({ eventId, eventTitle }) => {
     }
   };
 
-  // Open calendar for a specific task
-  const openCalendar = (index, e) => {
-    e.stopPropagation();
-    setSelectedTaskIndex(index);
-    setShowCalendar(true);
+  //handle to update date
+  const handleRemoveDate = async (index) => {
+    const taskId = tasks[index].id;
+    
+    try {
+      await updateEventTask({
+        taskId,
+        data: {
+          ...tasks[index],
+          scheduleDate: null
+        }
+      }).unwrap();
+      
+      // If you're using a refetch pattern like in the first component
+      if (setRefetch) {
+        setRefetch(true);
+      }
+      
+      closeModal();
+    } catch (err) {
+      console.error("Error removing task date:", err);
+    }
   };
 
   return (
@@ -187,7 +230,7 @@ const TaskForm = ({ eventId, eventTitle }) => {
       {/* Task List */}
       <div className="mt-4">
         <h4 className="text-lg font-medium text-gray-700 mb-2">Tasks</h4>
-        
+        {/* //todo  */}
         {tasksLoading ? (
           <div className="flex items-center justify-center py-4">
             <Loader2 className="animate-spin text-pink-500" size={24} />
@@ -238,23 +281,49 @@ const TaskForm = ({ eventId, eventTitle }) => {
                   </span>
                 )}
 
-                {/* Action buttons */}
-                <div className="flex space-x-2">
-                  <button
-                    onClick={(e) => openCalendar(index, e)}
-                    className="text-gray-400 hover:text-pink-600"
-                  >
-                    <FaCalendarAlt size={16} />
-                  </button>
-                  <button 
-                    onClick={(e) => handleDeleteTask(task.id, e)}
-                    className="text-gray-400 hover:text-pink-600"
-                  >
-                    <FaTimes size={16} />
-                  </button>
-                </div>
-              </li>
-            ))}
+                  {/* Icons Container */}
+                  <div className="flex flex-shrink-0 w-auto justify-end items-center space-x-2">
+                    <div className="relative">
+                      {task.scheduleDate ? (
+                        <BiBell
+                          className="text-pink-500  hover:text-pink-700 transition-all duration-300 ease-in-out cursor-pointer"
+                          size={18}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openModal(index);
+                          }}
+                        />
+                      ) : (
+                        <BiBellPlus
+                          className={`transition-all duration-300 ease-in-out text-gray-300 hover:text-pink-600 cursor-pointer ${
+                            hoveredIndex === index || isMediumScreenOrSmaller
+                              ? "visible opacity-100"
+                              : "invisible opacity-0"
+                          }`}
+                          size={18}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openModal(index);
+                          }}
+                        />
+                      )}
+                    </div>
+                    <FaTimes
+                      className={`transition-all duration-300 ml-1 ease-in-out text-gray-300 hover:text-pink-600 ${
+                        hoveredIndex === index || isMediumScreenOrSmaller
+                          ? "visible opacity-100"
+                          : "invisible opacity-0"
+                      }`}
+                      size={18}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveTask(index);
+                      }}
+                    />
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>

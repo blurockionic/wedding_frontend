@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { Trash, Calendar } from "lucide-react";
 
-const EventTask = ({ task, key, onRemove, onSchedule, onUpdate, index }) => {
+const EventTask = ({ task, onRemove, onSchedule, onUpdate, index }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [taskName, setTaskName] = useState(task);
+  const [taskName, setTaskName] = useState(task.task); 
 
   const handleUpdate = () => {
     setIsEditing(false);
-    onUpdate(key, taskName);
+    onUpdate(task.id, taskName); // Use task.id instead of key
   };
+
+  console.log(taskName)
 
   return (
     <div className="flex items-center justify-between p-4 border rounded-lg shadow-md bg-white">
@@ -24,17 +26,15 @@ const EventTask = ({ task, key, onRemove, onSchedule, onUpdate, index }) => {
             onKeyDown={(e) => e.key === "Enter" && handleUpdate()}
           />
         ) : (
-         <>
-          <span>
-            {index + 1}.
-          </span>
-          <span
-            className="px-2 truncate max-w-xs cursor-pointer"
-            onClick={() => setIsEditing(true)}
-          >
-            {taskName}
-          </span>
-         </>
+          <>
+            <span>{index + 1}.</span>
+            <span
+              className="px-2 truncate max-w-xs cursor-pointer"
+              onClick={() => setIsEditing(true)}
+            >
+              {taskName}
+            </span>
+          </>
         )}
       </div>
 
