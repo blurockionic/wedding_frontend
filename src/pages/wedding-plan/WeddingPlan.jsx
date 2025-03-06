@@ -9,7 +9,7 @@ import { X } from "lucide-react";
 import CreateTaskForm from "./component/CreateTaskForm";
 import AddVevdors from "./component/AddVevdors";
 import { useGetWeddingPlanQuery } from "../../redux/weddingPlanSlice";
-
+import AddTaskOnEvent from "./component/addTaskOnEvent";
 
 const WeddingPlan = () => {
   const { data, error, isLoading, refetch } = useGetWeddingPlanQuery();
@@ -17,9 +17,9 @@ const WeddingPlan = () => {
   const [isActiveSubEvent, setIsActiveSubEvent] = useState(false);
   const [isActiveTask, setIsActiveTask] = useState(false);
   const [isActiveVendor, setIsActiveVendor] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
-  const [isRefetchData, setIsRefetchData] =  useState(false)
-
+  const [isRefetchData, setIsRefetchData] = useState(false);
   const [eventId, setEventId] =  useState(null)
 
 
@@ -40,9 +40,12 @@ const WeddingPlan = () => {
   };
 
   //handle to add task
-  const handleOnAddTask = () => {
+  const handleOnAddTask = (eventId) => {
+    console.log(eventId)
+    setSelectedEvent(eventId);
     setIsActiveTask((prev) => !prev);
   };
+  
   //handle to add vendor
   const handleOnAddVendor = (serviceId) => {
     console.log(serviceId)
@@ -92,7 +95,7 @@ const WeddingPlan = () => {
           <X />
         </button>
 
-        <CreateYourWeddingPlan setRefetch={setIsRefetchData}/>
+        <CreateYourWeddingPlan setRefetch={() => setIsRefetchData(true)} />
       </div>
 
       {/* Sliding Form for sub-event */}
@@ -115,16 +118,27 @@ const WeddingPlan = () => {
       <div
         className={`fixed top-0 right-0 h-full w-[500px] bg-white shadow-lg p-6 transform ${
           isActiveTask ? "translate-x-0" : "translate-x-full"
-        } transition-transform duration-300 ease-in-out z-50`}
+        } transition-transform duration-300 ease-in-out z-50 overflow-y-auto`}
       >
         <button
           className="absolute top-4 right-4 text-gray-500 hover:text-red-500"
-          onClick={() => setIsActiveTask(false)}
+          onClick={() => {
+            setIsActiveTask(false);
+            setSelectedEvent(null);
+          }}
         >
           <X />
         </button>
 
-        <CreateTaskForm />
+        {/* {isActiveTask && selectedEvent && ( */}
+          {/* // <CreateTaskForm  */}
+          {/* //   eventId={selectedEvent.id} 
+          //   eventTitle={selectedEvent.title} 
+          // /> */}
+          <AddTaskOnEvent eventId={selectedEvent} />
+
+
+        {/* )} */}
       </div>
 
       {/* Pop-out Form for Vendor */}
@@ -136,7 +150,7 @@ const WeddingPlan = () => {
         {/* Close Button */}
         <button
           className="absolute top-4 right-4 text-gray-500 hover:text-red-500"
-          onClick={() => setIsActiveVendor(false)} // Updated function
+          onClick={() => setIsActiveVendor(false)}
         >
           <X />
         </button>

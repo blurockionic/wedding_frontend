@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Loader2, Plus, X } from "lucide-react";
+import { CalendarCheck, CalendarDays, CalendarMinus, CalendarPlus, ChevronDown, ChevronUp, Delete, DeleteIcon, HandCoins, Loader2, NotebookTabs, Plus, Trash, X } from "lucide-react";
 import moment from "moment";
 // import SubEventView from "./sub-event/SubEventView";
 import EventTask from "./EventTask";
@@ -7,7 +7,6 @@ import { useDeleteEventMutation } from "../../../redux/weddingPlanSlice";
 import { toast } from "react-toastify";
 import ServiceCard from "./ServiceCard";
 import { FiMinusCircle } from "react-icons/fi";
-
 
 const WeddingEventList = ({
   data,
@@ -21,6 +20,9 @@ const WeddingEventList = ({
   const [activeIndex, setActiveIndex] = useState(null);
 
   const [deletEvent, { isLoading, error }] = useDeleteEventMutation();
+
+  const [isToggle, setIsToggle] = useState(false);
+  const [toggledIndex, setToggleIndex] = useState(null);
 
   //handle to add task
   // const handleOnAddSubEventTask = () => {
@@ -85,20 +87,22 @@ const WeddingEventList = ({
     );
   }
 
+  console.log(eventData);
+
   return (
     <section className="bg-gray-100 p-6 mt-10 border-4 border-dashed rounded-md">
       {eventData.map((event, index) => (
         <>
           <div
             key={index}
-            className="flex gap-20 justify-between  mb-4 p-4 bg-white shadow-md rounded-md "
+            className="flex gap-10 justify-between  mb-4 p-4 bg-white shadow-md rounded-md "
           >
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-5 md:gap-10">
               <div className="flex flex-wrap gap-4 items-center">
                 <span>{index + 1}.</span>
                 {/* Editable Event Name */}
                 <div className="flex flex-col">
-                  <p className="font-thin">Event Name</p>
+                  <p className="font-thin flex items-center gap-x-1"><span><CalendarCheck size={16}/></span>Event Name</p>
                   {editingIndexes[`${index}-eventName`] ? (
                     <input
                       className="mt-1 border rounded p-1"
@@ -112,7 +116,7 @@ const WeddingEventList = ({
                     />
                   ) : (
                     <p
-                      className="mt-1 cursor-pointer"
+                      className="mt-1 cursor-pointer capitalize text-green-500 text-xl"
                       onClick={() => toggleEditing(index, "eventName")}
                     >
                       {event.eventName}
@@ -121,8 +125,14 @@ const WeddingEventList = ({
                 </div>
 
                 {/* Editable Event Description */}
-                <div className="flex flex-col">
-                  <p className="font-thin">Event Description</p>
+                <div
+                  className={`${
+                    isToggle && index === toggledIndex
+                      ? "flex flex-col"
+                      : "hidden"
+                  } `}
+                >
+                  <p className="font-thin flex items-center gap-x-1"><span><NotebookTabs size={16}/></span>Description</p>
                   {editingIndexes[`${index}-eventDescription`] ? (
                     <input
                       className="mt-1 border rounded p-1"
@@ -136,7 +146,7 @@ const WeddingEventList = ({
                     />
                   ) : (
                     <p
-                      className="mt-1 w-64 cursor-pointer truncate"
+                      className="mt-1 w-64 cursor-pointer truncate text-xl"
                       onClick={() => toggleEditing(index, "eventDescription")}
                     >
                       {event.eventDescription}
@@ -145,7 +155,7 @@ const WeddingEventList = ({
                 </div>
                 {/* Editable Event Date */}
                 <div className="flex flex-col">
-                  <p className="font-thin">Event Date</p>
+                <p className="font-thin flex items-center gap-x-1"><span><CalendarDays size={16}/></span>Date</p>
                   {editingIndexes[`${index}-eventDate`] ? (
                     <input
                       className="mt-1 border rounded p-1"
@@ -159,7 +169,7 @@ const WeddingEventList = ({
                     />
                   ) : (
                     <p
-                      className="mt-1 cursor-pointer"
+                      className="mt-1 cursor-pointer text-xl"
                       onClick={() => toggleEditing(index, "eventDate")}
                     >
                       {moment(event.eventDate).format("DD-MM-YYYY")}
@@ -168,8 +178,14 @@ const WeddingEventList = ({
                 </div>
 
                 {/* Editable Start Time */}
-                <div className="flex flex-col">
-                  <p className="font-thin">Start Time</p>
+                <div
+                  className={`${
+                    isToggle && index === toggledIndex
+                      ? "flex flex-col"
+                      : "hidden"
+                  } `}
+                >
+                  <p className="font-thin flex items-center gap-x-1"><span><CalendarPlus size={16}/></span>Start Date</p>
                   {editingIndexes[`${index}-eventStartTime`] ? (
                     <input
                       className="mt-1 border rounded p-1"
@@ -183,7 +199,7 @@ const WeddingEventList = ({
                     />
                   ) : (
                     <p
-                      className="mt-1 cursor-pointer"
+                      className="mt-1 cursor-pointer text-xl"
                       onClick={() => toggleEditing(index, "eventStartTime")}
                     >
                       {moment(event.eventStartTime).format("hh:mm A")}
@@ -192,8 +208,14 @@ const WeddingEventList = ({
                 </div>
 
                 {/* Editable End Time */}
-                <div className="flex flex-col">
-                  <p className="font-thin">End Time</p>
+                <div
+                  className={`${
+                    isToggle && index === toggledIndex
+                      ? "flex flex-col"
+                      : "hidden"
+                  } `}
+                >
+                  <p className="font-thin flex items-center gap-x-1"><span><CalendarMinus size={16}/></span>End Date</p>
                   {editingIndexes[`${index}-eventEndTime`] ? (
                     <input
                       className="mt-1 border rounded p-1"
@@ -207,7 +229,7 @@ const WeddingEventList = ({
                     />
                   ) : (
                     <p
-                      className="mt-1 cursor-pointer"
+                      className="mt-1 cursor-pointer text-xl"
                       onClick={() => toggleEditing(index, "eventEndTime")}
                     >
                       {moment(event.eventEndTime).format("hh:mm A")}
@@ -216,8 +238,8 @@ const WeddingEventList = ({
                 </div>
 
                 {/* Editable Event Budget */}
-                <div className="flex flex-col">
-                  <p className="font-thin">Budget</p>
+                <div className={` flex flex-col  `}>
+                <p className="font-thin flex items-center gap-x-1"><span><HandCoins size={16}/></span>Budget</p>
                   {editingIndexes[`${index}-eventBudget`] ? (
                     <input
                       className="mt-1 border rounded p-1"
@@ -231,7 +253,7 @@ const WeddingEventList = ({
                     />
                   ) : (
                     <p
-                      className="mt-1 cursor-pointer"
+                      className="mt-1 cursor-pointer text-red-500 text-xl"
                       onClick={() => toggleEditing(index, "eventBudget")}
                     >
                       ₹{event.eventBudget}
@@ -239,50 +261,76 @@ const WeddingEventList = ({
                   )}
                 </div>
               </div>
-              <div className="flex flex-col ml-12 mt-5">
-                {/* sub event  */}
-                {/* <div>
-                <h1 className="text-md">Sub Event</h1>
-                <SubEventView data={event.subEvent} handleOnAddSubEventTask={handleOnAddSubEventTask} handleOnAddSubEventVendor={handleOnAddSubEventVendor}/>
-              </div> */}
+              <div
+                className={`${
+                  isToggle && index === toggledIndex
+                    ? "flex flex-col"
+                    : "hidden"
+                } `}
+              >
                 {/* task of event  */}
-                <div>
+                <div className="hidden">
                   <h1>Task</h1>
-                  {event.eventTask.map((eventTask, index) => (
+                  {event.eventTask.map((task, index) => (
                     <EventTask
                       index={index}
-                      key={eventTask.id}
-                      task={eventTask.items.task}
+                      key={task.id}
+                      task={task.items}
                       onRemove={handleRemove}
                       onSchedule={handleSchedule}
                     />
                   ))}
                 </div>
                 {/* add vendors */}
-                <div>
-                  <h1>Vendor</h1>
-                    <div className="grid grid-cols-3">
-                      <ServiceCard
-                        key={"1"}
-                        service={[]}
-                        category={"vendor"}
-                        state={"Ranchi"}
-                        subCategory={"caterer"}
-                        city={"chaibasa"}
-                      />
+                <div
+                  className={`${
+                    isToggle && index === toggledIndex
+                      ? "flex flex-col"
+                      : "hidden"
+                  } `}
+                >
+                  {/* <h1>Vendor</h1> */}
+                  <div className="grid grid-cols-3 gap-5">
+                    {event.eventVendors.map((vendor) => (
+                      <ServiceCard key={vendor.id} service={vendor} />
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Floating Button with Hover Menu */}
-            <div className="right-4 top-4 relative">
+            <div className="flex flex-col">
+              <button
+                // disabled={isToggle}
+                className="p-2 text-primary rounded-md"
+                onClick={() => {
+                  setIsToggle((prev) => !prev);
+                  setToggleIndex(index);
+                }}
+              >
+                {isToggle && index === toggledIndex ? (
+                  <ChevronDown size={30} />
+                ) : (
+                  <ChevronUp size={30} />
+                )}
+              </button>
+            
+
+            {/* Floating Button with Hover Menu */}
+            <div
+              className={`${
+                isToggle && index === toggledIndex
+                  ? "right-4 top-4 relative"
+                  : "hidden"
+              }`}
+            >
               <button
                 disabled={isLoading}
-                className="p-2 bg-primary text-white rounded-md"
+                className="p-2 bg-primary text-white rounded-md mr-5"
                 onClick={() => handleOnDelete(event.id)}
               >
-                {isLoading ? <Loader2 className="animate-spin" /> : <X />}
+                {isLoading ? <Loader2 className="animate-spin" /> : <Trash />}
               </button>
               <button
                 className="p-2 bg-primary text-white rounded-md"
@@ -303,26 +351,21 @@ const WeddingEventList = ({
                 >
                   <div className="flex flex-col gap-3">
                     <div
-                      onClick={()=>handleOnAddVendor(event.id)}
+                      onClick={() => handleOnAddVendor(event.id)}
                       className="cursor-pointer p-2 w-full shadow-sm h-16 border border-dashed border-primary text-primary flex justify-center items-center gap-2 rounded-md hover:bg-pink-100"
                     >
                       <Plus /> <span>Vendor</span>
                     </div>
                     <div
-                      onClick={handleOnAddTask}
+                      onClick={() => handleOnAddTask(event.id)}
                       className="cursor-pointer p-2 w-full shadow-sm h-16 border border-dashed flex justify-center items-center gap-2 rounded-md border-primary text-primary  hover:bg-pink-100"
                     >
                       <Plus /> <span>Task</span>
                     </div>
-                    {/* <div
-                    onClick={handleOnAddSubEvent}
-                    className="cursor-pointer p-2 w-full shadow-sm h-16 border border-dashed flex justify-center items-center gap-2 rounded-md border-primary text-primary  hover:bg-pink-100"
-                  >
-                    <Plus /> <span>Sub Event</span>
-                  </div> */}
                   </div>
                 </div>
               )}
+            </div>
             </div>
           </div>
         </>
