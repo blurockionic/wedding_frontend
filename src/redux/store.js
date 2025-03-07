@@ -9,7 +9,7 @@ import favoritesSlice from "./favoriteSlice";
 import { uploadSlice } from "./uploadSlice";
 import { vendorApi } from "./vendorSlice";
 import { paymentApi } from "./payment";
-import { checklistApiSlice } from "./checklistApiSlice"; 
+import { checklistApiSlice } from "./checklistApiSlice";
 
 import { apiGuestSlice } from "./apiSlice.guest";
 import { userDataTemplateSlice } from "./TemplateSlice";
