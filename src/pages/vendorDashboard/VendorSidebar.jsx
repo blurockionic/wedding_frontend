@@ -79,7 +79,7 @@ const VendorSidebar = ({ footer, setIsOpen, isOpen }) => {
             <img src={brandlogo} alt="brandlogo" className="w-10 h-10" />
             <div className="flex flex-col justify-start">
               <span className="text-primary text-xl">Marriage Vendors</span>
-              <span className="text-primary text-xs">Wedding Organiser</span>
+              {/* <span className="text-primary text-xs">Wedding Organiser</span> */}
             </div>
           </NavLink>
 

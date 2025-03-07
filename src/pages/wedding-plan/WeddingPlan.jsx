@@ -28,15 +28,15 @@ const WeddingPlan = () => {
   const [preLoadEvent, setPreLoadEvent] =  useState("")
 
 
+  // refetch the data 
   useEffect(()=>{
-    if(refetch){
-      refetch() //refetch the event 
+      refetch()  
       setIsRefetchData(false)
-    }
   },[isRefetchData, refetch])
 
+  //handle to active create event form
   const handleOnActive = () => {
-    setIsActiveWeddingPlanForm((prev) => !prev); // Toggle the state
+    setIsActiveWeddingPlanForm((prev) => !prev); 
   };
 
   //handle add sub event
@@ -136,6 +136,12 @@ const WeddingPlan = () => {
     console.log("clicked share")
   }
 
+  //handle refech
+  const handleRefech =(value)=>{
+    console.log(value)
+    setIsRefetchData(value)
+  }
+
   if (isLoading) return <p className="h-screen flex justify-center items-center gap-3"><Loader2 className="animate-spin"/>Loading</p>;
   if (error) return <p className="h-screen flex justify-center items-center">Error fetching wedding plans.</p>;
 
@@ -180,7 +186,9 @@ const WeddingPlan = () => {
           <X />
         </button>
 
-        <CreateYourWeddingPlan setRefetch={() => setIsRefetchData(true)} preLoadEvent={preLoadEvent}/>
+        <CreateYourWeddingPlan 
+        setRefetch={handleRefech} 
+        preLoadEvent={preLoadEvent}/>
       </div>
 
       {/* Sliding Form for sub-event */}
