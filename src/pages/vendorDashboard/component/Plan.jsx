@@ -17,11 +17,18 @@ export default function Plan({ displayRazorpay }) {
     );
    
   return (
+    <>
+     <div className="flex justify-start mt-5 px-12">
+      <h2 className="text-xl text-center font-montserrat text-primary  py-3 border-b border-primary">
+        Select plan
+      </h2>
+      </div>
+      
+
     <div className="mx-auto flex justify-center items-center flex-col p-4">
-      <h2 className="text-3xl text-center font-montserrat text-primary mb-6">
+    <h2 className="text-xl text-center font-montserrat bg-primary mb-6 text-white px-3 py-2 rounded-lg">
         Available Plans
       </h2>
-
       <div
         className={`grid gap-5 grid-cols-1 md:grid-cols-2 ustify-center"  ${
           data?.plan?.length >= 3 ? "lg:grid-cols-3" : "lg:grid-cols-2"
@@ -74,5 +81,6 @@ export default function Plan({ displayRazorpay }) {
         ))}
       </div>
     </div>
+    </>
   );
 }
