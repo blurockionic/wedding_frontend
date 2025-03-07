@@ -15,13 +15,14 @@ const Discover = () => {
       title: "Most Rated Wedding Vendors",
       subtitle: "Plan your wedding with ease",
       bgColor: "#DFE6F1",
-      filter: { limit: 4, page: 1, sortBy: "rating", order: "desc" },
+      filter: { limit: 4, page: 1, sort_by: "rating", sort_order: "desc" },
     },
     {
       key: "mostViewed",
       title: "Most Viewed Services",
       subtitle: "Assured quality services",
       bgColor: "#E9F1DF",
+      filter: { limit: 4, page: 1, sort_by: "rating", sort_order: "desc" },
       queryHook: useGetMostViewdServicesQuery,
     },
     {
@@ -33,8 +34,8 @@ const Discover = () => {
         limit: 4,
         page: 1,
         service_type: "caterers",
-        sortBy: "rating",
-        order: "desc",
+        sort_by: "rating",
+        sort_order: "desc",
       },
     },
     {
@@ -46,8 +47,8 @@ const Discover = () => {
         limit: 4,
         page: 1,
         service_type: "Wedding DJ",
-        sortBy: "rating",
-        order: "desc",
+        sort_by: "rating",
+        sort_order: "desc",
       },
     },
   ];
