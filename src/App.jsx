@@ -23,6 +23,7 @@ import { wrap } from "framer-motion";
 const Billing = lazy(() => import("./pages/vendorDashboard/Billing.jsx"));
 
 const Checklist = lazy(() => import("./pages/userDashboard/checklist/Checklist.jsx"));
+const Admin = lazy(() => import("./pages/admin/Dashboard.jsx"));
 
 const Blog = lazy(() => import("./pages/blog-section/blog-section/Blog.jsx"));
 const BlogDashboard = lazy(() => import("./pages/blog-section/admin-section/BlogDashboard.jsx"));
@@ -126,6 +127,7 @@ const router = createBrowserRouter([
       { path: "/new-blog-post", element: wrapWithSuspense(NewBlogPost)},
       { path: "/blogs", element: wrapWithSuspense(BlogList)},
       { path: "/", element: wrapWithSuspense(LandingPage) },
+      { path: "/admin", element: wrapWithSuspense(Admin) },
       { path: "/signup", element: wrapWithSuspense(Signup) },
       { path: "/templates", element: wrapWithSuspense(Template) },
       { path: "/browse", element: wrapWithSuspense(Review) },
@@ -148,7 +150,11 @@ const router = createBrowserRouter([
       { path: "/view_1", element: wrapWithSuspense(View_1) },
       { path: "/login", element: wrapWithSuspense(Login) },
       { path: "/contactus", element: wrapWithSuspense(ContactUs) },
+
+      { path: "/checklist", element: wrapWithSuspense(Checklist) },
+
       { path: "/weddingplan", element: wrapWithSuspense(WeddingDairy) },
+
       // dynamic route for category
       { path: "/all", element: wrapWithSuspense(AllCategories) },
       { path: "/all/:category", element: wrapWithSuspense(Category) },

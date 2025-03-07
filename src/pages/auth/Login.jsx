@@ -64,6 +64,24 @@ export default function Login() {
         reset();
         toast.success(message);
 
+
+        const from = location.state?.from || "/";
+        if (user.role == "ADMIN" || user.role == "SUPER_ADMIN"){
+          navigate("/admin");
+        }
+        else{
+          navigate(from);
+        }
+        
+        // if (location.state?.isBuyClicked && isBuyClicked===true || location.state?.from || "/payment") {
+        //   navigate("/payment");
+        // }
+        // else {
+        //   const from = location.state?.from || "/";
+        //   navigate(from);  
+        // }
+
+
       }
     } catch (error) {
       const errorMessage =
