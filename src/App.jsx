@@ -94,15 +94,17 @@ const VendorSetting = lazy(() =>
   import("./pages/vendorDashboard/VendorsSetting.jsx")
 );
 const Template = lazy(() => import("./pages/InvitationTemplates/Template.jsx"));
+const Review = lazy(() => import("./pages/BrowseTemplate/Review.jsx"));
 const View = lazy(() => import("./pages/ViewTemplate/View.jsx"));
 const View_1 = lazy(() => import("./pages/ViewTemplate/View_1.jsx"));
 const Payment = lazy(() => import("./pages/InvitationPayment/Payment.jsx"));
 const Preview = lazy(() => import("./pages/EditTemplate/Preview.jsx"));
 const Preview_1 = lazy(() => import("./pages/EditTemplate/Preview_1.jsx"));
+const Preview_2 = lazy(() => import("./pages/EditTemplate/Preview_2.jsx"));
 const Card = lazy(() => import("./pages/InvitationCard/Card.jsx"));
 const Guest = lazy(() => import("./pages/AddGuests/Guest.jsx"));
 const Modify = lazy(() => import("./pages/UpdatedTemplate/Modify.jsx"));
-const Modify_1 = lazy(() => import("./pages/UpdatedTemplate/Modify_1.jsx"));
+
 
 const WeddingDairy  = lazy(()=> import("./pages/wedding-plan/WeddingPlan.jsx"))
 
@@ -126,13 +128,22 @@ const router = createBrowserRouter([
       { path: "/", element: wrapWithSuspense(LandingPage) },
       { path: "/signup", element: wrapWithSuspense(Signup) },
       { path: "/templates", element: wrapWithSuspense(Template) },
+      { path: "/browse", element: wrapWithSuspense(Review) },
       { path: "/card", element: wrapWithSuspense(Card) },
       { path: "/guests", element: wrapWithSuspense(Guest) },
+
       { path: "/guests/see-template/template", element: wrapWithSuspense(Modify) },
       { path: "/guests/see-template/template1", element: wrapWithSuspense(Modify_1) },
+
+      {
+        path: "/guests/see-template/:template",
+        element: wrapWithSuspense(Modify),
+      },
+
       { path: "/payment", element: wrapWithSuspense(Payment) },
       { path: "/preview", element: wrapWithSuspense(Preview) },
       { path: "/preview_1", element: wrapWithSuspense(Preview_1) },
+      { path: "/preview_2", element: wrapWithSuspense(Preview_2) },
       { path: "/view", element: wrapWithSuspense(View) },
       { path: "/view_1", element: wrapWithSuspense(View_1) },
       { path: "/login", element: wrapWithSuspense(Login) },

@@ -1,25 +1,54 @@
 import { useForm } from "react-hook-form";
+import { useCreateEventMutation } from "../../../redux/weddingPlanSlice";
+import { Loader2 } from "lucide-react";
+import { toast } from "react-toastify";
+import { useEffect } from "react";
 
-const CreateYourWeddingPlan = () => {
+const CreateYourWeddingPlan = ({setRefetch, preLoadEvent}) => {
+  
+  const [createEvent, { isLoading, error }] = useCreateEventMutation();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+    setValue
+  } = useForm({
+    defaultValues:{
+      eventName: preLoadEvent || "",
+    }
+  });
 
-  const onSubmit = (data) => {
-    console.log("Form Data:", data);
+  // Use effect to update values if preLoadEvent changes
+  useEffect(() => {
+    if (preLoadEvent) {
+      setValue("eventName", preLoadEvent || "");
+    }
+  }, [preLoadEvent, setValue]);
+
+  //handle on submit 
+  const onSubmit = async(data) => {
+    try {
+      const response = await createEvent(data).unwrap();
+      const {message, success} =  response
+      if(success){
+        toast.success(message)
+      }
+      setRefetch(true)
+    } catch (err) {
+      console.error("Error creating event:", err);
+    }
   };
 
   return (
-    <div className=" p-2 mt-10 rounded-md border-yellow">
-       <h1 className="text-3xl p-3">Create Your Event</h1>
+    <div className=" p-2 mt-10 rounded-md border-yellow ">
+       <h1 className="px-3 text-3xl">Create Your Event</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-1 p-4 rounded-md relative group mt-4">
           <div className="flex flex-wrap gap-4 items-center">
             {/* Event Name */}
             <div className="flex flex-col w-full">
-              <p className="text-md px-1">
+              <p className="text-xs px-1">
                 Event Name <span className="text-red-500">*</span>
               </p>
               <input
@@ -31,14 +60,14 @@ const CreateYourWeddingPlan = () => {
                 placeholder="Event Name"
               />
               {errors.eventName && (
-                <span className="text-red-500 text-md">
+                <span className="text-red-500 text-xs">
                   {errors.eventName.message}
                 </span>
               )}
             </div>
             {/* Event Name */}
             <div className="flex flex-col w-full">
-              <p className="text-md px-1">
+              <p className="text-xs px-1">
                 Event budget <span className="text-red-500">*</span>
               </p>
               <input
@@ -50,7 +79,7 @@ const CreateYourWeddingPlan = () => {
                 placeholder="Event Budget"
               />
               {errors.eventBudget && (
-                <span className="text-red-500 text-md">
+                <span className="text-red-500 text-xs">
                   {errors.eventBudget.message}
                 </span>
               )}
@@ -59,7 +88,7 @@ const CreateYourWeddingPlan = () => {
             {/* Date, Start Time, End Time */}
 
             <div className="flex flex-col w-full">
-              <p className="text-md px-1">
+              <p className="text-xs px-1">
                 Event Date <span className="text-red-500">*</span>
               </p>
               <input
@@ -70,13 +99,13 @@ const CreateYourWeddingPlan = () => {
                 type="date"
               />
               {errors.eventDate && (
-                <span className="text-red-500 text-md">
+                <span className="text-red-500 text-xs">
                   {errors.eventDate.message}
                 </span>
               )}
             </div>
             <div className="flex flex-col w-full">
-              <p className="text-md px-1">
+              <p className="text-xs px-1">
                 Start From <span className="text-red-500">*</span>
               </p>
               <input
@@ -87,13 +116,13 @@ const CreateYourWeddingPlan = () => {
                 type="time"
               />
               {errors.startTime && (
-                <span className="text-red-500 text-md">
+                <span className="text-red-500 text-xs">
                   {errors.startTime.message}
                 </span>
               )}
             </div>
             <div className="flex flex-col w-full">
-              <p className="text-md px-1">
+              <p className="text-xs px-1">
                 End At <span className="text-red-500">*</span>
               </p>
               <input
@@ -102,7 +131,7 @@ const CreateYourWeddingPlan = () => {
                 type="time"
               />
               {errors.endTime && (
-                <span className="text-red-500 text-md">
+                <span className="text-red-500 text-xs">
                   {errors.endTime.message}
                 </span>
               )}
@@ -110,7 +139,7 @@ const CreateYourWeddingPlan = () => {
 
             {/* Event Description */}
             <div className="flex flex-col w-full">
-              <p className="text-md  px-1">
+              <p className="text-xs  px-1">
                 Event Description <span className="text-red-500">*</span>
               </p>
               <textarea
@@ -132,11 +161,13 @@ const CreateYourWeddingPlan = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="px-5 py-2 font-semibold text-[20px] bg-primary rounded-md w-full text-white mt-10"
+            disabled={isLoading}
+            className="px-5 py-2 flex justify-center items-centerfont-semibold text-[20px] bg-primary rounded-md w-full text-white mt-10"
           >
-            Submit
+            {isLoading ? <Loader2 className="animate-spin"/> : "Create Event"}
           </button>
         </div>
+        {error && <p className="text-red-500">Error creating event</p>}
       </form>
     </div>
   );
