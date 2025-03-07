@@ -71,13 +71,12 @@ export const weddingPlanForEventApi = createApi({
     }),
 
     // Create event task
+    
     createEventTask: builder.mutation({
-      query: ({ tasks, eventId }) => ({
+      query: ({ data, eventId }) => ({
         url: `/task/${eventId}`,
         method: "POST",
-        body: {
-          items: tasks
-        },
+        body: data,  // Simply pass the data object directly
       }),
       invalidatesTags: ["EventTask"],
     }),

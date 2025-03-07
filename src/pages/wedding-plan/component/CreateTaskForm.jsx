@@ -1,9 +1,7 @@
-import { useState, useRef, useEffect } from "react";
-import { FaCheckCircle, FaPlus, FaTimes, FaCalendarAlt, FaTrash } from "react-icons/fa";
-import { BiBell, BiBellPlus } from "react-icons/bi";
+import { useState, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { FaCheckCircle, FaPlus, FaTimes, FaCalendarAlt } from "react-icons/fa";
 import { Loader2 } from "lucide-react";
+import { toast } from "react-toastify";
 import PropTypes from "prop-types";
 import { 
   useCreateEventTaskMutation, 
@@ -12,78 +10,177 @@ import {
   useDeleteEventTaskMutation,
   useUpdateEventTaskMutation
 } from "../../../redux/weddingPlanSlice";
+import { FaCheckCircle, FaTimes } from "react-icons/fa";
+import { BiBell, BiBellPlus } from "react-icons/bi";
 
-// Custom hook to detect screen size
-const useMediaQuery = (query) => {
-  const [matches, setMatches] = useState(
-    typeof window !== "undefined" ? window.matchMedia(query).matches : false
+// A separate EventTask component with defensive checks and logging
+const EventTask = ({
+  task,
+  index,
+  onToggleStatus,
+  onRemoveTask,
+  onOpenModal,
+  hoveredIndex,
+  isMediumScreenOrSmaller
+}) => {
+  // Defensive check for undefined task
+  if (!task) {
+    console.error(`EventTask: task is undefined at index ${index}`);
+    return <div>Task data is missing.</div>;
+  }
+
+  return (
+    <li
+      key={task.id}
+      className={`flex items-center p-3 rounded-md transition-all duration-300 ease-in-out ${
+        task.done ? "bg-gray-50 text-gray-400" : "bg-white text-gray-700"
+      } ${
+        task.priority === "High" ? "border-l-4 border-red-400" :
+        task.priority === "Medium" ? "border-l-4 border-yellow-400" :
+        "border-l-4 border-green-400"
+      } hover:shadow-md`}
+      onMouseEnter={() => onToggleStatus(index, "enter")}
+      onMouseLeave={() => onToggleStatus(index, "leave")}
+    >
+      <div 
+        className="cursor-pointer mr-3"
+        onClick={() => onToggleStatus(task.id, task.done)}
+      >
+        <FaCheckCircle
+          className={`transition-all duration-150 ${
+            task.done
+              ? "text-primary"
+              : "text-gray-300 hover:text-primary"
+          }`}
+          size={20}
+        />
+      </div>
+
+      <div 
+        className="flex-1 min-w-0 cursor-pointer"
+        onClick={() => onToggleStatus(task.id, task.done)}
+      >
+        <span
+          className={`leading-relaxed transition-all whitespace-normal block ${
+            task.done ? "line-through opacity-50" : ""
+          }`}
+          style={{ wordBreak: "break-word" }}
+        >
+          {task.name}
+        </span>
+      </div>
+
+      {task.scheduleDate && (
+        <span className="text-xs bg-gray-100 text-gray-800 rounded-full px-2 py-1 mr-2">
+          {new Date(task.scheduleDate).toLocaleDateString()}
+        </span>
+      )}
+
+      <div className="flex flex-shrink-0 w-auto justify-end items-center space-x-3">
+        <div className="relative">
+          {task.scheduleDate ? (
+            <BiBell
+              className="text-primary hover:text-gray-700 transition-all duration-300 ease-in-out cursor-pointer"
+              size={18}
+              onClick={() => onOpenModal(index)}
+            />
+          ) : (
+            <BiBellPlus
+              className={`transition-all duration-300 ease-in-out text-gray-300 hover:text-primary cursor-pointer ${
+                hoveredIndex === index || isMediumScreenOrSmaller
+                  ? "visible opacity-100"
+                  : "invisible opacity-0"
+              }`}
+              size={18}
+              onClick={() => onOpenModal(index)}
+            />
+          )}
+        </div>
+        <FaTimes
+          className={`transition-all duration-300 ease-in-out text-gray-300 hover:text-red-500 ${
+            hoveredIndex === index || isMediumScreenOrSmaller
+              ? "visible opacity-100"
+              : "invisible opacity-0"
+          }`}
+          size={18}
+          onClick={() => onRemoveTask(index)}
+        />
+      </div>
+    </li>
   );
+};
 
-  useEffect(() => {
-    const media = window.matchMedia(query);
-    const listener = () => setMatches(media.matches);
-    media.addEventListener("change", listener);
-    return () => media.removeEventListener("change", listener);
-  }, [query]);
-
-  return matches;
+EventTask.propTypes = {
+  task: PropTypes.object,
+  index: PropTypes.number.isRequired,
+  onToggleStatus: PropTypes.func.isRequired,
+  onRemoveTask: PropTypes.func.isRequired,
+  onOpenModal: PropTypes.func.isRequired,
+  hoveredIndex: PropTypes.number,
+  isMediumScreenOrSmaller: PropTypes.bool.isRequired,
 };
 
 const CreateTaskForm = ({ eventId, eventTitle, setRefetch }) => {
-  const [clickedIndex, setClickedIndex] = useState(null);
-  const [hoveredIndex, setHoveredIndex] = useState(null);
-  const [isHovering, setIsHovering] = useState(false);
-  const [scheduleIndex, setScheduleIndex] = useState(null);
-  const isMediumScreenOrSmaller = useMediaQuery("(max-width: 1024px)");
-  const modalRef = useRef(null);
-
-  // State for calendar modal
+  console.log("CreateTaskForm: eventId =", eventId);
   const [selectedTaskIndex, setSelectedTaskIndex] = useState(null);
   const [showCalendar, setShowCalendar] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
   
-  // RTK Query hooks
-  const { data: tasks = [], isLoading: tasksLoading, refetch } = useGetEventTasksQuery(eventId);
-  const [createEventTask, { isLoading: isCreatingTask }] = useCreateEventTaskMutation();
+  // RTK Query hooks for fetching tasks
+  const { data: tasksData, isLoading: tasksLoading, refetch } = useGetEventTasksQuery(eventId);
+  // Ensure tasks is an array (adjust based on your API response structure)
+  const tasks = useMemo(() => Array.isArray(tasksData) ? tasksData : tasksData?.tasks || [], [tasksData]);
+  
+  useEffect(() => {
+    console.log("Fetched tasks:", tasks);
+  }, [tasks]);
+
+  const [createEventTask, { isLoading: isCreatingTask, error }] = useCreateEventTaskMutation();
   const [updateTaskStatus] = useUpdateTaskStatusMutation();
   const [deleteEventTask] = useDeleteEventTaskMutation();
   const [updateEventTask] = useUpdateEventTaskMutation();
 
-  // Access tasks from query result
-  const taskData =  [];
-
-  console.log(JSON.stringify(taskData))
-
   const {
-    register: registerTask,
-    handleSubmit: handleTaskSubmit,
-    reset: resetTaskForm,
-    formState: { errors: taskErrors },
-  } = useForm();
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset
+  } = useForm({
+    defaultValues: {
+      task: "",
+      priority: "Medium"
+    }
+  });
 
+  // Custom hook for media query
+  const useMediaQuery = (query) => {
+    const [matches, setMatches] = useState(
+      typeof window !== "undefined" ? window.matchMedia(query).matches : false
+    );
   
-
-  //handle for task clicked
-  const handleTaskClick = (index) => {
-    setClickedIndex(index);
-    
-    // Using RTK mutation to toggle status
-    const task = tasks[index];
-    const newStatus = !task.done;
-    
-    updateTaskStatus({
-      taskId: task.id,
-      status: newStatus
-    });
-
-    setTimeout(() => {
-      setClickedIndex(null);
-    }, 300);
+    useEffect(() => {
+      const media = window.matchMedia(query);
+      const listener = () => setMatches(media.matches);
+      media.addEventListener("change", listener);
+      return () => media.removeEventListener("change", listener);
+    }, [query]);
+  
+    return matches;
   };
 
-  // handle for create task 
-  const handleAddTask = async (data) => {
+  const isMediumScreenOrSmaller = useMediaQuery("(max-width: 1024px)");
+
+  // Handle create task form submission
+  const onSubmit = async (data) => {
     try {
-      await createEventTask({
+      if (!eventId) {
+        toast.error("Event ID is missing");
+        return;
+      }
+      
+      console.log("onSubmit: Using eventId:", eventId, "Form data:", data);
+
+      const response = await createEventTask({
         data: {
           name: data.task,
           priority: data.priority,
@@ -93,32 +190,64 @@ const CreateTaskForm = ({ eventId, eventTitle, setRefetch }) => {
         eventId
       }).unwrap();
       
-      // Reset form
+      toast.success(response.message || "Task added successfully");
       reset();
-      
-      // Refresh task list
       refetch();
+      if (setRefetch) setRefetch(true);
     } catch (err) {
       console.error("Error creating task:", err);
+      toast.error("Failed to create task");
     }
   };
 
-  //handle for remove task
+  // Toggle task status (done/undone)
+  const handleTaskStatus = async (taskId, currentStatus) => {
+    try {
+      console.log("Toggling status for taskId:", taskId, "Current status:", currentStatus);
+      await updateTaskStatus({
+        taskId,
+        status: !currentStatus
+      }).unwrap();
+      refetch();
+      if (setRefetch) setRefetch(true);
+    } catch (err) {
+      console.error("Error updating task status:", err);
+    }
+  };
+
+  // Remove a task
   const handleRemoveTask = async (index) => {
+    if (!tasks[index]) {
+      console.error("handleRemoveTask: No task found at index", index);
+      return;
+    }
     const taskId = tasks[index].id;
     try {
       await deleteEventTask(taskId).unwrap();
+      toast.success("Task removed");
       refetch();
+      if (setRefetch) setRefetch(true);
     } catch (err) {
       console.error("Error deleting task:", err);
+      toast.error("Failed to remove task");
     }
   };
 
-  // handle to change date 
-  const handleDateChange = async (date, index) => {
-    const taskId = tasks[index].id;
-    const dateString = date.toISOString();
+  // Open calendar modal to set schedule date
+  const openModal = (index) => {
+    setSelectedTaskIndex(index);
+    setShowCalendar(true);
+  };
+
+  // Set schedule date for a task
+  const handleSetScheduleDate = async (date) => {
+    if (selectedTaskIndex === null) return;
     
+    const task = tasks[selectedTaskIndex];
+    if (!task) {
+      console.error("handleSetScheduleDate: Task not found at index", selectedTaskIndex);
+      return;
+    }
     try {
       await updateEventTask({
         taskId: task.id,
@@ -128,200 +257,119 @@ const CreateTaskForm = ({ eventId, eventTitle, setRefetch }) => {
         }
       }).unwrap();
       
-      // Close calendar and refresh
+      toast.success(date ? "Task scheduled" : "Schedule removed");
       setShowCalendar(false);
-      setSelectedTaskIndex(null);
       refetch();
+      if (setRefetch) setRefetch(true);
     } catch (err) {
       console.error("Error updating task date:", err);
+      toast.error("Failed to update schedule");
     }
   };
 
-  //handle to update date
-  const handleRemoveDate = async (index) => {
-    const taskId = tasks[index].id;
-    
-    try {
-      await updateEventTask({
-        taskId,
-        data: {
-          ...tasks[index],
-          scheduleDate: null
-        }
-      }).unwrap();
-      
-      // If you're using a refetch pattern like in the first component
-      if (setRefetch) {
-        setRefetch(true);
-      }
-      
-      closeModal();
-    } catch (err) {
-      console.error("Error removing task date:", err);
+  // Handle hover events for tasks (for visual effects)
+  const handleHover = (index, action) => {
+    if (action === "enter") {
+      setHoveredIndex(index);
+    } else if (action === "leave") {
+      setHoveredIndex(null);
     }
   };
 
   return (
-    <div className="p-4 bg-white shadow-lg rounded-lg border-4 border-pink-300">
-      <h1 className="text-2xl font-semibold text-pink-600 mb-3">
-        {eventTitle || "Event Tasks"}
-      </h1>
-
-      {/* Task form using React Hook Form */}
-      <form onSubmit={handleSubmit(onSubmit)} className="mb-6">
-        <div className="mb-1 p-4 rounded-md relative group">
+    <div className="p-2 mt-10 rounded-md border-yellow">
+      <h1 className="px-3 text-3xl">{eventTitle || "Event Tasks"}</h1>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="mb-1 p-4 rounded-md relative group mt-4">
           <div className="flex flex-wrap gap-4 items-center">
-            {/* Task Name */}
+            {/* Task Name Input */}
             <div className="flex flex-col w-full">
               <p className="text-xs px-1">
                 Task Name <span className="text-red-500">*</span>
               </p>
-              <div className="flex items-center mt-1">
-                <button 
-                  type="submit" 
-                  className="mr-2"
-                  disabled={isCreatingTask}
-                >
-                  {isCreatingTask ? (
-                    <Loader2 className="animate-spin text-pink-500" size={20} />
-                  ) : (
-                    <FaPlus className="text-pink-500 hover:text-pink-600" size={20} />
-                  )}
-                </button>
-                <input
-                  {...register("task", {
-                    required: "Task name is required",
-                    maxLength: {
-                      value: 100,
-                      message: "Task name cannot exceed 100 characters"
-                    }
-                  })}
-                  className="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-pink-300"
-                  type="text"
-                  placeholder="Add a new task"
-                />
-              </div>
+              <input
+                {...register("task", {
+                  required: "Task name is required",
+                  maxLength: {
+                    value: 100,
+                    message: "Task name cannot exceed 100 characters"
+                  }
+                })}
+                className="mt-1 border rounded p-2"
+                type="text"
+                placeholder="Add a new task"
+              />
               {errors.task && (
                 <span className="text-red-500 text-xs">
                   {errors.task.message}
                 </span>
               )}
             </div>
-
-            {/* Priority */}
+            {/* Priority Select */}
             <div className="flex flex-col w-full">
               <p className="text-xs px-1">
                 Priority <span className="text-red-500">*</span>
               </p>
               <select
                 {...register("priority")}
-                className="mt-1 border rounded p-2 focus:outline-none focus:ring-2 focus:ring-pink-300"
+                className="mt-1 border rounded p-2"
                 defaultValue="Medium"
               >
                 <option value="Low">Low</option>
                 <option value="Medium">Medium</option>
                 <option value="High">High</option>
               </select>
+              {errors.priority && (
+                <span className="text-red-500 text-xs">
+                  {errors.priority.message}
+                </span>
+              )}
             </div>
           </div>
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={isCreatingTask}
+            className="px-5 py-2 flex justify-center items-center font-semibold text-[20px] bg-primary rounded-md w-full text-white mt-10"
+          >
+            {isCreatingTask ? <Loader2 className="animate-spin" /> : "Add Task"}
+          </button>
         </div>
+        {error && <p className="text-red-500">Error creating task</p>}
       </form>
-
+      
       {/* Task List */}
-      <div className="mt-4">
-        <h4 className="text-lg font-medium text-gray-700 mb-2">Tasks</h4>
-        {/* //todo  */}
+      <div className="mt-8 px-3">
+        <h4 className="text-xl font-medium mb-4">Your Tasks</h4>
         {tasksLoading ? (
-          <div className="flex items-center justify-center py-4">
-            <Loader2 className="animate-spin text-pink-500" size={24} />
+          <div className="flex items-center justify-center py-6">
+            <Loader2 className="animate-spin text-primary" size={24} />
             <span className="ml-2 text-gray-500">Loading tasks...</span>
           </div>
+        ) : !Array.isArray(tasks) ? (
+          <p className="text-gray-500 italic py-4">Error loading tasks</p>
         ) : tasks.length === 0 ? (
-          <p className="text-gray-500 italic">No tasks yet. Add one above.</p>
+          <p className="text-gray-500 italic py-4">No tasks yet. Add one above.</p>
         ) : (
-          <ul className="space-y-2">
+          <ul className="space-y-3">
             {tasks.map((task, index) => (
-              <li
-                key={task.id}
-                className={`flex items-center space-x-2 cursor-pointer group transition-all duration-300 ease-in-out ${
-                  task.done ? "text-gray-400" : "text-gray-700"
-                } ${
-                  task.priority === "High" ? "border-l-4 border-red-400 pl-2" :
-                  task.priority === "Medium" ? "border-l-4 border-yellow-400 pl-2" :
-                  "border-l-4 border-green-400 pl-2"
-                }`}
-                onClick={() => handleTaskStatus(task.id, task.done)}
-              >
-                <FaCheckCircle
-                  className={`transition-all duration-150 ${
-                    task.done
-                      ? "text-pink-500"
-                      : "text-gray-300 group-hover:text-pink-400"
-                  }`}
-                  size={20}
-                />
-
-                <div className="flex-1 min-w-0">
-                  <span
-                    className={`leading-relaxed transition-all whitespace-normal block ${
-                      task.done
-                        ? "line-through opacity-50"
-                        : "group-hover:text-pink-600"
-                    }`}
-                    style={{ wordBreak: "break-word" }}
-                  >
-                    {task.name}
-                  </span>
-                </div>
-
-                {/* Task schedule date badge */}
-                {task.scheduleDate && (
-                  <span className="text-xs bg-pink-100 text-pink-800 rounded-full px-2 py-1">
-                    {new Date(task.scheduleDate).toLocaleDateString()}
-                  </span>
-                )}
-
-                  {/* Icons Container */}
-                  <div className="flex flex-shrink-0 w-auto justify-end items-center space-x-2">
-                    <div className="relative">
-                      {task.scheduleDate ? (
-                        <BiBell
-                          className="text-pink-500  hover:text-pink-700 transition-all duration-300 ease-in-out cursor-pointer"
-                          size={18}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            openModal(index);
-                          }}
-                        />
-                      ) : (
-                        <BiBellPlus
-                          className={`transition-all duration-300 ease-in-out text-gray-300 hover:text-pink-600 cursor-pointer ${
-                            hoveredIndex === index || isMediumScreenOrSmaller
-                              ? "visible opacity-100"
-                              : "invisible opacity-0"
-                          }`}
-                          size={18}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            openModal(index);
-                          }}
-                        />
-                      )}
-                    </div>
-                    <FaTimes
-                      className={`transition-all duration-300 ml-1 ease-in-out text-gray-300 hover:text-pink-600 ${
-                        hoveredIndex === index || isMediumScreenOrSmaller
-                          ? "visible opacity-100"
-                          : "invisible opacity-0"
-                      }`}
-                      size={18}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleRemoveTask(index);
-                      }}
-                    />
-                  </div>
-              </li>
+              <EventTask
+                key={task?.id || index}
+                task={task}
+                index={index}
+                onToggleStatus={(idOrIndex, statusOrAction) => {
+                  // Differentiate between hover events and status toggling
+                  if (typeof statusOrAction === "string") {
+                    handleHover(index, statusOrAction);
+                  } else {
+                    handleTaskStatus(idOrIndex, statusOrAction);
+                  }
+                }}
+                onRemoveTask={handleRemoveTask}
+                onOpenModal={openModal}
+                hoveredIndex={hoveredIndex}
+                isMediumScreenOrSmaller={isMediumScreenOrSmaller}
+              />
             ))}
           </ul>
         )}
@@ -332,19 +380,20 @@ const CreateTaskForm = ({ eventId, eventTitle, setRefetch }) => {
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center" onClick={() => setShowCalendar(false)}>
           <div className="bg-white rounded-xl shadow-2xl p-6 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-pink-600">Schedule Task</h2>
-              <button onClick={() => setShowCalendar(false)} className="text-gray-400 hover:text-pink-600">
+              <h2 className="text-xl font-bold text-primary">Schedule Task</h2>
+              <button onClick={() => setShowCalendar(false)} className="text-gray-400 hover:text-primary">
                 <FaTimes size={20} />
               </button>
             </div>
             
-            <h3 className="text-lg font-medium mb-3">{tasks[selectedTaskIndex]?.name}</h3>
+            <h3 className="text-lg font-medium mb-3">
+              {tasks[selectedTaskIndex]?.name || "Task name not available"}
+            </h3>
             
-            <Calendar
-              onChange={(date) => handleSetScheduleDate(date)}
-              value={tasks[selectedTaskIndex]?.scheduleDate ? new Date(tasks[selectedTaskIndex].scheduleDate) : null}
-              className="w-full border rounded-lg p-2 mb-4"
-            />
+            <div className="mb-4 text-center text-gray-500">
+              {/* Placeholder for a calendar component */}
+              Calendar component would render here
+            </div>
             
             <div className="flex justify-between">
               {tasks[selectedTaskIndex]?.scheduleDate && (
@@ -357,7 +406,7 @@ const CreateTaskForm = ({ eventId, eventTitle, setRefetch }) => {
               )}
               
               <button
-                className="bg-pink-600 hover:bg-pink-700 text-white font-medium py-2 px-6 rounded-md ml-auto"
+                className="bg-primary hover:bg-opacity-90 text-white font-medium py-2 px-6 rounded-md ml-auto"
                 onClick={() => setShowCalendar(false)}
               >
                 Close
@@ -370,13 +419,14 @@ const CreateTaskForm = ({ eventId, eventTitle, setRefetch }) => {
   );
 };
 
-TaskForm.propTypes = {
+CreateTaskForm.propTypes = {
   eventId: PropTypes.string.isRequired,
-  eventTitle: PropTypes.string
+  eventTitle: PropTypes.string,
+  setRefetch: PropTypes.func
 };
 
-TaskForm.defaultProps = {
-  eventTitle: 'Event Tasks'
+CreateTaskForm.defaultProps = {
+  eventTitle: "Event Tasks"
 };
 
-export default TaskForm;
+export default CreateTaskForm;

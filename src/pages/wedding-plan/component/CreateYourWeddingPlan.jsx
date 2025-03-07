@@ -3,6 +3,7 @@ import { useCreateEventMutation } from "../../../redux/weddingPlanSlice";
 import { Loader2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
+import PropTypes from "prop-types";
 
 const CreateYourWeddingPlan = ({setRefetch, preLoadEvent}) => {
   
@@ -171,6 +172,10 @@ const CreateYourWeddingPlan = ({setRefetch, preLoadEvent}) => {
       </form>
     </div>
   );
+};
+CreateYourWeddingPlan.propTypes = {
+  setRefetch: PropTypes.func.isRequired,
+  preLoadEvent: PropTypes.string
 };
 
 export default CreateYourWeddingPlan;
