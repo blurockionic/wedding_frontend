@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CalendarCheck, CalendarDays, CalendarMinus, CalendarPlus, ChevronDown, ChevronUp, Delete, DeleteIcon, HandCoins, Loader2, NotebookTabs, Plus, Trash, X } from "lucide-react";
 import moment from "moment";
 // import SubEventView from "./sub-event/SubEventView";
-import EventTask from "./EventTask";
+// import EventTask from "./EventTask";
 import { useDeleteEventMutation } from "../../../redux/weddingPlanSlice";
 import { toast } from "react-toastify";
 import ServiceCard from "./ServiceCard";
@@ -269,7 +269,7 @@ const WeddingEventList = ({
                 } `}
               >
                 {/* task of event  */}
-                <div className="hidden">
+                {/* <div className="hidden">
                   <h1>Task</h1>
                   {event.eventTask.map((task, index) => (
                     <EventTask
@@ -280,7 +280,7 @@ const WeddingEventList = ({
                       onSchedule={handleSchedule}
                     />
                   ))}
-                </div>
+                </div> */}
                 {/* add vendors */}
                 <div
                   className={`${

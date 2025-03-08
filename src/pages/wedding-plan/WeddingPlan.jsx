@@ -12,6 +12,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import moment from "moment";
 import { useSelector } from "react-redux";
+import CreateTaskForm from "./component/CreateTaskForm";
 
 
 const WeddingPlan = () => {
@@ -223,14 +224,12 @@ const WeddingPlan = () => {
           <X />
         </button>
 
-        {/* {isActiveTask && selectedEvent && ( */}
-          {/* // <CreateTaskForm  */}
-          {/* //   eventId={selectedEvent.id} 
-          //   eventTitle={selectedEvent.title} 
-          // /> */}
-
-
-        {/* )} */}
+        {isActiveTask && selectedEvent && ( 
+            <CreateTaskForm
+            eventId={selectedEvent} 
+            eventTitle={selectedEvent} 
+            />
+        )}  
       </div>
 
       {/* Pop-out Form for Vendor */}
