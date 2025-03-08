@@ -1,4 +1,3 @@
-import React from "react";
 import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -73,14 +72,6 @@ export default function Login() {
           navigate(from);
         }
         
-        // if (location.state?.isBuyClicked && isBuyClicked===true || location.state?.from || "/payment") {
-        //   navigate("/payment");
-        // }
-        // else {
-        //   const from = location.state?.from || "/";
-        //   navigate(from);  
-        // }
-
 
       }
     } catch (error) {

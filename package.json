@@ -15,7 +15,7 @@
     "@reduxjs/toolkit": "^2.4.0",
     "@tailwindcss/typography": "^0.5.16",
     "aos": "^2.3.4",
-    "axios": "^1.7.9",
+    "axios": "^1.7.9",  
     "chartjs-plugin-datalabels": "^2.2.0",
     "country-state-city": "^3.2.1",
     "dotenv": "^16.4.7",

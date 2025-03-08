@@ -127,7 +127,7 @@ export default function VendorLogin() {
         <div className="flex justify-center items-center cusrsor-pointer py-4 ">
           <NavLink
             to="/"
-            className="flex flex-col items-center gap-3 cursor-pointer mt-12"
+            className="flex flex-col items-center gap-3 cursor-pointer mt-10"
           >
             <img src={brandlogo} alt="brandlogo" className="w-16 h-16" />
             <div className="flex flex-col justify-start">
@@ -136,7 +136,7 @@ export default function VendorLogin() {
             </div>
           </NavLink>
         </div>
-        <div className="min-h-1/2  grid grid-cols-1 md:grid-cols-2 px-5 sm:px-10 md:px-16 lg:px-20 py-10 gap-10 md:mt-5">
+        <div className="min-h-1/2  grid grid-cols-1 md:grid-cols-2 px-5 sm:px-10 md:px-16 lg:px-20 py-10 gap-10 ">
           <div className="space-y-12 md:space-y-24">
             <div className="space-y-5">
               <h1
@@ -202,7 +202,7 @@ export default function VendorLogin() {
         </Link> */}
           </div>
           {/* vendor login  */}
-          <div className="flex items-center justify-center md:mt-5">
+          <div className="flex items-center justify-center md:mt-3">
             <div
               className="w-full 
       sm:w-96 sm:bg-card bg-transparent

@@ -10,15 +10,59 @@ const weddingEvents = [
 ];
 
 const subEvents = {
-  Hinduism: ["Haldi Ceremony", "Mehendi Function", "Sangeet Night"],
-  Christianity: ["Bridal Shower", "Wedding Mass", "Reception"],
-  Islam: ["Nikah Ceremony", "Walima Reception"],
+  Hinduism: [
+    "Engagement Ceremony (Sagai)",
+    "Mehendi Ceremony",
+    "Sangeet Ceremony",
+    "Tilak Ceremony",
+    "Haldi Ceremony",
+    "Roka Ceremony",
+    "Wedding Day Ceremonies",
+    " Vidaai",
+    "Reception",
+    "Blessing Ceremony (Aashirvaad)",
+    "Dwar Rokai and Griha Pravesh",
+    "Mooh Dikhai and Pag Phera:",
+  ],
+  Christianity: [
+    "Processional",
+    "Presentation",
+    "Moment of Silence",
+    "Homily",
+    "Prayer",
+    "Exchanging of Vows",
+    "Unity Ceremony",
+    "Exchanging of Rings",
+    "Pronouncement",
+    "Recessional",
+  ],
+  Islam: ["Salat al-Istikhara – Prayers to Allah",
+   " Imam Zamin – Groom’s mother to bless the bride",
+   " Mangni – The ring ceremony",
+    "Manjha – Haldi Ceremony",
+    "Heena aka Mehndi time",
+   " Sanchaq – Groom’s family visit",
+   " Baraat arrival – Here comes the King",
+    "Nikah – The Main Ceremony",
+    "Fatiha – First verse of holy Quran",
+    "Mehar – A contract for life",
+    "Arsi Mushraf – See through Mirror",
+    "Rukhsat – The Goodbyes"
+    ],
   Sikhism: ["Anand Karaj", "Reception"],
-  Buddhism: ["Buddhist Blessing Ceremony"],
+  Buddhism: [
+    "Decorations",
+    "The Couple’s Outfits",
+    "The Event Coordinator",
+    "Meditations and Readings",
+    "Vows",
+    "Offerings to the Buddha",
+    "Blessings by Monks"
+    ],
   Jainism: ["Lagna Lekhan", "Mangal Pheras"],
 };
 
-const WeddingPlanSideNavber = ({handleToSelectSuggestion}) => {
+const WeddingPlanSideNavber = ({ handleToSelectSuggestion }) => {
   const [query, setQuery] = useState("Hinduism");
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedReligion, setSelectedReligion] = useState("Hinduism");
@@ -77,12 +121,16 @@ const WeddingPlanSideNavber = ({handleToSelectSuggestion}) => {
       {/* Sub-Events List */}
       {selectedReligion && subEvents[selectedReligion] && (
         <div className="mt-4">
-          <h3 className="text-lg font-semibold mb-2">Suggested Events ({selectedReligion})</h3>
+          <h3 className="text-lg font-semibold mb-2">
+            Suggested Events ({selectedReligion})
+          </h3>
           <ul className="bg-gray-50 p-2 rounded-md">
             {subEvents[selectedReligion].map((subEvent, index) => (
-              <li key={index} 
-              onClick={()=>handleToSelectSuggestion(subEvent)}
-              className=" border-primary w-full my-1 cursor-pointer inline-flex items-center justify-center gap-2 ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-white hover:bg-[#F5F5F5] hover:text-primary h-9 rounded-md px-3 group text-lg">
+              <li
+                key={index}
+                onClick={() => handleToSelectSuggestion(subEvent)}
+                className=" border-primary w-full my-1 cursor-pointer inline-flex items-center justify-start gap-2 ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-white hover:bg-[#F5F5F5] hover:text-primary h-9 rounded-md px-3 group text-sm"
+              >
                 {subEvent}
               </li>
             ))}

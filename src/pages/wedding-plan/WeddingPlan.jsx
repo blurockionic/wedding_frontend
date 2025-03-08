@@ -154,6 +154,7 @@ const WeddingPlan = () => {
         <div className="w-full p-3">
           <HeadingCard user={user}/>
           <ActionHeader 
+          eventSummary = {data.event_summary}
           handleOnShare={handleOnShare}
           handleOnEventActive={handleOnActive} 
           handleOnDownloadPlan={()=>handleOnDownloadPlan(data.events)}/>
