@@ -173,15 +173,41 @@ html {
   background-position: top;
   background-repeat: no-repeat;
 }
-.browse_image_card{
+.browse_image_card {
+  background: url("../public/image_7.jpg");
+  position:relative;
+  background-size: 100% ;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.browse_image_card_3 {
   background: url("../public/image_7.jpg");
   background-size: cover;
   position: relative;
   background-position: center;
   background-repeat: no-repeat;
 }
+.shadow_1{
+box-shadow:
+  inset #6e749b2b 3px 3px 4px 1px;}
+
+.browse_image_card_1 {
+  width:150px;
+  background: url("../public/image_7.jpg");
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
 .gradient-background {
-  background: linear-gradient(44deg,#FCE7F3,#fc94c8,#f38bf8,#C6AAFD,#f4c6f7,#FCE7F3);
+  background: linear-gradient(
+    44deg,
+    #fce7f3,
+    #fc94c8,
+    #f38bf8,
+    #c6aafd,
+    #f4c6f7,
+    #fce7f3
+  );
   background-size: 240% 240%;
   animation: gradient-animation 6s ease infinite;
 }
@@ -760,18 +786,12 @@ html {
   align-items: center;
 }
 .prev2_sec_53_1 {
-  height: 100%;
-  width: 100%;
-  border-radius: 15px;
   background: url("../public/image_7.jpg");
-  background-size: contain;
-  position: relative;
-  background-position: center;
+  background-size:100% 100%;
+  background-position:center;
   background-repeat: no-repeat;
   background-color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  position: relative;
 }
 .pre_1 {
   height: 50%;
@@ -4159,7 +4179,7 @@ html {
     border-radius: 15px;
     align-items: center;
   }
-  .day1{
+  .day1 {
     font-size: 12px;
     margin-top: -12px;
   }
@@ -4236,32 +4256,32 @@ html {
     height: 20px;
     width: 50px;
   }
-  .pre_2{
+  .pre_2 {
     font-size: 12px;
   }
-  .pre_3{
+  .pre_3 {
     font-size: 12px;
   }
-  .pre_4{
+  .pre_4 {
     font-size: 22px;
     margin-top: -2px;
   }
-  .pre_5{
+  .pre_5 {
     margin-top: -10px;
   }
-  .pre_6{
+  .pre_6 {
     font-size: 22px;
     margin-top: -5px;
   }
-  .pre_7{
+  .pre_7 {
     font-size: 12px;
     margin-top: 0px;
-    height:100px;
+    height: 100px;
   }
-  .day{
+  .day {
     margin-top: -10px;
   }
-  .day1{
+  .day1 {
     font-size: 8px;
     margin-top: -20px;
   }
@@ -4294,33 +4314,33 @@ html {
     color: #fff;
     cursor: pointer;
   }
-  .another_pre_2{
+  .another_pre_2 {
     font-size: 8px;
   }
-  .another_pre_3{
+  .another_pre_3 {
     font-size: 8px;
     margin-top: -15px;
   }
-  .another_pre_4{
+  .another_pre_4 {
     font-size: 12px;
     margin-top: -15px;
   }
-  .pre_5{
+  .pre_5 {
     font-size: 10px;
     margin-top: -18px;
   }
-  .another_pre_6{
+  .another_pre_6 {
     font-size: 12px;
     margin-top: -20px;
   }
-  .another_pre_7{
+  .another_pre_7 {
     margin-top: -1px;
   }
-  .another_day{
+  .another_day {
     font-size: 6px;
     margin-top: -25px;
   }
-  .another_day1{
+  .another_day1 {
     font-size: 7px;
     margin-top: -50px;
     margin-left: 40px;
