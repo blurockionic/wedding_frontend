@@ -5,6 +5,7 @@ import ServiceList from "../../../components/ServiceList";
 import Sidebar from "../../../components/Sidebar";
 import { FilterIcon, X } from "lucide-react";
 
+
 const CategoryByCity = () => {
   const { category, subcategory, state, city } = useParams();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -79,7 +80,7 @@ const CategoryByCity = () => {
         </div>
 
         <h2 className="text-lg font-semibold">Filters</h2>
-        <Sidebar city={city} state={state} onFilterChange={handleFilterChange} />
+        <Sidebar filters={filters}  onFilterChange={handleFilterChange} />
       </aside>
 
       {/* Service Listings */}
