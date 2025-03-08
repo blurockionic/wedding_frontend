@@ -105,3 +105,5 @@ export const allCategories = {
   "Bride": (brides || []).map((bride) => bride?.name || bride),
   "Groom":(grooms || []).map((groom) => groom?.name || groom),
 };
+
+
