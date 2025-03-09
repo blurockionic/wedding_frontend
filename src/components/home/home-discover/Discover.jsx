@@ -58,7 +58,6 @@ const Discover = () => {
     queryHook ? queryHook() : useGetServicesQuery(filter)
   );
 
-
   return (
     <div className="my-10">
       {serviceFilters.map(({ key, title, subtitle, bgColor }, index) => {
@@ -82,20 +81,29 @@ const Discover = () => {
 // Reusable Section Component
 const Section = ({ title, subtitle, children, bgColor }) => (
   <div
-    className="w-[90%] my-10 rounded-2xl px-2 lg:px-10 mx-auto pt-10 "
+    className="w-[90%] my-10 rounded-2xl px-1 md:px-4 lg:px-10 mx-auto pt-10"
     style={{ backgroundColor: bgColor }}
   >
-    <div className="flex justify-between">
+    <div className="flex justify-center md:justify-between">
       <CustomText
         as="h2"
         text={title}
-        className="text-4xl font-bold   capitalize"
+        className="text-3xl md:text-4xl font-bold text-center md:text-start capitalize"
       />
-
-      <button className="py-2 px-4 border-2  border-white cursor-pointer capitalize">explore more </button>
+      <button className="hidden md:block py-2 px-4 border-2 border-white cursor-pointer capitalize rounded-md">
+        explore more
+      </button>
     </div>
 
-    <div className="relative flex md:px-0 py-10 lg:py-10">{children}</div>
+    {/* Centering children on mobile */}
+    <div className="relative flex flex-col items-center md:items-start mx-auto md:px-0 py-10 lg:py-10">
+      {children}
+    </div>
+    <div className="flex justify-center items-center py-5 md:py-0">
+      <button className="block md:hidden py-2 px-20 border-2 border-white cursor-pointer capitalize rounded-md">
+        explore more
+      </button>
+    </div>
   </div>
 );
 

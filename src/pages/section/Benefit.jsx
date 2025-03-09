@@ -33,7 +33,7 @@ const BenefitsData = [
 
 const Benefits = () => {
   return (
-    <section className=" bg-gray-100 p-20">
+    <section className=" bg-gray-100 md:p-20 p-4">
      
         <div className="text-center ">
           <h1 className="lg:text-5xl text-3xl mb-20  font-bold  text-gray-600">

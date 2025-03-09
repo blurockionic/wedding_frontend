@@ -20,7 +20,7 @@ const ServiceList = ({ services }) => {
   // );
 
 return (
-  <div className="rounded-lg flex-wrap flex gap-8 justify-start items-start">
+  <div className="rounded-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6">
   {services.map((service, index) => (
     <ServiceCard key={index} service={service} />
   ))}
