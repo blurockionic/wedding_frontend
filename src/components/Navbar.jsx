@@ -37,7 +37,6 @@ function Navbar() {
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
-  console.log(allCategories);
 
   return (
     <>

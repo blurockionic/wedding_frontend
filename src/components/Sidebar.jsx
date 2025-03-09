@@ -1,81 +1,113 @@
-import React, { memo, useState, useEffect } from "react";
+import React, { memo, useState, useEffect, useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { SelectField } from "./global/select/SelectField";
-
 import RangeSlider from "./global/RangeSlider";
-import {
-  brides,
-  grooms,
-  weddingVendors,
-  weddingVenues,
-} from "../../src/static/static";
+// import {
+//   brides,
+//   grooms,
+//   weddingVendors,
+//   weddingVenues,
+// } from "../../src/static/static";
+import { useNavigate, useLocation } from "react-router-dom";
+import LocationSearch from "./LocationSearch/LocationSearch";
 
-
-const Sidebar = memo(({ state, city, onFilterChange }) => {
+const Sidebar = memo(({ filters, onFilterChange }) => {
   const { register, handleSubmit, reset, setValue, watch } = useForm({
     defaultValues: {
-      city,
-      state,
-      minPrice: "0",
-      maxPrice: "1000",
-      rating: "",
-      sort_by: "",
-      sort_order: "",
-      selectedService: "",
+      city: filters?.city || "",
+      state: filters?.state || "",
+      minPrice: filters?.minPrice || "0",
+      maxPrice: filters?.maxPrice || "1000",
+      rating: filters?.rating || "",
+      sort_by: filters?.sort_by || "",
+      sort_order: filters?.sort_order || "",
+      selectedService: filters?.selectedService || "",
     },
   });
 
-  const [serviceOptions, setServiceOptions] = useState([]);
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [selectedCategory, setSelectedCategory] = useState("");
 
-  useEffect(() => {
-    switch (selectedCategory) {
-      case "Bride":
-        setServiceOptions(brides);
-        break;
-      case "Groom":
-        setServiceOptions(grooms);
-        break;
-      case "Wedding Vendor":
-        setServiceOptions(weddingVendors);
-        break;
-      case "Wedding Venue":
-        setServiceOptions(weddingVenues);
-        break;
-      default:
-        setServiceOptions([]);
-    }
-    setValue("selectedService", "");
-  }, [selectedCategory]);
+  /** ✅ Fix 1: Memoize service options to avoid recalculation */
+  // const serviceOptions = useMemo(() => {
+  //   switch (selectedCategory) {
+  //     case "Bride":
+  //       return brides;
+  //     case "Groom":
+  //       return grooms;
+  //     case "Wedding Vendor":
+  //       return weddingVendors;
+  //     case "Wedding Venue":
+  //       return weddingVenues;
+  //     default:
+  //       return [];
+  //   }
+  // }, [selectedCategory]);
 
-  const handleFilterChange = (data) => {
-    const filters = {};
-    [
-      "city",
-      "state",
-      "rating",
-      "selectedService",
-      "sort_by",
-      "sort_order",
-    ].forEach((key) => {
-      if (data[key]) filters[key] = data[key];
-    });
-    ["minPrice", "maxPrice"].forEach((key) => {
-      const value = parseFloat(data[key]);
-      if (!isNaN(value)) filters[key] = value.toFixed(2);
-    });
-    onFilterChange(filters);
-  };
+  useEffect(() => {
+    if (selectedCategory) {
+      setValue("selectedService", "");
+    }
+  }, [selectedCategory, setValue]);
+
+  const setSearchLocation = useCallback(
+    (selectedCity) => {
+      if (!selectedCity) return;
+
+      const [getSelectedState, getSelectedCity] = selectedCity.split("/");
+
+      if (
+        watch("city") === getSelectedCity &&
+        watch("state") === getSelectedState
+      ) {
+        return; // Skip update if values are the same
+      }
+
+      setValue("city", getSelectedCity, { shouldDirty: true });
+      setValue("state", getSelectedState, { shouldDirty: true });
+
+      // Ensure correct path structure before updating
+
+      console.log(location.pathname);
+
+      const pathSegments = location.pathname.split("/");
+      console.log(pathSegments);
+
+      if (pathSegments.length >= 3) {
+        pathSegments[5] = getSelectedCity.toLowerCase(); // Update city
+        pathSegments[4] = getSelectedState.toLowerCase(); // Update state
+      }
+
+      pathSegments.splice(6);
+
+      navigate(pathSegments.join("/"), { replace: true });
+    },
+
+    [setValue, navigate, location, watch]
+  );
+
+  const handleFilterChange = useCallback(
+    (data) => {
+      if (JSON.stringify(data) !== JSON.stringify(filters)) {
+        onFilterChange(data);
+      }
+    },
+    [onFilterChange, filters]
+  );
 
   return (
     <div className="w-full p-4">
       <form onSubmit={handleSubmit(handleFilterChange)} className="space-y-4">
+        <LocationSearch setSearchLocation={setSearchLocation} />
+
         {selectedCategory && (
           <SelectField
             id="selectedService"
-            label="service"
+            label="Service"
             value={watch("selectedService")}
-            placeholder={"select service"}
+            placeholder="Select Service"
             options={serviceOptions.map((service) => ({
               value: service,
               label: service,
@@ -98,6 +130,7 @@ const Sidebar = memo(({ state, city, onFilterChange }) => {
             }}
           />
         </div>
+
         <div className="grid grid-cols-2 gap-2">
           {[4, 3, 2, 1].map((value) => (
             <label
@@ -114,6 +147,7 @@ const Sidebar = memo(({ state, city, onFilterChange }) => {
             </label>
           ))}
         </div>
+
         <SelectField
           id="sort_by"
           placeholder="Sort By"
@@ -124,6 +158,7 @@ const Sidebar = memo(({ state, city, onFilterChange }) => {
           ]}
           register={register}
         />
+
         <SelectField
           id="sort_order"
           placeholder="Sort Order"
@@ -133,6 +168,7 @@ const Sidebar = memo(({ state, city, onFilterChange }) => {
           ]}
           register={register}
         />
+
         <div className="flex gap-2">
           <button
             type="submit"

@@ -4,35 +4,25 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../../components/global/button/CustomButton";
 import CustomInput from "../../components/global/inputfield/CustomInput";
-import { GoLocation, GoSearch } from "react-icons/go";
-import Discover from "../../components/home/home-discover/Discover.jsx";
+import {  GoSearch } from "react-icons/go";
 import { Helmet } from "react-helmet-async";
 import { allCategories } from "../../static/static";
-import { useGetServicesQuery } from "../../redux/serviceSlice";
 import { toast } from "react-toastify";
+import LocationSearch from "../../components/LocationSearch/LocationSearch";
 
 export default function Home() {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
-  const [location, setLocation] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [locationSuggestions, setLocationSuggestions] = useState({});
-  const [showlocationSuggestions, setShowlocationSuggestions] = useState(false);
-  const [originalLocationData, setOriginalLocationData] = useState({});
-  const [categroy, setCategory] = useState("")
-  const [searchLocation, setSearchLocation] = useState("")
-
-  const { data, error, isLoading } = useGetServicesQuery();
-
+  const [categroy, setCategory] = useState("");
+  const [searchLocation, setSearchLocation] = useState("");
   useEffect(() => {
     Aos.init({
       duration: 1000,
     });
-    // fetchStatesAndCities();
   }, []);
 
-  //handle on change vendors
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearch(value);
@@ -53,79 +43,21 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-
-    if (!data?.ServiceResult) return;
-
-    const filterData = data.ServiceResult.reduce((acc, service) => {
-      if (service.state) {
-        acc[service.state] = acc[service.state] || [];
-        acc[service.state].push(service.city);
-      }
-      return acc;
-    }, {});
-
-    //set data
-    setOriginalLocationData(filterData); // Store original data
-    setLocationSuggestions(filterData);
-  }, [data]);
-
-
   // set value on input field
   const handleSuggestionClick = (category, subcategory) => {
-    // console.log(category, subcategory)
     setSearch(`${subcategory}`);
-    // this for search
-    setCategory(`${category}/${subcategory}`)
+    setCategory(`${category}/${subcategory}`);
     setShowSuggestions(false);
   };
 
-  //handle on location
-  const handleSearchLocationChange = (e) => {
-    const searchLocation = e.target.value;
-    setLocation(searchLocation);
-
-    if (searchLocation) {
-      const filteredLocation = Object.entries(originalLocationData).reduce(
-        (acc, [state, cities]) => {
-          const filteredCities = cities.filter((city) =>
-            city.toLowerCase().startsWith(searchLocation.toLowerCase())
-          );
-
-          if (filteredCities.length > 0) {
-            acc[state] = filteredCities;
-          }
-          return acc;
-        },
-        {}
-      );
-
-      setLocationSuggestions(filteredLocation);
-      setShowlocationSuggestions(Object.keys(filteredLocation).length > 0);
-    } else {
-      setShowlocationSuggestions(false);
-      setLocationSuggestions(originalLocationData); // Reset to original data
-    }
-  };
-
-  //set wedding location
-  const handleLocationClick = (state, city) => {
-    setLocation(`${city}`);
-    //this is for search
-    setSearchLocation(`${state}/${city}`)
-    setShowlocationSuggestions(false);
-  };
-
-  // navigate to specific services 
   const handleNavigate = () => {
-    if(categroy && searchLocation){
+    if (categroy && searchLocation) {
       navigate(`/all/${categroy}/${searchLocation}`);
-    }else if(searchLocation){
-      toast.error("Please select vendor")
-    }else if(categroy){
-      navigate(`/all/${categroy}`)
-    }
-    else{
+    } else if (searchLocation) {
+      toast.error("Please select vendor");
+    } else if (categroy) {
+      navigate(`/all/${categroy}`);
+    } else {
       navigate(`/all`);
     }
   };
@@ -235,11 +167,11 @@ export default function Home() {
                 aria-label="Select Vendor"
                 value={search}
                 onChange={handleSearchChange}
-                onFocus={() => setShowSuggestions(true)} 
+                onFocus={() => setShowSuggestions(true)}
                 onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
                 leftIcon={<GoSearch size={20} />}
               />
-            
+
               {showSuggestions && suggestions.length > 0 && (
                 <ul className="absolute bg-white border border-gray-300 rounded w-[400px] shadow-lg mt-1 z-20 overflow-auto max-h-[200px]">
                   {suggestions.map(({ category, subcategories }, index) => (
@@ -264,42 +196,7 @@ export default function Home() {
 
             {/* Location Input */}
             <div className="relative w-[400px]">
-              <CustomInput
-                type="text"
-                value={location}
-                placeholder="In Location"
-                className="w-full outline-none focus:border-white bg-white "
-                aria-label="Location"
-                onChange={handleSearchLocationChange}
-               
-                leftIcon={<GoLocation size={20} />}
-              />
-              {showlocationSuggestions &&
-                Object.keys(locationSuggestions).length > 0 && (
-                  <ul className="absolute bg-white border border-gray-300 rounded w-full shadow-lg mt-1 z-20 overflow-auto max-h-[300px]">
-                    {Object.entries(locationSuggestions).map(
-                      ([state, cities]) => (
-                        <li key={state} className="border-b border-gray-200">
-                          
-                          
-                            <ul className=" bg-white">
-                              {cities.map((city, index) => (
-                                <li
-                                  key={index}
-                                  className="px-4 py-2 hover:bg-gray-200 cursor-pointer capitalize"
-                                  onClick={() => handleLocationClick(state,city)}
-                                >
-                                  {city}
-                                </li>
-                              ))}
-                            </ul>
-                         
-                          
-                        </li>
-                      )
-                    )}
-                  </ul>
-                )}
+              <LocationSearch setSearchLocation={setSearchLocation} />
             </div>
 
             {/* Discover Button */}
@@ -313,9 +210,6 @@ export default function Home() {
           </div>
         </section>
       </div>
-
-     
-    
     </>
   );
 }
