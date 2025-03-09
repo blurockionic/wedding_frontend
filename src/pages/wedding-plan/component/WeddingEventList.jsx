@@ -27,6 +27,8 @@ import { FaCheckCircle, FaTimes } from "react-icons/fa";
 import { BiBell, BiBellPlus } from "react-icons/bi";
 import { useEffect } from "react";
 
+
+
 // A separate EventTask component with defensive checks and logging
 const EventTask = ({
   task,
@@ -43,6 +45,8 @@ const EventTask = ({
     return <div>Task data is missing.</div>;
   }
 
+  
+
   return (
     <li
       key={task.id}
@@ -50,10 +54,10 @@ const EventTask = ({
         task.done ? "bg-gray-50 text-gray-400" : "bg-white text-gray-700"
       } ${
         task.priority === "High"
-          ? "border-l-4 border-red-400"
+          ? "border-l-8 border-red-400"
           : task.priority === "Medium"
-          ? "border-l-4 border-yellow-400"
-          : "border-l-4 border-green-400"
+          ? "border-l-8 border-yellow-400"
+          : "border-l-8 border-green-400"
       } hover:shadow-md`}
       onMouseEnter={() => onToggleStatus(index, "enter")}
       onMouseLeave={() => onToggleStatus(index, "leave")}
@@ -76,7 +80,7 @@ const EventTask = ({
       >
         <span
           className={`leading-relaxed transition-all whitespace-normal block ${
-            task.done ? "line-through opacity-50" : ""
+            task.done ? "line-through opacity-50 bg-gray-400" : ""
           }`}
           style={{ wordBreak: "break-word" }}
         >
@@ -133,6 +137,8 @@ EventTask.propTypes = {
   hoveredIndex: PropTypes.number,
   isMediumScreenOrSmaller: PropTypes.bool.isRequired,
 };
+
+
 
 const WeddingEventList = ({
   data,

@@ -12,6 +12,8 @@ import {
 } from "../../../redux/weddingPlanSlice";
 import { FaCheckCircle, FaTimes } from "react-icons/fa";
 import { BiBell, BiBellPlus } from "react-icons/bi";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 
 // A separate EventTask component with defensive checks and logging
 const EventTask = ({
@@ -21,7 +23,11 @@ const EventTask = ({
   onRemoveTask,
   onOpenModal,
   hoveredIndex,
-  isMediumScreenOrSmaller
+  isMediumScreenOrSmaller,
+  onUpdateTask,
+  editingIndexes,
+  toggleEditing,
+  handleChange
 }) => {
   // Defensive check for undefined task
   if (!task) {
@@ -56,18 +62,27 @@ const EventTask = ({
         />
       </div>
 
-      <div 
-        className="flex-1 min-w-0 cursor-pointer"
-        onClick={() => onToggleStatus(task.id, task.done)}
-      >
-        <span
-          className={`leading-relaxed transition-all whitespace-normal block ${
-            task.done ? "line-through opacity-50" : ""
-          }`}
-          style={{ wordBreak: "break-word" }}
-        >
-          {task.name}
-        </span>
+      <div className="flex-1 min-w-0 cursor-pointer">
+        {editingIndexes[`${index}-taskName`] ? (
+          <input
+            className="mt-1 border rounded p-1 w-full"
+            type="text"
+            value={task.name}
+            onChange={(e) => handleChange(index, "name", e.target.value)}
+            onBlur={() => toggleEditing(index, "taskName")}
+            autoFocus
+          />
+        ) : (
+          <span
+            className={`leading-relaxed transition-all whitespace-normal block ${
+              task.done ? "line-through opacity-50" : ""
+            }`}
+            style={{ wordBreak: "break-word" }}
+            onClick={() => toggleEditing(index, "taskName")}
+          >
+            {task.name}
+          </span>
+        )}
       </div>
 
       {task.scheduleDate && (
@@ -125,6 +140,7 @@ const CreateTaskForm = ({ eventId, eventTitle, setRefetch }) => {
   const [selectedTaskIndex, setSelectedTaskIndex] = useState(null);
   const [showCalendar, setShowCalendar] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [editingIndexes, setEditingIndexes] = useState({});
   
   // RTK Query hooks for fetching tasks
   const { data: tasksData, isLoading: tasksLoading, refetch } = useGetEventTasksQuery(eventId);
@@ -222,8 +238,12 @@ const CreateTaskForm = ({ eventId, eventTitle, setRefetch }) => {
       return;
     }
     const taskId = tasks[index].id;
+    console.log("handleRemoveTask: Removing task with ID:", taskId);
     try {
-      await deleteEventTask(taskId).unwrap();
+      await deleteEventTask({
+        eventId, // Add this
+        taskId
+      }).unwrap();
       toast.success("Task removed");
       refetch();
       if (setRefetch) setRefetch(true);
@@ -273,6 +293,33 @@ const CreateTaskForm = ({ eventId, eventTitle, setRefetch }) => {
       setHoveredIndex(index);
     } else if (action === "leave") {
       setHoveredIndex(null);
+    }
+  };
+
+  // Toggle editing state for task properties
+  const toggleEditing = (index, field) => {
+    setEditingIndexes((prev) => ({
+      ...prev,
+      [`${index}-${field}`]: !prev[`${index}-${field}`],
+    }));
+  };
+
+  // Handle change for task properties
+  const handleChange = async (index, field, value) => {
+    const task = tasks[index];
+    if (!task) return;
+
+    const updatedTask = { ...task, [field]: value };
+    try {
+      await updateEventTask({
+        taskId: task.id,
+        data: updatedTask
+      }).unwrap();
+      refetch();
+      if (setRefetch) setRefetch(true);
+    } catch (err) {
+      console.error("Error updating task:", err);
+      toast.error("Failed to update task");
     }
   };
 
@@ -369,6 +416,10 @@ const CreateTaskForm = ({ eventId, eventTitle, setRefetch }) => {
                 onOpenModal={openModal}
                 hoveredIndex={hoveredIndex}
                 isMediumScreenOrSmaller={isMediumScreenOrSmaller}
+                onUpdateTask={handleChange}
+                editingIndexes={editingIndexes}
+                toggleEditing={toggleEditing}
+                handleChange={handleChange}
               />
             ))}
           </ul>
@@ -391,8 +442,11 @@ const CreateTaskForm = ({ eventId, eventTitle, setRefetch }) => {
             </h3>
             
             <div className="mb-4 text-center text-gray-500">
-              {/* Placeholder for a calendar component */}
-              Calendar component would render here
+              <Calendar
+                onChange={handleSetScheduleDate}
+                value={tasks[selectedTaskIndex]?.scheduleDate ? new Date(tasks[selectedTaskIndex].scheduleDate) : null}
+                className="w-full border rounded-lg p-2"
+              />
             </div>
             
             <div className="flex justify-between">
