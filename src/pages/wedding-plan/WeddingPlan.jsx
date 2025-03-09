@@ -57,7 +57,7 @@ const WeddingPlan = () => {
     setIsActiveVendor((prev) => !prev);
   };
 
-  //handle on dwonload plan
+  //handle on download plan
   const handleOnDownloadPlan = (events) => {
     const doc = new jsPDF();
   

@@ -102,8 +102,8 @@ export const weddingPlanForEventApi = createApi({
 
     // Delete event task
     deleteEventTask: builder.mutation({
-      query: (taskId) => ({
-        url: `/task/${taskId}`,
+      query: ({ eventId, taskId }) => ({
+        url: `/task/${eventId}/${taskId}`,
         method: "DELETE",
       }),
       invalidatesTags: ["EventTask"],
