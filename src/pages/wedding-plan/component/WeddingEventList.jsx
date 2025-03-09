@@ -27,8 +27,6 @@ import { FaCheckCircle, FaTimes } from "react-icons/fa";
 import { BiBell, BiBellPlus } from "react-icons/bi";
 import { useEffect } from "react";
 
-
-
 // A separate EventTask component with defensive checks and logging
 const EventTask = ({
   task,
@@ -154,7 +152,7 @@ const WeddingEventList = ({
   const [showCalendar, setShowCalendar] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
-  const [deletEvent, { isLoading, error }] = useDeleteEventMutation();
+  const [deleteEvent, { isLoading, error }] = useDeleteEventMutation();
 
   const [isToggle, setIsToggle] = useState(false);
   const [toggledIndex, setToggleIndex] = useState(null);
@@ -183,7 +181,7 @@ const WeddingEventList = ({
   // const handle to delete event
   const handleOnDelete = async (eventId) => {
     try {
-      const response = await deletEvent(eventId).unwrap();
+      const response = await deleteEvent(eventId).unwrap();
       const { success, message } = response;
       if (success) {
         toast.success(message);
@@ -277,7 +275,7 @@ const WeddingEventList = ({
   }
 
   return (
-    <section className="bg-gray-100 p-6  border-4 border-dashed rounded-md">
+    <section className="p-2  border-1 border-b-2 rounded-md">
       {eventData.map((event, index) => (
         <>
           <div
