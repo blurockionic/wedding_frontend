@@ -26,9 +26,6 @@ const ServiceCard = ({ service }) => {
     } catch (error) {
       console.error(error)
     }
-
-    console.log(eventId)
-    console.log(seriveId)
   }
 
   return (

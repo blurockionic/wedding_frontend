@@ -28,7 +28,7 @@ const ActionHeader = ({
           className="flex justify-center items-center border border-dashed border-primary text-primary px-5 py-2 rounded-md cursor-pointer"
         >
           <Download />
-          <p className="ml-2">Download Plan</p>
+          <p className="ml-2 flex items-center gap-1"><span className="hidden md:block">Download </span> Plan</p>
         </div>
 
         <div

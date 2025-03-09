@@ -25,12 +25,6 @@ const Sidebar = memo(({ state, city, onFilterChange }) => {
     },
   });
 
-  
-
-
-
-
-
   const [serviceOptions, setServiceOptions] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
 
@@ -76,8 +70,6 @@ const Sidebar = memo(({ state, city, onFilterChange }) => {
   return (
     <div className="w-full p-4">
       <form onSubmit={handleSubmit(handleFilterChange)} className="space-y-4">
-        
-
         {selectedCategory && (
           <SelectField
             id="selectedService"

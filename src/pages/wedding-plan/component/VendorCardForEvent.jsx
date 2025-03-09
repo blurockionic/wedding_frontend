@@ -9,15 +9,20 @@ import { toast } from "react-toastify";
 import { PlusCircle, PlusCircleIcon } from "lucide-react";
 import { useAddServiceMutation } from "../../../redux/weddingPlanSlice";
 
-const VendorCardForEvent = ({ service,category, state, subCategory, city, eventId}) => {
-
-  const [addService, {isLoading, error}] = useAddServiceMutation()
+const VendorCardForEvent = ({
+  service,
+  category,
+  state,
+  subCategory,
+  city,
+  eventId,
+}) => {
+  const [addService, { isLoading, error }] = useAddServiceMutation();
   const [toggleCart] = useToggleCartMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
- console.log(eventId)
-  
+  console.log(eventId);
 
   const favoriteList = useSelector((state) => {
     return state.favorites.favorites || [];
@@ -29,7 +34,6 @@ const VendorCardForEvent = ({ service,category, state, subCategory, city, eventI
     [favoriteList, service.id]
   );
 
-
   // Navigate to service details
   const handleCardClick = () => {
     navigate(`/all/${category}/${subCategory}/${state}/${city}/${service.id}`);
@@ -37,47 +41,62 @@ const VendorCardForEvent = ({ service,category, state, subCategory, city, eventI
 
   //handle on favorite
   const handleFavoriteClick = async (e, id) => {
-    e.stopPropagation(); 
-  
+    e.stopPropagation();
+
     try {
       const response = await toggleCart(id).unwrap();
-  
+
       if (response.success) {
         dispatch(toggleFavorite(id));
         toast.success(response.message || "Added to favorites!");
-      } 
+      }
     } catch (error) {
-      toast.error(error?.data?.message||"Failed to update favorite status. Please try again.");
+      toast.error(
+        error?.data?.message ||
+          "Failed to update favorite status. Please try again."
+      );
     }
   };
 
-  // handle on add event 
+  // handle on add event
   const handleAddOnEvent = async (e, serviceId) => {
     e.stopPropagation();
     try {
       if (eventId) {
-        console.log("Service ID:", serviceId);
-        console.log("Event ID:", eventId);
-  
         const response = await addService({ serviceId, eventId }).unwrap();
-  
+        await toggleCart(serviceId).unwrap();
+
         const { success, message } = response;
-  
+
         if (success) {
           toast.success(message || "Added to event!");
+          dispatch(toggleFavorite(serviceId));
+          toast.success("Added to favorites!");
         }
       }
     } catch (error) {
-      toast.error(error?.data?.message || "Failed to add service to event. Please try again.");
+      toast.error(
+        error?.data?.message ||
+          "Failed to add service to event. Please try again."
+      );
     }
   };
-  
 
   const imageUrl = useMemo(() => {
-    if (service && service.media && service.media.length > 0 && service.media[0] && service.media[0].image_urls && service.media[0].image_urls.length > 0 && service.media[0].image_urls[0].path) {
+    if (
+      service &&
+      service.media &&
+      service.media.length > 0 &&
+      service.media[0] &&
+      service.media[0].image_urls &&
+      service.media[0].image_urls.length > 0 &&
+      service.media[0].image_urls[0].path
+    ) {
       return service.media[0].image_urls[0].path;
     } else {
-      return `https://via.placeholder.com/300x200?text=${service?.service_type || "No Image"}`; // Provide a default or placeholder
+      return `https://via.placeholder.com/300x200?text=${
+        service?.service_type || "No Image"
+      }`; // Provide a default or placeholder
     }
   }, [service]);
 
@@ -88,7 +107,7 @@ const VendorCardForEvent = ({ service,category, state, subCategory, city, eventI
       aria-label={`View details of ${service?.service_name}`}
     >
       {/* Image Section */}
-      <div className="relative h-48 truncate bg-gray-200">
+      <div className="relative h-48 truncate bg-gray-200 ">
         <img
           src={imageUrl}
           alt={service?.service_name}
@@ -116,34 +135,34 @@ const VendorCardForEvent = ({ service,category, state, subCategory, city, eventI
           onClick={(e) => handleAddOnEvent(e, service?.id)}
         >
           {isFavorite ? (
-            <PlusCircle color={`red`} size={20} />
+            <PlusCircle color={`white`} size={30}  fill="red"/>
           ) : (
-            <PlusCircleIcon color="red" size={20} />
+            <PlusCircle color="red" size={24} fill="none"/>
           )}
         </button>
       </div>
 
       {/* Content Section */}
       <div className="p-4">
-       <div className="flex justify-between items-center">
-       <h3
-          className="text-lg font-semibold text-gray-800 truncate capitalize"
-          title={service?.service_name}
-        >
-          {service?.service_name}
-        </h3>
-        <span className="text-sm text-gray-500">⭐ {service?.rating}</span>
-       </div>
+        <div className="flex justify-between items-center">
+          <h3
+            className="text-lg font-semibold text-gray-800 truncate capitalize"
+            title={service?.service_name}
+          >
+            {service?.service_name}
+          </h3>
+          <span className="text-sm text-gray-500">⭐ {service?.rating}</span>
+        </div>
         <div className="flex items-center justify-between text-sm text-gray-500 mt-1">
           <span>
-            <strong className="font-thin">Vendor:</strong> <span className="capitalize">{service?.vendor?.name}</span>
+            <strong className="font-thin">Vendor:</strong>{" "}
+            <span className="capitalize">{service?.vendor?.name}</span>
           </span>
           {/* <span className="capitalize">
             {service.vendor.business_name || "No business name available"}
           </span> */}
         </div>
         <div className="mt-2 flex items-center justify-between">
-         
           <span className="text-sm text-gray-700 font-semibold">
             Price:₹{service?.min_price}/{service?.service_unit}
           </span>
