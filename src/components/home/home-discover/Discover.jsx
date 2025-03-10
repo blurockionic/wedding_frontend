@@ -14,14 +14,14 @@ const Discover = () => {
       title: "Most Rated Wedding Vendors",
       subtitle: "Plan your wedding with ease",
       bgColor: "#DFE6F1",
-      filter: { limit: 4, page: 1, sort_by: "rating", sort_order: "desc" },
+      filter: { limit: 20, page: 1, sort_by: "rating", sort_order: "desc" },
     },
     {
       key: "mostViewed",
       title: "Most Viewed Services",
       subtitle: "Assured quality services",
       bgColor: "#E9F1DF",
-      filter: { limit: 4, page: 1, sort_by: "rating", sort_order: "desc" },
+      filter: { limit: 20, page: 1, sort_by: "rating", sort_order: "desc" },
       queryHook: useGetMostViewdServicesQuery,
     },
     {
@@ -30,7 +30,7 @@ const Discover = () => {
       subtitle: "Find top wedding Caterer in your city",
       bgColor: "#F1DFE4",
       filter: {
-        limit: 4,
+        limit: 20,
         page: 1,
         service_type: "caterers",
         sort_by: "rating",
@@ -43,7 +43,7 @@ const Discover = () => {
       subtitle: "Find top DJ services in your city",
       bgColor: "#DFF1F1",
       filter: {
-        limit: 4,
+        limit: 20,
         page: 1,
         service_type: "Wedding DJ",
         sort_by: "rating",
@@ -123,13 +123,13 @@ const Section = ({ title, services, bgColor }) => {
       style={{ backgroundColor: bgColor, opacity: services.length ? 1 : 0.5 }}
     >
       {/* Heading & Buttons Row */}
-      <div className="flex justify-between items-center">
+      <div className="py-0 md:py-8 flex flex-col md:flex-row justify-between ">
         <CustomText
           as="h2"
           text={title}
           className="text-3xl md:text-4xl font-bold capitalize"
         />
-        <div className="flex gap-2">
+        <div className="self-end flex gap-2">
           <button
             className={`bg-white p-2 rounded-full shadow-md ${
               isAtStart ? "opacity-50 " : ""
@@ -154,7 +154,7 @@ const Section = ({ title, services, bgColor }) => {
       {/* Scrollable Services List */}
       <div
         ref={scrollContainer}
-        className="relative  flex overflow-x-auto scroll-smooth hide-scrollbar py-10 gap-4"
+        className="relative  flex overflow-x-auto scroll-smooth hide-scrollbar py-5  md:py-10 gap-4"
       >
         <ServiceList services={services} />
       </div>
