@@ -107,3 +107,110 @@ export const allCategories = {
 };
 
 
+
+
+// ===========================================================================================================
+
+
+
+ export const weddingVenuesWithImage = [
+  { name: "Wedding Lawns Farmhouse", image: "/weddingvenue/weddingfarm.webp" },
+  { name: "Hotel", image: "/weddingvenue/hotel.jpg" },
+  { name: "Banquet Halls", image: "/weddingvenue/banquet.jpg" },
+  { name: "Marriage Garden", image: "/weddingvenue/gardenn.jpg" },
+  { name: "Wedding Halls", image: "/weddingvenue/hall.avif" },
+  { name: "Wedding Resorts", image: "/weddingvenue/resort.jpg" },
+];
+
+export const weddingVendorsWithImage = [
+  { name: "Caterers", image: "/weddingvendors/cateres.jpg" },
+  { name: "Wedding Invitation", image: "/weddingvendors/inviation.jpg" },
+  { name: "Wedding Decor", image: "/weddingvendors/decoration.jpg" },
+  { name: "Wedding Gift", image: "/weddingvendors/gift.webp" },
+  { name: "Wedding Photographers", image: "/weddingvendors/photo.jpg" },
+  { name: "Wedding Coordinators", image: "/weddingvendors/cordinator.jpg" },
+  { name: "Wedding Music", image: "/weddingvendors/band.jpeg" },
+  { name: "Wedding Videographers", image: "/weddingvendors/cateres.jpg" },
+  {
+    name: "Wedding Transportation",
+    image: "/weddingvendors/transportt.avif",
+  },
+  { name: "Wedding House", image: "/weddingvendors/house.jpg" },
+  { name: "Tent House", image: "/weddingvendors/tent.jpeg" },
+  { name: "Wedding Entertainment", image: "/weddingvendors/game.jpeg" },
+  { name: "Florists", image: "/weddingvendors/florist.jpeg" },
+  { name: "Wedding Planner", image: "/weddingvendors/planner.jpeg" },
+  { name: "Wedding Decoration", image: "/weddingvendors/decoration.jpg" },
+  { name: "Wedding Cakes", image: "/weddingvendors/cake.jpg" },
+  { name: "Wedding Agencies", image: "/weddingvendors/cordinator.jpg" },
+  { name: "Wedding DJ", image: "/weddingvendors/dj.jpg" },
+  { name: "Pandit", image: "/weddingvendors/pandit.jpeg" },
+  { name: "Photobooth", image: "/weddingvendors/photobooth.jpg" },
+  { name: "Astrologers", image: "/weddingvendors/astro.jpg" },
+];
+
+export const bridesWithImage = [
+  { name: "Bridal Lahenga", image: "/bride/bridal_lengha.png" },
+  { name: "Bridal Jewellery", image: "/bride/bridal_jewellery.png" },
+  { name: "Bridal Makeup Artist", image: "/bride/bridal_makeup_artists.png" },
+  { name: "Mehndi Artist", image: "/bride/mehdi_artist.jpg" },
+  { name: "Makeup Salon", image: "/bride/bridal_makeup_salon.png" },
+];
+
+export const groomsWithImage = [
+  { name: "Sherwani", image: "/groom/Sherwani.avif" },
+  { name: "Men's Grooming", image: "/groom/groom.webp" },
+  { name: "Men's Accessories", image: "/groom/aceeroes.jpg" },
+];
+
+
+export const categories = [
+    {
+      title: "Wedding Venues",
+      description: "Find stunning venues, from grand resorts to cozy gardens!",
+      image: "/discover/wedding-venues.png",
+      subcategories: weddingVenuesWithImage,
+    },
+    {
+      title: "Wedding Vendors",
+      description:
+        "Top-rated professionals to bring your wedding vision to life!",
+      image: "/discover/wedding-vendor.png",
+      subcategories: weddingVendorsWithImage,
+    },
+    {
+      title: "Bride",
+      description:
+        "Bridal wear, beauty, and essentials for your perfect wedding look!",
+      image: "/discover/bride.png",
+      subcategories: bridesWithImage,
+    },
+    {
+      title: "Groom",
+      description:
+        "Stylish suits, grooming, and accessories for the modern groom!",
+      image: "/discover/groom.png",
+      subcategories: groomsWithImage,
+    },
+    {
+      title: "Wedding Services",
+      description:
+        "Planners, decorators, caterers & more for a seamless wedding!",
+      image: "/discover/wedding-services.png",
+      subcategories: [
+        { name: "Wedding Planners", image: "/weddingservices/planner.webp" },
+        { name: "Decorators", image: "/weddingservices/decorator.jpg" },
+      ],
+    },
+    {
+      title: "Other Services",
+      description:
+        "Entertainment, transport, and extras for a flawless celebration!",
+      image: "/discover/other.png",
+      subcategories: [
+        { name: "Live Bands", image: "/otherimages/band.webp" },
+        { name: "Luxury Transport", image: "/otherimages/transport.jpeg" },
+        { name: "Fireworks & Effects", image: "/otherimages/fireworks.jpeg" },
+      ],
+    },
+  ];
