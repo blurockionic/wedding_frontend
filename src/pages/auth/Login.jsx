@@ -1,4 +1,3 @@
-import React from "react";
 import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -63,6 +62,16 @@ export default function Login() {
         dispatch(hydrateFavorites(allCart));
         reset();
         toast.success(message);
+
+
+        const from = location.state?.from || "/";
+        if (user.role == "ADMIN" || user.role == "SUPER_ADMIN"){
+          navigate("/admin");
+        }
+        else{
+          navigate(from);
+        }
+        
 
       }
     } catch (error) {

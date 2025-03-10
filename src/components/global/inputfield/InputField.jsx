@@ -1,4 +1,5 @@
 import CustomText from "../text/CustomText";
+import PropTypes from "prop-types"
 
 export const InputField = ({
   min,
@@ -53,3 +54,21 @@ export const InputField = ({
     </div>
   </div>
 );
+
+
+InputField.propTypes = {
+  min: PropTypes.number,
+  max: PropTypes.number,
+  step: PropTypes.number,
+  id: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  autoFocus: PropTypes.bool,
+  register: PropTypes.func.isRequired,
+  disabled: PropTypes.bool,
+  error: PropTypes.object,
+  icon: PropTypes.node,
+  onChange: PropTypes.func,
+  placeholder: PropTypes.string,
+  style: PropTypes.string,
+};

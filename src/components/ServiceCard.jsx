@@ -53,7 +53,7 @@ const ServiceCard = React.memo(({ service,category, state, subCategory, city}) =
     }
   
    
-    return `https://via.placeholder.com/300x200?text=${encodeURIComponent(
+    return `https://placeholder.com/300x200?text=${encodeURIComponent(
       service?.service_type || "No Image"
     )}`;
   }, [service]);

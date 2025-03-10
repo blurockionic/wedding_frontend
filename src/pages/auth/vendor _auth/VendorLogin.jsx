@@ -12,7 +12,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PasswordField } from "../../../components/global/inputfield/PasswordField";
 import useProtectAfterLogin from "../../../hooks/useProtectAfterLogin";
-import CustomButton from "../../../components/global/button/CustomButton";
 import Footer from "../../Footer";
 import ServiceTypeCard from "../../../components/global/card/ServiceTypeCard";
 import { MdEventAvailable, MdOutlinePersonAddAlt } from "react-icons/md";
@@ -30,6 +29,7 @@ import { FiUsers } from "react-icons/fi";
 import { BiAnalyse } from "react-icons/bi";
 import signup_bg from "../../../../public/signup/sign-bg.webp";
 import brandlogo from "../../../../public/logo/brandlogo.png";
+import { Loader2 } from "lucide-react";
 
 const vendorLoginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -77,9 +77,11 @@ export default function VendorLogin() {
 
   return (
     <>
-    {/* SEO Optimization */}
-    <Helmet>
-        <title>Vendor Login - Marriage Vendors | Manage Your Wedding Services</title>
+      {/* SEO Optimization */}
+      <Helmet>
+        <title>
+          Vendor Login - Marriage Vendors | Manage Your Wedding Services
+        </title>
         <meta
           name="description"
           content="Login to your Marriage Vendors account to showcase your wedding services, connect with engaged couples, and grow your business effortlessly."
@@ -94,8 +96,14 @@ export default function VendorLogin() {
           property="og:description"
           content="Login to showcase your wedding services and connect with engaged couples."
         />
-        <meta property="og:image" content="https://www.marriagevendors.com/assets/login-DWbP2E5R.jpg" />
-        <meta property="og:url" content="https://www.marriagevendors.com/vendorLogin" />
+        <meta
+          property="og:image"
+          content="https://www.marriagevendors.com/assets/login-DWbP2E5R.jpg"
+        />
+        <meta
+          property="og:url"
+          content="https://www.marriagevendors.com/vendorLogin"
+        />
         <meta name="twitter:card" content="summary_large_image" />
         <script type="application/ld+json">
           {JSON.stringify({
@@ -115,169 +123,158 @@ export default function VendorLogin() {
         </script>
       </Helmet>
 
-      <div className="flex justify-center items-center cusrsor-pointer py-4 ">
-        <NavLink to="/" className="flex items-center gap-3 cursor-pointer">
-          <img src={brandlogo} alt="brandlogo" className="w-16 h-16" />
-          <div className="flex flex-col justify-start">
-            <span className="text-primary text-3xl">Marriage Vendors</span>
-            <span className="text-primary text-xs">Wedding Organiser</span>
-          </div>
-        </NavLink>
-      </div>
-      <div className="min-h-1/2  grid grid-cols-1 md:grid-cols-2 px-5 sm:px-10 md:px-16 lg:px-20 py-10 gap-10">
-        <div className="space-y-12 md:space-y-24">
-          <div className="space-y-5">
-            <h1
-              className="text-primary 
+      <div className="h-screen bg-gradient-to-b from-yellow-100  to-pink-100">
+        <div className="flex justify-center items-center cusrsor-pointer py-4 ">
+          <NavLink
+            to="/"
+            className="flex flex-col items-center gap-3 cursor-pointer mt-10"
+          >
+            <img src={brandlogo} alt="brandlogo" className="w-16 h-16" />
+            <div className="flex flex-col justify-start">
+              <span className="text-primary text-3xl">Marriage Vendors</span>
+              {/* <span className="text-primary text-xs">Wedding Organiser</span> */}
+            </div>
+          </NavLink>
+        </div>
+        <div className="min-h-1/2  grid grid-cols-1 md:grid-cols-2 px-5 sm:px-10 md:px-16 lg:px-20 py-10 gap-10 ">
+          <div className="space-y-12 md:space-y-24">
+            <div className="space-y-5">
+              <h1
+                className="text-primary 
         text-3xl md:text-5xl lg:text-6xl
         font-thin
         "
-            >
-              Discover the smarter way to connect with couples
-            </h1>
-            <ul className="space-y-2 texl-md sm:text-lg md:text-xl">
-              <li className="flex items-center justify-start">
-                <svg
-                  className="w-3.5 h-3.5 me-2 text-green-500 dark:text-green-400 flex-shrink-0"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
-                </svg>
-                <span>Showcase your services on our site!</span>
-              </li>
-              <li className="flex items-center justify-start">
-                <svg
-                  className="w-3.5 h-3.5 me-2 text-green-500 dark:text-green-400 flex-shrink-0"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
-                </svg>
-                <span>Reach local engaged couples and book more weddings.</span>
-              </li>
-              <li className="flex items-center justify-start">
-                <svg
-                  className="w-3.5 h-3.5 me-2 text-green-500 dark:text-green-400 flex-shrink-0"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
-                </svg>
-                <span>Trusted by over 76,000 professionals</span>
-              </li>
-            </ul>
-          </div>
-          
-        <Link to="/services" className="mt-4 block">
+              >
+                Discover the smarter way to connect with couples
+              </h1>
+              <ul className="space-y-2 texl-md sm:text-lg md:text-xl">
+                <li className="flex items-center justify-start">
+                  <svg
+                    className="w-3.5 h-3.5 me-2 text-green-500 dark:text-green-400 flex-shrink-0"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                  </svg>
+                  <span className="font-thin">
+                    Showcase your <strong>services</strong> on our site!
+                  </span>
+                </li>
+                <li className="flex items-center justify-start">
+                  <svg
+                    className="w-3.5 h-3.5 me-2 text-green-500 dark:text-green-400 flex-shrink-0"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                  </svg>
+                  <span className="font-thin">
+                    Connect with Local Couples <strong>Ready to Book</strong>
+                  </span>
+                </li>
+                <li className="flex items-center justify-start">
+                  <svg
+                    className="w-3.5 h-3.5 me-2 text-green-500 dark:text-green-400 flex-shrink-0"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                  </svg>
+                  <span className="font-thin">
+                    Join a Network of Over <strong>+100</strong> Trusted
+                    Professionals
+                  </span>
+                </li>
+              </ul>
+            </div>
+
+            {/* <Link to="/services" className="mt-4 block">
           <CustomButton
             text="Create your free service"
             className="border border-ring px-5 py-3 text-primary"
           />
-        </Link>
-        
-        </div>
-        {/* vendor login  */}
-        <div className="flex items-center justify-center">
-          <div
-            className="w-full 
+        </Link> */}
+          </div>
+          {/* vendor login  */}
+          <div className="flex items-center justify-center md:mt-3">
+            <div
+              className="w-full 
       sm:w-96 sm:bg-card bg-transparent
        sm:shadow-custom 
       rounded-lg sm:px-8 px-4 py-10 
       space-y-6"
-          >
-            <div>
-              <CustomText
-                variant="heading"
-                className="text-3xl mb-1 font-bold text-primary-foreground"
-              >
-                Vendor Login
-              </CustomText>
-              <CustomText
-                variant="paragraph"
-                className="text-sm text-muted-foreground"
-              >
-                Enter your credentials to access the vendor portal
-              </CustomText>
-            </div>
-
-            <form onSubmit={handleSubmit(handleLogin)} className="space-y-6">
-              <InputField
-                label="Email"
-                type="email"
-                placeholder="Enter your email"
-                icon={<GoMail size={19} className="text-primary" />}
-                register={register}
-                id="email"
-                error={errors.email}
-              />
-
-              <PasswordField
-                icon={<GoLock size={19} className="text-primary" />}
-                type={isShowPassword ? "text" : "password"}
-                isShow={isShowPassword}
-                setIsShow={setIsShowPassword}
-                id="password"
-                register={register}
-                label="Enter your password"
-                error={errors.password}
-              />
-
-              <Link
-                to="/vendor-forgot-password"
-                className="text-sm text-muted-foreground hover:underline block text-end"
-              >
-                Forgot Password?
-              </Link>
-
-              <button
-                type="submit"
-                disabled={loading || !isValid}
-                className={`w-full ${
-                  loading ? "bg-muted" : "bg-primary text-white"
-                } disabled:cursor-not-allowed cursor-pointer flex  items-center justify-center w-full disabled:bg-muted border-2 border-ring hover:bg-dustyRose text-accent-foreground font-bold py-2  rounded focus:outline-none  focus:ring-ring transition`}
-              >
-                {loading && (
-                  <svg
-                    className="w-5 h-5 mr-2 text-primary animate-spin"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.963 7.963 0="
-                    />
-                  </svg>
-                )}
-                {loading ? "Logging..." : "Login"}
-              </button>
-            </form>
-            <div className=" text-center">
-              <CustomText variant="paragraph" className="text-sm">
-                Don&apos;t have an account?{" "}
-                <Link
-                  to="/vendorSignup"
-                  className="font-bold text-primary hover:underline"
+            >
+              <div>
+                <CustomText
+                  variant="heading"
+                  className="text-3xl font-semibold mb-1  text-primary-foreground"
                 >
-                  Sign Up
+                  Vendor Login
+                </CustomText>
+                {/* <CustomText
+                  variant="paragraph"
+                  className="text-sm text-muted-foreground"
+                >
+                  Enter your credentials to access the vendor portal
+                </CustomText> */}
+              </div>
+
+              <form onSubmit={handleSubmit(handleLogin)} className="space-y-6">
+                <InputField
+                  label="Email"
+                  type="email"
+                  placeholder="Enter your email"
+                  icon={<GoMail size={19} className="text-primary" />}
+                  register={() => register("email", { required: "Email is required" })} 
+                  id="email"
+                  error={errors.email}
+                />
+
+                <PasswordField
+                  icon={<GoLock size={19} className="text-primary" />}
+                  type={isShowPassword ? "text" : "password"}
+                  isShow={isShowPassword}
+                  setIsShow={setIsShowPassword}
+                  id="password"
+                  register={() => register("password", { required: "Password is required" })} 
+                  label="Enter your password"
+                  error={errors.password}
+                />
+
+                <Link
+                  to="/vendor-forgot-password"
+                  className="text-sm text-muted-foreground hover:underline block text-end"
+                >
+                  Forgot Password?
                 </Link>
-              </CustomText>
+
+                <button
+                  type="submit"
+                  disabled={loading || !isValid}
+                  className={`w-full ${
+                    loading ? "bg-muted" : "bg-primary text-white"
+                  } disabled:cursor-not-allowed cursor-pointer flex  items-center justify-center w-full disabled:bg-muted border-2 border-ring hover:bg-dustyRose text-accent-foreground font-bold py-2  rounded focus:outline-none  focus:ring-ring transition`}
+                >
+                  {loading ? <Loader2 className="animate-spin text-primary"/> : (<><span className="text-white">Login</span></>)}
+                </button>
+              </form>
+              <div className="text-center">
+                <CustomText variant="paragraph" className="text-sm">
+                  Don&apos;t have an account?{" "}
+                  <Link
+                    to="/vendorSignup"
+                    className="font-bold text-primary hover:underline"
+                  >
+                    Sign Up
+                  </Link>
+                </CustomText>
+              </div>
             </div>
           </div>
         </div>
@@ -413,7 +410,7 @@ export default function VendorLogin() {
               <FaHeadset className="text-blue-500 text-4xl mb-4" />
               <h3 className="text-lg font-semibold text-gray-800">Live Chat</h3>
               <p className="text-gray-600">
-              Chat with our support team for instant help.
+                Chat with our support team for instant help.
               </p>
             </div>
 
@@ -424,7 +421,7 @@ export default function VendorLogin() {
                 Email Support
               </h3>
               <p className="text-gray-600">
-               Reach us at support@blurockionic.com for detailed inquiries
+                Reach us at support@blurockionic.com for detailed inquiries
               </p>
             </div>
 
@@ -433,15 +430,10 @@ export default function VendorLogin() {
               <FaPhone className="text-purple-500 text-4xl mb-4" />
               <h3 className="text-lg font-semibold text-gray-800">Call Us</h3>
               <p className="text-gray-600">
-               Get direct support at +91-6200932331..
+                Get direct support at +91-6200932331..
               </p>
             </div>
           </div>
-
-          {/* Contact Support Button
-          <button className="border border-ring hover:bg-pink-600 text-foreground hover:text-white font-semibold py-3 px-8 rounded-full shadow-md transition-all duration-300">
-            Contact Support
-          </button> */}
         </div>
       </div>
 

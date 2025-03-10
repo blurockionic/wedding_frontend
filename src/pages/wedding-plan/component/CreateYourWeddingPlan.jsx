@@ -1,25 +1,45 @@
 import { useForm } from "react-hook-form";
 import { useCreateEventMutation } from "../../../redux/weddingPlanSlice";
 import { Loader2 } from "lucide-react";
+import { toast } from "react-toastify";
+import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 
-const CreateYourWeddingPlan = ({setRefetch}) => {
+const CreateYourWeddingPlan = ({setRefetch, preLoadEvent}) => {
+  
   const [createEvent, { isLoading, error }] = useCreateEventMutation();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+    setValue
+  } = useForm({
+    defaultValues:{
+      eventName: preLoadEvent || "",
+    }
+  });
+
+  // Use effect to update values if preLoadEvent changes
+  useEffect(() => {
+    if (preLoadEvent) {
+      setValue("eventName", preLoadEvent || "");
+    }
+  }, [preLoadEvent, setValue]);
 
   //handle on submit 
   const onSubmit = async(data) => {
-    console.log("Form Data:", data);
-    // e.preventDefault();
     try {
-      await createEvent(data).unwrap();
-      alert("Event created successfully!");
-      setRefetch(true)
+      const response = await createEvent(data).unwrap();
+      const {message, success} =  response
+      if(success){
+        toast.success(message)
+        setRefetch(true)
+      }
+      
     } catch (err) {
       console.error("Error creating event:", err);
+      toast.error("Failed to create event. Please try again.");
     }
   };
 
@@ -145,7 +165,7 @@ const CreateYourWeddingPlan = ({setRefetch}) => {
           <button
             type="submit"
             disabled={isLoading}
-            className="px-5 py-2 font-semibold text-[20px] bg-primary rounded-md w-full text-white mt-10"
+            className="px-5 py-2 flex justify-center items-centerfont-semibold text-[20px] bg-primary rounded-md w-full text-white mt-10"
           >
             {isLoading ? <Loader2 className="animate-spin"/> : "Create Event"}
           </button>
@@ -154,6 +174,10 @@ const CreateYourWeddingPlan = ({setRefetch}) => {
       </form>
     </div>
   );
+};
+CreateYourWeddingPlan.propTypes = {
+  setRefetch: PropTypes.func.isRequired,
+  preLoadEvent: PropTypes.string
 };
 
 export default CreateYourWeddingPlan;
