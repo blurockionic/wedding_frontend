@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useCreateFeedbackMutation } from "../../redux/serviceSlice";
 import { toast } from "react-toastify";
+import { Loader2 } from "lucide-react";
 
 const FeedbackForm = ({ serviceId, setIsLoading }) => {
   const [createFeedback, { isLoading }] = useCreateFeedbackMutation();
@@ -92,7 +93,7 @@ const FeedbackForm = ({ serviceId, setIsLoading }) => {
             className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-pink-600 focus:outline-none focus:ring focus:ring-blue-200"
             disabled={isLoading || !rating}
           >
-            {isLoading ? "Submitting..." : "Submit Feedback"}
+            {isLoading ? <Loader2 className="animate-spin"/> : "Submit Feedback"}
           </button>
         </div>
       </form>

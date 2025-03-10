@@ -140,7 +140,7 @@ function VendorRegistration() {
             </div>
           </div>
         </div>
-        <div className="col-span-3 w-full px-10 my-auto">
+        <div className="col-span-3 w-full md:px-10 my-auto">
           {/* Header Card */}
           <div className="bg-white rounded-t-lg shadow-sm p-6 border-b border-[#d6d6d6]">
             <div className="flex items-center justify-between mb-6">
