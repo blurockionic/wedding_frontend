@@ -127,9 +127,9 @@ const Section = ({ title, services, bgColor }) => {
         <CustomText
           as="h2"
           text={title}
-          className="text-3xl md:text-4xl font-bold capitalize"
+          className="text-2xl  md:text-4xl font-bold capitalize"
         />
-        <div className="self-end flex gap-2">
+        <div className="self-end flex py-5 gap-2">
           <button
             className={`bg-white p-2 rounded-full shadow-md ${
               isAtStart ? "opacity-50 " : ""
@@ -154,7 +154,7 @@ const Section = ({ title, services, bgColor }) => {
       {/* Scrollable Services List */}
       <div
         ref={scrollContainer}
-        className="relative  flex overflow-x-auto scroll-smooth hide-scrollbar py-5  md:py-10 gap-4"
+        className="relative  mx-auto flex overflow-x-auto scroll-smooth hide-scrollbar pb-5  md:py-10 gap-4"
       >
         <ServiceList services={services} />
       </div>
