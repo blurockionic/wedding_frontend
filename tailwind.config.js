@@ -1,7 +1,6 @@
 /** @type {import('tailwindcss').Config} */ 
 const flowbite = require("flowbite-react/tailwind");
     const plugin = require ("tailwindcss/plugin");
-
 // Utility to create RGBA colors
 
 module.exports = {

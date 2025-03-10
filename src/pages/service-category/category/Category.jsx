@@ -1,13 +1,16 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import Footer from "../../Footer";
 import ServiceCard from "../component/ServiceCard";
-import { brides, grooms, weddingVendors, weddingVenues } from "../../../static/static";
+import {
+  brides,
+  grooms,
+  weddingVendors,
+  weddingVenues,
+} from "../../../static/static";
 
 const Category = () => {
   const { category } = useParams();
   const navigate = useNavigate();
-
- 
 
   const categories = [
     {
@@ -61,7 +64,6 @@ const Category = () => {
     },
   ];
 
-
   // Sample top venues by state
   const topVenues = {
     jharkhand: [
@@ -84,9 +86,7 @@ const Category = () => {
 
   // Handle state selection
   const handleStateClick = (state) => {
-    navigate(
-      `/all/${category}/${state}`
-    );
+    navigate(`/all/${category}/${state}`);
   };
 
   // key_id = rzp_live_xNk4evjTjQGwAn
@@ -98,9 +98,12 @@ const Category = () => {
   return (
     <>
       {/* navigation */}
-      <span className="px-16 text-sm"><Link to={`/all`}>Wedding</Link> &gt; <Link to={`/all/${category}`}>{category}</Link>  </span>
+      <span className="px-16 text-sm">
+        <Link to={`/all`}>Wedding</Link> &gt;{" "}
+        <Link to={`/all/${category}`}>{category}</Link>{" "}
+      </span>
       <h1 className="px-16 text-2xl font-semibold">{category}</h1>
-     
+
       {/* Horizontal Scroll for States */}
       <div className="px-16 py-4">
         <h2 className="text-xl font-semibold">{`Select ${category} by category `}</h2>
@@ -114,13 +117,7 @@ const Category = () => {
               <p
                 key={subCategory}
                 onClick={() => handleStateClick(subCategory)}
-                // className={`px-4 py-2 rounded-full transition ${
-                //   selectedCategory
-                //     ? "bg-gray-200 hover:bg-blue-500 hover:text-white"
-                //     : "bg-gray-300 cursor-not-allowed"
-                // }`}
                 className={`px-4 py-2 text-md rounded-full transition cursor-pointer`}
-                // disabled={!selectedCategory}
               >
                 {subCategory}
               </p>
@@ -137,9 +134,12 @@ const Category = () => {
         <ul className="mt-2 space-y-2 flex items-center gap-2">
           {topVenues.delhi.map((venue, index) => (
             <li key={index} className=" p-2 rounded-lg">
-              
-              <ServiceCard image={""} title={venue} rate={"20002"} rating={2.5}/>
-              
+              <ServiceCard
+                image={""}
+                title={venue}
+                rate={"20002"}
+                rating={2.5}
+              />
             </li>
           ))}
         </ul>
@@ -150,7 +150,12 @@ const Category = () => {
         <ul className="mt-2 space-y-2 flex itesm-center gap-2">
           {topVenues.maharashtra.map((venue, index) => (
             <li key={index} className=" p-2 rounded-lg">
-              <ServiceCard image={""} title={venue} rate={"20002"} rating={2.5}/>
+              <ServiceCard
+                image={""}
+                title={venue}
+                rate={"20002"}
+                rating={2.5}
+              />
             </li>
           ))}
         </ul>
@@ -161,13 +166,18 @@ const Category = () => {
         <ul className="mt-2 space-y-2 flex items-center gap-2">
           {topVenues.karnataka.map((venue, index) => (
             <li key={index} className=" p-2 rounded-lg">
-              <ServiceCard image={""} title={venue} rate={"20002"} rating={2.5}/>
+              <ServiceCard
+                image={""}
+                title={venue}
+                rate={"20002"}
+                rating={2.5}
+              />
             </li>
           ))}
         </ul>
       </div>
 
-      <Footer/>
+      <Footer />
     </>
   );
 };

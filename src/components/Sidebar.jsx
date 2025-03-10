@@ -1,112 +1,180 @@
-import React, { memo } from "react";
+import React, { memo, useState, useEffect, useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { InputField } from "./global/inputfield/InputField";
 import { SelectField } from "./global/select/SelectField";
+import RangeSlider from "./global/RangeSlider";
+// import {
+//   brides,
+//   grooms,
+//   weddingVendors,
+//   weddingVenues,
+// } from "../../src/static/static";
+import { useNavigate, useLocation } from "react-router-dom";
+import LocationSearch from "./LocationSearch/LocationSearch";
 
-const Sidebar = memo(({ state, city, onFilterChange }) => {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm({
+const Sidebar = memo(({ filters, onFilterChange }) => {
+  const { register, handleSubmit, reset, setValue, watch } = useForm({
     defaultValues: {
-      city: city || "",
-      state: state || "",
-      minPrice: "",
-      maxPrice: "",
-      rating: "",
-      sort_by: "",
-      sort_order: "",
+      city: filters?.city || "",
+      state: filters?.state || "",
+      minPrice: filters?.minPrice || "0",
+      maxPrice: filters?.maxPrice || "1000",
+      rating: filters?.rating || "",
+      sort_by: filters?.sort_by || "",
+      sort_order: filters?.sort_order || "",
+      selectedService: filters?.selectedService || "",
     },
   });
 
-  const handleFilterChange = (data) => {
-    const filters = {};
+  const navigate = useNavigate();
+  const location = useLocation();
 
-    if (data.city) filters.city = data.city;
-    if (data.state) filters.state = data.state;
+  const [selectedCategory, setSelectedCategory] = useState("");
 
-    const minPrice = parseFloat(data.minPrice);
-    const maxPrice = parseFloat(data.maxPrice);
+  /** ✅ Fix 1: Memoize service options to avoid recalculation */
+  // const serviceOptions = useMemo(() => {
+  //   switch (selectedCategory) {
+  //     case "Bride":
+  //       return brides;
+  //     case "Groom":
+  //       return grooms;
+  //     case "Wedding Vendor":
+  //       return weddingVendors;
+  //     case "Wedding Venue":
+  //       return weddingVenues;
+  //     default:
+  //       return [];
+  //   }
+  // }, [selectedCategory]);
 
-    if (!isNaN(minPrice)) filters.minPrice = minPrice.toFixed(2);
-    if (!isNaN(maxPrice)) filters.maxPrice = maxPrice.toFixed(2);
+  useEffect(() => {
+    if (selectedCategory) {
+      setValue("selectedService", "");
+    }
+  }, [selectedCategory, setValue]);
 
-    if (data.rating) filters.rating = data.rating;
-    if (data.sort_by) filters.sort_by = data.sort_by;
-    if (data.sort_order) filters.sort_order = data.sort_order;
+  const setSearchLocation = useCallback(
+    (selectedCity) => {
+      if (!selectedCity) return;
 
-    onFilterChange(filters);
-  };
+      const [getSelectedState, getSelectedCity] = selectedCity.split("/");
+
+      if (
+        watch("city") === getSelectedCity &&
+        watch("state") === getSelectedState
+      ) {
+        return; // Skip update if values are the same
+      }
+
+      setValue("city", getSelectedCity, { shouldDirty: true });
+      setValue("state", getSelectedState, { shouldDirty: true });
+
+      // Ensure correct path structure before updating
+
+      console.log(location.pathname);
+
+      const pathSegments = location.pathname.split("/");
+      console.log(pathSegments);
+
+      if (pathSegments.length >= 3) {
+        pathSegments[5] = getSelectedCity.toLowerCase(); // Update city
+        pathSegments[4] = getSelectedState.toLowerCase(); // Update state
+      }
+
+      pathSegments.splice(6);
+
+      navigate(pathSegments.join("/"), { replace: true });
+    },
+
+    [setValue, navigate, location, watch]
+  );
+
+  const handleFilterChange = useCallback(
+    (data) => {
+      if (JSON.stringify(data) !== JSON.stringify(filters)) {
+        onFilterChange(data);
+      }
+    },
+    [onFilterChange, filters]
+  );
 
   return (
     <div className="w-full p-4">
-      <form onSubmit={handleSubmit(handleFilterChange)} className="space-y-5">
-        {/* Price Range */}
-        <div className="flex space-x-4">
-          <InputField
-            id="minPrice"
-            type="number"
-            label="Min Price"
+      <form onSubmit={handleSubmit(handleFilterChange)} className="space-y-4">
+        <LocationSearch setSearchLocation={setSearchLocation} />
+
+        {selectedCategory && (
+          <SelectField
+            id="selectedService"
+            label="Service"
+            value={watch("selectedService")}
+            placeholder="Select Service"
+            options={serviceOptions.map((service) => ({
+              value: service,
+              label: service,
+            }))}
             register={register}
-            error={errors.minPrice}
-            placeholder="Min price"
           />
-          <InputField
-            id="maxPrice"
-            type="number"
-            label="Max Price"
-            register={register}
-            error={errors.maxPrice}
-            placeholder="Max price"
+        )}
+
+        <div className="flex flex-col">
+          <label className="text-gray-700 mb-2 font-medium">
+            Price Range: {watch("minPrice")} - {watch("maxPrice")}
+          </label>
+          <RangeSlider
+            start={[watch("minPrice"), watch("maxPrice")]}
+            min={0}
+            max={1000}
+            onChange={(values) => {
+              setValue("minPrice", values[0]);
+              setValue("maxPrice", values[1]);
+            }}
           />
         </div>
 
-        {/* Rating Filter */}
-        <InputField
-          id="rating"
-          type="number"
-          label="Rating"
-          register={register}
-          error={errors.rating}
-          placeholder="Rating (1-5)"
-        />
+        <div className="grid grid-cols-2 gap-2">
+          {[4, 3, 2, 1].map((value) => (
+            <label
+              key={value}
+              className="flex items-center space-x-2 p-2 border rounded-lg shadow-sm hover:bg-gray-100"
+            >
+              <input
+                type="radio"
+                value={value}
+                {...register("rating")}
+                className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+              />
+              <span className="text-gray-700 font-medium">{value} & above</span>
+            </label>
+          ))}
+        </div>
 
-        {/* Sort By */}
         <SelectField
           id="sort_by"
-          label="Sort By"
+          placeholder="Sort By"
           options={[
-            { value: "created_at", label: "Newest First" },
-            { value: "min_price", label: "Lowest Price First" },
+            { value: "created_at", label: "Newest" },
+            { value: "min_price", label: "Lowest Price" },
             { value: "rating", label: "Rating" },
           ]}
           register={register}
-          error={errors.sort_by}
-          placeholder="Sort By"
         />
 
-        {/* Sort Order */}
         <SelectField
           id="sort_order"
-          label="Sort Order"
+          placeholder="Sort Order"
           options={[
             { value: "asc", label: "Low to High" },
             { value: "desc", label: "High to Low" },
           ]}
           register={register}
-          error={errors.sort_order}
-          placeholder="Sort Order"
         />
 
-        {/* Buttons */}
-        <div className="flex gap-2 justify-center items-center">
+        <div className="flex gap-2">
           <button
             type="submit"
-            className="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded"
+            className="w-full bg-green-500 text-white py-2 rounded"
           >
-            Apply Filters
+            Apply
           </button>
           <button
             type="button"

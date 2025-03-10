@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import ServiceList from "../components/ServiceList";
 import { useGetServicesQuery } from "../redux/serviceSlice";
@@ -21,30 +21,24 @@ function ServicesPage() {
   const itemsPerPage = 10;
 
   // Update filters if URL params change
+ 
+
+  // Fetch data with updated filters
+  const { data, error, isLoading, refetch } = useGetServicesQuery({
+    ...filters,
+    page: currentPage,
+    limit: itemsPerPage,
+  });
+
+  
   useEffect(() => {
-    setFilters({
-      location: searchLocation,
-      service_type: searchType,
-    });
+    refetch();
+  }, [filters, currentPage,]);
+
+  const handleFilterChange = (newFilters) => {
+    setFilters({ ...newFilters, status: "active" });
     setCurrentPage(1);
-  }, [searchLocation, searchType]);
-
-  const memoizedFilters = useMemo(
-    () => ({
-      ...filters,
-      page: currentPage,
-      limit: itemsPerPage,
-      status: "active",
-    }),
-    [filters, currentPage]
-  );
-
-  const { data, error, isLoading } = useGetServicesQuery(memoizedFilters);
-
-  const handleFilterChange = (data) => {
-    setFilters(data);
-    setCurrentPage(1);
-    if (!window.matchMedia("(min-width: 768px)").matches) {
+    if (window.innerWidth < 768) {
       setIsSidebarOpen(false);
     }
   };
@@ -67,7 +61,7 @@ function ServicesPage() {
 
   return (
     <>
-      {/* sidebar and main content  */}
+      {/* Sidebar and Main Content */}
       <div className="flex flex-col gap-2 md:flex-row px-2 h-screen relative">
         {/* Mobile Sidebar Toggle */}
         <button
@@ -85,11 +79,7 @@ function ServicesPage() {
             isSidebarOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
-          <Sidebar
-            searchType={searchType}
-            searchLocation={searchLocation}
-            onFilterChange={handleFilterChange}
-          />
+          <Sidebar filters={filters} onFilterChange={handleFilterChange} />
         </div>
 
         {/* Main Content */}
@@ -98,22 +88,12 @@ function ServicesPage() {
             <div className="flex items-center justify-center h-full">
               <p className="text-gray-600 text-8xl">Loading...</p>
             </div>
-          ) : error ? (
+          ) : !data?.success ? (
             <div className="flex items-center justify-center h-full">
-              <p>{error?.data?.message || "Something went wrong"}</p>
+              <p>{data?.message || "Something went wrong"}</p>
             </div>
           ) : (
             <>
-              {/* naviagtion  */}
-              {/* <div className="px-10 py-2">
-                <span>
-                  <Link>Home &gt; Wedding Venue &gt; Hotel</Link>
-                </span>
-              </div>
-              <div className="p-10">
-                <h1 className="text-3xl">{`${"Wedding venue "} in ${"Ranchi"}`}</h1>
-                <p>{`Showing ${"23232 "} results as per your search criteria`}</p>
-              </div> */}
               {/* Scrollable Service List */}
               <div className="overflow-y-auto h-[90%] pb-20">
                 <ServiceList services={data?.ServiceResult || []} />

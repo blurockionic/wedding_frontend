@@ -23,7 +23,7 @@ const UserProfile = () => {
   const [updateUser, { isLoading }] = useUpdateUserMutation();
 
   useEffect(() => {
-    if (userData?.role !== "USER") {
+    if (userData?.role!=="USER" && userData?.role!=="ADMIN" && userData?.role!=="SUPER_ADMIN") {
       navigate("/");
     }
   }, [userData, navigate]);

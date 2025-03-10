@@ -1,6 +1,13 @@
 import { Plus } from "lucide-react";
 
-const ServiceCategoriesCard = ({ title, description, image, handleOnPlusBtn, handleOnCategory, className }) => {
+const ServiceCategoriesCard = ({
+  title,
+  description,
+  image,
+  handleOnPlusBtn,
+  handleOnCategory,
+  className,
+}) => {
   const onClickOnPlusBtn = () => {
     handleOnPlusBtn(title);
   };
@@ -11,9 +18,10 @@ const ServiceCategoriesCard = ({ title, description, image, handleOnPlusBtn, han
 
   return (
     <div
+      onClick={onClickOnPlusBtn}
       className={`relative p-5 w-full max-w-sm bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer border border-gray-200 hover:shadow-xl transition-shadow duration-300 ${className}`}
     >
-      {/* Background Image with Overlay */}
+     
       <div
         className="h-48 bg-cover bg-center rounded-t-2xl relative"
         style={{ backgroundImage: `url(${image})` }}
@@ -35,27 +43,9 @@ const ServiceCategoriesCard = ({ title, description, image, handleOnPlusBtn, han
         <p className="text-gray-600 text-sm mt-2">{description}</p>
 
         {/* Action Buttons */}
-        <div className="mt-4 flex items-center justify-between">
-          {/* Know More Button */}
-          <button
-            onClick={handleOnCategoryBtn}
-            className="text-pink-600 font-medium hover:underline hover:text-pink-700 transition-colors duration-300"
-          >
-            Know More
-          </button>
-
-          {/* Plus Button with Elegant Design */}
-          <button
-            onClick={onClickOnPlusBtn}
-            className="bg-pink-50 text-pink-600 p-2 rounded-full hover:bg-pink-100 transition-colors duration-300"
-          >
-            <Plus size={18} />
-          </button>
-        </div>
       </div>
 
-      {/* Decorative Ribbon (Optional) */}
-      <div className="absolute top-0 right-0 bg-pink-600 text-white px-3 py-1 text-sm font-semibold rounded-bl-lg">
+      <div className="absolute top-1 right-1 bg-pink-600 text-white px-4 py-1 text-sm font-semibold transform rotate-45 translate-x-6 -translate-y-2 shadow-md">
         New
       </div>
     </div>
