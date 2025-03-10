@@ -83,7 +83,7 @@ const AboutLanding = () => {
                 {section.features.map((feature, index) => (
                   <li
                     key={index}
-                    className="flex items-center  gap-3 text-sm md:text-md lg:text-lg"
+                    className="flex items-center  gap-3 text-sm md:text-md lg:text-lg bg-white rounded-full"
                   >
                     <Check className="border-2 border-green-500 text-green-500 rounded-full" />
                     {feature}
