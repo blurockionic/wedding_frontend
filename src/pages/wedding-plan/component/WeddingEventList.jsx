@@ -139,13 +139,13 @@ EventTask.propTypes = {
 
 
 const WeddingEventList = ({
-  data,
+  events,
   handleOnAddSubEvent,
   handleOnAddTask,
   handleOnAddVendor,
+  handleOnDeleteService
 }) => {
   const [editingIndexes, setEditingIndexes] = useState({});
-  const [eventData, setEventData] = useState(data);
   const [isActiveActions, setIsActiveActions] = useState(false);
   const [activeIndex, setActiveIndex] = useState(null);
   const [selectedTaskIndex, setSelectedTaskIndex] = useState(null);
@@ -177,6 +177,8 @@ const WeddingEventList = ({
   };
 
   const isMediumScreenOrSmaller = useMediaQuery("(max-width: 1024px)");
+
+  console.log(events)
 
   // const handle to delete event
   const handleOnDelete = async (eventId) => {
@@ -266,7 +268,7 @@ const WeddingEventList = ({
     // }
   };
 
-  if (!data || data.length === 0) {
+  if (!events || events.length === 0) {
     return (
       <div className="flex justify-center items-center  bg-gray-100 p-6">
         No event data available
@@ -276,7 +278,7 @@ const WeddingEventList = ({
 
   return (
     <section className="p-2  border-1 border-b-2 rounded-md">
-      {eventData.map((event, index) => (
+      {events.map((event, index) => (
         <>
           <div
             key={index}
@@ -520,7 +522,7 @@ const WeddingEventList = ({
                   <h1 className="text-blue-700  my-5 px-4">Services</h1>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-5 p-4 ">
                     {event.eventVendors.map((vendor) => (
-                      <ServiceCard key={vendor.id} service={vendor} />
+                      <ServiceCard key={vendor.id} service={vendor} setRefetch={handleOnDeleteService}/>
                     ))}
                   </div>
                   </div>

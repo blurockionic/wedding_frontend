@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDeleteEventServiceMutation } from "../../../redux/weddingPlanSlice";
 import { toast } from "react-toastify";
 
-const ServiceCard = ({ service }) => {
+const ServiceCard = ({ service, setRefetch }) => {
   const [deleteEventService, {isLoading, error}] = useDeleteEventServiceMutation()
   const navigate = useNavigate();
 
@@ -13,7 +13,7 @@ const ServiceCard = ({ service }) => {
     console.log(id)
   };
 
-  // handle on delete 
+  // handle on delete service
   const handleOnDeleteEventVendor = async(serviceId, eventId)=>{
 
     try {
@@ -22,6 +22,7 @@ const ServiceCard = ({ service }) => {
 
       if(success){
         toast.success(message)
+        setRefetch(true)
       }
     } catch (error) {
       console.error(error)

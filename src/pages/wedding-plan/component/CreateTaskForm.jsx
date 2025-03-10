@@ -207,6 +207,7 @@ const CreateTaskForm = ({ eventId, eventTitle, setRefetch }) => {
       }).unwrap();
       
       toast.success(response.message || "Task added successfully");
+      setRefetch(true)
       reset();
       refetch();
       if (setRefetch) setRefetch(true);
@@ -476,7 +477,8 @@ const CreateTaskForm = ({ eventId, eventTitle, setRefetch }) => {
 CreateTaskForm.propTypes = {
   eventId: PropTypes.string.isRequired,
   eventTitle: PropTypes.string,
-  setRefetch: PropTypes.func
+  setRefetch: PropTypes.func,
+
 };
 
 CreateTaskForm.defaultProps = {
