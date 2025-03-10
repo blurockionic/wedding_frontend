@@ -193,13 +193,6 @@ export default function VendorLogin() {
                 </li>
               </ul>
             </div>
-
-            {/* <Link to="/services" className="mt-4 block">
-          <CustomButton
-            text="Create your free service"
-            className="border border-ring px-5 py-3 text-primary"
-          />
-        </Link> */}
           </div>
           {/* vendor login  */}
           <div className="flex items-center justify-center md:mt-3">
@@ -217,12 +210,7 @@ export default function VendorLogin() {
                 >
                   Vendor Login
                 </CustomText>
-                {/* <CustomText
-                  variant="paragraph"
-                  className="text-sm text-muted-foreground"
-                >
-                  Enter your credentials to access the vendor portal
-                </CustomText> */}
+                
               </div>
 
               <form onSubmit={handleSubmit(handleLogin)} className="space-y-6">
