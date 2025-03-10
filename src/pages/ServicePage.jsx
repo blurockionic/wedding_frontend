@@ -31,9 +31,6 @@ function ServicesPage() {
   });
 
   
-
-
-
   useEffect(() => {
     refetch();
   }, [filters, currentPage,]);
