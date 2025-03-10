@@ -152,7 +152,7 @@ export default function Login() {
         </script>
       </Helmet>
       <div className="min-h-screen flex items-center justify-center md:py-10">
-        <div className="flex items-center justify-center space-x-10">
+        <div className="flex items-center justify-center ">
           <div className="hidden md:block w-3/4">
             <img
               src={loginImage}

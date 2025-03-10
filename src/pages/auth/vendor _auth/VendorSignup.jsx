@@ -164,7 +164,7 @@ function VendorRegistration() {
                     <div
                       className={`w-6 h-6 flex items-center justify-center rounded-full border-2 text-xs font-bold ${
                         currentStep >= step
-                          ? "border-white bg-green-500 text-white"
+                          ? "border-white bg-primary text-white"
                           : "border-gray-400 bg-white text-gray-600"
                       }`}
                     >
@@ -177,7 +177,7 @@ function VendorRegistration() {
               {/* Progress Bar */}
               <div className="h-2 bg-[#e6e6e6] rounded-full overflow-hidden mt-4 relative">
                 <div
-                  className="absolute h-full bg-green-500 rounded-full transition-all duration-300 ease-in-out"
+                  className="absolute h-full bg-primary rounded-full transition-all duration-300 ease-in-out"
                   style={{ width: `${(currentStep / 6) * 100}%` }}
                 />
               </div>
