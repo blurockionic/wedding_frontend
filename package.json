@@ -19,6 +19,7 @@
     "chartjs-plugin-datalabels": "^2.2.0",
     "country-state-city": "^3.2.1",
     "dotenv": "^16.4.7",
+    "fabric": "^6.6.1",
     "firebase": "^11.4.0",
     "flowbite": "^2.5.2",
     "flowbite-react": "^0.10.2",
