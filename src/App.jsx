@@ -23,6 +23,7 @@ const Billing = lazy(() => import("./pages/vendorDashboard/Billing.jsx"));
 
 const Checklist = lazy(() => import("./pages/userDashboard/checklist/Checklist.jsx"));
 const Admin = lazy(() => import("./pages/admin/Dashboard.jsx"));
+const AdminGeneralAnalytics = lazy(() => import("./pages/admin/generalAnalytics.jsx"));
 
 const Setting = lazy(() => import("./pages/vendorDashboard/Setting.jsx"));
 const ContactUs = lazy(() => import("./pages/contactus/ContactUs.jsx"));
@@ -114,7 +115,22 @@ const router = createBrowserRouter([
     element: <OutletPage />,
     children: [
       { path: "/", element: wrapWithSuspense(LandingPage) },
-      { path: "/admin", element: wrapWithSuspense(Admin) },
+      {
+        path: "/admin",
+        element: (
+          <ProtectedRoute
+            component={() => wrapWithSuspense(Admin)}
+            allowedRoles={["admin", "super_admin"]}
+          />
+        ), 
+        // Protected route
+        children: [
+          { path: "", index: true, element: wrapWithSuspense(AdminGeneralAnalytics) },
+          // { path: "favoriteList", element: wrapWithSuspense(FavoriteListPage) },
+          // { path: "checklist", element: wrapWithSuspense(Checklist) },
+          // { path: "weddingbudget", element: wrapWithSuspense(WeddingBudgetCalculator)}
+        ],
+      },
       { path: "/signup", element: wrapWithSuspense(Signup) },
       { path: "/templates", element: wrapWithSuspense(Template) },
       { path: "/card", element: wrapWithSuspense(Card) },

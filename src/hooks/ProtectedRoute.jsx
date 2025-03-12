@@ -25,7 +25,7 @@ const rolePermissions = {
     "/VendorDashboard/services",
     "/VendorDashboard/services/service-details/:serviceId",
   ],
-  admin: ["/adminPanel", "/analytics", "/profile"],
+  admin: ["admin", "/adminPanel", "/analytics", "/profile"],
 };
 
 const ProtectedRoute = ({ allowedRoles, component: Component }) => {
