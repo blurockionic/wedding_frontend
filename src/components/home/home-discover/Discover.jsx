@@ -5,7 +5,7 @@ import {
   useGetServicesQuery,
 } from "../../../redux/serviceSlice";
 import ServiceList from "../../serviceList/ServiceList";
-import { ArrowLeft, ArrowRight, MoveLeft, MoveRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 const Discover = () => {
   const serviceFilters = [
@@ -91,7 +91,7 @@ const Section = ({ title, services, bgColor }) => {
 
   const scroll = (direction) => {
     if (scrollContainer.current) {
-      const scrollAmount = 300;
+      const scrollAmount = 800;
       scrollContainer.current.scrollBy({
         left: direction === "left" ? -scrollAmount : scrollAmount,
         behavior: "smooth",
