@@ -246,7 +246,7 @@ export default function Home() {
           <div className="absolute  top-10 right-40">
             {" "}
             <img
-              src="../../public/heroSection/Vectorheartbuzz.png"
+              src="/heroSection/Vectorheartbuzz.png"
               alt="heartbuzz"
             />
           </div>
