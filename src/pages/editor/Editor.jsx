@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as fabric  from "fabric";
 import { FiImage, FiDownload, FiType } from "react-icons/fi";
+import { Square } from "lucide-react";
 
 const templates = [
   { id: 1, name: "Floral Wedding", src: "/Logo.png" },
@@ -93,11 +94,29 @@ const Editor = () => {
     link.click();
   };
 
+  const addRectangle =()=>{
+    const rect =  new fabric.Rect({
+      top:100,
+      left: 50,
+      width: 100,
+      height: 60,
+      fill:"#aaa"
+    })
+
+    canvas.add(rect)
+  }
+
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen ">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-800 text-white p-6 flex flex-col gap-4">
+      <div className="w-64 bg-gray-100 p-6 flex flex-col gap-4">
         <h2 className="text-lg font-bold">Editor Tools</h2>
+
+         {/* tools 
+          */}
+          <div>
+            <Square onClick={addRectangle}/>
+          </div>
 
         {/* Add Text Button */}
         <button onClick={addText} className="px-4 py-2 bg-blue-500 rounded flex items-center gap-2">
