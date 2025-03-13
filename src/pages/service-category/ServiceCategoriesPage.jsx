@@ -2,6 +2,7 @@ import { useState } from "react";
 import ServiceCategoriesCard from "../../components/servicecatogories/ServiceCatogoriesCard";
 // import SubCategory from "../../components/sub-category/SubCategory";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 const weddingVenues = [
   { name: "Wedding Lawns Farmhouse", image: "/weddingvenue/weddingfarm.webp" },
@@ -134,8 +135,80 @@ const ServiceCategoriesPage = () => {
     setCategory(c);
   };
 
+  // Structured Data for SEO
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Wedding Services Categories",
+    "description": "Explore comprehensive wedding services including venues, vendors, bridal services, groom essentials, and more.",
+    "itemListElement": categories.map((category, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "item": {
+        "@type": "Service",
+        "name": category.title,
+        "description": category.description,
+        "image": `https://marriagevendors${category.image}`,
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": `${category.title} Subcategories`,
+          "itemListElement": category.subcategories.map((sub, subIndex) => ({
+            "@type": "Offer",
+            "name": sub.name,
+            "image": `https://marriagevendors${sub.image}`
+          }))
+        }
+      }
+    }))
+  };
+
   return (
     <div className="w-full flex items-center justify-center">
+
+<Helmet>
+        {/* Primary Meta Tags */}
+        <title>Wedding Services & Vendors | Marriage Vendors</title>
+        <meta name="title" content="Wedding Services & Vendors | Marriage Vendors" />
+        <meta
+          name="description"
+          content="Discover premium wedding services, venues, vendors, bridal & groom essentials. Plan your perfect wedding with trusted professionals and services."
+        />
+        <meta
+          name="keywords"
+          content="wedding venues, bridal services, groom essentials, wedding planners, caterers, wedding decor, wedding photography, wedding vendors"
+        />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="/" />
+        <meta property="og:title" content="Wedding Services & Vendors | Marriage Vendors" />
+        <meta
+          property="og:description"
+          content="Discover premium wedding services, venues, vendors, bridal & groom essentials. Plan your perfect wedding with trusted professionals and services."
+        />
+        <meta
+          property="og:image"
+          content="/"
+        />
+
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="/" />
+        <meta property="twitter:title" content="Wedding Services & Vendors | Marriage Vendors" />
+        <meta
+          property="twitter:description"
+          content="Discover premium wedding services, venues, vendors, bridal & groom essentials. Plan your perfect wedding with trusted professionals and services."
+        />
+        <meta
+          property="twitter:image"
+          content="/"
+        />
+
+        {/* Structured Data */}
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
+      </Helmet>
     
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-20 py-5 md:py-10">
         {categories.map((category, index) => (
