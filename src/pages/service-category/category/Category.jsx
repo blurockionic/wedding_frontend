@@ -98,7 +98,7 @@ const Category = () => {
   return (
     <>
       {/* navigation */}
-      <span className="px-16 text-sm">
+      <span className="px-6 md:px-16 text-sm">
         <Link to={`/all`}>Wedding</Link> &gt;{" "}
         <Link to={`/all/${category}`}>{category}</Link>{" "}
       </span>

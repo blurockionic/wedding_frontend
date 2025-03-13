@@ -85,9 +85,9 @@ const CategoryByCity = () => {
 
       {/* Service Listings */}
       <div className="w-full lg:w-3/4">
-        <span className="text-sm">
+        <span className="text-xs md:text-sm">
           <Link to={`/all`}>Wedding</Link> &gt;
-          <Link to={`/all/${category}`}> {category}</Link> &gt;
+          <Link > {category}</Link> &gt;
           <Link to={`/all/${category}/${subcategory}`}> {subcategory}</Link> &gt;
           <Link to={`/all/${category}/${subcategory}/${state}`} className="capitalize"> {state}</Link> &gt;
           <Link to={`/all/${category}/${subcategory}/${state}/${city}`} className="capitalize"> {city}</Link>

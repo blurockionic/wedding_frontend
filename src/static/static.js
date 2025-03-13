@@ -1,5 +1,13 @@
 
 import { MdDesignServices, MdOutlineAnalytics, MdOutlinePayment } from "react-icons/md";
+import img1 from "../../public/heroSection/c1.png"
+import img2 from "../../public/heroSection/c2.png"
+import img3 from "../../public/heroSection/c3.png"
+import img4 from "../../public/heroSection/c4.png"
+import img5 from "../../public/heroSection/c5.png"
+import img6 from "../../public/heroSection/c6.png"
+
+
 
 export const sectorTypes = [
   "Wedding Venue",
@@ -214,3 +222,5 @@ export const categories = [
       ],
     },
   ];
+
+  export {img1,img2,img3,img4,img5,img6}

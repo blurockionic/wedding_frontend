@@ -70,19 +70,19 @@ const SubCategories = () => {
   return (
     <>
       {/* navigation */}
-      <span className="px-16 text-sm">
+      <span className="px-4 md:px-16 text-xs md:text-sm">
         <Link to={`/all`}>Wedding</Link> &gt;
         <Link to={`/all/${category}`}>{category}</Link> &gt;
         <Link to={`/all/${category}/${subCategory}`}>{subCategory}</Link>
       </span>
-      <h1 className="px-16 text-2xl font-semibold">Search for {subCategory}</h1>
+      <h1 className="px-4 md:px-16 text-2xl font-semibold">Search for {subCategory}</h1>
 
       {/* Horizontal Scroll for States */}
-      <div className="px-16 py-4">
+      <div className="px-4 md:px-16 py-4">
         <h2 className="text-xl font-semibold">{`Select ${subCategory} by region `}</h2>
       </div>
 
-      <div className="px-16 mt-4 overflow-x-auto whitespace-nowrap flex gap-4 py-2 scrollbar-hide">
+      <div className="px-4 md:px-16 mt-4 overflow-x-auto whitespace-nowrap flex gap-4 md:py-2 scrollbar-hide">
         {Object.keys(stateServiceCount || {}).length > 0 ? (
           Object.entries(stateServiceCount).map(([state, count]) => (
             <div key={state} className="flex flex-col items-center gap-2 cursor-pointer"
@@ -91,11 +91,11 @@ const SubCategories = () => {
              <img
                 src={getRandomImage()}
                 alt="Wedding Venue"
-                className="w-40 h-40 rounded-full object-cover shadow-md"
+                className="w-16 h-16 md:w-40 md:h-40 rounded-full object-cover shadow-md"
               />
               <p
                 
-                className="px-4 py-2 text-md rounded-full transition cursor-pointer capitalize"
+                className="px-4 py-2 text-sm md:text-md  rounded-full transition cursor-pointer capitalize"
               >
                 {state}
               </p>
@@ -104,7 +104,7 @@ const SubCategories = () => {
           ))
         ) : (
           <div className="w-full flex items-center justify-center">
-            <p className="text-foreground text-8xl">No search found.</p>
+            <p className="text-foreground text-4xl md:text-8xl">No search found.</p>
           </div>
         )}
       </div>
@@ -160,13 +160,13 @@ const SubCategories = () => {
       </div> */}
 
       {/* 🌟 Destination Wedding Banner (Above Footer) */}
-      <div className="relative w-full h-64 lg:h-96 bg-cover bg-center mt-10" 
+      <div className="relative w-full h-64 lg:h-96 bg-cover bg-center mt-10 " 
         style={{ backgroundImage: `url(${img})` }} 
       >
         <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center text-center text-white px-6">
           <h1 className="text-3xl lg:text-5xl font-bold">Plan Your Dream Destination Wedding</h1>
           <p className="mt-2 text-lg lg:text-xl ">Explore the best venues & services </p>
-          <a href="tel:+916200932331" className="mt-4 px-6 py-2 bg-white text-black font-semibold rounded-full shadow-lg hover:bg-gray-200 transition">
+          <a href="tel:+916200932331" className="mt-4 px-6 py-2 bg-white text-black font-thin md:font-semibold rounded-full shadow-lg hover:bg-gray-200 transition">
             📞 +91 6200932331
           </a>
         </div>

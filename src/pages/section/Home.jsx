@@ -4,18 +4,19 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../../components/global/button/CustomButton";
 import CustomInput from "../../components/global/inputfield/CustomInput";
-import {  GoSearch } from "react-icons/go";
+import { GoSearch } from "react-icons/go";
 import { Helmet } from "react-helmet-async";
 import { allCategories } from "../../static/static";
 import { toast } from "react-toastify";
 import LocationSearch from "../../components/LocationSearch/LocationSearch";
+import CircularAnimation from "../CircularMotion";
 
 export default function Home() {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [categroy, setCategory] = useState("");
+  const [category, setCategory] = useState("");
   const [searchLocation, setSearchLocation] = useState("");
   useEffect(() => {
     Aos.init({
@@ -51,20 +52,21 @@ export default function Home() {
   };
 
   const handleNavigate = () => {
-    if (categroy && searchLocation) {
-      navigate(`/all/${categroy}/${searchLocation}`);
+    if (category && searchLocation) {
+      navigate(`/all/${category}/${searchLocation}`);
     } else if (searchLocation) {
       toast.error("Please select vendor");
-    } else if (categroy) {
-      navigate(`/all/${categroy}`);
+    } else if (category) {
+      navigate(`/all/${category}`);
     } else {
       navigate(`/all`);
     }
   };
 
+  console.log(suggestions);
+
   return (
     <>
-      {/* SEO Optimization */}
       <Helmet>
         <title>Home | Marriage Vendors</title>
         <meta
@@ -119,96 +121,136 @@ export default function Home() {
         </script>
       </Helmet>
 
-      <div
-        className="h-[80vh] w-full z-10 relative flex items-center justify-center"
-        style={{
-          backgroundImage: `linear-gradient(360deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), url('/herobg.jpg')`,
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
-        }}
-        aria-hidden="true"
-      >
-        {/* Content Section */}
-        <div className="p-4 mt-48 md:pl-24 space-y-6 rounded-lg z-40 flex justify-center items-center flex-col w-full">
+      <div className="p-5 grid sm:grid-cols-2 grid-cols-1  h-fit justify-between gap-10  items-center">
+        {/* Left Section */}
+        <div className="relative px-2 md:px-10 flex flex-col gap-6 text-center items-start md:text-left">
+          <img
+            className="hidden lg:block absolute  left-0 -top-20  "
+            src="/heroSection/Vector1.png"
+            alt=""
+          />
+
           <p
-            className="text-3xl md:text-6xl lg:text-7xl font-bold text-white flex flex-col items-center text-center"
+            className="text-3xl  font-bold tracking-tight leading-tight"
             data-aos="fade-up"
             data-aos-delay="400"
             data-aos-once="true"
           >
-            <span className="text-4xl md:text-4xl lg:text-[66px] mb-3">
-              Your one-stop destination for{" "}
+            Your one-stop destination for
+            <br />
+            <span className="text-6xl custom-animate tracking-tight text-primary ">
+              Dream Wedding
             </span>
-            <span className="text-[#fecd17]">Dream Wedding</span>
           </p>
+          <section className=" md:flex-row items-center justify-center w-fit mx-auto  flex-col  flex">
+            {/* Input Group */}
+            <div className=" hidden    relative  my-5 md:flex justify-start items-center rounded-lg  border focus-within:ring-1 focus-within:ring-primary transition duration-300  ">
+              <div className=" relative ">
+                <CustomInput
+                  type="text"
+                  placeholder="Select Vendor"
+                  className="outline-none   focus:ring-0 focus:ring-none bg-white  border-none  "
+                  aria-label="Select Vendor"
+                  value={search}
+                  onChange={handleSearchChange}
+                  onFocus={() => setShowSuggestions(true)}
+                  onBlur={() =>
+                    setTimeout(() => setShowSuggestions(false), 200)
+                  }
+                  leftIcon={<GoSearch size={20} />}
+                />
 
-          {/* Mobile Search Button */}
-          <CustomButton
-            leftIcon={<GoSearch size={20} className="text-white" />}
-            text="Search"
-            className="w-1/2 lg:hidden bg-primary px-10 py-2 rounded text-white md:ml-[-50px] lg:ml-0"
-            onClick={handleNavigate}
-          >
-            Discover
-          </CustomButton>
+                {showSuggestions && suggestions.length > 0 && (
+                  <ul className=" absolute  bg-white border border-gray-300 w-full rounded shadow-lg mt-1 z-20 overflow-auto  max-h-[200px]">
+                    {suggestions.map(({ category, subcategories }, index) => (
+                      <li key={index} className="px-4 py-2  cursor-pointer">
+                        {/* {category} */}
+                        <ul className=" text-sm grid grid-cols-1  gap-2">
+                          {subcategories.map((sub, index) => (
+                            <li
+                              key={index}
+                              className="text-gray-700 hover:bg-gray-200 p-2 rounded-md"
+                              onClick={() =>
+                                handleSuggestionClick(category, sub)
+                              }
+                            >
+                              {sub}
+                            </li>
+                          ))}
+                        </ul>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+              <div className="absolute  left-1/2 transform -translate-x-1/2   -mt-2">
+                <span className="  text-4xl text-pink-400">|</span>
+              </div>
+              <LocationSearch
+                customClass={"border-none rounded-none "}
+                setSearchLocation={setSearchLocation}
+              />
+            </div>
+
+            <CustomButton
+              text="search"
+              className="justify-ce bg-primary md:ml-5 px-10 py-2 text-white  border-none"
+              onClick={handleNavigate}
+            />
+          </section>
+
+          {/* Stats Section */}
+          <div className="flex mt-12 w-full overflow-scroll gap-4 justify-between items-center ">
+            {[
+              {
+                count: "50+",
+                desc: " Verified Users",
+                background: "text-[#F20574]",
+              },
+              {
+                count: "50+",
+                desc: " Verified Vendors",
+                background: "text-[#B14DA1]",
+              },
+              {
+                count: "50+",
+                desc: " Offering Services",
+                background: "text-[#C1000DB2]",
+              },
+            ].map(({ count, desc, background }, index) => (
+              <div
+                key={index}
+                className="border px-6 rounded-lg py-4 bg-white bg-opacity-20 backdrop-blur-lg min-w-[160px] text-center shadow-md"
+              >
+                <p className="text-3xl font-bold">{count}</p>
+                <div className="mt-2 bg-slate-600 h-1 w-full rounded"></div>
+                <p className={` ${background} text-sm whitespace-nowrap mt-2`}>
+                  {desc}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <img
+            className="relative  hidden lg:block -left-14 "
+            src="/heroSection/Vectorheart.png"
+            alt=""
+          />
         </div>
 
-        {/* Search Section */}
-        <section className="hidden z-50 absolute bottom-0 w-full lg:flex items-center justify-center flex-col gap-1 bg-gradient-to-t from-white bg-opacity-70">
-          {/* Input Group */}
-          <div className="flex gap-4 bg-white p-6 rounded-lg shadow-lg ">
-            {/* Vendor Input */}
-            <div className="w-[400px]">
-              <CustomInput
-                type="text"
-                placeholder="Select Vendor"
-                className="outline-none bg-white w-full focus:border-white"
-                aria-label="Select Vendor"
-                value={search}
-                onChange={handleSearchChange}
-                onFocus={() => setShowSuggestions(true)}
-                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-                leftIcon={<GoSearch size={20} />}
-              />
-
-              {showSuggestions && suggestions.length > 0 && (
-                <ul className="absolute bg-white border border-gray-300 rounded w-[400px] shadow-lg mt-1 z-20 overflow-auto max-h-[200px]">
-                  {suggestions.map(({ category, subcategories }, index) => (
-                    <li key={index} className="px-4 py-2  cursor-pointer">
-                      {/* {category} */}
-                      <ul className=" text-sm grid grid-cols-1  gap-2">
-                        {subcategories.map((sub, index) => (
-                          <li
-                            key={index}
-                            className="text-gray-700 hover:bg-gray-200 p-2 rounded-md"
-                            onClick={() => handleSuggestionClick(category, sub)}
-                          >
-                            {sub}
-                          </li>
-                        ))}
-                      </ul>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-
-            {/* Location Input */}
-            <div className="relative w-[400px]">
-              <LocationSearch setSearchLocation={setSearchLocation} />
-            </div>
-
-            {/* Discover Button */}
-            <CustomButton
-              text="Discover"
-              className="bg-primary px-10 py-2 rounded text-white"
-              onClick={handleNavigate}
-            >
-              Discover
-            </CustomButton>
+        {/* Right Section */}
+        <div className="relative flex flex-1 justify-center items-center w-full  md:h-[500px] lg:h-[600px]">
+          <div className="hidden md:block">
+            <CircularAnimation />
           </div>
-        </section>
+          <div className="absolute  top-10 right-40">
+            {" "}
+            <img
+              src="../../public/heroSection/Vectorheartbuzz.png"
+              alt="heartbuzz"
+            />
+          </div>
+        </div>
       </div>
     </>
   );
