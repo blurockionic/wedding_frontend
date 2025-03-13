@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import Footer from "../../Footer";
 
 // Custom hook to detect screen size (no changes)
 const useMediaQuery = (query) => {

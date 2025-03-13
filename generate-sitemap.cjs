@@ -10,8 +10,7 @@ const links = [
   { url: '/services', changefreq: 'daily', priority: 0.7 },
   { url: '/vendorlogin', changefreq: 'daily', priority: 0.8},
   { url: '/vendorsignup', changefreq: 'daily', priority: 0.8},
-  { url: '/all', changefreq: 'daily', priority: 0.8},
-  
+  { url: '/checklist', changefreq: 'weekly', priority: 0.7},
 
   
   // Add other routes here

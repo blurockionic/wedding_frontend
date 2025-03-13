@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 function Template() {
   const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn); 
-  
+
   const handleBuyClick = () => {
     if (isLoggedIn) {
       navigate("/payment");
@@ -43,11 +43,9 @@ function Template() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Link className="" to="/browse">
                   <button className="px-8 py-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-full font-medium hover:from-pink-600 hover:to-rose-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                     Browse Templates
                   </button>
-                </Link>
                   <button className="px-8 py-4 bg-white text-gray-900 rounded-full font-medium border border-gray-200 hover:border-pink-500 hover:text-pink-500 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                     Create Custom Design
                   </button>
@@ -122,7 +120,7 @@ function Template() {
                     <div className="sec_53">
                       <div className="h-[30px] w-[30%] popular_1"></div>
                     </div>
-                    <div className="h-[30px] w-[100%] mt-4 text-lg font-bold flex temp_name">
+                    <div className="h-[30px] w-[100%] mt-4 text-lg font-bold flex">
                       Bird of Charm
                       <div className="ms-[38%] text-black">₹100.00</div>
                       <div className="ms-[4%] text-yellow-500">⭐5</div>
@@ -146,9 +144,9 @@ function Template() {
                     <div className="sec_53_1">
                       <div className="h-[30px] w-[25%] popular"></div>
                     </div>
-                    <div className="h-[30px] w-[100%] mt-4 text-lg font-bold flex temp_name_1">
+                    <div className="h-[30px] w-[100%] mt-4 text-lg font-bold flex">
                       Aquamarine Peacock
-                      <div className="ms-[25%] text-green-600 text-[15px] bg-slate-200 rounded p-3 flex justify-center items-center free_1">
+                      <div className="ms-[25%] text-green-600 text-[15px] bg-slate-200 rounded p-3 flex justify-center items-center">
                         FREE
                       </div>
                       <div className="ms-[4%] text-yellow-500">⭐5</div>
@@ -168,7 +166,7 @@ function Template() {
                 <div className="sec_51">
                   <div className="sec_52">
                     <div className="sec_53"></div>
-                    <div className="h-[30px] w-[100%] mt-4 text-lg font-bold flex temp_name">
+                    <div className="h-[30px] w-[100%] mt-4 text-lg font-bold flex ">
                       Bird of Charm
                       <div className="ms-[53%] text-yellow-500">⭐4.9</div>
                     </div>
@@ -185,7 +183,7 @@ function Template() {
                 <div className="sec_51">
                   <div className="sec_52">
                     <div className="sec_53"></div>
-                    <div className="h-[30px] w-[100%] mt-4 text-lg font-bold flex temp_name">
+                    <div className="h-[30px] w-[100%] mt-4 text-lg font-bold flex ">
                       Bird of Charm
                       <div className="ms-[55%] text-yellow-500">⭐5</div>
                     </div>
@@ -200,7 +198,7 @@ function Template() {
                 <div className="sec_51">
                   <div className="sec_52">
                     <div className="sec_53"></div>
-                    <div className="h-[30px] w-[100%] mt-4 text-lg font-bold flex temp_name">
+                    <div className="h-[30px] w-[100%] mt-4 text-lg font-bold flex">
                       Bird of Charm
                       <div className="ms-[53%] text-yellow-500">⭐4.8</div>
                     </div>
@@ -215,137 +213,7 @@ function Template() {
                 <div className="sec_51">
                   <div className="sec_52">
                     <div className="sec_53"></div>
-                    <div className="h-[30px] w-[100%] mt-4 text-lg font-bold flex temp_name">
-                      Bird of Charm
-                      <div className="ms-[53%] text-yellow-500">⭐4.9</div>
-                    </div>
-                    <div className="sec_54">
-                      <div className="sec_55">Preview</div>
-                      <Link className="sec_55" to="/payment">
-                        <div className="">Buy</div>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="sec_5">
-                <div className="sec_51">
-                  <div className="sec_52">
-                    <div className="sec_53">
-                      <div className="h-[30px] w-[30%] popular_1"></div>
-                    </div>
-                    <div className="h-[30px] w-[100%] mt-4 text-lg font-bold flex temp_name">
-                      Bird of Charm
-                      <div className="ms-[38%] text-black">₹100.00</div>
-                      <div className="ms-[4%] text-yellow-500">⭐5</div>
-                    </div>
-                    <div className="sec_54">
-                      <Link className="sec_55" to="/view">
-                        <div className="">Preview</div>
-                      </Link>
-                      <Link className="sec_55" to="">
-                        <div>
-                        <button onClick={handleBuyClick}>
-                          Buy
-                        </button>
-                        </div>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-                <div className="sec_51">
-                  <div className="sec_52">
-                    <div className="sec_53_1">
-                      <div className="h-[30px] w-[25%] popular"></div>
-                    </div>
-                    <div className="h-[30px] w-[100%] mt-4 text-lg font-bold flex temp_name_1">
-                      Aquamarine Peacock
-                      <div className="ms-[25%] text-green-600 text-[15px] bg-slate-200 rounded p-3 flex justify-center items-center free_1">
-                        FREE
-                      </div>
-                      <div className="ms-[4%] text-yellow-500">⭐5</div>
-                    </div>
-                    <div className="sec_54">
-                      <Link className="sec_55" to="/view_1">
-                        <div className="">Preview</div>
-                      </Link>
-                      <Link className="sec_55" to="/preview_1">
-                        <div>
-                          Edit
-                        </div>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-                <div className="sec_51">
-                  <div className="sec_52">
-                    <div className="sec_53"></div>
-                    <div className="h-[30px] w-[100%] mt-4 text-lg font-bold flex temp_name">
-                      Bird of Charm
-                      <div className="ms-[53%] text-yellow-500">⭐4.9</div>
-                    </div>
-                    <div className="sec_54">
-                      <div className="sec_55">Preview</div>
-                      <Link className="sec_55" to="/payment">
-                        <div className="">Buy</div>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="sec_5">
-                <div className="sec_51">
-                  <div className="sec_52">
-                    <div className="sec_53">
-                      <div className="h-[30px] w-[30%] popular_1"></div>
-                    </div>
-                    <div className="h-[30px] w-[100%] mt-4 text-lg font-bold flex temp_name">
-                      Bird of Charm
-                      <div className="ms-[38%] text-black">₹100.00</div>
-                      <div className="ms-[4%] text-yellow-500">⭐5</div>
-                    </div>
-                    <div className="sec_54">
-                      <Link className="sec_55" to="/view">
-                        <div className="">Preview</div>
-                      </Link>
-                      <Link className="sec_55" to="">
-                        <div>
-                        <button onClick={handleBuyClick}>
-                          Buy
-                        </button>
-                        </div>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-                <div className="sec_51">
-                  <div className="sec_52">
-                    <div className="sec_53_1">
-                      <div className="h-[30px] w-[25%] popular"></div>
-                    </div>
-                    <div className="h-[30px] w-[100%] mt-4 text-lg font-bold flex temp_name_1">
-                      Aquamarine Peacock
-                      <div className="ms-[25%] text-green-600 text-[15px] bg-slate-200 rounded p-3 flex justify-center items-center free_1">
-                        FREE
-                      </div>
-                      <div className="ms-[4%] text-yellow-500">⭐5</div>
-                    </div>
-                    <div className="sec_54">
-                      <Link className="sec_55" to="/view_1">
-                        <div className="">Preview</div>
-                      </Link>
-                      <Link className="sec_55" to="/preview_1">
-                        <div>
-                          Edit
-                        </div>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-                <div className="sec_51">
-                  <div className="sec_52">
-                    <div className="sec_53"></div>
-                    <div className="h-[30px] w-[100%] mt-4 text-lg font-bold flex temp_name">
+                    <div className="h-[30px] w-[100%] mt-4 text-lg font-bold flex">
                       Bird of Charm
                       <div className="ms-[53%] text-yellow-500">⭐4.9</div>
                     </div>
@@ -366,7 +234,7 @@ function Template() {
                 <div className="another_sec_51">
                   <div className="sec_52">
                     <div className="sec_53"></div>
-                    <div className="h-[30px] w-[100%] mt-4 text-lg font-bold flex a_53">
+                    <div className="h-[30px] w-[100%] mt-4 text-lg font-bold flex">
                       Bird of Charm
                       <div className="md:ms-[55%] ms-[50%] text-yellow-500">
                         ⭐5
@@ -387,7 +255,7 @@ function Template() {
                 <div className="another_sec_51">
                   <div className="sec_52">
                     <div className="sec_53"></div>
-                    <div className="h-[30px] w-[100%] mt-4 text-lg font-bold flex a_53">
+                    <div className="h-[30px] w-[100%] mt-4 text-lg font-bold flex ">
                       Bird of Charm
                       <div className="md:ms-[55%] ms-[50%] text-yellow-500">
                         ⭐5
@@ -405,7 +273,7 @@ function Template() {
             </div>
           </div>
         </div>
-        <Footer></Footer>
+        <Footer />
       </div>
     </div>
   );

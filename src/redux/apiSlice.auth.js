@@ -23,14 +23,6 @@ export const apiAuthSlice = createApi({
       }),
     }),
 
-    googleLogin: builder.mutation({
-      query: (userData) => ({
-        url: `/users/google-login`,
-        method: "POST",
-        body: userData,
-      }),
-    }),
-
    
     logout: builder.mutation({
       query: () => ({
@@ -83,7 +75,6 @@ export const apiAuthSlice = createApi({
 
 export const {
   useLoginMutation,
-  useGoogleLoginMutation,
   useLogoutMutation,
   useSignupMutation,
   useUpdateUserMutation,

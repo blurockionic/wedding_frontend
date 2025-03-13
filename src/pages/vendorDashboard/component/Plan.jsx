@@ -14,7 +14,7 @@ export default function Plan({ displayRazorpay }) {
         {error?.message || "An error occurred while fetching plans"}
       </div>
     );
-   
+
   return (
     <div className="mx-auto flex justify-center items-center flex-col p-4">
       <h2 className="text-3xl text-center font-montserrat text-primary mb-6">

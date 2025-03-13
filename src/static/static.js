@@ -38,7 +38,6 @@ export const weddingVendors = [
   "Pandit",
   "Photobooth",
   "Astrologers",
-  "Invitation"
 ];
 export const brides = [
   "Bridal Lahenga",

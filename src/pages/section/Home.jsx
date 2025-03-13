@@ -314,8 +314,8 @@ export default function Home() {
         </section>
       </div>
 
-     
-    
+      {/* Discover Section */}
+      <Discover />
     </>
   );
 }

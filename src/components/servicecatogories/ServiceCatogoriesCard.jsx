@@ -1,64 +1,52 @@
 import { Plus } from "lucide-react";
 
-const ServiceCategoriesCard = ({ title, description, image, handleOnPlusBtn, handleOnCategory, className }) => {
+const ServiceCategoriesCard = ({ title, description, image, handleOnPlusBtn, handleOnCategory, className}) => {
+ 
+
   const onClickOnPlusBtn = () => {
-    handleOnPlusBtn(title);
-  };
+    handleOnPlusBtn(title)
+  }
 
-  const handleOnCategoryBtn = () => {
-    handleOnCategory(title);
-  };
-
+  const handleOnCategoryBtn = (title) => {
+    handleOnCategory(title)
+  }
   return (
-    <div
-      className={`relative p-5 w-full max-w-sm bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer border border-gray-200 hover:shadow-xl transition-shadow duration-300 ${className}`}
-    >
-      {/* Background Image with Overlay */}
+   <>
+    <div 
+    
+    className={`relative p-5 
+    w-full max-w-sm bg-white rounded-2xl 
+    shadow-lg overflow-hidden cursor-pointer border
+     border-gray-300 ${className}`}>
+      {/* Background Image */}
       <div
-        className="h-48 bg-cover bg-center rounded-t-2xl relative"
+        className="h-40 bg-cover bg-center rounded-t-2xl"
         style={{ backgroundImage: `url(${image})` }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-      </div>
+      ></div>
 
       {/* Card Content */}
       <div className="p-4">
-        {/* Title with Elegant Font */}
-        <h2
-          onClick={handleOnCategoryBtn}
-          className="text-2xl font-bold text-gray-800 hover:text-pink-600 transition-colors duration-300 cursor-pointer"
-        >
-          {title}
-        </h2>
-
-        {/* Description with Smaller Font */}
+        <h2 
+        onClick={() => handleOnCategoryBtn(title)}
+        className="text-xl font-semibold hover:underline">{title}</h2>
         <p className="text-gray-600 text-sm mt-2">{description}</p>
 
         {/* Action Buttons */}
         <div className="mt-4 flex items-center justify-between">
-          {/* Know More Button */}
           <button
-            onClick={handleOnCategoryBtn}
-            className="text-pink-600 font-medium hover:underline hover:text-pink-700 transition-colors duration-300"
-          >
+          onClick={() => handleOnCategoryBtn(title)}
+           className="text-foreground font-medium hover:underline">
             Know More
           </button>
-
-          {/* Plus Button with Elegant Design */}
           <button
-            onClick={onClickOnPlusBtn}
-            className="bg-pink-50 text-pink-600 p-2 rounded-full hover:bg-pink-100 transition-colors duration-300"
-          >
+            onClick={() => onClickOnPlusBtn()}
+            className="bg-gray-50 text-foreground p-2 rounded-full hover:bg-gray-200">
             <Plus size={18} />
           </button>
         </div>
       </div>
-
-      {/* Decorative Ribbon (Optional) */}
-      <div className="absolute top-0 right-0 bg-pink-600 text-white px-3 py-1 text-sm font-semibold rounded-bl-lg">
-        New
-      </div>
     </div>
+   </>
   );
 };
 

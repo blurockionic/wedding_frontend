@@ -3,7 +3,7 @@ import ServiceCard from "../components/ServiceCard";
 import CustomText from "../components/global/text/CustomText";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
-const LandingPageSlider = React.memo(({ title, services ,bgColor}) => {
+const LandingPageSlider = React.memo(({ title, services }) => {
   const sliderRef = useRef(null);
   const [showArrows, setShowArrows] = useState(false);
 

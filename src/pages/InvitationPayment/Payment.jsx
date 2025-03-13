@@ -77,7 +77,7 @@ function Payment() {
       handler: function (response) {
         setResponseId(response.razorpay_payment_id);
         setPaymentSuccess(true);
-        navigate("/preview");
+        navigate("/preview"); // Automatically navigate to /preview after success
       },
       prefill: {
         name: "marriage vendors",
