@@ -62,7 +62,7 @@ const CategoryByState = () => {
       {/* Breadcrumb Navigation */}
       <span className="px-4 md:px-16 text-xs md:text-sm">
         <Link to={`/all`}>Wedding</Link> &gt;
-        <Link to={`/all/${category}`}>{category}</Link> &gt;
+        <Link >{category}</Link> &gt;
         <Link to={`/all/${category}/${subcategory}`}>{subcategory}</Link> &gt;
         <Link
           to={`/all/${category}/${subcategory}/${state}`}

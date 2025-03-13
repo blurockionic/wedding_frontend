@@ -72,7 +72,7 @@ const SubCategories = () => {
       {/* navigation */}
       <span className="px-4 md:px-16 text-xs md:text-sm">
         <Link to={`/all`}>Wedding</Link> &gt;
-        <Link to={`/all/${category}`}>{category}</Link> &gt;
+        <Link>{category}</Link> &gt;
         <Link to={`/all/${category}/${subCategory}`}>{subCategory}</Link>
       </span>
       <h1 className="px-4 md:px-16 text-2xl font-semibold">Search for {subCategory}</h1>
