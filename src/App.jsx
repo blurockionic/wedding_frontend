@@ -18,10 +18,17 @@ const VendorRegistration = lazy(() =>
 import VendorDashboard from "./pages/vendorDashboard/Dashboard.jsx";
 const Subscription = lazy(() => import("./pages/Subscription.jsx"));
 import { HelmetProvider } from "react-helmet-async";
+import { wrap } from "framer-motion";
 
 const Billing = lazy(() => import("./pages/vendorDashboard/Billing.jsx"));
 
 const Checklist = lazy(() => import("./pages/userDashboard/checklist/Checklist.jsx"));
+const Admin = lazy(() => import("./pages/admin/Dashboard.jsx"));
+
+const Blog = lazy(() => import("./pages/blog-section/blog-section/Blog.jsx"));
+const BlogDashboard = lazy(() => import("./pages/blog-section/admin-section/BlogDashboard.jsx"));
+const NewBlogPost = lazy(() => import("./pages/blog-section/admin-section/NewBlogPost.jsx"));
+const BlogList = lazy(() => import("./pages/blog-section/blog-section/BlogList.jsx"));
 
 const Setting = lazy(() => import("./pages/vendorDashboard/Setting.jsx"));
 const ContactUs = lazy(() => import("./pages/contactus/ContactUs.jsx"));
@@ -98,6 +105,7 @@ const Preview_2 = lazy(() => import("./pages/EditTemplate/Preview_2.jsx"));
 const Card = lazy(() => import("./pages/InvitationCard/Card.jsx"));
 const Guest = lazy(() => import("./pages/AddGuests/Guest.jsx"));
 const Modify = lazy(() => import("./pages/UpdatedTemplate/Modify.jsx"));
+const Editor = lazy(() => import("./pages/editor/Editor.jsx"));
 
 
 const WeddingDairy  = lazy(()=> import("./pages/wedding-plan/WeddingPlan.jsx"))
@@ -116,16 +124,28 @@ const router = createBrowserRouter([
     path: "/",
     element: <OutletPage />,
     children: [
+      { path: "/blog_dashboard", element: wrapWithSuspense(BlogDashboard)},
+      { path: "/new-blog-post", element: wrapWithSuspense(NewBlogPost)},
+      { path: "/blogs", element: wrapWithSuspense(BlogList)},
       { path: "/", element: wrapWithSuspense(LandingPage) },
+      { path: "/admin", element: wrapWithSuspense(Admin) },
       { path: "/signup", element: wrapWithSuspense(Signup) },
       { path: "/templates", element: wrapWithSuspense(Template) },
       { path: "/browse", element: wrapWithSuspense(Review) },
       { path: "/card", element: wrapWithSuspense(Card) },
       { path: "/guests", element: wrapWithSuspense(Guest) },
+
+      //editor
+      { path: "/editor", element: wrapWithSuspense(Editor) },
+
+      { path: "/guests/see-template/template", element: wrapWithSuspense(Modify) },
+      // { path: "/guests/see-template/template1", element: wrapWithSuspense(Modify_1) },
+
       {
         path: "/guests/see-template/:template",
         element: wrapWithSuspense(Modify),
       },
+
       { path: "/payment", element: wrapWithSuspense(Payment) },
       { path: "/preview", element: wrapWithSuspense(Preview) },
       { path: "/preview_1", element: wrapWithSuspense(Preview_1) },
@@ -134,7 +154,11 @@ const router = createBrowserRouter([
       { path: "/view_1", element: wrapWithSuspense(View_1) },
       { path: "/login", element: wrapWithSuspense(Login) },
       { path: "/contactus", element: wrapWithSuspense(ContactUs) },
+
+      { path: "/checklist", element: wrapWithSuspense(Checklist) },
+
       { path: "/weddingplan", element: wrapWithSuspense(WeddingDairy) },
+
       // dynamic route for category
       { path: "/all", element: wrapWithSuspense(AllCategories) },
       { path: "/all/:category", element: wrapWithSuspense(Category) },
@@ -159,7 +183,7 @@ const router = createBrowserRouter([
         element: wrapWithSuspense(VenderBiodata),
       },
 
-      { path: "/about", element: wrapWithSuspense(AboutPage) }, // Add the About page route
+      { path: "/about", element: wrapWithSuspense(AboutPage) }, 
       {
         path: "/user-forgot-password",
         element: wrapWithSuspense(UserForgotPassword),
@@ -181,6 +205,8 @@ const router = createBrowserRouter([
       },
       { path: "/services", element: wrapWithSuspense(ServicesPage) },
       { path: "/service/:id", element: wrapWithSuspense(ServiceDetail) },
+
+      // Protect user admin routes
       {
         path: "/profile",
         element: (

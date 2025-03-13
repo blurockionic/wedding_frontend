@@ -27,8 +27,7 @@ const CustomButton = ({
       {/* Left Icon */}
       {leftIcon && <span>{leftIcon}</span>}
 
-      {/* Button Text */}
-      <span>{text}</span>
+     {text}
 
       {/* Right Icon */}
       {rightIcon && <span>{rightIcon}</span>}

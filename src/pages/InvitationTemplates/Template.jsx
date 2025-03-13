@@ -48,9 +48,6 @@ function Template() {
                     Browse Templates
                   </button>
                 </Link>
-                  <button className="px-8 py-4 bg-white text-gray-900 rounded-full font-medium border border-gray-200 hover:border-pink-500 hover:text-pink-500 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                    Create Custom Design
-                  </button>
                 </div>
 
                 <div className="flex items-center justify-center lg:justify-start gap-8 pt-6">

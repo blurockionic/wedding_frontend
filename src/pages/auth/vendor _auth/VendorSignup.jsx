@@ -60,10 +60,11 @@ function VendorRegistration() {
 
   return (
     <FormProvider {...methods}>
-
       {/* SEO Optimization */}
       <Helmet>
-        <title>Vendor Signup - Join Marriage Vendors & Grow Your Business</title>
+        <title>
+          Vendor Signup - Join Marriage Vendors & Grow Your Business
+        </title>
         <meta
           name="description"
           content="Register as a vendor on Marriage Vendors, showcase your wedding services, and connect with engaged couples. Sign up today and grow your business!"
@@ -78,8 +79,14 @@ function VendorRegistration() {
           property="og:description"
           content="Sign up to showcase your wedding services and connect with engaged couples."
         />
-        <meta property="og:image" content="https://www.marriagevendors.com/signup-preview.jpg" />
-        <meta property="og:url" content="https://www.marriagevendors.com/vendorSignup" />
+        <meta
+          property="og:image"
+          content="https://www.marriagevendors.com/signup-preview.jpg"
+        />
+        <meta
+          property="og:url"
+          content="https://www.marriagevendors.com/vendorSignup"
+        />
         <meta name="twitter:card" content="summary_large_image" />
         <script type="application/ld+json">
           {JSON.stringify({
@@ -99,8 +106,8 @@ function VendorRegistration() {
         </script>
       </Helmet>
 
-      <div className="min-h-screen bg-[#f2f2f2]  px-4 grid grid-cols-1 md:grid-cols-3">
-        <div className="col-span-1 hidden md:block">
+      <div className="min-h-screen bg-gradient-to-b from-yellow-100  to-pink-100   grid grid-cols-1 md:grid-cols-5">
+        <div className="col-span-2 hidden md:block">
           {/* sign up  */}
           <div
             className="relative h-screen flex items-center justify-center bg-cover bg-center"
@@ -113,17 +120,17 @@ function VendorRegistration() {
             <div className="relative z-10 text-center text-white px-6 ">
               <NavLink
                 to="/"
-                className="cursor-pointer flex gap-3 justify-center w-full "
+                className="cursor-pointer flex flex-col items-center gap-3 justify-center w-full "
               >
                 <img src={brandlogo} alt="brandlogo" className="w-16 h-16" />
                 <div className="flex flex-col justify-start items-start">
                   <span className="text-background text-4xl">
                     Marriage Vendors
                   </span>
-                  <span className="text-background text-xs">Wedding Organiser</span>
+                  {/* <span className="text-background text-xs">Wedding Organiser</span> */}
                 </div>
               </NavLink>
-              <h2 className="text-4xl md:text-5xl font-bold mb-4 mt-10">
+              <h2 className="text-4xl md:text-5xl font-bold mb-4 mt-40">
                 Join Us Today!
               </h2>
               <p className="text-lg md:text-xl mb-6">
@@ -133,7 +140,7 @@ function VendorRegistration() {
             </div>
           </div>
         </div>
-        <div className="col-span-2 w-full px-10 my-auto">
+        <div className="col-span-3 w-full md:px-10 my-auto">
           {/* Header Card */}
           <div className="bg-white rounded-t-lg shadow-sm p-6 border-b border-[#d6d6d6]">
             <div className="flex items-center justify-between mb-6">
@@ -145,12 +152,35 @@ function VendorRegistration() {
               </p>
             </div>
 
-            {/* Progress Bar */}
-            <div className="relative h-2 bg-[#e6e6e6] rounded-full overflow-hidden">
-              <div
-                className="absolute h-full bg-[#d43fa6] rounded-full transition-all duration-300 ease-in-out"
-                style={{ width: `${(currentStep / 6) * 100}%` }}
-              />
+            {/* Progress Bar with Checkpoints */}
+            <div className="relative w-full">
+              {/* Checkpoints Container */}
+              <div className="flex justify-between w-full absolute top-[-10px] z-10">
+                {[1, 2, 3, 4, 5, 6].map((step) => (
+                  <div
+                    key={step}
+                    className="relative w-1/6 flex justify-center"
+                  >
+                    <div
+                      className={`w-6 h-6 flex items-center justify-center rounded-full border-2 text-xs font-bold ${
+                        currentStep >= step
+                          ? "border-white bg-primary text-white"
+                          : "border-gray-400 bg-white text-gray-600"
+                      }`}
+                    >
+                      {step}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Progress Bar */}
+              <div className="h-2 bg-[#e6e6e6] rounded-full overflow-hidden mt-4 relative">
+                <div
+                  className="absolute h-full bg-primary rounded-full transition-all duration-300 ease-in-out"
+                  style={{ width: `${(currentStep / 6) * 100}%` }}
+                />
+              </div>
             </div>
           </div>
 
@@ -168,7 +198,7 @@ function VendorRegistration() {
 
             {/* Loading and Error States */}
             {isLoading && (
-              <div className="mt-6 text-center text-[#d43fa6]">
+              <div className="mt-6 text-center text-primary">
                 <p className="font-medium">Processing your registration...</p>
               </div>
             )}
@@ -195,7 +225,7 @@ function VendorRegistration() {
               {currentStep < 6 && (
                 <button
                   onClick={nextStep}
-                  className="px-6 py-2.5 bg-[#d43fa6] hover:bg-[#c23795] text-white rounded-md transition-colors duration-200 ml-auto"
+                  className="px-6 py-2.5 bg-primary hover:border hover:border-dashed hover:border-primary hover:bg-white hover:text-primary  text-white rounded-md transition-colors duration-200 ml-auto"
                 >
                   Next
                 </button>
@@ -217,4 +247,3 @@ function VendorRegistration() {
 }
 
 export default VendorRegistration;
-

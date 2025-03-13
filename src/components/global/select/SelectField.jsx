@@ -1,8 +1,8 @@
 import React from "react";
 
-export const SelectField = ({ id, label, options, register, error, placeholder }) => (
+export const SelectField = ({ id, label, value, options, register, error, placeholder }) => (
   <div className="my-4 cursor-pointer">
-    <label htmlFor={id} className="block font-montserrat text-muted-foreground text-sm font-bold ">
+    <label htmlFor={id} className="block font-montserrat text-gray-700 font-medium ">
       {label}
     </label>
     <div className="relative">
@@ -14,7 +14,11 @@ export const SelectField = ({ id, label, options, register, error, placeholder }
           backgroundColor: 'red',
           fontWeight: 'bold',
         },
+
+        
       }}
+
+      value={value}
         id={id}
         {...register(id)}
         className="w-full p-2 border rounded bg-background text-popover-foreground focus:outline-none focus:ring-2 focus:ring-ring"

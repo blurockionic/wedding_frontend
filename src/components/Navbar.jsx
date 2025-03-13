@@ -5,10 +5,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { useLogoutMutation } from "../redux/apiSlice.auth";
 import {
   allCategories,
-  brides,
-  grooms,
-  weddingVendors,
-  weddingVenues,
 } from "../static/static";
 import TopNavbar from "./topnavbar/TopNavbar";
 import CustomText from "./global/text/CustomText";
@@ -37,7 +33,6 @@ function Navbar() {
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
-  console.log(allCategories);
 
   return (
     <>
@@ -292,68 +287,89 @@ function Navbar() {
                   </NavLink>
                 </li>
 
-                {user?.role !== "USER" ? (
-                  <>
+                  {(user?.role!=="ADMIN" && user?.role!=="SUPER_ADMIN") ? (
+                    <>
+                    </>
+                  ) : (
+                    <>
                     <li className="lg:inline-block">
-                      <NavLink
-                        to="/login"
-                        onClick={() => setIsMenuOpen(false)}
-                        className={({ isActive }) =>
-                          isActive
-                            ? "text-primary px-3 py-1 border border-primary  rounded-md"
-                            : "px-3 py-1 text-primary border border-primary rounded-md"
-                        }
-                      >
-                        Login
-                      </NavLink>
-                    </li>
+                        <NavLink
+                          to="/admin"
+                          onClick={() => setIsMenuOpen(false)}
+                          className={({ isActive }) =>
+                            isActive
+                              ? "text-primary px-3 py-1 border border-primary  rounded-md"
+                              : "px-3 py-1 text-primary border border-primary rounded-md"
+                          }
+                        >
+                          ADMIN
+                        </NavLink>
+                      </li>
+                    </>
+                  )}
+
+                  {( user?.role!=="USER" && user?.role!=="ADMIN" && user?.role!=="SUPER_ADMIN" ) ? (
+                    <>
+                      <li className="lg:inline-block">
+                        <NavLink
+                          to="/login"
+                          onClick={() => setIsMenuOpen(false)}
+                          className={({ isActive }) =>
+                            isActive
+                              ? "text-primary px-3 py-1 border border-primary  rounded-md"
+                              : "px-3 py-1 text-primary border border-primary rounded-md"
+                          }
+                        >
+                          Login
+                        </NavLink>
+                      </li>
+                      <li className="lg:inline-block">
+                        <NavLink
+                          to="/signup"
+                          onClick={() => setIsMenuOpen(false)}
+                          className={({ isActive }) =>
+                            isActive
+                              ? "text-white px-3 py-1 bg-primary rounded-md"
+                              : "text-white px-3 py-1 bg-primary rounded-md"
+                          }
+                        >
+                          Sign up
+                        </NavLink>
+                      </li>
+                    </>
+                  ) : (
                     <li className="lg:inline-block">
-                      <NavLink
-                        to="/signup"
-                        onClick={() => setIsMenuOpen(false)}
-                        className={({ isActive }) =>
-                          isActive
-                            ? "text-white px-3 py-1 bg-primary rounded-md"
-                            : "text-white px-3 py-1 bg-primary rounded-md"
-                        }
+                      <div
+                        onClick={handleOnProfile}
+                        className="flex items-center gap-x-2 cursor-pointer"
                       >
-                        Sign up
-                      </NavLink>
+                        <img
+                          src={user?.profile_photo || Avatar}
+                          alt="Profile"
+                          className="w-8 h-8 rounded-full"
+                        />
+                        <CustomText
+                          variant="paragraph"
+                          className="text-sm hidden lg:block"
+                          text="Profile"
+                        />
+                      </div>
                     </li>
-                  </>
-                ) : (
-                  <li className="lg:inline-block">
-                    <div
-                      onClick={handleOnProfile}
-                      className="flex items-center gap-x-2 cursor-pointer"
-                    >
-                      <img
-                        src={user?.profile_photo || Avatar}
-                        alt="Profile"
-                        className="w-8 h-8 rounded-full"
-                      />
-                      <CustomText
-                        variant="paragraph"
-                        className="text-sm hidden lg:block"
-                        text="Profile"
-                      />
-                    </div>
-                  </li>
-                )}
-              </ul>
-            </div>
-            {/* Background Overlay */}
-            <div
-              className={`fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ${
-                isMenuOpen
-                  ? "opacity-100 backdrop-blur-md"
-                  : "opacity-0 pointer-events-none"
-              } z-40`}
-              onClick={() => setIsMenuOpen(false)}
-            />
-          </nav>
-        </>
-      </div>
+                  )}
+                </ul>
+              </div>
+              {/* Background Overlay */}
+              <div
+                className={`fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ${
+                  isMenuOpen
+                    ? "opacity-100 backdrop-blur-md"
+                    : "opacity-0 pointer-events-none"
+                } z-40`}
+                onClick={() => setIsMenuOpen(false)}
+              />
+            </nav>
+          </>
+        </div>
     </>
   );
 }
