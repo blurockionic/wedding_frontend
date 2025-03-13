@@ -5,10 +5,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { useLogoutMutation } from "../redux/apiSlice.auth";
 import {
   allCategories,
-  brides,
-  grooms,
-  weddingVendors,
-  weddingVenues,
 } from "../static/static";
 import TopNavbar from "./topnavbar/TopNavbar";
 import CustomText from "./global/text/CustomText";
