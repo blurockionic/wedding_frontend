@@ -127,7 +127,7 @@ export default function Home() {
           <img
             className="hidden lg:block absolute  left-0 -top-20  "
             src="/heroSection/Vector1.png"
-            alt=""
+            alt="Vector1"
           />
 
           <p
@@ -234,7 +234,7 @@ export default function Home() {
           <img
             className="relative  hidden lg:block -left-14 "
             src="/heroSection/Vectorheart.png"
-            alt=""
+            alt="Vectorheart"
           />
         </div>
 

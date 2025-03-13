@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useRef } from "react";
+import todo1 from "../../../public/tools/todo-list/todo1.png"
+import todo2 from "../../../public/tools/todo-list/todo2.png"
+import wishlist1 from "../../../public/tools/wishlist/wishlist1.png"
+import wishlist2 from "../../../public/tools/wishlist/wishlist2.png"
+import wishlist3 from "../../../public/tools/wishlist/wishlist3.png"
+import wishlist4 from "../../../public/tools/wishlist/wishlist4.png"
+import eventplan1 from "../../../public/tools/event-plan/eventplan1.png"
+import eventplan2 from "../../../public/tools/event-plan/eventplan2.png"
+import invite1 from "../../../public/tools/invitation/invitationcar1.png"
 
-// const cards = [
-//   { id: 1, title: "Card 1", image: "https://via.placeholder.com/300" },
-//   { id: 2, title: "Card 2", image: "https://via.placeholder.com/300" },
-//   { id: 3, title: "Card 3", image: "https://via.placeholder.com/300" },
-//   { id: 4, title: "Card 4", image: "https://via.placeholder.com/300" },
-//   { id: 5, title: "Card 5", image: "https://via.placeholder.com/300" },
-// ];
+
+
 
 const Benefits = () => {
   // const [expandedId, setExpandedId] = useState(null);
@@ -65,12 +69,12 @@ const Benefits = () => {
             </div>
             <div className="w-full h-[30vh] sm:h-[40vh] md:h-[40vh] lg:h-[38vh] rounded-xl flex items-center justify-center relative group ">
               <img
-                src="#"
+                src={todo1}
                 alt="todo list"
                 className="absolute w-[80%] sm:w-[70%] md:w-[60%] lg:w-[50%] h-full object-contain bg-white transition-transform duration-300 ease-in-out group-hover:rotate-[-10deg] -translate-x-10 rounded-xl shadow-xl"
               />
               <img
-                src="#"
+                src={todo2}
                 alt="todo list"
                 className="absolute w-[80%] sm:w-[70%] md:w-[60%] lg:w-[50%] h-full object-contain bg-white transition-transform duration-300 ease-in-out group-hover:rotate-[10deg] translate-x-10 rounded-xl shadow-lg"
               />
@@ -91,12 +95,12 @@ const Benefits = () => {
 
             <div className="w-full h-[30vh] sm:h-[40vh] md:h-[30vh] lg:h-[20vh] rounded-xl flex items-center justify-center relative group ">
               <img
-                src="#"
+                src={eventplan2}
                 alt="todo list"
-                className="absolute w-[80%] sm:w-[70%] md:w-[60%] lg:w-[60%] h-full object-contain bg-white transition-transform duration-300 ease-in-out group-hover:rotate-[-20deg] -translate-x-10 md:-translate-y-10 rounded-xl shadow-xl"
+                className="absolute w-[80%] sm:w-[70%] md:w-[60%] lg:w-[60%] h-full object-cover bg-white transition-transform duration-300 ease-in-out group-hover:rotate-[-20deg] -translate-x-10 md:-translate-y-10 rounded-xl shadow-xl"
               />
               <img
-                src="#"
+                src={eventplan1}
                 alt="todo list"
                 className="absolute w-[80%] sm:w-[70%] md:w-[60%] lg:w-[70%] h-full object-contain bg-white transition-transform duration-300 ease-in-out group-hover:rotate-[20deg] translate-x-12 rounded-xl shadow-lg"
               />
@@ -110,24 +114,24 @@ const Benefits = () => {
           <div className="bg-yellow-100 text-black px-6 py-6 rounded-2xl shadow-lg flex flex-col justify-between gap-5 sm:gap-6 md:gap-10 group">
             <div className="w-full h-[20vh] sm:h-[20vh] md:h-[20vh] lg:h-[20vh] rounded-xl flex items-center justify-center relative ">
               <img
-                src="#"
-                alt="todo list"
-                className="absolute w-[80%] sm:w-[70%] md:w-[70%] lg:w-[90%] h-full object-contain bg-yellow-300 transition-transform duration-300 ease-in-out group-hover:rotate-[-32deg] group-hover:-translate-x-2 group-hover:-translate-y-12 rounded-xl shadow-xl"
+                src={wishlist4}
+                alt="wishlist"
+                className="absolute w-[80%] sm:w-[70%] md:w-[70%] lg:w-[90%] h-full object-cover border border-white bg-yellow-300 transition-transform duration-300 ease-in-out group-hover:rotate-[-32deg] group-hover:-translate-x-2 group-hover:-translate-y-12 rounded-xl shadow-xl"
               />
               <img
-                src="#"
-                alt="todo list"
-                className="absolute w-[80%] sm:w-[70%] md:w-[70%] lg:w-[90%] h-full object-contain bg-green-500 transition-transform duration-300 ease-in-out group-hover:rotate-[-18deg] group-hover:-translate-x-2 group-hover:-translate-y-7 rounded-xl shadow-xl"
+                src={wishlist3}
+                alt="wishlist"
+                className="absolute w-[80%] sm:w-[70%] md:w-[70%] lg:w-[90%] h-full object-cover bg-green-500 border border-white transition-transform duration-300 ease-in-out group-hover:rotate-[-18deg] group-hover:-translate-x-2 group-hover:-translate-y-7 rounded-xl shadow-xl"
               />
               <img
-                src="#"
-                alt="todo list"
-                className="absolute w-[80%] sm:w-[70%] md:w-[70%] lg:w-[90%] h-full object-contain bg-blue-600 transition-transform duration-300 ease-in-out group-hover:rotate-[-6deg] -translate-x-2 group-hover:-translate-y-4 rounded-xl shadow-xl "
+                src={wishlist2}
+                alt="wishist"
+                className="absolute w-[80%] sm:w-[70%] md:w-[70%] lg:w-[90%] h-full object-cover bg-blue-600 border border-white transition-transform duration-300 ease-in-out group-hover:rotate-[-6deg] -translate-x-2 group-hover:-translate-y-4 rounded-xl shadow-xl "
               />
               <img
-                src="#"
-                alt="todo list-"
-                className="absolute w-[80%] sm:w-[70%] md:w-[70%] lg:w-[90%] h-full object-contain bg-white transition-transform duration-300 ease-in-out rounded-xl shadow-lg"
+                src={wishlist1}
+                alt="wish list-"
+                className="absolute w-[80%] sm:w-[70%] md:w-[70%] lg:w-[90%] h-full object-cover bg-white border border-white transition-transform duration-300 ease-in-out rounded-xl shadow-lg"
               />
             </div>
             <div className="">
@@ -183,36 +187,36 @@ const Benefits = () => {
 
             {/* List Container */}
             <div className="relative w-full lg:w-[50%]  flex justify-center items-center gap-3">
-              <ul className=" w-full flex flex-col items-center gap-3  rotate-[-30deg] ">
-                {[1, 2, 3, 4].map((item, index) => (
+            <ul className="w-full flex flex-col items-center gap-3   rotate-[-30deg]">
+                {[invite1, invite1, invite1, invite1].map((item, index) => (
                   <li
                     key={index}
                     className="p-3 flex items-center justify-center bg-white w-[80%] lg:w-[90%] h-20 rounded-lg shadow-lg 
-          transform rotate-x-30 translate-y-[10px] scale-95 transition-all duration-300 hover:scale-100 hover:translate-y-0 group-hover:overflow-scroll"
+          transform rotate-x-30 translate-y-[10px] scale-95 transition-all duration-300 hover:scale-100 hover:translate-y-0 overflow-hidden"
                   >
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <ul className="w-full flex flex-col items-center gap-3  rotate-[-30deg]">
-                {[1, 2, 3, 4, 5].map((item, index) => (
-                  <li
-                    key={index}
-                    className="p-3 flex items-center justify-center bg-white w-[80%] lg:w-[90%] h-20 rounded-lg shadow-lg 
-          transform rotate-x-30 translate-y-[10px] scale-95 transition-all duration-300 hover:scale-100 hover:translate-y-0 "
-                  >
-                    {item}
+                    <img src={item} alt={`image-${index}`} className="object-cover"/>
                   </li>
                 ))}
               </ul>
               <ul className="w-full flex flex-col items-center gap-3   rotate-[-30deg]">
-                {[1, 2, 3, 4].map((item, index) => (
+                {[invite1, invite1, invite1, invite1].map((item, index) => (
                   <li
                     key={index}
                     className="p-3 flex items-center justify-center bg-white w-[80%] lg:w-[90%] h-20 rounded-lg shadow-lg 
-          transform rotate-x-30 translate-y-[10px] scale-95 transition-all duration-300 hover:scale-100 hover:translate-y-0 "
+          transform rotate-x-30 translate-y-[10px] scale-95 transition-all duration-300 hover:scale-100 hover:translate-y-0 overflow-hidden"
                   >
-                    {item}
+                    <img src={item} alt={`image-${index}`} className="object-cover"/>
+                  </li>
+                ))}
+              </ul>
+              <ul className="w-full flex flex-col items-center gap-3   rotate-[-30deg]">
+                {[invite1, invite1, invite1, invite1].map((item, index) => (
+                  <li
+                    key={index}
+                    className="p-3 flex items-center justify-center bg-white w-[80%] lg:w-[90%] h-20 rounded-lg shadow-lg 
+          transform rotate-x-30 translate-y-[10px] scale-95 transition-all duration-300 hover:scale-100 hover:translate-y-0 overflow-hidden"
+                  >
+                    <img src={item} alt={`image-${index}`} className="object-cover"/>
                   </li>
                 ))}
               </ul>
@@ -229,9 +233,9 @@ const Benefits = () => {
             </div>
             <div className="w-full h-[30vh] sm:h-[40vh] md:h-[30vh] lg:h-[80vh] rounded-xl flex items-center justify-center relative">
               <img
-                src="#"
+                src={todo2}
                 alt="todo list-"
-                className="absolute w-[80%] sm:w-[70%] md:w-[70%] lg:w-[90%] h-full object-contain bg-white transition-transform translate-y-5 group-hover:-translate-y-9 duration-300 ease-in-out rounded-xl shadow-lg"
+                className="absolute w-[80%] sm:w-[70%] md:w-[70%] lg:w-[90%] h-full object-cover bg-white transition-transform translate-y-5 group-hover:-translate-y-9 duration-300 ease-in-out rounded-xl shadow-lg"
               />
             </div>
           </div>
