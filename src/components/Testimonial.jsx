@@ -1,4 +1,3 @@
-import React from "react";
 import user from "../../public/user.png";
 import Masonry from "react-masonry-css";
 

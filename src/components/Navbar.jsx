@@ -329,8 +329,8 @@ function Navbar() {
                           onClick={() => setIsMenuOpen(false)}
                           className={({ isActive }) =>
                             isActive
-                              ? "text-white px-3 py-1 bg-primary rounded-md"
-                              : "text-white px-3 py-1 bg-primary rounded-md"
+                              ? "text-white px-3 py-1.5 bg-primary rounded-md"
+                              : "text-white px-3 py-1.5 bg-primary rounded-md"
                           }
                         >
                           Sign up
