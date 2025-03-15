@@ -102,7 +102,7 @@ const ServiceCard = React.memo(({ service, category}) => {
        </div>
         <div className="flex items-center justify-between text-sm text-gray-500 mt-1">
           <span>
-            <strong className="font-semibold capitalize">location:</strong> <span className="capitalize">{service?.vendor?.city}</span>
+            <strong className="font-semibold capitalize">location:</strong> <span className="capitalize">{service?.city}</span>
           </span>
           {/* <span className="capitalize">
             {service.vendor.business_name || "No business name available"}
