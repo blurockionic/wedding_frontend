@@ -1,11 +1,11 @@
 
 import { MdDesignServices, MdOutlineAnalytics, MdOutlinePayment } from "react-icons/md";
-import img1 from "../../public/heroSection/c1.png"
-import img2 from "../../public/heroSection/c2.png"
-import img3 from "../../public/heroSection/c3.png"
-import img4 from "../../public/heroSection/c4.png"
-import img5 from "../../public/heroSection/c5.png"
-import img6 from "../../public/heroSection/c6.png"
+import img1 from "../../public/heroSection/c1.jpeg"
+import img2 from "../../public/heroSection/c2.jpeg"
+import img3 from "../../public/heroSection/c3.jpeg"
+import img4 from "../../public/heroSection/c4.jpeg"
+import img5 from "../../public/heroSection/c5.jpeg"
+import img6 from "../../public/heroSection/c6.jpeg"
 
 
 

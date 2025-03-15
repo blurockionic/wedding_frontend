@@ -144,7 +144,7 @@ export default function Home() {
           </p>
           <section className=" md:flex-row items-center justify-center w-fit mx-auto  flex-col  flex">
             {/* Input Group */}
-            <div className=" hidden    relative  my-5 md:flex justify-start items-center rounded-lg  border focus-within:ring-1 focus-within:ring-primary transition duration-300  ">
+            <div className="  hidden   relative  my-5 md:flex justify-start items-center rounded-lg  border focus-within:ring-1 focus-within:ring-primary transition duration-300  ">
               <div className=" relative ">
                 <CustomInput
                   type="text"

@@ -198,7 +198,7 @@ const WeddingPlan = () => {
 
       {/* Sliding Form for event */}
       <div
-        className={`fixed top-0 right-0 h-full w-[500px] bg-white shadow-lg p-6 transform ${
+        className={`fixed top-0 right-0 h-full w-full md:w-[500px] bg-white shadow-lg md:p-6 overflow-scroll transform ${
           isActiveWeddingPlanForm ? "translate-x-0" : "translate-x-full"
         } transition-transform duration-300 ease-in-out z-50`}
       >
@@ -216,7 +216,7 @@ const WeddingPlan = () => {
 
       {/* Sliding Form for task */}
       <div
-        className={`fixed top-0 right-0 h-full w-[500px] bg-white shadow-lg p-6 transform ${
+        className={`fixed top-0 right-0 h-full w-full md:w-[500px] bg-white shadow-lg md:p-6 overflow-scroll transform ${
           isActiveTask ? "translate-x-0" : "translate-x-full"
         } transition-transform duration-300 ease-in-out z-50 overflow-y-auto`}
       >
