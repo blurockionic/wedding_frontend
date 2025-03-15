@@ -10,6 +10,7 @@ import { allCategories } from "../../static/static";
 import { toast } from "react-toastify";
 import LocationSearch from "../../components/LocationSearch/LocationSearch";
 import CircularAnimation from "../CircularMotion";
+import img from "../../../public/heroSection/image 49.png";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -18,6 +19,8 @@ export default function Home() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [category, setCategory] = useState("");
   const [searchLocation, setSearchLocation] = useState("");
+  const [backgroundImg, setBackGroundImg] = useState(img);
+  const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     Aos.init({
       duration: 1000,
@@ -44,6 +47,13 @@ export default function Home() {
     }
   };
 
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   // set value on input field
   const handleSuggestionClick = (category, subcategory) => {
     setSearch(`${subcategory}`);
@@ -64,6 +74,47 @@ export default function Home() {
   };
 
   console.log(suggestions);
+
+  const insightCard = () => {
+    return (
+      <>
+        <div
+          className={`flex w-full flex-grow px-2   my-10 gap-6 ${
+            !isMobile ? "justify-between " : "justify-around"
+          } items-center `}
+        >
+          {[
+            {
+              count: "50+",
+              desc: " Verified Users",
+              background: "text-[#F20574]",
+            },
+            {
+              count: "50+",
+              desc: " Verified Vendors",
+              background: "text-[#B14DA1]",
+            },
+            {
+              count: "50+",
+              desc: " Offering Services",
+              background: "text-[#C1000DB2]",
+            },
+          ].map(({ count, desc, background }, index) => (
+            <div
+              key={index}
+              className="border px-2 rounded-md py-2 bg-white bg-opacity-20 backdrop-blur-lg min-w-[80px] flex-grow  md:w-auto md:min-w-[120px] md:max-w-[180px] text-center shadow-md"
+            >
+              <p className="text-md md:text-3xl font-bold">{count}</p>
+              <div className="mt-2 bg-slate-600 h-1 w-full rounded"></div>
+              <p className={` ${background} text-[8px] md:text-lg mt-2`}>
+                {desc}
+              </p>
+            </div>
+          ))}
+        </div>
+      </>
+    );
+  };
 
   return (
     <>
@@ -121,30 +172,57 @@ export default function Home() {
         </script>
       </Helmet>
 
-      <div className="p-5 grid sm:grid-cols-2 grid-cols-1  h-fit justify-between gap-10  items-center">
+      <div className="  grid pl-10 md:pt-20 overflow-hidden lg:grid-cols-2 grid-cols-1 justify-between gap-10  items-center">
         {/* Left Section */}
-        <div className="relative px-2 md:px-10 flex flex-col gap-6 text-center items-start md:text-left">
+
+        {isMobile && (
+          <div className="absolute inset-0 z-[-1]">
+            <img
+              className="w-full h-full object-cover"
+              src={backgroundImg}
+              alt="Background"
+            />
+            {/* Dark Overlay */}
+            <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+          </div>
+        )}
+
+        <div className="relative   flex flex-col gap-6  text-center items-start md:text-left">
           <img
-            className="hidden lg:block absolute  left-0 -top-20  "
+            className="hidden lg:block absolute  left-0 -top-10  "
             src="/heroSection/Vector1.png"
             alt="Vector1"
           />
 
-          <p
-            className="text-3xl  font-bold tracking-tight leading-tight"
-            data-aos="fade-up"
-            data-aos-delay="400"
-            data-aos-once="true"
-          >
-            Your one-stop destination for
-            <br />
-            <span className="text-6xl custom-animate tracking-tight text-primary ">
+          <div className="text-center  w-full my-10 md:text-left">
+            <p
+              className="text-sm md:text-3xl text-white md:text-black font-bold tracking-tight leading-tight"
+              data-aos="fade-up"
+              data-aos-delay="400"
+              data-aos-once="true"
+            >
+              Your one-stop destination for
+            </p>
+            <p
+              className="text-3xl  md:text-6xl font-bold tracking-tight custom-animate text-white md:text-primary"
+              data-aos="fade-up"
+              style={
+                isMobile
+                  ? {
+                      WebkitTextStroke: "1px pink", // Adjust thickness for clarity
+                      WebkitTextFillColor: "white", // Keeps the inner text white
+                    }
+                  : {}
+              }
+              data-aos-delay="500"
+              data-aos-once="true"
+            >
               Dream Wedding
-            </span>
-          </p>
-          <section className=" md:flex-row items-center justify-center w-fit mx-auto  flex-col  flex">
+            </p>
+          </div>
+          <section className="  ml-0 w-full md:flex-row items-center justify-start  mx-auto  flex-col  flex">
             {/* Input Group */}
-            <div className=" hidden    relative  my-5 md:flex justify-start items-center rounded-lg  border focus-within:ring-1 focus-within:ring-primary transition duration-300  ">
+            <div className=" hidden   relative  my-5 md:flex justify-start items-center rounded-lg  border focus-within:ring-1 focus-within:ring-primary transition duration-300  ">
               <div className=" relative ">
                 <CustomInput
                   type="text"
@@ -192,44 +270,61 @@ export default function Home() {
               />
             </div>
 
+            <div className="md:hidden flex flex-col gap-5">
+              <div className=" relative ">
+                <CustomInput
+                  type="text"
+                  placeholder="Select Vendor"
+                  className="outline-none   focus:ring-0 focus:ring-none bg-white  border-none  "
+                  aria-label="Select Vendor"
+                  value={search}
+                  onChange={handleSearchChange}
+                  onFocus={() => setShowSuggestions(true)}
+                  onBlur={() =>
+                    setTimeout(() => setShowSuggestions(false), 200)
+                  }
+                  leftIcon={<GoSearch size={20} />}
+                />
+
+                {showSuggestions && suggestions.length > 0 && (
+                  <ul className=" absolute  bg-white border border-gray-300 w-full rounded shadow-lg mt-1 z-20 overflow-auto  max-h-[200px]">
+                    {suggestions.map(({ category, subcategories }, index) => (
+                      <li key={index} className="px-4 py-2  cursor-pointer">
+                        {/* {category} */}
+                        <ul className=" text-sm grid grid-cols-1  gap-2">
+                          {subcategories.map((sub, index) => (
+                            <li
+                              key={index}
+                              className="text-gray-700 hover:bg-gray-200 p-2 rounded-md"
+                              onClick={() =>
+                                handleSuggestionClick(category, sub)
+                              }
+                            >
+                              {sub}
+                            </li>
+                          ))}
+                        </ul>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+              <LocationSearch
+                customClass={" "}
+                setSearchLocation={setSearchLocation}
+              />
+            </div>
+
             <CustomButton
               text="search"
-              className="justify-ce bg-primary md:ml-5 px-10 py-2 text-white  border-none"
+              className="justify-center bg-primary my-5 md:my-0 md:ml-5 px-10 py-2 text-white  border-none"
               onClick={handleNavigate}
             />
           </section>
 
+          {!isMobile && <div>{insightCard()}</div>}
+
           {/* Stats Section */}
-          <div className="flex mt-12 w-full overflow-scroll gap-4 justify-between items-center ">
-            {[
-              {
-                count: "50+",
-                desc: " Verified Users",
-                background: "text-[#F20574]",
-              },
-              {
-                count: "50+",
-                desc: " Verified Vendors",
-                background: "text-[#B14DA1]",
-              },
-              {
-                count: "50+",
-                desc: " Offering Services",
-                background: "text-[#C1000DB2]",
-              },
-            ].map(({ count, desc, background }, index) => (
-              <div
-                key={index}
-                className="border px-6 rounded-lg py-4 bg-white bg-opacity-20 backdrop-blur-lg min-w-[160px] text-center shadow-md"
-              >
-                <p className="text-3xl font-bold">{count}</p>
-                <div className="mt-2 bg-slate-600 h-1 w-full rounded"></div>
-                <p className={` ${background} text-sm whitespace-nowrap mt-2`}>
-                  {desc}
-                </p>
-              </div>
-            ))}
-          </div>
 
           <img
             className="relative  hidden lg:block -left-14 "
@@ -239,19 +334,21 @@ export default function Home() {
         </div>
 
         {/* Right Section */}
-        <div className="relative flex flex-1 justify-center items-center w-full  md:h-[500px] lg:h-[600px]">
-          <div className="hidden md:block">
+        <div className="hidden relative lg:flex flex-1 justify-center items-center w-full  md:h-[500px] lg:h-[600px]">
+          <div className="">
             <CircularAnimation />
           </div>
-          <div className="absolute  top-10 right-40">
+          <div className="">
             {" "}
             <img
+              className="absolute  top-10 right-40 hidden md:block"
               src="/heroSection/Vectorheartbuzz.png"
               alt="heartbuzz"
             />
           </div>
         </div>
       </div>
+      {isMobile && insightCard()}
     </>
   );
 }

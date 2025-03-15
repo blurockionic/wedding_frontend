@@ -104,7 +104,7 @@ function Navbar() {
                 className={`
               flex flex-col lg:flex-row lg:gap-8 gap-4
               absolute lg:relative z-50
-              rounded-lg m-2
+              rounded-lg 
               bg-white text-gray-600 font-medium
               h-screen lg:h-0 w-1/2 left-0 top-0
               lg:w-auto lg:top-auto lg:items-center
