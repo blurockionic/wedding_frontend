@@ -317,7 +317,7 @@ export default function Home() {
 
             <CustomButton
               text="search"
-              className="justify-center bg-primary my-5 md:my-0 md:ml-5 px-10 py-2 text-white  border-none"
+              className="justify-center bg-primary my-5 md:my-0 md:ml-5 px-10 py-3 text-white  border-none"
               onClick={handleNavigate}
             />
           </section>
