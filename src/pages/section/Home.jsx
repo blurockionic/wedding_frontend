@@ -172,7 +172,7 @@ export default function Home() {
         </script>
       </Helmet>
 
-      <div className="  grid pl-10 md:pt-20 overflow-hidden lg:grid-cols-2 grid-cols-1 justify-between gap-10  items-center">
+      <div className="  grid pl-16 md:pt-20 overflow-hidden lg:grid-cols-2 grid-cols-1 justify-between gap-10  items-center">
         {/* Left Section */}
 
         {isMobile && (
