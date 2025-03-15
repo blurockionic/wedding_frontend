@@ -1,9 +1,16 @@
-import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
+import {
+  Link,
+  NavLink,
+  Outlet,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { useLogoutMutation } from "../../redux/apiSlice.auth";
 import { useDispatch } from "react-redux";
 import { userlogout } from "../../redux/authSlice";
 import { toast } from "react-toastify";
-
+import { GoChecklist } from "react-icons/go";
+import { Heart, User } from "lucide-react";
 
 const UserDashBoard = () => {
   const location = useLocation(); // Get the current location
@@ -13,10 +20,10 @@ const UserDashBoard = () => {
 
   // Array of links and their paths
   const navItems = [
-    { name: "Profile", path: "" }, // Use "/" for the default route
-    { name: "Checklist", path: "checklist" },
-    { name: "Budget", path: "weddingbudget" },
-    { name: "FavoriteList", path: "favoriteList" },
+    { name: "Profile", path: "", icon: <User size={20} /> },
+    { name: "Checklist", path: "checklist", icon: <GoChecklist size={20} /> },
+    // { name: "Budget", path: "weddingbudget" },
+    { name: "FavoriteList", path: "favoriteList", icon: <Heart size={20} /> },
     // { name: "Settings", path: "settings" },
   ];
 
@@ -40,13 +47,13 @@ const UserDashBoard = () => {
 
   return (
     <div className=" h-screen ">
-      <div className="container mx-auto flex flex-col lg:flex-row gap-8 px-4  py-6">
+      <div className=" mx-auto flex flex-col lg:flex-row lg:justify-between gap-8 px-12 py-6">
         {/* Sidebar */}
-        <div className="w-full   lg:w-1/4 shadow-lg rounded-lg p-6 border border-pink-200 bg-white">
+        <div className="w-full   lg:w-1/4 shadow-lg rounded-lg p-4 border border-pink-200 bg-white">
           <h2 className="text-2xl font-serif text-pink-600 mb-6 text-center lg:text-left">
             Dashboard
           </h2>
-          <ul className="flex  flex-col space-y-4">
+          <ul className="flex  flex-col space-y-4 ">
             {navItems.map((item, index) => (
               <li key={index}>
                 <NavLink
@@ -59,23 +66,24 @@ const UserDashBoard = () => {
                   }
                   end // Ensure exact match for root path "/"
                 >
-                  {item.name}
+                  <p className="flex items-center gap-2">
+                    {item.icon}
+                    {item.name}
+                  </p>
                 </NavLink>
               </li>
             ))}
-           
           </ul>
           <button
             onClick={() => handleLogout()}
             className="w-full mt-4 px-4 py-3 text-muted text-sm bg-primary rounded-md hover:bg-pink-600 focus:outline-none z-50"
-              >
+          >
             Logout
           </button>
-          
         </div>
 
         {/* Outlet for rendering child components */}
-        <div className="w-full lg:w-3/4 shadow-lg rounded-lg p-8 bg-white border border-pink-200">
+        <div className="w-full lg:w-3/4 shadow-lg rounded-lg  bg-white border border-pink-200">
           <Outlet />
         </div>
       </div>

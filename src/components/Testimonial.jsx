@@ -1,57 +1,39 @@
-import React from "react";
 import user from "../../public/user.png";
 import Masonry from "react-masonry-css";
 
 const testimonials = [
   {
     avatar: "https://via.placeholder.com/50",
-    name: "Ryan Carniato",
-    username: "@RyanCarniato",
-    text: "Vite enables amazing possibilities. While built with SolidJS in mind, it scales from simple templates to opinionated starters. We are building an ecosystem on Vite.",
+    name: "Priya Sharma",
+    username: "@priya_weds",
+    text: "MarriageVendors.com made my wedding planning stress-free. From venue selection to catering, everything was seamless and within budget!",
   },
   {
     avatar: "https://via.placeholder.com/50",
-    name: "Mark Dalgleish",
-    username: "@markdalgleish",
-    text: "Vite provides a pluggable development environment, making it a fantastic platform to build frameworks. The community support is incredible too!",
+    name: "Amit Verma",
+    username: "@amit_verma",
+    text: "Highly recommend MarriageVendors.com for finding the best decorators and photographers. Their service was top-notch and timely.",
   },
   {
     avatar: "https://via.placeholder.com/50",
-    name: "Dion Almaer",
-    username: "@dalmaer",
-    text: "Seeing so many great frameworks built on Vite is exciting. Many will benefit from its performance and flexibility.",
+    name: "Neha Kapoor",
+    username: "@neha_kapoor",
+    text: "I was able to find the perfect makeup artist and bridal wear through MarriageVendors.com. A one-stop solution for all wedding needs!",
   },
   {
     avatar: "https://via.placeholder.com/50",
-    name: "Rich Harris",
-    username: "@Rich_Harris",
-    text: "Vite has become the United Nations of JavaScript frameworks. I'll be there as a representative of Sveltelandia!",
+    name: "Rahul Mehta",
+    username: "@rahul_mehta",
+    text: "The customer support team was very helpful in guiding me through the best catering options. Our guests loved the food!",
   },
   {
     avatar: "https://via.placeholder.com/50",
-    name: "Jason Miller",
-    username: "@_developit",
-    text: "Just when I think I’ve reached the limits of what Vite can do, it surprises me yet again!",
-  },
-  {
-    avatar: "https://via.placeholder.com/50",
-    name: "Christoph Nakazawa",
-    username: "@cpojer",
-    text: "Vite is going to revolutionize the JavaScript ecosystem!",
-  },
-  {
-    avatar: "https://via.placeholder.com/50",
-    name: "David Cramer",
-    username: "@zeeg",
-    text: "Vite is simply mind-blowing. The speed and efficiency are unmatched!",
-  },
-  {
-    avatar: "https://via.placeholder.com/50",
-    name: "Nikolaj",
-    username: "@lopugit",
-    text: "Vite is a game-changer. The developer experience is outstanding!",
+    name: "Sneha Patil",
+    username: "@sneha_patil",
+    text: "MarriageVendors.com saved me so much time and effort. The reviews and ratings helped me make informed decisions. Truly amazing!",
   },
 ];
+
 
 const Testimonials = () => {
   const breakpointColumnsObj = {

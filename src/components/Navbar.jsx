@@ -45,7 +45,7 @@ function Navbar() {
         }`}
       >
         <>
-          <TopNavbar />
+          {/* <TopNavbar /> */}
           <nav className="w-full bg-white top-0 px-4 lg:px-16 z-50 shadow-sm">
             <div className="w-full flex justify-between items-center py-4">
               <div className="text-2xl font-bold text-primary cursor-pointer">
@@ -102,7 +102,7 @@ function Navbar() {
 
               <ul
                 className={`
-              flex flex-col lg:flex-row lg:gap-8 gap-4
+              flex flex-col lg:flex-row lg:gap-4 gap-4
               absolute lg:relative z-50
               rounded-lg 
               bg-white text-gray-600 font-medium
@@ -286,6 +286,14 @@ function Navbar() {
                     Invitation
                   </NavLink>
                 </li>
+                <li>
+                  <NavLink
+                    to="/vendorLogin"
+                    className="cursor-pointer border px-2 py-1 rounded-md"
+                  >
+                    Vendor Login
+                  </NavLink>
+                </li>
 
                   {(user?.role!=="ADMIN" && user?.role!=="SUPER_ADMIN") ? (
                     <>
@@ -329,8 +337,8 @@ function Navbar() {
                           onClick={() => setIsMenuOpen(false)}
                           className={({ isActive }) =>
                             isActive
-                              ? "text-white px-3 py-1 bg-primary rounded-md"
-                              : "text-white px-3 py-1 bg-primary rounded-md"
+                              ? "text-white px-3 py-1.5 bg-primary rounded-md"
+                              : "text-white px-3 py-1.5 bg-primary rounded-md"
                           }
                         >
                           Sign up

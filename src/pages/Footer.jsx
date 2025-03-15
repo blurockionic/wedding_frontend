@@ -28,7 +28,7 @@ export default function Footer() {
             <ul className="mt-4 space-y-2">
               {weddingVenues.map((item, index) => (
                 <li key={index}>
-                  <Link to={`/services?search=${item}&location=`} className="hover:text-white">
+                  <Link to={`/all/Wedding Venues/${item}`} className="hover:text-white">
                     {item}
                   </Link>
                 </li>
@@ -42,7 +42,7 @@ export default function Footer() {
             <ul className="mt-4 grid grid-cols-2 gap-4">
               {weddingVendors.map((item, index) => (
                 <li key={index}>
-                  <Link to={`/services?search=${item}&location=`} className="hover:text-white">
+                  <Link to={`/all/Wedding Vendors/${item}`} className="hover:text-white">
                     {item}
                   </Link>
                 </li>
@@ -56,7 +56,7 @@ export default function Footer() {
             <ul className="mt-4 space-y-2">
               {brides.map((item, index) => (
                 <li key={index}>
-                  <Link to={`/services?search=${item}&location=`} className="hover:text-white">
+                  <Link to={`/all/bride/${item}`} className="hover:text-white">
                     {item}
                   </Link>
                 </li>
@@ -70,7 +70,7 @@ export default function Footer() {
             <ul className="mt-4 space-y-2">
               {grooms.map((item, index) => (
                 <li key={index}>
-                  <Link to={`/services?search=${item}&location=`} className="hover:text-white">
+                  <Link to={`/all/groom/${item}`} className="hover:text-white">
                     {item}
                   </Link>
                 </li>

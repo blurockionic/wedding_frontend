@@ -112,7 +112,7 @@ const ServiceCategoriesPage = () => {
         </script>
       </Helmet>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-20 py-5 md:py-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-20 px-4 py-5 md:py-10">
         {categories.map((category, index) => (
           <div
             key={index}
