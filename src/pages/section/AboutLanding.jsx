@@ -76,6 +76,14 @@ const AboutLanding = () => {
               <h2 className="text-3xl md:text-5xl font-bold">
                 {section.title}
               </h2>
+               {/* Right Side: Image */}
+            <div className="w-full md:w-1/2 flex justify-center md:hidden">
+              <img
+                src={section.image}
+                alt={section.title}
+                className="w-full max-w-sm md:max-w-md h-auto rounded-lg "
+              />
+            </div>
               <p className="mt-4 text-gray-700 text-justify">{section.description}</p>
 
               {/* Feature List */}
@@ -93,7 +101,7 @@ const AboutLanding = () => {
             </div>
 
             {/* Right Side: Image */}
-            <div className="w-full md:w-1/2 flex justify-center">
+            <div className="w-full md:w-1/2 md:flex justify-center hidden">
               <img
                 src={section.image}
                 alt={section.title}
