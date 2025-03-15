@@ -43,6 +43,15 @@ export const weddingPlanForEventApi = createApi({
       invalidatesTags: ["WeddingPlan"],
     }),
 
+    updateEvent: builder.mutation({
+      query: ({ eventId, data }) => ({
+        url: `/${eventId}`,
+        method: "PUT",
+        body: data,  // This will include all the required fields
+      }),
+      invalidatesTags: ["WeddingPlan"],
+    }),
+
     // Create sub-event of an event
     createSubEvent: builder.mutation({
       query: ({ data, eventId }) => ({
@@ -133,6 +142,7 @@ export const {
   useGetWeddingPlanQuery,
   useCreateEventMutation,
   useDeleteEventMutation,
+  useUpdateEventMutation,
   useCreateSubEventMutation,
   useAddServiceMutation,
   useCreateEventTaskMutation,
