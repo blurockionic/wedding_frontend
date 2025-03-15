@@ -166,321 +166,279 @@ const WeddingEventList = ({
   }
 
   return (
-    <section className="p-2  border-1 border-b-2 rounded-md">
-      {events.map((event, index) => (
-        <div
-          key={index}
-          className="flex gap-10 justify-between  mb-4 p-4 bg-white shadow-md rounded-md "
-        >
-          <div className="flex flex-col gap-5 md:gap-10">
-            <div className="flex flex-wrap gap-4 items-center">
-              <span>{index + 1}.</span>
-              {/* Editable Event Name */}
-              <div className="flex flex-col">
-                <p className="font-thin flex items-center gap-x-1">
-                  <span>
-                    <CalendarCheck size={16} />
-                  </span>
-                  Event Name
-                </p>
-                {editingIndexes[`${index}-eventName`] ? (
-                  <input
-                    className="mt-1 border rounded p-1"
-                    type="text"
-                    value={event.eventName}
-                    onChange={(e) =>
-                      handleChange(index, "eventName", e.target.value)
-                    }
-                    onBlur={() => toggleEditing(index, "eventName")}
-                    autoFocus
-                  />
-                ) : (
-                  <p
-                    className="mt-1 cursor-pointer capitalize text-green-500 text-xl"
-                    onClick={() => toggleEditing(index, "eventName")}
-                  >
-                    {event.eventName}
-                  </p>
-                )}
-              </div>
-
-              {/* Editable Event Description */}
-              <div
-                className={`${
-                  isToggle && index === toggledIndex
-                    ? "flex flex-col"
-                    : "hidden"
-                } `}
-              >
-                <p className="font-thin flex items-center gap-x-1">
-                  <span>
-                    <NotebookTabs size={16} />
-                  </span>
-                  Description
-                </p>
-                {editingIndexes[`${index}-eventDescription`] ? (
-                  <input
-                    className="mt-1 border rounded p-1"
-                    type="text"
-                    value={event.eventDescription}
-                    onChange={(e) =>
-                      handleChange(index, "eventDescription", e.target.value)
-                    }
-                    onBlur={() => toggleEditing(index, "eventDescription")}
-                    autoFocus
-                  />
-                ) : (
-                  <p
-                    className="mt-1 w-64 cursor-pointer truncate text-xl"
-                    onClick={() => toggleEditing(index, "eventDescription")}
-                  >
-                    {event.eventDescription}
-                  </p>
-                )}
-              </div>
-              {/* Editable Event Date */}
-              <div className="flex flex-col">
-                <p className="font-thin flex items-center gap-x-1">
-                  <span>
-                    <CalendarDays size={16} />
-                  </span>
-                  Date
-                </p>
-                {editingIndexes[`${index}-eventDate`] ? (
-                  <input
-                    className="mt-1 border rounded p-1"
-                    type="date"
-                    value={event.eventDate}
-                    onChange={(e) =>
-                      handleChange(index, "eventDate", e.target.value)
-                    }
-                    onBlur={() => toggleEditing(index, "eventDate")}
-                    autoFocus
-                  />
-                ) : (
-                  <p
-                    className="mt-1 cursor-pointer text-xl"
-                    onClick={() => toggleEditing(index, "eventDate")}
-                  >
-                    {moment(event.eventDate).format("DD-MM-YYYY")}
-                  </p>
-                )}
-              </div>
-
-              {/* Editable Start Time */}
-              <div
-                className={`${
-                  isToggle && index === toggledIndex
-                    ? "flex flex-col"
-                    : "hidden"
-                } `}
-              >
-                <p className="font-thin flex items-center gap-x-1">
-                  <span>
-                    <CalendarPlus size={16} />
-                  </span>
-                  Start Date
-                </p>
-                {editingIndexes[`${index}-eventStartTime`] ? (
-                  <input
-                    className="mt-1 border rounded p-1"
-                    type="time"
-                    value={event.eventStartTime}
-                    onChange={(e) =>
-                      handleChange(index, "eventStartTime", e.target.value)
-                    }
-                    onBlur={() => toggleEditing(index, "eventStartTime")}
-                    autoFocus
-                  />
-                ) : (
-                  <p
-                    className="mt-1 cursor-pointer text-xl"
-                    onClick={() => toggleEditing(index, "eventStartTime")}
-                  >
-                    {moment(event.eventStartTime).format("hh:mm A")}
-                  </p>
-                )}
-              </div>
-
-              {/* Editable End Time */}
-              <div
-                className={`${
-                  isToggle && index === toggledIndex
-                    ? "flex flex-col"
-                    : "hidden"
-                } `}
-              >
-                <p className="font-thin flex items-center gap-x-1">
-                  <span>
-                    <CalendarMinus size={16} />
-                  </span>
-                  End Date
-                </p>
-                {editingIndexes[`${index}-eventEndTime`] ? (
-                  <input
-                    className="mt-1 border rounded p-1"
-                    type="time"
-                    value={event.eventEndTime}
-                    onChange={(e) =>
-                      handleChange(index, "eventEndTime", e.target.value)
-                    }
-                    onBlur={() => toggleEditing(index, "eventEndTime")}
-                    autoFocus
-                  />
-                ) : (
-                  <p
-                    className="mt-1 cursor-pointer text-xl"
-                    onClick={() => toggleEditing(index, "eventEndTime")}
-                  >
-                    {moment(event.eventEndTime).format("hh:mm A")}
-                  </p>
-                )}
-              </div>
-
-              {/* Editable Event Budget */}
-              <div className={` flex flex-col  `}>
-                <p className="font-thin flex items-center gap-x-1">
-                  <span>
-                    <HandCoins size={16} />
-                  </span>
-                  Budget
-                </p>
-                {editingIndexes[`${index}-eventBudget`] ? (
-                  <input
-                    className="mt-1 border rounded p-1"
-                    type="number"
-                    value={event.eventBudget}
-                    onChange={(e) =>
-                      handleChange(index, "eventBudget", e.target.value)
-                    }
-                    onBlur={() => toggleEditing(index, "eventBudget")}
-                    autoFocus
-                  />
-                ) : (
-                  <p
-                    className="mt-1 cursor-pointer text-red-500 text-xl"
-                    onClick={() => toggleEditing(index, "eventBudget")}
-                  >
-                    ₹{event.eventBudget}
-                  </p>
-                )}
-              </div>
+  <section className="p-4 bg-gray-50 rounded-lg">
+    {events.map((event, index) => (
+      <div
+        key={index}
+        className="mb-6 overflow-hidden bg-white shadow-md rounded-lg border border-gray-100"
+      >
+        {/* Main Event Card Header */}
+        <div className="flex justify-between items-start p-5 border-b border-gray-100">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center w-8 h-8 bg-primary/10 text-primary rounded-full">
+              {index + 1}
             </div>
-            <div
-              className={`${
-                isToggle && index === toggledIndex
-                  ? "flex flex-col md:px-10"
-                  : "hidden"
-              } `}
-            >
-              {/* task of event  */}
-              <div className="flex flex-col gap-4  bg-yellow-50 p-4 rounded-lg">
-                <h1 className="text-yellow-500">Task</h1>
-                {/* Only render TaskList if this is the active event */}
-                {isToggle && index === toggledIndex && (
-                  <TaskList
-                    tasks={tasks}
-                    eventId={event.id}
-                    isLoading={tasksLoading}
-                    updateTaskStatus={updateTaskStatus}
-                    deleteEventTask={deleteEventTask}
-                    updateEventTask={updateEventTask}
-                    refetch={refetch}
-                  />
-                )}
-              </div>
-              
+            
+            {/* Event Name */}
+            <div className="flex flex-col">
+              <p className="text-xs text-gray-500 flex items-center gap-x-1">
+                <CalendarCheck size={14} className="text-primary" />
+                Event Name
+              </p>
+              {editingIndexes[`${index}-eventName`] ? (
+                <input
+                  className="mt-1 border rounded p-1 w-full focus:ring-1 focus:ring-primary focus:border-primary"
+                  type="text"
+                  value={event.eventName}
+                  onChange={(e) => handleChange(index, "eventName", e.target.value)}
+                  onBlur={() => toggleEditing(index, "eventName")}
+                  autoFocus
+                />
+              ) : (
+                <h3
+                  className="font-medium text-lg cursor-pointer capitalize text-green-600 hover:text-green-700"
+                  onClick={() => toggleEditing(index, "eventName")}
+                >
+                  {event.eventName}
+                </h3>
+              )}
             </div>
-            {/* add vendors */}
-            <div
-                className={`${
-                  isToggle && index === toggledIndex
-                    ? "flex flex-col md:px-10"
-                    : "hidden"
-                } `}
-              >
-                <div className="bg-blue-50 rounded-lg">
-                <h1 className="text-blue-700  my-5 px-4">Services</h1>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 p-4 ">
-                  {event.eventVendors.map((vendor) => (
-                    <ServiceCard key={vendor.id} service={vendor} setRefetch={handleOnDeleteService}/>
-                  ))}
-                </div>
-                </div>
-              </div>
           </div>
 
-          {/* Floating Button with Hover Menu */}
-          <div className="flex flex-col">
-            <button
-              // disabled={isToggle}
-              className="p-2 text-primary rounded-md"
-              onClick={() => {
-                setIsToggle((prev) => !prev);
-                setToggleIndex(index);
-              }}
-            >
-              {isToggle && index === toggledIndex ? (
-                <ChevronDown size={30} />
+          {/* Date and Budget Info */}
+          <div className="flex items-center gap-6">
+            {/* Event Date */}
+            <div className="flex flex-col">
+              <p className="text-xs text-gray-500 flex items-center gap-x-1">
+                <CalendarDays size={14} className="text-primary" />
+                Date
+              </p>
+              {editingIndexes[`${index}-eventDate`] ? (
+                <input
+                  className="mt-1 border rounded p-1 focus:ring-1 focus:ring-primary focus:border-primary"
+                  type="date"
+                  value={event.eventDate}
+                  onChange={(e) => handleChange(index, "eventDate", e.target.value)}
+                  onBlur={() => toggleEditing(index, "eventDate")}
+                  autoFocus
+                />
               ) : (
-                <ChevronUp size={30} />
-              )}
-            </button>
-
-            {/* Floating Button with Hover Menu */}
-            <div
-              className={`${
-                isToggle && index === toggledIndex
-                  ? "right-4 top-4 relative"
-                  : "hidden"
-              }`}
-            >
-              <button
-                disabled={isLoading}
-                className="p-2 bg-primary text-white rounded-md mr-5"
-                onClick={() => handleOnDelete(event.id)}
-              >
-                {isLoading ? <Loader2 className="animate-spin" /> : <Trash />}
-              </button>
-              <button
-                className="p-2 bg-primary text-white rounded-md"
-                onClick={() => handleOnPlus(index, event.id)}
-              >
-                <Plus />
-              </button>
-
-              {/* Group of divs - hidden by default, shown on hover */}
-              {isActiveActions && index === activeIndex && (
-                <div
-                  className={`absolute z-40 right-0 mt-2 w-48 bg-white p-4 rounded-md shadow-md transition-all duration-300 
-            ${
-              isActiveActions && index === activeIndex
-                ? "opacity-100 scale-100"
-                : "opacity-0 scale-95 pointer-events-none"
-            }`}
+                <p
+                  className="font-medium cursor-pointer"
+                  onClick={() => toggleEditing(index, "eventDate")}
                 >
-                  <div className="flex flex-col gap-3">
-                    <div
-                      onClick={() => handleOnAddVendor(event.id)}
-                      className="cursor-pointer p-2 w-full shadow-sm h-16 border border-dashed border-primary text-primary flex justify-center items-center gap-2 rounded-md hover:bg-pink-100"
-                    >
-                      <Plus /> <span>Vendor</span>
-                    </div>
-                    <div
-                      onClick={() => handleOnAddTask(event.id)}
-                      className="cursor-pointer p-2 w-full shadow-sm h-16 border border-dashed flex justify-center items-center gap-2 rounded-md border-primary text-primary  hover:bg-pink-100"
-                    >
-                      <Plus /> <span>Task</span>
-                    </div>
-                  </div>
+                  {moment(event.eventDate).format("DD-MM-YYYY")}
+                </p>
+              )}
+            </div>
+
+            {/* Event Budget */}
+            <div className="flex flex-col">
+              <p className="text-xs text-gray-500 flex items-center gap-x-1">
+                <HandCoins size={14} className="text-primary" />
+                Budget
+              </p>
+              {editingIndexes[`${index}-eventBudget`] ? (
+                <input
+                  className="mt-1 border rounded p-1 focus:ring-1 focus:ring-primary focus:border-primary"
+                  type="number"
+                  value={event.eventBudget}
+                  onChange={(e) => handleChange(index, "eventBudget", e.target.value)}
+                  onBlur={() => toggleEditing(index, "eventBudget")}
+                  autoFocus
+                />
+              ) : (
+                <p
+                  className="font-medium cursor-pointer text-red-500"
+                  onClick={() => toggleEditing(index, "eventBudget")}
+                >
+                  ₹{event.eventBudget}
+                </p>
+              )}
+            </div>
+
+            {/* Toggle & Action Buttons */}
+            <div className="flex items-center">
+              <button
+                className="p-2 text-primary rounded-full hover:bg-gray-100 transition-colors"
+                onClick={() => {
+                  setIsToggle((prev) => !prev);
+                  setToggleIndex(index);
+                }}
+              >
+                {isToggle && index === toggledIndex ? (
+                  <ChevronDown size={24} />
+                ) : (
+                  <ChevronUp size={24} />
+                )}
+              </button>
+              
+              {isToggle && index === toggledIndex && (
+                <div className="flex gap-2 ml-2">
+                  <button
+                    disabled={isLoading}
+                    className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+                    onClick={() => handleOnDelete(event.id)}
+                  >
+                    {isLoading ? <Loader2 className="animate-spin" size={18} /> : <Trash size={18} />}
+                  </button>
+                  <button
+                    className="p-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors relative"
+                    onClick={() => handleOnPlus(index, event.id)}
+                  >
+                    <Plus size={18} />
+                    
+                    {/* Dropdown Menu */}
+                    {isActiveActions && index === activeIndex && (
+                      <div className="absolute z-40 right-0 top-full mt-2 w-48 bg-white p-3 rounded-md shadow-lg border border-gray-100">
+                        <div className="flex flex-col gap-2">
+                          <div
+                            onClick={() => handleOnAddVendor(event.id)}
+                            className="cursor-pointer p-3 w-full border border-dashed border-primary text-primary flex items-center gap-2 rounded-md hover:bg-pink-50 transition-colors"
+                          >
+                            <Plus size={16} /> <span>Add Vendor</span>
+                          </div>
+                          <div
+                            onClick={() => handleOnAddTask(event.id)}
+                            className="cursor-pointer p-3 w-full border border-dashed border-primary text-primary flex items-center gap-2 rounded-md hover:bg-pink-50 transition-colors"
+                          >
+                            <Plus size={16} /> <span>Add Task</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </button>
                 </div>
               )}
             </div>
           </div>
         </div>
-      ))}
-    </section>
-  );
+
+        {/* Expandable Content */}
+        {isToggle && index === toggledIndex && (
+          <div className="p-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              {/* Event Description */}
+              <div className="flex flex-col">
+                <p className="text-xs text-gray-500 flex items-center gap-x-1 mb-1">
+                  <NotebookTabs size={14} className="text-primary" />
+                  Description
+                </p>
+                {editingIndexes[`${index}-eventDescription`] ? (
+                  <input
+                    className="border rounded p-2 w-full focus:ring-1 focus:ring-primary focus:border-primary"
+                    type="text"
+                    value={event.eventDescription}
+                    onChange={(e) => handleChange(index, "eventDescription", e.target.value)}
+                    onBlur={() => toggleEditing(index, "eventDescription")}
+                    autoFocus
+                  />
+                ) : (
+                  <p
+                    className="cursor-pointer p-2 bg-gray-50 rounded-md hover:bg-gray-100 transition-colors"
+                    onClick={() => toggleEditing(index, "eventDescription")}
+                  >
+                    {event.eventDescription || "Add a description..."}
+                  </p>
+                )}
+              </div>
+
+              {/* Event Times */}
+              <div className="grid grid-cols-2 gap-4">
+                {/* Start Time */}
+                <div className="flex flex-col">
+                  <p className="text-xs text-gray-500 flex items-center gap-x-1 mb-1">
+                    <CalendarPlus size={14} className="text-primary" />
+                    Start Time
+                  </p>
+                  {editingIndexes[`${index}-eventStartTime`] ? (
+                    <input
+                      className="border rounded p-2 w-full focus:ring-1 focus:ring-primary focus:border-primary"
+                      type="time"
+                      value={event.eventStartTime}
+                      onChange={(e) => handleChange(index, "eventStartTime", e.target.value)}
+                      onBlur={() => toggleEditing(index, "eventStartTime")}
+                      autoFocus
+                    />
+                  ) : (
+                    <p
+                      className="cursor-pointer p-2 bg-gray-50 rounded-md hover:bg-gray-100 transition-colors"
+                      onClick={() => toggleEditing(index, "eventStartTime")}
+                    >
+                      {moment(event.eventStartTime).format("hh:mm A")}
+                    </p>
+                  )}
+                </div>
+
+                {/* End Time */}
+                <div className="flex flex-col">
+                  <p className="text-xs text-gray-500 flex items-center gap-x-1 mb-1">
+                    <CalendarMinus size={14} className="text-primary" />
+                    End Time
+                  </p>
+                  {editingIndexes[`${index}-eventEndTime`] ? (
+                    <input
+                      className="border rounded p-2 w-full focus:ring-1 focus:ring-primary focus:border-primary"
+                      type="time"
+                      value={event.eventEndTime}
+                      onChange={(e) => handleChange(index, "eventEndTime", e.target.value)}
+                      onBlur={() => toggleEditing(index, "eventEndTime")}
+                      autoFocus
+                    />
+                  ) : (
+                    <p
+                      className="cursor-pointer p-2 bg-gray-50 rounded-md hover:bg-gray-100 transition-colors"
+                      onClick={() => toggleEditing(index, "eventEndTime")}
+                    >
+                      {moment(event.eventEndTime).format("hh:mm A")}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Task Section */}
+            <div className="bg-yellow-50 p-5 rounded-lg border border-yellow-100 mb-6">
+              <h2 className="text-yellow-700 font-medium flex items-center mb-4">
+                <NotebookTabs size={18} className="mr-2" />
+                Tasks
+              </h2>
+              {/* Task List Component */}
+              {isToggle && index === toggledIndex && (
+                <TaskList
+                  tasks={tasks}
+                  eventId={event.id}
+                  isLoading={tasksLoading}
+                  updateTaskStatus={updateTaskStatus}
+                  deleteEventTask={deleteEventTask}
+                  updateEventTask={updateEventTask}
+                  refetch={refetch}
+                />
+              )}
+            </div>
+
+            {/* Services Section */}
+            <div className="bg-blue-50 p-5 rounded-lg border border-blue-100">
+              <h2 className="text-blue-700 font-medium flex items-center mb-4">
+                <NotebookTabs size={18} className="mr-2" />
+                Services
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {event.eventVendors.map((vendor) => (
+                  <ServiceCard 
+                    key={vendor.id} 
+                    service={vendor} 
+                    setRefetch={handleOnDeleteService}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    ))}
+  </section>
+);
 };
 
 WeddingEventList.propTypes = {

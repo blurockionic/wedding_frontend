@@ -234,7 +234,7 @@ const WeddingPlan = () => {
             <CreateTaskForm
             setRefetch={handleOnTaskCreated}
             eventId={selectedEvent} 
-            eventTitle={selectedEvent} 
+            eventTitle={selectedEvent.eventName}
             />
         )}  
       </div>

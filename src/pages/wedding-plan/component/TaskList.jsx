@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { FaCheckCircle, FaTimes } from "react-icons/fa";
+import { FaCheckCircle, FaTimes, FaCalendarAlt } from "react-icons/fa";
 import { BiBell, BiBellPlus } from "react-icons/bi";
 import { Loader2 } from "lucide-react";
 import { toast } from "react-toastify";
@@ -285,6 +285,26 @@ const TaskList = ({
     }
   };
 
+  // Create Google Calendar link
+  const createGoogleCalendarLink = (task) => {
+    if (!task || !task.scheduleDate) return null;
+    
+    // Format task details for Google Calendar
+    const encodedTitle = encodeURIComponent(task.name);
+    const encodedDetails = encodeURIComponent(
+      `Reminder to complete your task: "${task.name}"\n\nMake sure to finish it before the deadline!`
+    );
+    
+    // Format the date for Google Calendar (YYYYMMDDTHHMMSSZ format)
+    const formattedDate = new Date(task.scheduleDate)
+      .toISOString()
+      .replace(/[-:]/g, "")
+      .split(".")[0] + "Z";
+    
+    // Create the Google Calendar URL
+    return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodedTitle}&details=${encodedDetails}&dates=${formattedDate}/${formattedDate}`;
+  };
+
   return (
     <div className="mt-4">
       <h4 className="text-xl font-medium mb-4">{title}</h4>
@@ -328,37 +348,78 @@ const TaskList = ({
       {showCalendar && selectedTaskIndex !== null && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center" onClick={() => setShowCalendar(false)}>
           <div className="bg-white rounded-xl shadow-2xl p-6 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-primary">Schedule Task</h2>
-              <button onClick={() => setShowCalendar(false)} className="text-gray-400 hover:text-primary">
-                <FaTimes size={20} />
+            {/* Header */}
+            <div className="flex justify-between items-start pb-3">
+              <div>
+                <h2 className="text-2xl font-bold text-primary mb-1">Schedule Task</h2>
+                <p className="text-gray-500 text-sm">(Select a completion date)</p>
+              </div>
+              <button
+                type="button"
+                className="text-gray-400 hover:text-primary transition-all duration-300"
+                onClick={() => setShowCalendar(false)}
+              >
+                <FaTimes size={22} />
               </button>
             </div>
+
+            {/* Task Name & Date */}
+            <div className="px-4 py-3">
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                {tasks[selectedTaskIndex]?.name || "Task name not available"}
+              </h3>
+              <div className="bg-gray-100 p-3 rounded-lg border border-gray-300">
+                <p className="text-gray-700">
+                  Complete by:{" "}
+                  {tasks[selectedTaskIndex]?.scheduleDate ? (
+                    <span className="font-semibold text-primary">
+                      {new Date(tasks[selectedTaskIndex].scheduleDate).toLocaleDateString()}
+                    </span>
+                  ) : (
+                    <span className="font-semibold text-gray-500">Not Set</span>
+                  )}
+                </p>
+              </div>
+            </div>
             
-            <h3 className="text-lg font-medium mb-3">
-              {tasks[selectedTaskIndex]?.name || "Task name not available"}
-            </h3>
-            
-            <div className="mb-4 text-center text-gray-500">
+            {/* Calendar Picker */}
+            <div className="flex justify-center my-4">
               <Calendar
-                onChange={handleSetScheduleDate}
+                onChange={(date) => handleSetScheduleDate(date)}
                 value={tasks[selectedTaskIndex]?.scheduleDate ? new Date(tasks[selectedTaskIndex].scheduleDate) : null}
                 className="w-full border rounded-lg p-2"
               />
             </div>
             
-            <div className="flex justify-between">
+            {/* Google Calendar Button */}
+            {tasks[selectedTaskIndex]?.scheduleDate && (
+              <div className="flex justify-center my-4">
+                <a
+                  href={createGoogleCalendarLink(tasks[selectedTaskIndex])}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 flex items-center justify-center shadow-md"
+                >
+                  <FaCalendarAlt className="mr-2" /> Set Reminder on Google Calendar
+                </a>
+              </div>
+            )}
+            
+            {/* Action Buttons */}
+            <div className="flex justify-between items-center mt-6">
               {tasks[selectedTaskIndex]?.scheduleDate && (
                 <button
-                  className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-md"
+                  type="button"
+                  className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-md flex items-center gap-2 transition-all"
                   onClick={() => handleSetScheduleDate(null)}
                 >
-                  Remove Date
+                  <FaTimes /> Remove Date
                 </button>
               )}
               
               <button
-                className="bg-primary hover:bg-opacity-90 text-white font-medium py-2 px-6 rounded-md ml-auto"
+                type="button"
+                className="bg-primary hover:bg-opacity-90 text-white font-medium py-2 px-6 rounded-md transition-all ml-auto"
                 onClick={() => setShowCalendar(false)}
               >
                 Close
