@@ -19,6 +19,7 @@ import {
   useDeleteEventTaskMutation,
   useUpdateEventTaskMutation,
   useUpdateTaskStatusMutation,
+  useUpdateEventMutation, // Add this import
 } from "../../../redux/weddingPlanSlice";
 import { toast } from "react-toastify";
 import ServiceCard from "./ServiceCard";
@@ -37,6 +38,7 @@ const WeddingEventList = ({
   handleOnDeleteService
 }) => {
   const [editingIndexes, setEditingIndexes] = useState({});
+  const [eventData, setEventData] = useState(events);
   const [isActiveActions, setIsActiveActions] = useState(false);
   const [activeIndex, setActiveIndex] = useState(null);
   const [selectedTaskIndex, setSelectedTaskIndex] = useState(null);
@@ -44,6 +46,7 @@ const WeddingEventList = ({
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const [deleteEvent, { isLoading, error }] = useDeleteEventMutation();
+  const [updateEvent, { isLoading: isUpdating }] = useUpdateEventMutation(); // Add this hook
   
   // Store the current event ID for tasks
   const [currentEventId, setCurrentEventId] = useState(null);
@@ -62,6 +65,11 @@ const WeddingEventList = ({
   const [updateTaskStatus] = useUpdateTaskStatusMutation();
   const [deleteEventTask] = useDeleteEventTaskMutation();
   const [updateEventTask] = useUpdateEventTaskMutation();
+
+  // Update eventData whenever events prop changes
+  useEffect(() => {
+    setEventData(events);
+  }, [events]);
 
   // Update currentEventId when toggledIndex changes
   useEffect(() => {
@@ -88,7 +96,7 @@ const WeddingEventList = ({
 
   const isMediumScreenOrSmaller = useMediaQuery("(max-width: 1024px)");
 
-  // const handle to delete event
+  // the handle to delete event
   const handleOnDelete = async (eventId) => {
     try {
       const response = await deleteEvent(eventId).unwrap();
@@ -98,8 +106,8 @@ const WeddingEventList = ({
       }
     } catch (error) {
       console.error(error);
+      toast.error("Failed to delete event");
     }
-    console.log("delete event", eventId);
   };
 
   const toggleEditing = (index, field) => {
@@ -116,6 +124,47 @@ const WeddingEventList = ({
       )
     );
   };
+
+  // New function to save event changes
+  // New function to save event changes
+const handleSaveChanges = async (index, field) => {
+  try {
+    const event = eventData[index];
+    const eventId = event.id;
+    
+    // Include all required fields in the update payload
+    const updatePayload = {
+      eventId,
+      data: {
+        eventName: event.eventName,
+        eventDescription: event.eventDescription || "",  // Provide default if empty
+        eventDate: event.eventDate,
+        eventBudget: event.eventBudget,
+        eventStartTime: event.eventStartTime,  // Add this line
+        eventEndTime: event.eventEndTime       // Add this line
+      }
+    };
+    
+    // Call the update API
+    const response = await updateEvent(updatePayload).unwrap();
+    
+    if (response.success) {
+      toast.success(`Event ${field} updated successfully`);
+    } else {
+      // Revert changes if API call failed
+      setEventData(events);
+      toast.error("Failed to update event");
+    }
+  } catch (error) {
+    console.error("Error updating event:", error);
+    toast.error(error.data?.message || "Failed to update event");
+    // Revert changes on error
+    setEventData(events);
+  } finally {
+    // End editing mode
+    toggleEditing(index, field);
+  }
+};
 
   //handle to show the options
   const handleOnPlus = (index, eventId) => {
@@ -167,7 +216,7 @@ const WeddingEventList = ({
 
   return (
   <section className="p-4 bg-gray-50 rounded-lg">
-    {events.map((event, index) => (
+    {eventData.map((event, index) => (
       <div
         key={index}
         className="mb-6 overflow-hidden bg-white shadow-md rounded-lg border border-gray-100"
@@ -186,14 +235,21 @@ const WeddingEventList = ({
                 Event Name
               </p>
               {editingIndexes[`${index}-eventName`] ? (
-                <input
-                  className="mt-1 border rounded p-1 w-full focus:ring-1 focus:ring-primary focus:border-primary"
-                  type="text"
-                  value={event.eventName}
-                  onChange={(e) => handleChange(index, "eventName", e.target.value)}
-                  onBlur={() => toggleEditing(index, "eventName")}
-                  autoFocus
-                />
+                <div className="flex items-center">
+                  <input
+                    className="mt-1 border rounded p-1 w-full focus:ring-1 focus:ring-primary focus:border-primary"
+                    type="text"
+                    value={event.eventName}
+                    onChange={(e) => handleChange(index, "eventName", e.target.value)}
+                    autoFocus
+                  />
+                  <button 
+                    className="ml-2 p-1 bg-green-500 text-white rounded-md hover:bg-green-600"
+                    onClick={() => handleSaveChanges(index, "eventName")}
+                  >
+                    {isUpdating ? <Loader2 className="animate-spin" size={16} /> : "✓"}
+                  </button>
+                </div>
               ) : (
                 <h3
                   className="font-medium text-lg cursor-pointer capitalize text-green-600 hover:text-green-700"
@@ -214,14 +270,21 @@ const WeddingEventList = ({
                 Date
               </p>
               {editingIndexes[`${index}-eventDate`] ? (
-                <input
-                  className="mt-1 border rounded p-1 focus:ring-1 focus:ring-primary focus:border-primary"
-                  type="date"
-                  value={event.eventDate}
-                  onChange={(e) => handleChange(index, "eventDate", e.target.value)}
-                  onBlur={() => toggleEditing(index, "eventDate")}
-                  autoFocus
-                />
+                <div className="flex items-center">
+                  <input
+                    className="mt-1 border rounded p-1 focus:ring-1 focus:ring-primary focus:border-primary"
+                    type="date"
+                    value={event.eventDate}
+                    onChange={(e) => handleChange(index, "eventDate", e.target.value)}
+                    autoFocus
+                  />
+                  <button 
+                    className="ml-2 p-1 bg-green-500 text-white rounded-md hover:bg-green-600"
+                    onClick={() => handleSaveChanges(index, "eventDate")}
+                  >
+                    {isUpdating ? <Loader2 className="animate-spin" size={16} /> : "✓"}
+                  </button>
+                </div>
               ) : (
                 <p
                   className="font-medium cursor-pointer"
@@ -239,14 +302,21 @@ const WeddingEventList = ({
                 Budget
               </p>
               {editingIndexes[`${index}-eventBudget`] ? (
-                <input
-                  className="mt-1 border rounded p-1 focus:ring-1 focus:ring-primary focus:border-primary"
-                  type="number"
-                  value={event.eventBudget}
-                  onChange={(e) => handleChange(index, "eventBudget", e.target.value)}
-                  onBlur={() => toggleEditing(index, "eventBudget")}
-                  autoFocus
-                />
+                <div className="flex items-center">
+                  <input
+                    className="mt-1 border rounded p-1 focus:ring-1 focus:ring-primary focus:border-primary"
+                    type="number"
+                    value={event.eventBudget}
+                    onChange={(e) => handleChange(index, "eventBudget", e.target.value)}
+                    autoFocus
+                  />
+                  <button 
+                    className="ml-2 p-1 bg-green-500 text-white rounded-md hover:bg-green-600"
+                    onClick={() => handleSaveChanges(index, "eventBudget")}
+                  >
+                    {isUpdating ? <Loader2 className="animate-spin" size={16} /> : "✓"}
+                  </button>
+                </div>
               ) : (
                 <p
                   className="font-medium cursor-pointer text-red-500"
@@ -267,9 +337,9 @@ const WeddingEventList = ({
                 }}
               >
                 {isToggle && index === toggledIndex ? (
-                  <ChevronDown size={24} />
-                ) : (
                   <ChevronUp size={24} />
+                ) : (
+                  <ChevronDown size={24} />
                 )}
               </button>
               
@@ -325,14 +395,21 @@ const WeddingEventList = ({
                   Description
                 </p>
                 {editingIndexes[`${index}-eventDescription`] ? (
-                  <input
-                    className="border rounded p-2 w-full focus:ring-1 focus:ring-primary focus:border-primary"
-                    type="text"
-                    value={event.eventDescription}
-                    onChange={(e) => handleChange(index, "eventDescription", e.target.value)}
-                    onBlur={() => toggleEditing(index, "eventDescription")}
-                    autoFocus
-                  />
+                  <div className="flex items-center">
+                    <input
+                      className="border rounded p-2 w-full focus:ring-1 focus:ring-primary focus:border-primary"
+                      type="text"
+                      value={event.eventDescription}
+                      onChange={(e) => handleChange(index, "eventDescription", e.target.value)}
+                      autoFocus
+                    />
+                    <button 
+                      className="ml-2 p-1 bg-green-500 text-white rounded-md hover:bg-green-600"
+                      onClick={() => handleSaveChanges(index, "eventDescription")}
+                    >
+                      {isUpdating ? <Loader2 className="animate-spin" size={16} /> : "✓"}
+                    </button>
+                  </div>
                 ) : (
                   <p
                     className="cursor-pointer p-2 bg-gray-50 rounded-md hover:bg-gray-100 transition-colors"
@@ -352,14 +429,21 @@ const WeddingEventList = ({
                     Start Time
                   </p>
                   {editingIndexes[`${index}-eventStartTime`] ? (
-                    <input
-                      className="border rounded p-2 w-full focus:ring-1 focus:ring-primary focus:border-primary"
-                      type="time"
-                      value={event.eventStartTime}
-                      onChange={(e) => handleChange(index, "eventStartTime", e.target.value)}
-                      onBlur={() => toggleEditing(index, "eventStartTime")}
-                      autoFocus
-                    />
+                    <div className="flex items-center">
+                      <input
+                        className="border rounded p-2 w-full focus:ring-1 focus:ring-primary focus:border-primary"
+                        type="time"
+                        value={event.eventStartTime}
+                        onChange={(e) => handleChange(index, "eventStartTime", e.target.value)}
+                        autoFocus
+                      />
+                      <button 
+                        className="ml-2 p-1 bg-green-500 text-white rounded-md hover:bg-green-600"
+                        onClick={() => handleSaveChanges(index, "eventStartTime")}
+                      >
+                        {isUpdating ? <Loader2 className="animate-spin" size={16} /> : "✓"}
+                      </button>
+                    </div>
                   ) : (
                     <p
                       className="cursor-pointer p-2 bg-gray-50 rounded-md hover:bg-gray-100 transition-colors"
@@ -377,14 +461,21 @@ const WeddingEventList = ({
                     End Time
                   </p>
                   {editingIndexes[`${index}-eventEndTime`] ? (
-                    <input
-                      className="border rounded p-2 w-full focus:ring-1 focus:ring-primary focus:border-primary"
-                      type="time"
-                      value={event.eventEndTime}
-                      onChange={(e) => handleChange(index, "eventEndTime", e.target.value)}
-                      onBlur={() => toggleEditing(index, "eventEndTime")}
-                      autoFocus
-                    />
+                    <div className="flex items-center">
+                      <input
+                        className="border rounded p-2 w-full focus:ring-1 focus:ring-primary focus:border-primary"
+                        type="time"
+                        value={event.eventEndTime}
+                        onChange={(e) => handleChange(index, "eventEndTime", e.target.value)}
+                        autoFocus
+                      />
+                      <button 
+                        className="ml-2 p-1 bg-green-500 text-white rounded-md hover:bg-green-600"
+                        onClick={() => handleSaveChanges(index, "eventEndTime")}
+                      >
+                        {isUpdating ? <Loader2 className="animate-spin" size={16} /> : "✓"}
+                      </button>
+                    </div>
                   ) : (
                     <p
                       className="cursor-pointer p-2 bg-gray-50 rounded-md hover:bg-gray-100 transition-colors"
