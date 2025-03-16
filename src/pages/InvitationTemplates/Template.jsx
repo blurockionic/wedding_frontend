@@ -87,7 +87,7 @@ function Template() {
                   <img
                     src={templateImage}
                     alt="Wedding Invitation"
-                    className="relative rounded-2xl shadow-2xl w-full max-w-lg h-[600px] object-cover transform transition-transform duration-500 group-hover:scale-105 rotate-[5deg]"
+                    className="relative rounded-2xl shadow-2xl w-full max-w-lg h-[600px] object-cover transform transition-transform duration-500 group-hover:scale-105 rotate-[5deg] group-hover:-rotate-[0deg]"
                   />
                   <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 </div>
