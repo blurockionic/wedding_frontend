@@ -204,12 +204,12 @@ export default function Home() {
               Your one-stop destination for
             </p>
             <p
-              className="text-5xl lg:mt-2 md:text-6xl lg:text-[94px] font-bold tracking-tight custom-animate text-white md:text-primary"
+              className="text-[2.5rem] lg:mt-2 md:text-6xl lg:text-[94px] font-bold tracking-tight custom-animate text-white md:text-primary"
               data-aos="fade-up"
               style={
                 isMobile
                   ? {
-                      WebkitTextStroke: "0.5px pink", // Adjust thickness for clarity
+                      WebkitTextStroke: "0.1px pink", // Adjust thickness for clarity
                       WebkitTextFillColor: "white", // Keeps the inner text white
                     }
                   : {}
