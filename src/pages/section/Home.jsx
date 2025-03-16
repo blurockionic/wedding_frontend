@@ -196,7 +196,7 @@ export default function Home() {
 
           <div className="text-center  w-full my-10 md:text-left">
             <p
-              className="text-sm md:text-3xl lg:text-4xl text-white md:text-black font-bold tracking-tight leading-tight"
+              className="text-lg md:text-3xl lg:text-4xl text-white md:text-black font-bold tracking-tight leading-tight"
               data-aos="fade-up"
               data-aos-delay="400"
               data-aos-once="true"
@@ -204,7 +204,7 @@ export default function Home() {
               Your one-stop destination for
             </p>
             <p
-              className="text-4xl lg:mt-2 md:text-6xl lg:text-[94px] font-bold tracking-tight custom-animate text-white md:text-primary"
+              className="text-5xl lg:mt-2 md:text-6xl lg:text-[94px] font-bold tracking-tight custom-animate text-white md:text-primary"
               data-aos="fade-up"
               style={
                 isMobile
