@@ -12,8 +12,8 @@ const AdminDashBoard = () => {
   // Array of links and their paths
   const navItems = [
     { name: "General Analytics", path: "" }, // Use "/" for the default route
-    { name: "Vendor Search", path: "" },
-    { name: "Service Search", path: "" },
+    { name: "Vendor Search", path: "vendorSearch" },
+    { name: "Service Search", path: "serviceSearch" },
     { name: "User Search", path: "" },
     { name: "Bill & transactions", path: "" },
     { name: "Reports", path: "" },

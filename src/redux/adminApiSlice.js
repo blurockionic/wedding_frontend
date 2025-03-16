@@ -8,12 +8,26 @@ export const adminApiSlice = createApi({
   }),
   endpoints: (builder) => ({
     getGeneralAnalytics: builder.query({
-        query: () => ({
-            url: `/general-analytics`,
-            method: "GET",
-          }),
+      query: () => ({
+        url: `/general-analytics`,
+        method: "GET",
+      }),
+    }),
+    searchVendors: builder.mutation({
+      query: (searchData) => ({
+        url: `/vendor-search`,
+        method: "POST",
+        body: searchData,
+      }),
+    }),
+    searchServices: builder.mutation({
+      query: (searchData) => ({
+        url: `/service-search`,
+        method: "POST",
+        body: searchData,
+      }),
     }),
   }),
 });
 
-export const { useGetGeneralAnalyticsQuery } = adminApiSlice; // Fixed export
+export const { useGetGeneralAnalyticsQuery, useSearchVendorsMutation, useSearchServicesMutation } = adminApiSlice;
