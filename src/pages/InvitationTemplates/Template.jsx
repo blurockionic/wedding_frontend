@@ -4,6 +4,7 @@ import Quote from "../Quote";
 import Footer from "../Footer";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import templateImage from "../../../public/template/templateImage.png"
 function Template() {
   const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn); 
@@ -84,9 +85,9 @@ function Template() {
                 {/* Main image */}
                 <div className="relative group">
                   <img
-                    src="https://img.pikbest.com/templates/20240630/royal-wedding-invitation-card-for-grand-celebrations-2024_10644630.jpg!w700wp"
+                    src={templateImage}
                     alt="Wedding Invitation"
-                    className="relative rounded-2xl shadow-2xl w-full max-w-lg h-[600px] object-cover transform transition-transform duration-500 group-hover:scale-105"
+                    className="relative rounded-2xl shadow-2xl w-full max-w-lg h-[600px] object-cover transform transition-transform duration-500 group-hover:scale-105 rotate-[5deg]"
                   />
                   <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 </div>
