@@ -51,21 +51,21 @@ function Template() {
                 </Link>
                 </div>
 
-                <div className="flex items-center justify-center lg:justify-start gap-8 pt-6">
+                <div className="flex items-center justify-center lg:justify-start gap-4 md:gap-8 pt-6 px-4 md:px-0">
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-gray-900">
+                    <div className="text-xl md:text-3xl font-bold text-gray-900">
                       1000+
                     </div>
                     <div className="text-gray-600">Templates</div>
                   </div>
                   <div className="h-12 w-px bg-gray-200"></div>
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-gray-900">24/7</div>
+                    <div className="text-xl md:text-3xl font-bold text-gray-900">24/7</div>
                     <div className="text-gray-600">Support</div>
                   </div>
                   <div className="h-12 w-px bg-gray-200"></div>
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-gray-900">4.9</div>
+                    <div className="text-xl md:text-3xl font-bold text-gray-900">4.9</div>
                     <div className="text-gray-600">Rating</div>
                   </div>
                 </div>
@@ -87,7 +87,7 @@ function Template() {
                   <img
                     src={templateImage}
                     alt="Wedding Invitation"
-                    className="relative rounded-2xl shadow-2xl w-full max-w-lg h-[600px] object-cover transform transition-transform duration-500 group-hover:scale-105 rotate-[5deg] group-hover:-rotate-[0deg]"
+                    className="relative rounded-2xl shadow-2xl w-full max-w-lg md:h-[600px] object-cover transform transition-transform duration-500 group-hover:scale-105 rotate-[5deg] group-hover:-rotate-[0deg]"
                   />
                   <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 </div>
