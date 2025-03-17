@@ -261,13 +261,8 @@ export default function Home() {
           </div>
           <section className="  ml-0 w-full md:flex-row items-center justify-start  mx-auto  flex-col  flex">
             {/* Input Group */}
-<<<<<<< HEAD
             <div className=" hidden  relative  my-5 md:flex justify-start items-center rounded-lg  border focus-within:ring-1 focus-within:ring-primary transition duration-300  ">
               <div ref={serviceTypeRef} className=" relative ">
-=======
-            <div className="  hidden   relative  my-5 md:flex justify-start items-center rounded-lg  border focus-within:ring-1 focus-within:ring-primary transition duration-300  ">
-              <div className=" relative ">
->>>>>>> 966fe0b0fed5b25daad25bcc7c34df9c9fa2e215
                 <CustomInput
                   type="text"
                   placeholder="Select Vendor"
