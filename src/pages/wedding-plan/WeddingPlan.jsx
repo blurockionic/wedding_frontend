@@ -23,6 +23,7 @@ const WeddingPlan = () => {
   const [isActiveTask, setIsActiveTask] = useState(false);
   const [isActiveVendor, setIsActiveVendor] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [events, setEvents] = useState([]);
 
   const [isRefetchData, setIsRefetchData] = useState(false);
   const [eventId, setEventId] =  useState(null)
@@ -32,8 +33,17 @@ const WeddingPlan = () => {
   // refetch the data 
   useEffect(()=>{
       refetch()  
+      console.log("this is working")
       setIsRefetchData(false)
+      //close the form 
+      setIsActiveWeddingPlanForm(false)
   },[isRefetchData, refetch])
+
+  useEffect(() => {
+    if (data?.events) {
+      setEvents([...data.events]);  
+    }
+  }, [data]);
 
   //handle to active create event form
   const handleOnActive = () => {
@@ -57,7 +67,7 @@ const WeddingPlan = () => {
     setIsActiveVendor((prev) => !prev);
   };
 
-  //handle on dwonload plan
+  //handle on download plan
   const handleOnDownloadPlan = (events) => {
     const doc = new jsPDF();
   
@@ -139,9 +149,19 @@ const WeddingPlan = () => {
 
   //handle refech
   const handleRefech =(value)=>{
-    console.log(value)
+    console.log("this is clicked", value)
     setIsRefetchData(value)
   }
+
+  // refetch when task created 
+  const handleOnTaskCreated =(value)=>{
+    setIsRefetchData(value)
+  }
+// refetch the data when service is deleted
+  const handleOnDeleteService = (value)=>{
+    setIsRefetchData(value)
+  }
+
 
   if (isLoading) return <p className="h-screen flex justify-center items-center gap-3"><Loader2 className="animate-spin"/>Loading</p>;
   if (error) return <p className="h-screen flex justify-center items-center">Error fetching wedding plans.</p>;
@@ -159,10 +179,11 @@ const WeddingPlan = () => {
           handleOnEventActive={handleOnActive} 
           handleOnDownloadPlan={()=>handleOnDownloadPlan(data.events)}/>
           <WeddingEventList
-            data={data.events}
+            events={events}
             handleOnAddSubEvent={handleOnAddSubEvent}
             handleOnAddTask={handleOnAddTask}
             handleOnAddVendor={handleOnAddVendor}
+            handleOnDeleteService={handleOnDeleteService}
           />
         </div>
       </section>
@@ -177,7 +198,7 @@ const WeddingPlan = () => {
 
       {/* Sliding Form for event */}
       <div
-        className={`fixed top-0 right-0 h-full w-[500px] bg-white shadow-lg p-6 transform ${
+        className={`fixed top-0 right-0 h-full w-full md:w-[500px] bg-white shadow-lg md:p-6 overflow-scroll transform ${
           isActiveWeddingPlanForm ? "translate-x-0" : "translate-x-full"
         } transition-transform duration-300 ease-in-out z-50`}
       >
@@ -193,25 +214,9 @@ const WeddingPlan = () => {
         preLoadEvent={preLoadEvent}/>
       </div>
 
-      {/* Sliding Form for sub-event */}
-      {/* <div
-        className={`fixed top-0 right-0 h-full w-[500px] bg-white shadow-lg p-6 transform ${
-          isActiveSubEvent ? "translate-x-0" : "translate-x-full"
-        } transition-transform duration-300 ease-in-out z-50`}
-      >
-        <button
-          className="absolute top-4 right-4 text-gray-500 hover:text-red-500"
-          onClick={() => setIsActiveSubEvent(false)}
-        >
-          <X />
-        </button>
-
-        <CreateSubEvent />
-      </div> */}
-
       {/* Sliding Form for task */}
       <div
-        className={`fixed top-0 right-0 h-full w-[500px] bg-white shadow-lg p-6 transform ${
+        className={`fixed top-0 right-0 h-full w-full md:w-[500px] bg-white shadow-lg md:p-6 overflow-scroll transform ${
           isActiveTask ? "translate-x-0" : "translate-x-full"
         } transition-transform duration-300 ease-in-out z-50 overflow-y-auto`}
       >
@@ -227,8 +232,9 @@ const WeddingPlan = () => {
 
         {isActiveTask && selectedEvent && ( 
             <CreateTaskForm
+            setRefetch={handleOnTaskCreated}
             eventId={selectedEvent} 
-            eventTitle={selectedEvent} 
+            eventTitle={selectedEvent.eventName}
             />
         )}  
       </div>

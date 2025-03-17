@@ -7,11 +7,12 @@ import { useToggleCartMutation } from "../redux/serviceSlice";
 import { toggleFavorite } from "../redux/favoriteSlice";
 import { toast } from "react-toastify";
 
-const ServiceCard = React.memo(({ service,category, state, subCategory, city}) => {
+const ServiceCard = React.memo(({ service, category}) => {
   const [toggleCart] = useToggleCartMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   
+
 
   const favoriteList = useSelector((state) => {
     return state.favorites.favorites || [];
@@ -24,8 +25,8 @@ const ServiceCard = React.memo(({ service,category, state, subCategory, city}) =
   );
 
   // Navigate to service details
-  const handleCardClick = () => {
-    navigate(`/all/${category}/${subCategory}/${state}/${city}/${service.id}`);
+  const handleCardClick = (subCategory, state, city, id) => {
+    navigate(`/all/${category}/${subCategory}/${state}/${city}/${id}`);
   };
 
   const handleFavoriteClick = async (e, id) => {
@@ -53,7 +54,7 @@ const ServiceCard = React.memo(({ service,category, state, subCategory, city}) =
     }
   
    
-    return `https://via.placeholder.com/300x200?text=${encodeURIComponent(
+    return `https://placeholder.com/300x200?text=${encodeURIComponent(
       service?.service_type || "No Image"
     )}`;
   }, [service]);
@@ -61,7 +62,7 @@ const ServiceCard = React.memo(({ service,category, state, subCategory, city}) =
   return (
     <div
       className="group relative w-[250px] bg-white  md:w-[300px] border border-gray-400 p-3 bg-muted rounded shadow-lg overflow-hidden transform transition-all duration-300  hover:shadow-xl"
-      onClick={handleCardClick}
+      onClick={()=>handleCardClick(service?.service_type, service?.state, service?.city, service?.id)}
       aria-label={`View details of ${service?.service_name}`}
     >
       {/* Image Section */}
@@ -101,7 +102,7 @@ const ServiceCard = React.memo(({ service,category, state, subCategory, city}) =
        </div>
         <div className="flex items-center justify-between text-sm text-gray-500 mt-1">
           <span>
-            <strong className="font-semibold capitalize">location:</strong> <span className="capitalize">{service?.vendor?.city}</span>
+            <strong className="font-semibold capitalize">location:</strong> <span className="capitalize">{service?.city}</span>
           </span>
           {/* <span className="capitalize">
             {service.vendor.business_name || "No business name available"}

@@ -5,10 +5,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { useLogoutMutation } from "../redux/apiSlice.auth";
 import {
   allCategories,
-  brides,
-  grooms,
-  weddingVendors,
-  weddingVenues,
 } from "../static/static";
 import TopNavbar from "./topnavbar/TopNavbar";
 import CustomText from "./global/text/CustomText";
@@ -37,7 +33,6 @@ function Navbar() {
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
-  console.log(allCategories);
 
   return (
     <>
@@ -50,7 +45,7 @@ function Navbar() {
         }`}
       >
         <>
-          <TopNavbar />
+          {/* <TopNavbar /> */}
           <nav className="w-full bg-white top-0 px-4 lg:px-16 z-50 shadow-sm">
             <div className="w-full flex justify-between items-center py-4">
               <div className="text-2xl font-bold text-primary cursor-pointer">
@@ -107,9 +102,9 @@ function Navbar() {
 
               <ul
                 className={`
-              flex flex-col lg:flex-row lg:gap-8 gap-4
+              flex flex-col lg:flex-row lg:gap-4 gap-4
               absolute lg:relative z-50
-              rounded-lg m-2
+              rounded-lg 
               bg-white text-gray-600 font-medium
               h-screen lg:h-0 w-1/2 left-0 top-0
               lg:w-auto lg:top-auto lg:items-center
@@ -291,6 +286,14 @@ function Navbar() {
                     Invitation
                   </NavLink>
                 </li>
+                <li>
+                  <NavLink
+                    to="/vendorLogin"
+                    className="cursor-pointer border px-2 py-1 rounded-md"
+                  >
+                    Vendor Login
+                  </NavLink>
+                </li>
 
                   {(user?.role!=="ADMIN" && user?.role!=="SUPER_ADMIN") ? (
                     <>
@@ -334,8 +337,8 @@ function Navbar() {
                           onClick={() => setIsMenuOpen(false)}
                           className={({ isActive }) =>
                             isActive
-                              ? "text-white px-3 py-1 bg-primary rounded-md"
-                              : "text-white px-3 py-1 bg-primary rounded-md"
+                              ? "text-white px-3 py-1.5 bg-primary rounded-md"
+                              : "text-white px-3 py-1.5 bg-primary rounded-md"
                           }
                         >
                           Sign up

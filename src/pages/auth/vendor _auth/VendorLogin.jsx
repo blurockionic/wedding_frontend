@@ -123,7 +123,7 @@ export default function VendorLogin() {
         </script>
       </Helmet>
 
-      <div className="h-screen bg-gradient-to-b from-yellow-100  to-pink-100">
+      <div className=" bg-gradient-to-b from-yellow-100  to-pink-100">
         <div className="flex justify-center items-center cusrsor-pointer py-4 ">
           <NavLink
             to="/"
@@ -136,9 +136,9 @@ export default function VendorLogin() {
             </div>
           </NavLink>
         </div>
-        <div className="min-h-1/2  grid grid-cols-1 md:grid-cols-2 px-5 sm:px-10 md:px-16 lg:px-20 py-10 gap-10 ">
+        <div className="grid grid-cols-1 md:grid-cols-2 px-5 sm:px-10 md:px-16 lg:px-20 py-10 gap-10 ">
           <div className="space-y-12 md:space-y-24">
-            <div className="space-y-5">
+            <div className="space-y-5 px-4">
               <h1
                 className="text-primary 
         text-3xl md:text-5xl lg:text-6xl
@@ -193,13 +193,6 @@ export default function VendorLogin() {
                 </li>
               </ul>
             </div>
-
-            {/* <Link to="/services" className="mt-4 block">
-          <CustomButton
-            text="Create your free service"
-            className="border border-ring px-5 py-3 text-primary"
-          />
-        </Link> */}
           </div>
           {/* vendor login  */}
           <div className="flex items-center justify-center md:mt-3">
@@ -217,12 +210,7 @@ export default function VendorLogin() {
                 >
                   Vendor Login
                 </CustomText>
-                {/* <CustomText
-                  variant="paragraph"
-                  className="text-sm text-muted-foreground"
-                >
-                  Enter your credentials to access the vendor portal
-                </CustomText> */}
+                
               </div>
 
               <form onSubmit={handleSubmit(handleLogin)} className="space-y-6">

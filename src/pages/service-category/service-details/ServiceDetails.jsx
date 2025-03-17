@@ -147,11 +147,13 @@ const ServiceDetails = () => {
     }
   };
 
-  console.log(data?.service?.vendor.phone_number)
+ 
 
   return (
     <>
   {isLoggedIn ? (
+    <>
+    
     <div className="px-4 md:px-16 py-6 md:py-8">
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Images Section */}
@@ -269,7 +271,22 @@ const ServiceDetails = () => {
         <FeedbackForm serviceId={id} setIsLoading={setIsLoading} />
       </div>
     </div>
+    </>
   ) : (
+    <>
+    <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-lg z-50">
+    <div className="bg-yellow-100 p-6 rounded-lg text-center shadow-lg max-w-sm w-full">
+      <p className="text-lg md:text-xl font-medium text-red-600 mb-4">
+        Please log in to contact the vendor.
+      </p>
+      <button
+        onClick={handleLoginRedirect}
+        className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition w-full"
+      >
+        Log in to Continue
+      </button>
+    </div>
+  </div>
     <div className="w-full mx-auto p-4 md:p-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Left Section */}
@@ -344,6 +361,7 @@ const ServiceDetails = () => {
         </div>
       </div>
     </div>
+    </>
   )}
 </>
 

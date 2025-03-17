@@ -4,35 +4,29 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../../components/global/button/CustomButton";
 import CustomInput from "../../components/global/inputfield/CustomInput";
-import { GoLocation, GoSearch } from "react-icons/go";
-import Discover from "../../components/home/home-discover/Discover.jsx";
+import { GoSearch } from "react-icons/go";
 import { Helmet } from "react-helmet-async";
 import { allCategories } from "../../static/static";
-import { useGetServicesQuery } from "../../redux/serviceSlice";
 import { toast } from "react-toastify";
+import LocationSearch from "../../components/LocationSearch/LocationSearch";
+import CircularAnimation from "../CircularMotion";
+import img from "../../../public/heroSection/image 49.png";
 
 export default function Home() {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
-  const [location, setLocation] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [locationSuggestions, setLocationSuggestions] = useState({});
-  const [showlocationSuggestions, setShowlocationSuggestions] = useState(false);
-  const [originalLocationData, setOriginalLocationData] = useState({});
-  const [categroy, setCategory] = useState("")
-  const [searchLocation, setSearchLocation] = useState("")
-
-  const { data, error, isLoading } = useGetServicesQuery();
-
+  const [category, setCategory] = useState("");
+  const [searchLocation, setSearchLocation] = useState("");
+  const [backgroundImg, setBackGroundImg] = useState(img);
+  const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     Aos.init({
       duration: 1000,
     });
-    // fetchStatesAndCities();
   }, []);
 
-  //handle on change vendors
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearch(value);
@@ -54,85 +48,76 @@ export default function Home() {
   };
 
   useEffect(() => {
-
-    if (!data?.ServiceResult) return;
-
-    const filterData = data.ServiceResult.reduce((acc, service) => {
-      if (service.state) {
-        acc[service.state] = acc[service.state] || [];
-        acc[service.state].push(service.city);
-      }
-      return acc;
-    }, {});
-
-    //set data
-    setOriginalLocationData(filterData); // Store original data
-    setLocationSuggestions(filterData);
-  }, [data]);
-
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // set value on input field
   const handleSuggestionClick = (category, subcategory) => {
-    // console.log(category, subcategory)
     setSearch(`${subcategory}`);
-    // this for search
-    setCategory(`${category}/${subcategory}`)
+    setCategory(`${category}/${subcategory}`);
     setShowSuggestions(false);
   };
 
-  //handle on location
-  const handleSearchLocationChange = (e) => {
-    const searchLocation = e.target.value;
-    setLocation(searchLocation);
-
-    if (searchLocation) {
-      const filteredLocation = Object.entries(originalLocationData).reduce(
-        (acc, [state, cities]) => {
-          const filteredCities = cities.filter((city) =>
-            city.toLowerCase().startsWith(searchLocation.toLowerCase())
-          );
-
-          if (filteredCities.length > 0) {
-            acc[state] = filteredCities;
-          }
-          return acc;
-        },
-        {}
-      );
-
-      setLocationSuggestions(filteredLocation);
-      setShowlocationSuggestions(Object.keys(filteredLocation).length > 0);
-    } else {
-      setShowlocationSuggestions(false);
-      setLocationSuggestions(originalLocationData); // Reset to original data
-    }
-  };
-
-  //set wedding location
-  const handleLocationClick = (state, city) => {
-    setLocation(`${city}`);
-    //this is for search
-    setSearchLocation(`${state}/${city}`)
-    setShowlocationSuggestions(false);
-  };
-
-  // navigate to specific services 
   const handleNavigate = () => {
-    if(categroy && searchLocation){
-      navigate(`/all/${categroy}/${searchLocation}`);
-    }else if(searchLocation){
-      toast.error("Please select vendor")
-    }else if(categroy){
-      navigate(`/all/${categroy}`)
-    }
-    else{
+    if (category && searchLocation) {
+      navigate(`/all/${category}/${searchLocation}`);
+    } else if (searchLocation) {
+      toast.error("Please select vendor");
+    } else if (category) {
+      navigate(`/all/${category}`);
+    } else {
       navigate(`/all`);
     }
   };
 
+  console.log(suggestions);
+
+  const insightCard = () => {
+    return (
+      <>
+        <div
+          className={`flex w-full flex-grow px-2   my-10 gap-6 ${
+            !isMobile ? "justify-between " : "justify-around"
+          } items-center `}
+        >
+          {[
+            {
+              count: "50+",
+              desc: " Verified Users",
+              background: "text-[#F20574]",
+            },
+            {
+              count: "50+",
+              desc: " Verified Vendors",
+              background: "text-[#B14DA1]",
+            },
+            {
+              count: "50+",
+              desc: " Offering Services",
+              background: "text-[#C1000DB2]",
+            },
+          ].map(({ count, desc, background }, index) => (
+            <div
+              key={index}
+              className="border px-2 rounded-md py-2 bg-white bg-opacity-20 backdrop-blur-lg min-w-[80px] flex-grow  md:w-auto md:min-w-[120px] md:max-w-[180px] text-center shadow-md"
+            >
+              <p className="text-md md:text-3xl font-bold">{count}</p>
+              <div className="mt-2 bg-slate-600 h-1 w-full rounded"></div>
+              <p className={` ${background} text-[8px] md:text-lg mt-2`}>
+                {desc}
+              </p>
+            </div>
+          ))}
+        </div>
+      </>
+    );
+  };
+
   return (
     <>
-      {/* SEO Optimization */}
       <Helmet>
         <title>Home | Marriage Vendors</title>
         <meta
@@ -187,135 +172,183 @@ export default function Home() {
         </script>
       </Helmet>
 
-      <div
-        className="h-[80vh] w-full z-10 relative flex items-center justify-center"
-        style={{
-          backgroundImage: `linear-gradient(360deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), url('/herobg.jpg')`,
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
-        }}
-        aria-hidden="true"
-      >
-        {/* Content Section */}
-        <div className="p-4 mt-48 md:pl-24 space-y-6 rounded-lg z-40 flex justify-center items-center flex-col w-full">
-          <p
-            className="text-3xl md:text-6xl lg:text-7xl font-bold text-white flex flex-col items-center text-center"
-            data-aos="fade-up"
-            data-aos-delay="400"
-            data-aos-once="true"
-          >
-            <span className="text-4xl md:text-4xl lg:text-[66px] mb-3">
-              Your one-stop destination for{" "}
-            </span>
-            <span className="text-[#fecd17]">Dream Wedding</span>
-          </p>
+      <div className="  grid md:pl-16 md:pt-20 overflow-hidden lg:grid-cols-2 grid-cols-1 justify-between gap-10  items-center">
+        {/* Left Section */}
 
-          {/* Mobile Search Button */}
-          <CustomButton
-            leftIcon={<GoSearch size={20} className="text-white" />}
-            text="Search"
-            className="w-1/2 lg:hidden bg-primary px-10 py-2 rounded text-white md:ml-[-50px] lg:ml-0"
-            onClick={handleNavigate}
-          >
-            Discover
-          </CustomButton>
-        </div>
+        {isMobile && (
+          <div className="absolute inset-0 z-[-1]">
+            <img
+              className="w-full h-full object-cover"
+              src={backgroundImg}
+              alt="Background"
+            />
+            {/* Dark Overlay */}
+            <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+          </div>
+        )}
 
-        {/* Search Section */}
-        <section className="hidden z-50 absolute bottom-0 w-full lg:flex items-center justify-center flex-col gap-1 bg-gradient-to-t from-white bg-opacity-70">
-          {/* Input Group */}
-          <div className="flex gap-4 bg-white p-6 rounded-lg shadow-lg ">
-            {/* Vendor Input */}
-            <div className="w-[400px]">
-              <CustomInput
-                type="text"
-                placeholder="Select Vendor"
-                className="outline-none bg-white w-full focus:border-white"
-                aria-label="Select Vendor"
-                value={search}
-                onChange={handleSearchChange}
-                onFocus={() => setShowSuggestions(true)} 
-                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-                leftIcon={<GoSearch size={20} />}
-              />
-            
-              {showSuggestions && suggestions.length > 0 && (
-                <ul className="absolute bg-white border border-gray-300 rounded w-[400px] shadow-lg mt-1 z-20 overflow-auto max-h-[200px]">
-                  {suggestions.map(({ category, subcategories }, index) => (
-                    <li key={index} className="px-4 py-2  cursor-pointer">
-                      {/* {category} */}
-                      <ul className=" text-sm grid grid-cols-1  gap-2">
-                        {subcategories.map((sub, index) => (
-                          <li
-                            key={index}
-                            className="text-gray-700 hover:bg-gray-200 p-2 rounded-md"
-                            onClick={() => handleSuggestionClick(category, sub)}
-                          >
-                            {sub}
-                          </li>
-                        ))}
-                      </ul>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
+        <div className="relative   flex flex-col gap-6  text-center items-start md:text-left">
+          <img
+            className="hidden lg:block absolute  left-0 -top-10  "
+            src="/heroSection/Vector1.png"
+            alt="Vector1"
+          />
 
-            {/* Location Input */}
-            <div className="relative w-[400px]">
-              <CustomInput
-                type="text"
-                value={location}
-                placeholder="In Location"
-                className="w-full outline-none focus:border-white bg-white "
-                aria-label="Location"
-                onChange={handleSearchLocationChange}
-               
-                leftIcon={<GoLocation size={20} />}
-              />
-              {showlocationSuggestions &&
-                Object.keys(locationSuggestions).length > 0 && (
-                  <ul className="absolute bg-white border border-gray-300 rounded w-full shadow-lg mt-1 z-20 overflow-auto max-h-[300px]">
-                    {Object.entries(locationSuggestions).map(
-                      ([state, cities]) => (
-                        <li key={state} className="border-b border-gray-200">
-                          
-                          
-                            <ul className=" bg-white">
-                              {cities.map((city, index) => (
-                                <li
-                                  key={index}
-                                  className="px-4 py-2 hover:bg-gray-200 cursor-pointer capitalize"
-                                  onClick={() => handleLocationClick(state,city)}
-                                >
-                                  {city}
-                                </li>
-                              ))}
-                            </ul>
-                         
-                          
-                        </li>
-                      )
-                    )}
+          <div className="text-center  w-full my-10 md:text-left">
+            <p
+              className="text-lg md:text-3xl lg:text-4xl text-white md:text-black font-bold tracking-tight leading-tight"
+              data-aos="fade-up"
+              data-aos-delay="400"
+              data-aos-once="true"
+            >
+              Your one-stop destination for
+            </p>
+            <p
+              className="text-[2.5rem] lg:mt-2 md:text-6xl lg:text-[94px] font-bold tracking-tight custom-animate text-white md:text-primary"
+              data-aos="fade-up"
+              style={
+                isMobile
+                  ? {
+                      WebkitTextStroke: "0.1px pink", // Adjust thickness for clarity
+                      WebkitTextFillColor: "white", // Keeps the inner text white
+                    }
+                  : {}
+              }
+              data-aos-delay="500"
+              data-aos-once="true"
+            >
+              Dream Wedding
+            </p>
+          </div>
+          <section className="  ml-0 w-full md:flex-row items-center justify-start  mx-auto  flex-col  flex">
+            {/* Input Group */}
+            <div className="  hidden   relative  my-5 md:flex justify-start items-center rounded-lg  border focus-within:ring-1 focus-within:ring-primary transition duration-300  ">
+              <div className=" relative ">
+                <CustomInput
+                  type="text"
+                  placeholder="Select Vendor"
+                  className="outline-none   focus:ring-0 focus:ring-none bg-white  border-none  "
+                  aria-label="Select Vendor"
+                  value={search}
+                  onChange={handleSearchChange}
+                  onFocus={() => setShowSuggestions(true)}
+                  onBlur={() =>
+                    setTimeout(() => setShowSuggestions(false), 200)
+                  }
+                  leftIcon={<GoSearch size={20} />}
+                />
+
+                {showSuggestions && suggestions.length > 0 && (
+                  <ul className=" absolute  bg-white border border-gray-300 w-full rounded shadow-lg mt-1 z-20 overflow-auto  max-h-[200px]">
+                    {suggestions.map(({ category, subcategories }, index) => (
+                      <li key={index} className="px-4 py-2  cursor-pointer">
+                        {/* {category} */}
+                        <ul className=" text-sm grid grid-cols-1  gap-2">
+                          {subcategories.map((sub, index) => (
+                            <li
+                              key={index}
+                              className="text-gray-700 hover:bg-gray-200 p-2 rounded-md"
+                              onClick={() =>
+                                handleSuggestionClick(category, sub)
+                              }
+                            >
+                              {sub}
+                            </li>
+                          ))}
+                        </ul>
+                      </li>
+                    ))}
                   </ul>
                 )}
+              </div>
+              <div className="absolute  left-1/2 transform -translate-x-1/2   -mt-2">
+                <span className="  text-4xl text-pink-400">|</span>
+              </div>
+              <LocationSearch
+                customClass={"border-none rounded-none "}
+                setSearchLocation={setSearchLocation}
+              />
             </div>
 
-            {/* Discover Button */}
-            <CustomButton
-              text="Discover"
-              className="bg-primary px-10 py-2 rounded text-white"
-              onClick={handleNavigate}
-            >
-              Discover
-            </CustomButton>
-          </div>
-        </section>
-      </div>
+            <div className="md:hidden flex flex-col gap-5">
+              <div className=" relative ">
+                <CustomInput
+                  type="text"
+                  placeholder="Select Vendor"
+                  className="outline-none   focus:ring-0 focus:ring-none bg-white  border-none  "
+                  aria-label="Select Vendor"
+                  value={search}
+                  onChange={handleSearchChange}
+                  onFocus={() => setShowSuggestions(true)}
+                  onBlur={() =>
+                    setTimeout(() => setShowSuggestions(false), 200)
+                  }
+                  leftIcon={<GoSearch size={20} />}
+                />
 
-     
-    
+                {showSuggestions && suggestions.length > 0 && (
+                  <ul className=" absolute  bg-white border border-gray-300 w-full rounded shadow-lg mt-1 z-20 overflow-auto  max-h-[200px]">
+                    {suggestions.map(({ category, subcategories }, index) => (
+                      <li key={index} className="px-4 py-2  cursor-pointer">
+                        {/* {category} */}
+                        <ul className=" text-sm grid grid-cols-1  gap-2">
+                          {subcategories.map((sub, index) => (
+                            <li
+                              key={index}
+                              className="text-gray-700 hover:bg-gray-200 p-2 rounded-md"
+                              onClick={() =>
+                                handleSuggestionClick(category, sub)
+                              }
+                            >
+                              {sub}
+                            </li>
+                          ))}
+                        </ul>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+              <LocationSearch
+                customClass={" "}
+                setSearchLocation={setSearchLocation}
+              />
+            </div>
+
+            <CustomButton
+              text="search"
+              className="justify-center bg-primary my-5 md:my-0 md:ml-5 px-10 py-3 text-white  border-none"
+              onClick={handleNavigate}
+            />
+          </section>
+
+          {!isMobile && <div>{insightCard()}</div>}
+
+          {/* Stats Section */}
+
+          <img
+            className="relative  hidden lg:block -left-14 "
+            src="/heroSection/Vectorheart.png"
+            alt="Vectorheart"
+          />
+        </div>
+
+        {/* Right Section */}
+        <div className="hidden relative lg:flex flex-1 justify-center items-center w-full  md:h-[500px] lg:h-[600px]">
+          <div className="">
+            <CircularAnimation />
+          </div>
+          <div className="">
+            {" "}
+            <img
+              className="absolute  top-10 right-40 hidden md:block"
+              src="/heroSection/Vectorheartbuzz.png"
+              alt="heartbuzz"
+            />
+          </div>
+        </div>
+      </div>
+      {isMobile && insightCard()}
     </>
   );
 }

@@ -38,7 +38,7 @@ function Card({ pricing }) {
     </Link>
   );
 }
-// template category
+
 const allTemplates = [
   { id: 1, pricing: "Paid" },
   { id: 2, pricing: "Paid" },

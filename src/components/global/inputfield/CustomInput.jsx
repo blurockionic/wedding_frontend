@@ -11,7 +11,6 @@ const CustomInput = (props) => {
     disabled = false,
     leftIcon = null,
     rightIcon = null,
-    
   } = props;
 
   return (
@@ -20,8 +19,8 @@ const CustomInput = (props) => {
       style={style}
     >
       {/* Left Icon */}
-      {leftIcon && <div className="mr-2 text-primary">{leftIcon}</div>}  {/* Custom color for left icon */}
-
+      {leftIcon && <div className="mr-2 text-primary">{leftIcon}</div>}{" "}
+      {/* Custom color for left icon */}
       {/* Input */}
       <input
         type={type}
@@ -29,11 +28,11 @@ const CustomInput = (props) => {
         value={value}
         onChange={onChange}
         disabled={disabled}
-        className="flex-1 py-1 text-primary placeholder:text-muted-foreground focus:outline-none border-2 border-transparent rounded focus:border-2 focus:border-pink-200 focus:ring-transparent"  // Custom color for text and placeholder
+        className="flex-1 py-1 text-primary placeholder:text-muted-foreground focus:outline-none border-2 border-transparent rounded focus:border-transparent focus:ring-0"
       />
-
       {/* Right Icon */}
-      {rightIcon && <div className="ml-2 text-primary">{rightIcon}</div>}  {/* Custom color for right icon */}
+      {rightIcon && <div className="ml-2 text-primary">{rightIcon}</div>}{" "}
+      {/* Custom color for right icon */}
     </div>
   );
 };
