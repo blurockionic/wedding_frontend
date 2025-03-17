@@ -1,6 +1,6 @@
 import Aos from "aos";
 import "aos/dist/aos.css";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../../components/global/button/CustomButton";
 import CustomInput from "../../components/global/inputfield/CustomInput";
@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import LocationSearch from "../../components/LocationSearch/LocationSearch";
 import CircularAnimation from "../CircularMotion";
 import img from "../../../public/heroSection/image 49.png";
+import { useGetHeroSectionAnalyticsQuery } from "../../redux/adminApiSlice";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -21,6 +22,10 @@ export default function Home() {
   const [searchLocation, setSearchLocation] = useState("");
   const [backgroundImg, setBackGroundImg] = useState(img);
   const [isMobile, setIsMobile] = useState(false);
+  const { data: heroSectionAnalyticsData, isLoading } =
+    useGetHeroSectionAnalyticsQuery();
+
+  const serviceTypeRef = useRef(null);
   useEffect(() => {
     Aos.init({
       duration: 1000,
@@ -30,7 +35,20 @@ export default function Home() {
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearch(value);
-    if (value) {
+    if (!value.trim()) {
+      const allCategoriesArray = Object.entries(allCategories).map(
+        ([category, subcategories]) => ({
+          category,
+          subcategories,
+        })
+      );
+
+      setSuggestions(allCategoriesArray);
+      setShowSuggestions(true);
+      return;
+    }
+
+    if (value.trim()) {
       const filtered = Object.entries(allCategories)
         .map(([category, subcategories]) => ({
           category,
@@ -41,11 +59,34 @@ export default function Home() {
         .filter((item) => item.subcategories.length > 0);
 
       setSuggestions(filtered);
+      console.log(filtered);
+
       setShowSuggestions(true);
-    } else {
-      setShowSuggestions(false);
     }
   };
+  const handleFocus = useCallback(() => {
+    if (!search.trim()) {
+      setSuggestions(() =>
+        Object.entries(allCategories).map(([category, subcategories]) => ({
+          category,
+          subcategories,
+        }))
+      );
+    }
+    setShowSuggestions(true);
+  }, [search]);
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        serviceTypeRef.current &&
+        !serviceTypeRef.current.contains(event.target)
+      ) {
+        setShowSuggestions(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -73,8 +114,6 @@ export default function Home() {
     }
   };
 
-  console.log(suggestions);
-
   const insightCard = () => {
     return (
       <>
@@ -85,17 +124,17 @@ export default function Home() {
         >
           {[
             {
-              count: "50+",
+              count: heroSectionAnalyticsData?.verifiedUsers,
               desc: " Verified Users",
               background: "text-[#F20574]",
             },
             {
-              count: "50+",
+              count: heroSectionAnalyticsData?.verifiedVendors,
               desc: " Verified Vendors",
               background: "text-[#B14DA1]",
             },
             {
-              count: "50+",
+              count: heroSectionAnalyticsData?.activeServices,
               desc: " Offering Services",
               background: "text-[#C1000DB2]",
             },
@@ -104,7 +143,7 @@ export default function Home() {
               key={index}
               className="border px-2 rounded-md py-2 bg-white bg-opacity-20 backdrop-blur-lg min-w-[80px] flex-grow  md:w-auto md:min-w-[120px] md:max-w-[180px] text-center shadow-md"
             >
-              <p className="text-md md:text-3xl font-bold">{count}</p>
+              <p className="text-md md:text-3xl font-bold">{count}+</p>
               <div className="mt-2 bg-slate-600 h-1 w-full rounded"></div>
               <p className={` ${background} text-[8px] md:text-lg mt-2`}>
                 {desc}
@@ -222,12 +261,8 @@ export default function Home() {
           </div>
           <section className="  ml-0 w-full md:flex-row items-center justify-start  mx-auto  flex-col  flex">
             {/* Input Group */}
-<<<<<<< HEAD
-            <div className=" hidden   relative  my-5 md:flex justify-start items-center rounded-lg  border focus-within:ring-1 focus-within:ring-primary transition duration-300  ">
-=======
-            <div className="  hidden   relative  my-5 md:flex justify-start items-center rounded-lg  border focus-within:ring-1 focus-within:ring-primary transition duration-300  ">
->>>>>>> 02141245045e1a373051a70d1cb0cde8e4c4ff86
-              <div className=" relative ">
+            <div className=" hidden  relative  my-5 md:flex justify-start items-center rounded-lg  border focus-within:ring-1 focus-within:ring-primary transition duration-300  ">
+              <div ref={serviceTypeRef} className=" relative ">
                 <CustomInput
                   type="text"
                   placeholder="Select Vendor"
@@ -235,22 +270,18 @@ export default function Home() {
                   aria-label="Select Vendor"
                   value={search}
                   onChange={handleSearchChange}
-                  onFocus={() => setShowSuggestions(true)}
-                  onBlur={() =>
-                    setTimeout(() => setShowSuggestions(false), 200)
-                  }
+                  onFocus={handleFocus}
                   leftIcon={<GoSearch size={20} />}
                 />
 
                 {showSuggestions && suggestions.length > 0 && (
                   <ul className=" absolute  bg-white border border-gray-300 w-full rounded shadow-lg mt-1 z-20 overflow-auto  max-h-[200px]">
-                    {suggestions.map(({ category, subcategories }, index) => (
-                      <li key={index} className="px-4 py-2  cursor-pointer">
-                        {/* {category} */}
+                    {suggestions.map(({ category, subcategories }) => (
+                      <li key={category} className="px-4 py-2  cursor-pointer">
                         <ul className=" text-sm grid grid-cols-1  gap-2">
                           {subcategories.map((sub, index) => (
                             <li
-                              key={index}
+                              key={sub}
                               className="text-gray-700 hover:bg-gray-200 p-2 rounded-md"
                               onClick={() =>
                                 handleSuggestionClick(category, sub)
