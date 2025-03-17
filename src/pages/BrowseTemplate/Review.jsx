@@ -58,9 +58,9 @@ function Review() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [amountCategory, setAmountCategory] = useState('');
   const [category, setCategory] = useState('');
-  const [templates, setTemplates] = useState(allTemplates.slice(0, 3));
+  const [templates, setTemplates] = useState(allTemplates.slice(0, 6));
   const [loading, setLoading] = useState(false);
-  const [loadedCount, setLoadedCount] = useState(3);
+  const [loadedCount, setLoadedCount] = useState(6);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -79,18 +79,19 @@ function Review() {
           const newTemplates = allTemplates.filter(temp =>
             amountCategory ? temp.pricing.toLowerCase() === amountCategory : true
           );
-          return newTemplates.slice(0, loadedCount + 3);
+          return newTemplates.slice(0, loadedCount + 6);
         });
-        setLoadedCount((prevCount) => Math.min(prevCount + 3, allTemplates.length));
+        setLoadedCount((prevCount) => Math.min(prevCount + 6, allTemplates.length));
         setLoading(false);
       }, 3000);
     }
   };
+
   useEffect(() => {
     setTemplates(allTemplates.filter(temp =>
       amountCategory ? temp.pricing.toLowerCase() === amountCategory : true
     ).slice(0, loadedCount));
-  }, [amountCategory , loadedCount]);
+  }, [amountCategory, loadedCount]);
 
   function Dropdown({ title, options }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -121,10 +122,6 @@ function Review() {
       </div>
     );
   }
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [loading]);
 
   const categories = [
     { id: 'hot', name: 'Hot', icon: <Flame className="w-6 h-6" /> },
@@ -146,7 +143,6 @@ function Review() {
       {/* Responsive Sidebar */}
       <div className="lg:w-72 bg-white shadow-2xl p-6 border-r-2 border-pink-200 flex lg:flex-col overflow-x-auto lg:overflow-visible">
         <div className="hidden lg:flex-col space-x-4 lg:space-x-0 lg:block">
-        
           {/* Filter Section */}
           <div>
             <div className="flex items-center gap-3 mb-6">
@@ -158,7 +154,7 @@ function Review() {
             <button
               onClick={() => setAmountCategory('')}
               className={`w-full text-left px-5 py-3 rounded-full font-semibold transition-all duration-300 ${
-                  setAmountCategory=== ''
+                  amountCategory === '' // Fixed the condition
                   ? 'bg-pink-100 text-pink-700 shadow-lg'
                   : 'text-gray-800 hover:bg-pink-50 hover:shadow-md'
               }`}
@@ -229,24 +225,28 @@ function Review() {
               ))}
             </div>
           </div>
-      </div>
-    </div>
-        <div className="lg:hidden flex justify-evenly items-start w-full h-[10vh] space-x-4 bg-white ps-2 pe-2">
-            <Dropdown title="Filter" options={categories} />
-            <Dropdown title="Amount" options={amountCategories} />
-            <Dropdown title="Category" options={eventCategories} />
         </div>
+      </div>
+      <div className="lg:hidden flex justify-evenly items-start w-full h-[10vh] space-x-4 bg-white ps-2 pe-2">
+        <Dropdown title="Filter" options={categories} />
+        <Dropdown title="Amount" options={amountCategories} />
+        <Dropdown title="Category" options={eventCategories} />
+      </div>
       {/* Main Content Area */}
       <div className="flex-1 p-8 bg-white shadow-2xl">
-        {/* Hide Search Section on Small Screens */}
-        
         {/* Card Section */}
-        <div className=" rounded-2xl py-8">
+        <div className="rounded-2xl py-8">
           <CardSection cards={templates.map((temp) => <Card key={temp.id} pricing={temp.pricing} />)} />
           {loading && (
-            <div className="flex flex-wrap justify-evenly py-8">
-              {Array(3).fill(0).map((_, index) => (
-                <motion.div key={index} className="w-[450px] h-[450px] bg-gray-200 animate-pulse rounded-lg shadow-md mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 py-8">
+              {Array(6).fill(0).map((_, index) => ( // Changed from 3 to 6
+                <motion.div 
+                  key={index} 
+                  className="w-full max-w-[450px] h-[440px] bg-gray-200 animate-pulse rounded-lg shadow-md mx-auto" 
+                  initial={{ opacity: 0 }} 
+                  animate={{ opacity: 1 }} 
+                  transition={{ duration: 0.5 }} 
+                />
               ))}
             </div>
           )}
