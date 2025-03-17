@@ -6,6 +6,7 @@ import image_2 from "../../../public/image_2.jpg";
 import image_16 from "../../../public/image_6.jpg";
 import { motion } from "framer-motion";
 
+//Template array
 const templates = [
   {
     id: 1,
