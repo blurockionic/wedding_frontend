@@ -15,13 +15,13 @@ const ActionHeader = ({
       </div>
 
       <div className="flex justify-end items-center px-4 py-3  border-b gap-4">
-        <div
+        {/* <div
           onClick={handleOnShare}
           className="flex justify-center items-center border border-dashed border-green-500 text-green-500 px-5 py-2 rounded-md cursor-pointer"
         >
           <Share />
           <p className="ml-2">Share</p>
-        </div>
+        </div> */}
 
         <div
           onClick={handleOnDownloadPlan}
