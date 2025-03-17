@@ -15,11 +15,11 @@ const FeatureService = ({services}) => {
           {services.map((service, index) => (
             <div key={service.id} className="relative">
               <ServiceCard service={service} />
-              {index === services.length - 1 && (
+              {/* {index === services.length - 1 && (
                 <button className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white font-semibold rounded-lg">
                   <span className="bg-primary px-5 py-2 rounded-md">See More</span>
                 </button>
-              )}
+              )} */}
             </div>
           ))}
         </div>

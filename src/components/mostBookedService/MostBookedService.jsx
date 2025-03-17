@@ -1,8 +1,10 @@
 import { Helmet } from "react-helmet";
 import { useEffect, useState } from "react";
 import ServiceCard from "../ServiceCard";
+import { useNavigate } from "react-router-dom";
 
 const TopRated = ({ services }) => {
+  const navigate = useNavigate()
   const [canonicalUrl, setCanonicalUrl] = useState("");
 
   useEffect(() => {
@@ -62,11 +64,13 @@ const TopRated = ({ services }) => {
         {services.map((service, index) => (
           <div key={service.id} className="relative">
             <ServiceCard service={service} />
-            {index === services.length - 1 && (
-              <button className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white font-semibold rounded-lg">
+            {/* {index === services.length - 1 && (
+              <button 
+              onClick={navigate(`/services?sortBy=rating&order=desc`)}
+              className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white font-semibold rounded-lg">
                 <span className="bg-primary px-5 py-2 rounded-md">See More</span>
               </button>
-            )}
+            )} */}
           </div>
         ))}
       </div>
