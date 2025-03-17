@@ -71,7 +71,7 @@ const VendorCardForEvent = ({
         if (success) {
           toast.success(message || "Added to event!");
           dispatch(toggleFavorite(serviceId));
-          toast.success("Added to favorites!");
+          // toast.success("Added to favorites!");
         }
       }
     } catch (error) {
