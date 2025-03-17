@@ -211,7 +211,7 @@ export default function Home() {
         </script>
       </Helmet>
 
-      <div className="  grid pl-10 md:pt-20 overflow-hidden lg:grid-cols-2 grid-cols-1 justify-between gap-10  items-center">
+      <div className="  grid md:pl-16 md:pt-20 overflow-hidden lg:grid-cols-2 grid-cols-1 justify-between gap-10  items-center">
         {/* Left Section */}
 
         {isMobile && (
@@ -235,7 +235,7 @@ export default function Home() {
 
           <div className="text-center  w-full my-10 md:text-left">
             <p
-              className="text-sm md:text-3xl text-white md:text-black font-bold tracking-tight leading-tight"
+              className="text-lg md:text-3xl lg:text-4xl text-white md:text-black font-bold tracking-tight leading-tight"
               data-aos="fade-up"
               data-aos-delay="400"
               data-aos-once="true"
@@ -243,12 +243,12 @@ export default function Home() {
               Your one-stop destination for
             </p>
             <p
-              className="text-3xl  md:text-6xl font-bold tracking-tight custom-animate text-white md:text-primary"
+              className="text-[2.5rem] lg:mt-2 md:text-6xl lg:text-[94px] font-bold tracking-tight custom-animate text-white md:text-primary"
               data-aos="fade-up"
               style={
                 isMobile
                   ? {
-                      WebkitTextStroke: "1px pink", // Adjust thickness for clarity
+                      WebkitTextStroke: "0.1px pink", // Adjust thickness for clarity
                       WebkitTextFillColor: "white", // Keeps the inner text white
                     }
                   : {}
@@ -261,8 +261,13 @@ export default function Home() {
           </div>
           <section className="  ml-0 w-full md:flex-row items-center justify-start  mx-auto  flex-col  flex">
             {/* Input Group */}
+<<<<<<< HEAD
             <div className=" hidden  relative  my-5 md:flex justify-start items-center rounded-lg  border focus-within:ring-1 focus-within:ring-primary transition duration-300  ">
               <div ref={serviceTypeRef} className=" relative ">
+=======
+            <div className="  hidden   relative  my-5 md:flex justify-start items-center rounded-lg  border focus-within:ring-1 focus-within:ring-primary transition duration-300  ">
+              <div className=" relative ">
+>>>>>>> 966fe0b0fed5b25daad25bcc7c34df9c9fa2e215
                 <CustomInput
                   type="text"
                   placeholder="Select Vendor"
@@ -352,7 +357,7 @@ export default function Home() {
 
             <CustomButton
               text="search"
-              className="justify-center bg-primary my-5 md:my-0 md:ml-5 px-10 py-2 text-white  border-none"
+              className="justify-center bg-primary my-5 md:my-0 md:ml-5 px-10 py-3 text-white  border-none"
               onClick={handleNavigate}
             />
           </section>

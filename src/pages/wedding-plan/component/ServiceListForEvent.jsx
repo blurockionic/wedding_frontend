@@ -2,7 +2,6 @@ import ServiceCard from "../../../components/ServiceCard";
 import VendorCardForEvent from "./VendorCardForEvent";
 
 const ServiceListForEvent = ({ services, category, state, subCategory, city, eventId }) => {
-  console.log(eventId)
   if (!services.length) {
     return (
       <div className="f flex items-center justify-center">

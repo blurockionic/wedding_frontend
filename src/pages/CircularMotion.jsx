@@ -7,8 +7,8 @@ const images = [img1,img2, img3, img4, img5,img6];
 const CircularAnimation = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const totalImages = images.length;
-  const startAngle = -310;
-  const endAngle = -100;
+  const startAngle = 310;
+  const endAngle = 100;
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -48,12 +48,12 @@ const CircularAnimation = () => {
                       left: "50%",
                       top: "50%",
                       transform: "translate(-50%, -50%)",
-                      height:"170px",
-                      width:"170px"
+                      height:"190px",
+                      width:"190px",
                     }
               }
             transition={{ duration: 2, ease: "easeInOut" }}
-            className=" rounded-full  w-[min(12vw,64px)] h-[min(12vw,64px)]  overflow-hidden  "
+            className=" rounded-full  w-[min(12vw,50px)] h-[min(12vw,50px)]  overflow-hidden  "
           >
             <img
               src={src}

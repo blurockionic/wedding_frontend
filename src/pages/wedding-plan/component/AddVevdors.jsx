@@ -11,18 +11,27 @@ function AddVendors({eventId}) {
   const queryParams = new URLSearchParams(location.search);
   const searchType = queryParams.get("search");
   const searchLocation = queryParams.get("location");
-
   const [filters, setFilters] = useState({
     location: searchLocation,
     service_type: searchType,
     status: "active",
   });
-
-  console.log(eventId)
-
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const memoizedFilters = useMemo(
+    () => ({
+      ...filters,
+      page: currentPage,
+      limit: itemsPerPage,
+      status: "active",
+    }),
+    [filters, currentPage]
+  );
+  const { data, error, isLoading, refetch } = useGetServicesQuery(memoizedFilters);
+
+
+  
 
   // Update filters if URL params change
   useEffect(() => {
@@ -33,17 +42,12 @@ function AddVendors({eventId}) {
     setCurrentPage(1);
   }, [searchLocation, searchType]);
 
-  const memoizedFilters = useMemo(
-    () => ({
-      ...filters,
-      page: currentPage,
-      limit: itemsPerPage,
-      status: "active",
-    }),
-    [filters, currentPage]
-  );
+  
 
-  const { data, error, isLoading } = useGetServicesQuery(memoizedFilters);
+  useEffect(() => {
+    refetch();
+  }, [filters, refetch]);
+
 
   const handleFilterChange = (data) => {
     setFilters(data);
