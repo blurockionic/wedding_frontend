@@ -7,7 +7,6 @@ const ActionHeader = ({
   handleOnShare,
   eventSummary,
 }) => {
-  console.log(eventSummary);
   return (
     <>
       <div className="px-2 py-3">

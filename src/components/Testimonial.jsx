@@ -1,34 +1,39 @@
 import user from "../../public/user.png";
+import harshmodi from "../../public/feedback/feed1.jpeg"
+import girraj from "../../public/feedback/feed2.jpeg"
+import harshit from "../../public/feedback/feed3.jpeg"
+import feed4 from "../../public/feedback/feed4.jpeg"
+import feed5 from "../../public/feedback/feed5.jpeg"
 
 const testimonials = [
   {
-    avatar: "https://via.placeholder.com/50",
-    name: "Priya Sharma",
-    username: "@priya_weds",
+    avatar: harshmodi,
+    name: "Harsh Modi",
+    username: "@harsh_modi",
     text: "MarriageVendors.com made my wedding planning stress-free. From venue selection to catering, everything was seamless and within budget!",
   },
   {
-    avatar: "https://via.placeholder.com/50",
-    name: "Amit Verma",
-    username: "@amit_verma",
+    avatar: girraj,
+    name: "Girraj Baghel",
+    username: "@girraj_baghel",
     text: "Highly recommend MarriageVendors.com for finding the best decorators and photographers. Their service was top-notch and timely.",
   },
   {
-    avatar: "https://via.placeholder.com/50",
-    name: "Neha Kapoor",
-    username: "@neha_kapoor",
+    avatar: harshit,
+    name: "Harshit Sahu",
+    username: "@harshit_sahu",
     text: "I was able to find the perfect makeup artist and bridal wear through MarriageVendors.com. A one-stop solution for all wedding needs!",
   },
   {
-    avatar: "https://via.placeholder.com/50",
-    name: "Rahul Mehta",
-    username: "@rahul_mehta",
+    avatar: feed4,
+    name: "Santosh kr. Gupta",
+    username: "@santash_kr_gupta",
     text: "The customer support team was very helpful in guiding me through the best catering options. Our guests loved the food!",
   },
   {
-    avatar: "https://via.placeholder.com/50",
-    name: "Sneha Patil",
-    username: "@sneha_patil",
+    avatar: feed5,
+    name: "Jay Tiwari",
+    username: "@jay_tiwari",
     text: "MarriageVendors.com saved me so much time and effort. The reviews and ratings helped me make informed decisions. Truly amazing!",
   },
 ];
@@ -54,7 +59,7 @@ const Testimonials = () => {
 
               <div className="flex gap-3 items-center w-full">
                 <img
-                  src={user}
+                  src={testimonial.avatar}
                   alt={`${testimonial.name} avatar`}
                   className="w-12 h-12 rounded-full"
                 />
