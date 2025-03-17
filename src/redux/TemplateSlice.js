@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-export const TemplateSlice = createApi({
+export const userDataTemplateSlice = createApi({
   reducerPath: "templateSlice",
 
   baseQuery: fetchBaseQuery({
@@ -50,4 +50,4 @@ export const {
   useAddTemplateMutation,
   useUpdateTemplateMutation,
   useDeleteTemplateMutation,
-} = TemplateSlice;
+} = userDataTemplateSlice;

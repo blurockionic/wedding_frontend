@@ -1,44 +1,59 @@
-import React, { useState } from 'react'
-import axios from "axios";
+import React, { useState } from "react";
 import { IoPersonAddSharp } from "react-icons/io5";
 import { MdMailOutline } from "react-icons/md";
-import { Link , useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { GrView } from "react-icons/gr";
 import { FaCircleArrowLeft } from "react-icons/fa6";
-import {toast} from 'react-toastify';
+import { toast } from "react-toastify";
+import { useAddGuestMutation } from "../../redux/apiSlice.guest";
+
 const Card = () => {
+  const [addGuest, { isLoading, isError }] = useAddGuestMutation();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
 
   // Get the template value passed from the Preview component
-  const template = searchParams.get('template');
-  console.log(template)
+  const template = searchParams.get("template");
 
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [status, setStatus] = useState('Not invited');
+  const [guestData, setGuestData] = useState({
+    name: "",
+    phone: "",
+    status: "Not invited",
+  });
 
-  const addGuest = async () => {
-    try {
-      const response = await axios.post('http://localhost:4000/api/guests/add', {
-        name,
-        phone,
-        status: status ||"not invited"
+  const handleAddGuest = async () => {
+    const res = await addGuest(
+      { ...guestData, template },
+    ).unwrap();
+    if (!res.success) {
+      console.log(res.error);
+      toast.error(res.message);
+    } else {
+      toast.success(res.message);
+      setGuestData({
+        name: "",
+        phone: "",
+        status: "Not invited",
+
       });
-      
-      setName('');
-      setPhone('');
-      setStatus("Not invited");
-      toast.success("Guest added successfully");
-    } catch (error) {
-      console.error('Error adding guest:', error);
-      toast.error("Fill details");
     }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setGuestData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   return (
     <div className="min-h-screen md:p-8 md:w-screen flex justify-center items-center">
-      <div className="arrow2"><a href="/preview"><FaCircleArrowLeft /></a></div>
+      <div className="arrow2">
+        <a href="/preview">
+          <FaCircleArrowLeft />
+        </a>
+      </div>
       <div className="h-[95vh] w-[90%] flex justify-center items-center image">
         <div className="md:h-[70%] w-[70%] bg-white h-[90%] rounded-2xl opacity-[90%]">
           <div className="md:h-[90px] md:w-[100%] para md:mt-[60px] mt-[10px] h-[130px]">
@@ -60,13 +75,15 @@ const Card = () => {
             <input
               type="text"
               placeholder="Guest Name"
-              value={name} onChange={(e) => setName(e.target.value)}
+              value={guestData.name}
+              onChange={handleInputChange}
               className="input input-bordered w-[412.47px] h-[60px] b_5"
             />
             <input
               type="text"
               placeholder="Phone Number"
-              value={phone} onChange={(e) => setPhone(e.target.value)}
+              value={guestData.phone}
+              onChange={handleInputChange}
               className="input input-bordered w-[412.47px] h-[60px] b_5"
             />
           </div>
@@ -92,18 +109,18 @@ const Card = () => {
           </div>
           <div className="md:flex md:justify-center md:items-center md:gap-4 mt-10 lg:hidden block">
             <div>
-            <button className="btn_1 gap-3" onClick={addGuest}>
-              <IoPersonAddSharp />
-              Add Guests
-            </button>
+              <button className="btn_1 gap-3" onClick={handleAddGuest}>
+                <IoPersonAddSharp />
+                Add Guests
+              </button>
             </div>
             <Link to="/guests/see-Template/template">
-            <button className="btn_2 gap-3">
-              <span className="text-[20px] mt-1">
-              <GrView />
-              </span>
-              View Template
-            </button>
+              <button className="btn_2 gap-3">
+                <span className="text-[20px] mt-1">
+                  <GrView />
+                </span>
+                View Template
+              </button>
             </Link>
             <Link to="/guests">
               <button className="btn_3 gap-3">
@@ -124,4 +141,3 @@ const Card = () => {
 };
 
 export default Card;
-

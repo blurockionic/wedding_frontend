@@ -138,6 +138,19 @@ export default function Footer() {
               <FaLinkedin />
             </a>
           </div>
+          <div className="text-left mt-4">
+        <span className="text-sm text-gray-500">
+          Powered by  
+          <a
+            href="https://www.blurockionic.com/home"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-pink-600 font-medium hover:underline ml-1 transition duration-200"
+          >
+            BluRock Ionic
+          </a>
+        </span>
+      </div>
         </div>
 
         {/* Menu Links */}
@@ -177,6 +190,7 @@ export default function Footer() {
           </li>
           </ul>
         </div>
+        
 
         {/* Services Links */}
         {/* <div data-aos="fade-up" data-aos-delay="600">

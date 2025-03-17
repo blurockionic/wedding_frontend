@@ -9,6 +9,8 @@ const VendorServiceList = ({ services }) => {
     navigate(`service-details/${serviceId}`);
   };
 
+  console.log(services)
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-2 md:p-6">
       {services?.length > 0 ? (
@@ -20,7 +22,8 @@ const VendorServiceList = ({ services }) => {
           >
             {/* Card Header */}
             <div className="p-4 bg-gray-100 border-b border-gray-300 rounded-tl-lg rounded-tr-lg">
-              <h3 className="text-lg font-medium text-gray-800 truncate capitalize">
+              <img src={service?.media[0]?.image_urls[0]?.path} alt="service image" className="rounded-md shadow-md h-40"/>
+              <h3 className="text-lg font-medium text-gray-800 truncate capitalize mt-2">
                 {service.service_name}
               </h3>
               <p className="text-sm text-gray-500 capitalize">
@@ -51,16 +54,16 @@ const VendorServiceList = ({ services }) => {
 
             {/* Card Footer */}
             <div className="flex justify-between p-2 bg-gray-100 border-t border-gray-300 rounded-bl-lg rounded-br-lg">
-              <p className="text-sm text-gray-500">
+              {/* <p className="text-sm text-gray-500">
                 Vendor:{" "}
                 <span className="font-medium capitalize text-gray-800">
                   {service.vendor?.name || "Unknown"}
                 </span>
-              </p>
+              </p> */}
               <p className="text-sm text-gray-500">
                 City:{" "}
-                <span className="font-medium text-gray-800">
-                  {service.vendor?.city || "N/A"}
+                <span className="font-medium text-gray-800 capitalize">
+                  {service?.city || "N/A"}
                 </span>
               </p>
             </div>

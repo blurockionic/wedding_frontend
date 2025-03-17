@@ -1,9 +1,6 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import VendorServiceList from "./component/VendorServiceList";
 import ServiceModel from "./component/ServiceModel";
-import { FiSearch } from "react-icons/fi";
-import SearchBar from "../../components/SearchBar";
-import { GoSearch } from "react-icons/go";
 import { useGetServicesQuery } from "../../redux/serviceSlice";
 import { PiPlus } from "react-icons/pi";
 import { Outlet, useNavigate } from "react-router-dom";
@@ -74,7 +71,7 @@ const VendorServicesPage = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-6 m-2 rounded-md bg-gradient-to-br from-white via-pink-50 to-pink-100">
+    <div className="max-w-7xl mx-auto p-6 m-2 rounded-md ">
       {/* Top Bar Section */}
       <div
         className={`flex justify-end items-center my-6 ${

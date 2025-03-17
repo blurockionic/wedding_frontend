@@ -19,7 +19,7 @@ const servicesList = [
 ];
 
 const WeddingBudgetCalculator = () => {
-  const [budget, setBudget] = useState(0);
+  const [budget, setBudget] = useState(150000);
   const [selectedServices, setSelectedServices] = useState([]);
   const [result, setResult] = useState(null);
 

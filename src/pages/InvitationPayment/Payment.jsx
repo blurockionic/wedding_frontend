@@ -73,7 +73,7 @@ function Payment() {
       currency: "INR",
       name: "marriage vendors",
       description: "payment to marriage vendors",
-      image: "http://localhost:4000/images/logo.png",
+      image: "https://www.marriagevendors.com/assets/brandlogo-U4Jufhk5.png",
       handler: function (response) {
         setResponseId(response.razorpay_payment_id);
         setPaymentSuccess(true);
@@ -98,7 +98,7 @@ function Payment() {
     const paymentId = e.target.paymentId.value;
 
     axios
-      .get(`http://localhost:4000/payment/${paymentId}`)
+      .get(`${import.meta.env.VITE_API_URL}/payment/${paymentId}`)
       .then((response) => {
         console.log(response.data);
         setResponseState(response.data);

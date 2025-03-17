@@ -742,6 +742,21 @@ box-shadow:
   margin-right: 50px;
   background-color: #ff2f7b;
 }
+
+.my-masonry-grid {
+  display: -webkit-box; /* Not needed if autoprefixing */
+  display: -ms-flexbox; /* Not needed if autoprefixing */
+  display: flex;
+  margin-left: -15px; /* gutter size offset */
+  width: auto;
+ 
+}
+
+.my-masonry-grid_column {
+  
+  background-clip: padding-box;
+  width: 100%; /* Make columns span full width */
+}
 .prev_sec_53 {
   height: 100%;
   width: 100%;

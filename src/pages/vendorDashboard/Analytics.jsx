@@ -4,6 +4,7 @@ import CustomCard from "../../components/vendor-analytics/Card/CustomCard";
 import RecentActivityTable from "../../components/vendor-analytics/table/RecentActivityTable";
 import ServicePieChart from "../../components/vendor-analytics/piechart/ServicePieChart";
 import { MdSpaceDashboard, MdVisibility } from "react-icons/md";
+import MostViewedService from "../../components/vendor-analytics/table/MostViewedService";
 
 const Analytics = () => {
   const { data } = useGetAnalyticsQuery();
@@ -39,7 +40,7 @@ const Analytics = () => {
       <div className="bg-[#F3CEE8] block md:flex justify-between items-center p-5 w-full gap-2 md:space-x-4 mt-5 rounded-lg">
         <div className="p-3  h-[490px] w-full md:w-[60%] bg-white rounded-md mt-4 md:mt-0">
           <h1 className="text-2xl font-thin text-start">Most Viewed Service</h1>
-          <RecentActivityTable recentLead ={data?.topThreeServices}/>
+          <MostViewedService mostviewed ={data?.topThreeServices}/>
         </div>
         <div className="h-[490px] w-full md:w-[40%] bg-white rounded-md p-3">
         {/* <h1 className="text-2xl font-thin text-start">Most Viewed Service</h1> */}
@@ -48,13 +49,14 @@ const Analytics = () => {
       </div>
 
       {/* recent lead  */}
-      <div className="p-2 h-[490px] w-full md:w-full shadow-lg rounded-md  border border-primary mt-4 md:mt-5">
-          <h1 className="text-2xl font-thin text-start">Recent Activities</h1>
-          <RecentActivityTable recentLead ={recentLead?.data}/>
+      <div className="p-4  bg-[#FEB3B1B2] w-full md:w-full shadow-lg rounded-md  mt-4 md:mt-5">
+        <div className="bg-white h-[490px] p-4 rounded-lg">
+        <h1 className="text-2xl font-thin text-start">Recent Activities</h1>
+        <RecentActivityTable recentLead ={recentLead?.data}/>
+        </div>
+         
         </div>
       </div>
-
-      
     </>
   );
 };
