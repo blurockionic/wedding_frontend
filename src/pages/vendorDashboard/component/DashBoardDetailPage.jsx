@@ -6,7 +6,7 @@ import {
   useSwitchServiceMutation,
   useUpdateFAQMutation,
 } from "../../../redux/serviceSlice";
-import ReactMarkdown from "react-markdown";
+
 import Slider from "../../../components/Slider";
 import Mediatab from "./Tabs/Mediatab";
 import FAQsTab from "./Tabs/FAQsTab";
@@ -22,6 +22,8 @@ import { userlogout } from "../../../redux/authSlice";
 import { useDispatch } from "react-redux";
 import { useVendorLogoutMutation } from "../../../redux/vendorSlice";
 import { ToggleSwitch } from "flowbite-react";
+import CustomMArkdown from "../../../components/EditTemplatePreview/CustomMArkdown";
+
 const DashBoardDetailPage = () => {
   const [vendorLogout] = useVendorLogoutMutation();
 
@@ -213,17 +215,15 @@ const DashBoardDetailPage = () => {
               </span>
             </p>
           </div>
-
-         
         </div>
       </div>
 
-       {/* Media Section */}
-       <div className="md:px-4">
+      {/* Media Section */}
+      <div className="md:px-4">
         <h2 className="text-lg font-thin text-foreground capitalize dark:text-white mb-4">
           Media
         </h2>
-        {service?.media?.[0] ?
+        {service?.media?.[0] ? (
           ["image_urls", "video_urls"].map(
             (mediaType) =>
               service?.media?.[0]?.[mediaType]?.length > 0 && (
@@ -234,34 +234,33 @@ const DashBoardDetailPage = () => {
                   type={mediaType === "image_urls" ? "image" : "video"}
                 />
               )
-          ): (
-            <><p className="w-full flex justify-center items-center bg-gray-50 p-4 rounded-lg">No media uploaded!</p></>
-          )}
-          
+          )
+        ) : (
+          <>
+            <p className="w-full flex justify-center items-center bg-gray-50 p-4 rounded-lg">
+              No media uploaded!
+            </p>
+          </>
+        )}
       </div>
 
       <div className="w-full mt-5 md:px-4">
-      <h2 className="text-lg font-thin text-foreground capitalize dark:text-white mb-4">
+        <h2 className="text-lg font-thin text-foreground capitalize dark:text-white mb-4">
           Description
         </h2>
-            <ReactMarkdown className="prose prose-lg text-gray-800  ">
-              {service?.description}
-            </ReactMarkdown>
-          </div>
-
-     
+        <CustomMArkdown content={service?.description} />
+      </div>
 
       {/* FAQ Section */}
       <div className="mt-8 md:px-4">
         <h2 className="text-lg font-thin text-gray-800 dark:text-white mb-4">
           FAQs
         </h2>
-        
-          <div>
-            {
-              service?.faqs?.length > 0 ? (<>
-             {
-               service?.faqs?.map((faq, index) => (
+
+        <div>
+          {service?.faqs?.length > 0 ? (
+            <>
+              {service?.faqs?.map((faq, index) => (
                 <div
                   key={index}
                   className="flex justify-between items-center border bg-gray-50 dark:bg-gray-800 px-5 py-3 rounded-md mb-3"
@@ -334,12 +333,16 @@ const DashBoardDetailPage = () => {
                     </>
                   </div>
                 </div>
-              ))
-             }
-              </>) : ( <><p className="w-full flex justify-center items-center bg-gray-50 p-4 rounded-lg">No FAQs updated!</p></>)
-            }
-          </div>
-        
+              ))}
+            </>
+          ) : (
+            <>
+              <p className="w-full flex justify-center items-center bg-gray-50 p-4 rounded-lg">
+                No FAQs updated!
+              </p>
+            </>
+          )}
+        </div>
       </div>
       <div className="mt-8 md:px-4 w-full">
         {activeTab === "media" && (
