@@ -93,8 +93,6 @@ const ServiceCreate = ({ onClose, serviceData }) => {
 
     if (selectedCity) {
       const selectedState = states.find((s) => s.isoCode === selectedStateCode);
-      console.log(selectedState);
-
       setValue("country", "india");
       setValue("city", selectedCity.name.toLowerCase());
       setValue("latitude", String(selectedCity.latitude || "").toLowerCase());
@@ -104,8 +102,6 @@ const ServiceCreate = ({ onClose, serviceData }) => {
   };
 
   const onSubmit = async (data) => {
-    console.log(data);
-
     try {
       const preparedData = {
         ...data,
@@ -129,7 +125,6 @@ const ServiceCreate = ({ onClose, serviceData }) => {
         }
       }
     } catch (error) {
-      console.error(error);
       if (error?.data?.errors) {
         toast.error(error?.data?.errors[0]?.message || "Something went wrong!");
       } else {
@@ -141,8 +136,6 @@ const ServiceCreate = ({ onClose, serviceData }) => {
   useEffect(() => {
     // Prepopulate form if serviceData exists
     if (serviceData) {
-      console.log(serviceData);
-
       const { service_name, description, min_price, service_type } =
         serviceData;
       setValue("service_name", service_name);
@@ -220,9 +213,6 @@ const ServiceCreate = ({ onClose, serviceData }) => {
   };
 
   const handleCategoryChange = (e) => {
-    
-    console.log(e);
-    
     setSelectedCategory(e);
     setValue("service_category", e);
   };

@@ -65,7 +65,7 @@ const Benefits = () => {
           {/* To-Do List */}
           <div className="bg-purple-200 group  text-foreground p-6 rounded-2xl shadow-lg col-span-1 md:col-span-3 lg:row-span-2 lg:col-span-2 flex flex-col justify-between gap-5 sm:gap-6 md:gap-10 ">
             <div>
-              <h3 className="font-bold ">To-Do List</h3>
+              <h3 className="font-bold">Checklist</h3>
             </div>
             <div className="w-full h-[30vh] sm:h-[40vh] md:h-[40vh] lg:h-[38vh] rounded-xl flex items-center justify-center relative group ">
               <img

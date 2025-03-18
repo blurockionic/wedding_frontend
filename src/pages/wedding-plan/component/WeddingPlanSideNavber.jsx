@@ -100,7 +100,7 @@ const WeddingPlanSideNavber = ({ handleToSelectSuggestion }) => {
   };
 
   return (
-    <aside className="hidden md:block w-[20%]  h-auto  border-r text-black p-4">
+    <aside className="hidden md:block w-[25%]  h-auto  border-r text-black p-4  overflow-scroll h-screen">
       <h2 className="text-xl font-semibold mb-4">Wedding Plan</h2>
 
       {/* Search Bar */}
@@ -130,7 +130,7 @@ const WeddingPlanSideNavber = ({ handleToSelectSuggestion }) => {
       {/* Sub-Events List */}
       {selectedReligion && subEvents[selectedReligion] && (
         <div className="mt-4">
-          <h3 className="text-lg font-semibold mb-2">
+          <h3 className="text-md font-semibold mb-2">
             Suggested Events ({selectedReligion})
           </h3>
           <ul className="bg-gray-50 p-2 rounded-md">

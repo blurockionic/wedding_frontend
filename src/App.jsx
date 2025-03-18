@@ -155,10 +155,6 @@ const router = createBrowserRouter([
       { path: "/login", element: wrapWithSuspense(Login) },
       { path: "/contactus", element: wrapWithSuspense(ContactUs) },
 
-      { path: "/checklist", element: wrapWithSuspense(Checklist) },
-
-      { path: "/weddingplan", element: wrapWithSuspense(WeddingDairy) },
-
       // dynamic route for category
       { path: "/all", element: wrapWithSuspense(AllCategories) },
       { path: "/all/:category", element: wrapWithSuspense(Category) },
@@ -220,7 +216,8 @@ const router = createBrowserRouter([
           { path: "", index: true, element: wrapWithSuspense(UserProfile) },
           { path: "favoriteList", element: wrapWithSuspense(FavoriteListPage) },
           { path: "checklist", element: wrapWithSuspense(Checklist) },
-          { path: "weddingbudget", element: wrapWithSuspense(WeddingBudgetCalculator)}
+          { path: "weddingbudget", element: wrapWithSuspense(WeddingBudgetCalculator)},
+          { path: "weddingplan", element: wrapWithSuspense(WeddingDairy) },
         ],
       },
 

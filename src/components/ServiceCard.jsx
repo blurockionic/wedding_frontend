@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useToggleCartMutation } from "../redux/serviceSlice";
 import { toggleFavorite } from "../redux/favoriteSlice";
 import { toast } from "react-toastify";
+import { GoLocation } from "react-icons/go";
+import { MdCurrencyRupee } from "react-icons/md";
 
 const ServiceCard = React.memo(({ service, category}) => {
   const [toggleCart] = useToggleCartMutation();
@@ -101,8 +103,8 @@ const ServiceCard = React.memo(({ service, category}) => {
         <span className="text-sm text-gray-500">⭐ {service?.rating}</span>
        </div>
         <div className="flex items-center justify-between text-sm text-gray-500 mt-1">
-          <span>
-            <strong className="font-semibold capitalize">location:</strong> <span className="capitalize">{service?.city}</span>
+          <span className="flex items-center gap-1">
+            <strong className="font-semibold capitalize"><span><GoLocation className="text-red-500"/></span></strong> <span className="capitalize">{service?.city}</span>
           </span>
           {/* <span className="capitalize">
             {service.vendor.business_name || "No business name available"}
@@ -110,8 +112,8 @@ const ServiceCard = React.memo(({ service, category}) => {
         </div>
         <div className="mt-2 flex items-center justify-between">
          
-          <span className="text-sm text-gray-700 font-semibold">
-            Price:₹{service?.min_price}/{service?.service_unit}
+          <span className="text-sm text-gray-700 font-semibold flex items-center gap-1" >
+            <MdCurrencyRupee size={20} className="text-yellow-500"/>{service?.min_price} / {service?.service_unit}
           </span>
         </div>
       </div>
