@@ -16,12 +16,13 @@ export default function LocationSearch({ setSearchLocation, customClass }) {
 
   const { data: originalLocationData } = useGetLocationQuery();
   const locationData = useMemo(
-    () => originalLocationData || {},
+    () => originalLocationData ?? {},
     [originalLocationData]
   );
 
   // Memoize filtered locations
   const filteredLocations = useMemo(() => {
+    if (!originalLocationData) return {};
     if (!location.trim()) return originalLocationData;
 
     return Object.entries(originalLocationData).reduce(
@@ -69,7 +70,7 @@ export default function LocationSearch({ setSearchLocation, customClass }) {
   }, []);
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative " ref={dropdownRef}>
       <CustomInput
         type="text"
         value={location}
@@ -80,15 +81,15 @@ export default function LocationSearch({ setSearchLocation, customClass }) {
         onFocus={handleFocus}
         leftIcon={<GoLocation size={20} />}
       />
-      {showSuggestions && Object.keys(filteredLocations).length > 0 && (
-        <ul className="absolute bg-white border border-gray-300 rounded w-full shadow-lg mt-1 z-20 overflow-auto max-h-[200px]">
+      {showSuggestions && Object.keys(filteredLocations || {}).length > 0 && (
+        <ul className="absolute bg-white border border-gray-300 rounded z-50 w-full shadow-lg mt-1 overflow-auto max-h-[200px]">
           {Object.entries(filteredLocations).map(([state, cities]) => (
             <li key={state} className="px-4 py-2 cursor-pointer">
               <ul className="text-sm grid grid-cols-1 gap-2">
                 {cities.map((city, index) => (
                   <li
                     key={index}
-                    className="text-gray-700 hover:bg-gray-200 p-2 rounded-md"
+                    className="text-gray-700 capitalize hover:bg-gray-200 p-2 rounded-md"
                     onMouseDown={() => handleLocationClick(state, city)} // Prevents dropdown from closing too early
                   >
                     {city}
