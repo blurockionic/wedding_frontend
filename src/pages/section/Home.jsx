@@ -296,7 +296,7 @@ export default function Home() {
                   </ul>
                 )}
               </div>
-              <div className="absolute  left-1/2 transform -translate-x-1/2   -mt-2">
+              <div className="absolute hidden md:block left-1/2 transform -translate-x-1/2   -mt-2">
                 <span className="  text-4xl text-pink-400">|</span>
               </div>
 
