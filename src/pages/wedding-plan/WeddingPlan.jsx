@@ -170,7 +170,7 @@ const WeddingPlan = () => {
   return (
     <div className="flex-col relative">
       <section className="p-3 w-full flex ">
-        <div className="w-full p-3">
+        <div className="w-full p-3 h-screen overflow-scroll">
           <HeadingCard user={user}/>
           <ActionHeader 
           eventSummary = {data.event_summary}
