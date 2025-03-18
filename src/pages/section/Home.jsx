@@ -345,7 +345,7 @@ export default function Home() {
                 )}
               </div>
               <LocationSearch
-                customClass={" "}
+                customClass={""}
                 setSearchLocation={setSearchLocation}
               />
             </div>
