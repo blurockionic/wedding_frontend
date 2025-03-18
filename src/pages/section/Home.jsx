@@ -118,7 +118,7 @@ export default function Home() {
     return (
       <>
         <div
-          className={`flex w-full flex-grow px-2   my-10 gap-6 ${
+          className={`flex w-full flex-grow px-2    my-10 gap-6 ${
             !isMobile ? "justify-between " : "justify-around"
           } items-center `}
         >
@@ -211,11 +211,20 @@ export default function Home() {
         </script>
       </Helmet>
 
-      <div className="  grid md:pl-16 md:pt-20 overflow-hidden lg:grid-cols-2 grid-cols-1 justify-between gap-10  items-center">
+      <div className="  grid md:pl-16 md:pt-20  lg:grid-cols-2 grid-cols-1 justify-between gap-10  items-center">
         {/* Left Section */}
 
-        {isMobile && (
-          <div className="absolute inset-0 z-[-1]">
+       
+
+        <div className="relative   flex flex-col gap-6  text-center items-start md:text-left">
+          <img
+            className="hidden lg:block absolute  left-0 -top-10  "
+            src="/heroSection/Vector1.png"
+            alt="Vector1"
+          />
+
+{isMobile && (
+          <div className="absolute inset-0 z-[-50]">
             <img
               className="w-full h-full object-cover"
               src={backgroundImg}
@@ -225,13 +234,6 @@ export default function Home() {
             <div className="absolute inset-0 bg-black bg-opacity-50"></div>
           </div>
         )}
-
-        <div className="relative   flex flex-col gap-6  text-center items-start md:text-left">
-          <img
-            className="hidden lg:block absolute  left-0 -top-10  "
-            src="/heroSection/Vector1.png"
-            alt="Vector1"
-          />
 
           <div className="text-center  w-full my-10 md:text-left">
             <p
@@ -259,10 +261,10 @@ export default function Home() {
               Dream Wedding
             </p>
           </div>
-          <section className="  ml-0 w-full md:flex-row items-center justify-start  mx-auto  flex-col  flex">
+          <section className="   ml-0 w-full md:flex-row items-center justify-start  mx-auto  flex-col  flex">
             {/* Input Group */}
             <div className=" hidden  relative  my-5 md:flex justify-start items-center rounded-lg  border focus-within:ring-1 focus-within:ring-primary transition duration-300  ">
-              <div ref={serviceTypeRef} className=" relative ">
+              <div ref={serviceTypeRef} className=" relative  ">
                 <CustomInput
                   type="text"
                   placeholder="Select Vendor"
@@ -299,10 +301,13 @@ export default function Home() {
               <div className="absolute  left-1/2 transform -translate-x-1/2   -mt-2">
                 <span className="  text-4xl text-pink-400">|</span>
               </div>
-              <LocationSearch
-                customClass={"border-none rounded-none "}
-                setSearchLocation={setSearchLocation}
-              />
+
+              <div className="relative overflow-visible z-10">
+                <LocationSearch
+                  customClass={"border-none rounded-none "}
+                  setSearchLocation={setSearchLocation}
+                />
+              </div>
             </div>
 
             <div className="md:hidden flex flex-col gap-5">
@@ -322,7 +327,7 @@ export default function Home() {
                 />
 
                 {showSuggestions && suggestions.length > 0 && (
-                  <ul className=" absolute  bg-white border border-gray-300 w-full rounded shadow-lg mt-1 z-20 overflow-auto  max-h-[200px]">
+                  <ul className=" absolute  bg-white border border-gray-300 w-full rounded shadow-lg mt-1 z-50 overflow-auto  max-h-[200px]">
                     {suggestions.map(({ category, subcategories }, index) => (
                       <li key={index} className="px-4 py-2  cursor-pointer">
                         {/* {category} */}
@@ -369,7 +374,7 @@ export default function Home() {
         </div>
 
         {/* Right Section */}
-        <div className="hidden relative lg:flex flex-1 justify-center items-center w-full  md:h-[500px] lg:h-[600px]">
+        <div className="hidden relative lg:flex flex-1 justify-center items-center w-full   md:h-[500px] lg:h-[600px]">
           <div className="">
             <CircularAnimation />
           </div>
