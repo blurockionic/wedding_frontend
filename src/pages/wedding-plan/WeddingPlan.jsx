@@ -164,7 +164,7 @@ const WeddingPlan = () => {
 
 
   if (isLoading) return <p className="h-screen flex justify-center items-center gap-3"><Loader2 className="animate-spin"/>Loading</p>;
-  if (error) return <p className="h-screen flex justify-center items-center">Error fetching wedding plans.</p>;
+  if (error) return <p className="h-screen flex justify-center items-center">Please login to use the wedding planning dairy.</p>;
 
  
   return (
