@@ -1,5 +1,4 @@
-import { Check, CheckCircle } from "lucide-react";
-import React from "react";
+import { Check} from "lucide-react";
 import image1 from "../../../public/about/about_1.png";
 import image2 from "../../../public/about/about_3.png";
 import image3 from "../../../public/about/about_2.png";

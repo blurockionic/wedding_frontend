@@ -170,7 +170,6 @@ const WeddingPlan = () => {
   return (
     <div className="flex-col relative">
       <section className="p-3 w-full flex ">
-        <WeddingPlanSideNavber handleToSelectSuggestion={handleToSelectSuggestion}/>
         <div className="w-full p-3">
           <HeadingCard user={user}/>
           <ActionHeader 
@@ -186,6 +185,7 @@ const WeddingPlan = () => {
             handleOnDeleteService={handleOnDeleteService}
           />
         </div>
+        <WeddingPlanSideNavber handleToSelectSuggestion={handleToSelectSuggestion}/>
       </section>
 
       {/* Backdrop Blur Effect */}
