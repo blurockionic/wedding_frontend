@@ -16,9 +16,55 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Bump version and push tag
-        uses: anothrNick/github-tag-action@1.67.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEFAULT_BUMP: patch
-          WITH_V: true
+      - name: Fetch all tags
+        run: git fetch --tags
+
+      - name: Get latest tag
+        id: get_latest_tag
+        run: |
+          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          echo "Latest tag: $latest_tag"
+          echo "latest_tag=$latest_tag" >> $GITHUB_ENV
+
+      - name: Calculate next version
+        id: versioning
+        run: |
+          latest_tag="${{ env.latest_tag }}"
+          version="${latest_tag#v}" # Remove "v" prefix
+          IFS='.' read -r major minor patch <<< "$version"
+
+          # Convert to integers
+          major=$((major))
+          minor=$((minor))
+          patch=$((patch))
+
+          # Custom logic for version bumping
+          if [ "$patch" -ge 10 ]; then
+            patch=0
+            minor=$((minor + 1))
+          else
+            patch=$((patch + 1))
+          fi
+
+          if [ "$minor" -ge 10 ]; then
+            minor=0
+            major=$((major + 1))
+          fi
+
+          new_tag="v$major.$minor.$patch"
+
+          # Ensure tag does not already exist
+          if git rev-parse "$new_tag" >/dev/null 2>&1; then
+            echo "Tag $new_tag already exists, skipping tagging."
+            exit 0
+          fi
+
+          echo "New tag: $new_tag"
+          echo "new_tag=$new_tag" >> $GITHUB_ENV
+
+      - name: Create and push new tag
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "GitHub Actions"
+          git tag ${{ env.new_tag }}
+          git push origin ${{ env.new_tag }}
