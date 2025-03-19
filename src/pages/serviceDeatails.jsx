@@ -12,6 +12,7 @@ import {
 import ImageGallery from "../components/gallery/ImageGallery";
 import FeedbackForm from "../components/feedbackform/FeedbackForm";
 import ReactMarkdown from "react-markdown";
+import CustomMArkdown from "../components/EditTemplatePreview/CustomMArkdown";
 
 // Mock data and API call simulation
 const mockServiceData = (id) => ({
@@ -148,7 +149,7 @@ function ServiceDetail() {
                 </ReactMarkdown>
                 <Rating rating={realService?.rating} />
                 <p className="mt-4 text-slate-DEFAULT">
-                  Price: {realService?.min_price} 
+                  Price: {realService?.min_price}
                 </p>
                 <p className="text-slate-DEFAULT capitalize ">
                   Service Type:{" "}
@@ -266,13 +267,11 @@ function ServiceDetail() {
           <div className="w-full mx-auto p-6 relative ">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Left Section */}
-              <div>
+              <div className="markdown-container">
                 <h1 className="text-4xl font-bold text-slate-900 mb-4">
                   {service.service_name}
                 </h1>
-                <ReactMarkdown className="prose prose-lg text-gray-800">
-                  {service?.description}
-                </ReactMarkdown>
+                <CustomMArkdown content={service?.description} />
                 <Rating rating={service.rating} />
                 <p className="mt-4 text-slate-900">
                   Price: {service.min_price} - {service.max_price}

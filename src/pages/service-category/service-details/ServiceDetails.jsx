@@ -13,7 +13,7 @@ import FeedbackForm from "../../../components/feedbackform/FeedbackForm";
 import ImageGallery from "../../../components/gallery/ImageGallery";
 import Rating from "../../../components/Rating";
 import Accordion from "../../../components/Accordion";
-import { space } from "postcss/lib/list";
+import CustomMArkdown from "../../../components/EditTemplatePreview/CustomMArkdown";
 
 // Mock data and API call simulation
 const mockServiceData = (id) => ({
@@ -91,9 +91,6 @@ const ServiceDetails = () => {
   const [showPhone, setShowPhone] =  useState(false);
 
   const isDesktop = window.innerWidth > 768; // Check if it's a desktop view
-
-
-   
 
   useEffect(() => {
     const fetchData = async () => {
@@ -239,12 +236,9 @@ const ServiceDetails = () => {
         <h2 className="text-lg md:text-xl font-semibold capitalize">
           About {data?.service?.service_name}
         </h2>
-        <p className="mt-2 text-gray-600">
-          <ReactMarkdown className="prose prose-sm md:prose-lg text-gray-800">
-            {data?.service?.description}
-          </ReactMarkdown>
-        </p>
+       
       </div>
+        <CustomMArkdown content={data?.service?.description} />
 
       {/* FAQ Section */}
       <div className="mt-6">

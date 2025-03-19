@@ -15,14 +15,19 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Ensures full tag history is available
 
       - name: Fetch all tags
-        run: git fetch --tags
+        run: git fetch --tags --force
 
       - name: Get latest tag
         id: get_latest_tag
         run: |
-          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          latest_tag=$(git tag --sort=-v:refname | head -n 1)
+          if [[ -z "$latest_tag" ]]; then
+            latest_tag="v0.0.0"
+          fi
           echo "Latest tag: $latest_tag"
           echo "latest_tag=$latest_tag" >> $GITHUB_ENV
 
@@ -38,26 +43,22 @@ jobs:
           minor=$((minor))
           patch=$((patch))
 
-          # Custom logic for version bumping
+          # Increment patch version
+          patch=$((patch + 1))
+
+          # Reset and increment minor version if needed
           if [ "$patch" -ge 10 ]; then
             patch=0
             minor=$((minor + 1))
-          else
-            patch=$((patch + 1))
           fi
 
+          # Reset and increment major version if needed
           if [ "$minor" -ge 10 ]; then
             minor=0
             major=$((major + 1))
           fi
 
           new_tag="v$major.$minor.$patch"
-
-          # Ensure tag does not already exist
-          if git rev-parse "$new_tag" >/dev/null 2>&1; then
-            echo "Tag $new_tag already exists, skipping tagging."
-            exit 0
-          fi
 
           echo "New tag: $new_tag"
           echo "new_tag=$new_tag" >> $GITHUB_ENV
@@ -66,5 +67,12 @@ jobs:
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "GitHub Actions"
+
+          # Ensure tag does not already exist before pushing
+          if git rev-parse "refs/tags/${{ env.new_tag }}" >/dev/null 2>&1; then
+            echo "Tag ${{ env.new_tag }} already exists, skipping tagging."
+            exit 0
+          fi
+
           git tag ${{ env.new_tag }}
           git push origin ${{ env.new_tag }}
