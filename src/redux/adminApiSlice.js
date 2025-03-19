@@ -27,7 +27,14 @@ export const adminApiSlice = createApi({
         body: searchData,
       }),
     }),
+    searchUsers: builder.mutation({
+      query: (searchData) => ({
+        url: `/user-search`,
+        method: "POST",
+        body: searchData,
+      }),
+    }),
   }),
 });
 
-export const { useGetGeneralAnalyticsQuery, useSearchVendorsMutation, useSearchServicesMutation } = adminApiSlice;
+export const { useGetGeneralAnalyticsQuery, useSearchVendorsMutation, useSearchServicesMutation, useSearchUsersMutation } = adminApiSlice;

@@ -14,7 +14,7 @@ const AdminDashBoard = () => {
     { name: "General Analytics", path: "" }, // Use "/" for the default route
     { name: "Vendor Search", path: "vendorSearch" },
     { name: "Service Search", path: "serviceSearch" },
-    { name: "User Search", path: "" },
+    { name: "User Search", path: "userSearch" },
     { name: "Bill & transactions", path: "" },
     { name: "Reports", path: "" },
     { name: "Give Admin", path: "" },
