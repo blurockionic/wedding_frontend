@@ -356,11 +356,11 @@ function Navbar() {
                           alt="Profile"
                           className="w-8 h-8 rounded-full"
                         />
-                        <CustomText
+                        {/* <CustomText
                           variant="paragraph"
                           className="text-sm hidden lg:block"
                           text="Profile"
-                        />
+                        /> */}
                       </div>
                     </li>
                   )}
