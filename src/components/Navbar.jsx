@@ -46,7 +46,7 @@ function Navbar() {
       >
         <>
           {/* <TopNavbar /> */}
-          <nav className="w-full bg-white top-0 px-16 z-50 shadow-sm">
+          <nav className="w-full bg-white top-0 px-6 md:px-16 z-50 shadow-sm">
             <div className="w-full flex justify-between items-center py-4">
               <div className="text-2xl font-bold text-primary cursor-pointer">
                 <NavLink
