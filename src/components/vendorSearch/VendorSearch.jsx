@@ -26,6 +26,8 @@ export default function VendorSearch({ setCategory }) {
     setShowSuggestions(true);
   }, [search]);
 
+ 
+
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearch(value);

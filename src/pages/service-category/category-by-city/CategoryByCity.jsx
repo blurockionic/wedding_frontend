@@ -27,7 +27,6 @@ const CategoryByCity = () => {
 
   // Handle Filter Changes
   const handleFilterChange = (newFilters) => {
-    console.log(newFilters);
     setFilters((prev) => ({
       ...prev,
       ...newFilters,
@@ -44,6 +43,9 @@ const CategoryByCity = () => {
     }),
     [filters, currentPage]
   );
+
+ 
+  
 
   // Fetch Data
   const { data, error, isLoading } = useGetServicesQuery(memoizedFilters);

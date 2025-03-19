@@ -5,13 +5,12 @@ import React, {
   useRef,
   useEffect,
   memo,
- 
 } from "react";
 import { GoLocation } from "react-icons/go";
 import CustomInput from "../global/inputfield/CustomInput";
 import { useGetLocationQuery } from "../../redux/serviceSlice";
 
- function  LocationSearch({ setSearchLocation, customClass }) {
+function LocationSearch({ setSearchLocation, customClass }) {
   const [location, setLocation] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const dropdownRef = useRef(null); // Ref to track dropdown clicks
@@ -22,14 +21,12 @@ import { useGetLocationQuery } from "../../redux/serviceSlice";
     [originalLocationData]
   );
 
-
-  
   // Memoize filtered locations
   const filteredLocations = useMemo(() => {
-    if (!originalLocationData) return {};
-    if (!location.trim()) return originalLocationData;
+    if (!locationData) return {};
+    if (!location.trim()) return locationData;
 
-    return Object.entries(originalLocationData).reduce(
+    return Object.entries(locationData).reduce(
       (acc, [state, cities]) => {
         const filteredCities = cities.filter((city) =>
           city.toLowerCase().startsWith(location.toLowerCase())
@@ -39,7 +36,7 @@ import { useGetLocationQuery } from "../../redux/serviceSlice";
       },
       {}
     );
-  }, [location, originalLocationData]);
+  }, [location, locationData]);
 
   // Handle input focus
   const handleFocus = useCallback(() => {
@@ -62,8 +59,6 @@ import { useGetLocationQuery } from "../../redux/serviceSlice";
     },
     [setSearchLocation]
   );
-
-  
 
   useEffect(() => {
     function handleClickOutside(event) {

@@ -14,7 +14,7 @@ const RangeSlider = ({ min, max, start, onChange }) => {
   }, [values, onChange]);
 
   return (
-    <div className=" ">
+    <div className=" p-3">
       <Nouislider
         range={{ min, max }}
         start={start}

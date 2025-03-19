@@ -7,7 +7,7 @@ import LocationSearch from "./LocationSearch/LocationSearch";
 import VendorSearch from "./vendorSearch/VendorSearch";
 
 const Sidebar = memo(({ filters, onFilterChange, isLoading }) => {
-  const { register, handleSubmit, control, reset, setValue, watch } = useForm({
+  const { register, handleSubmit,  reset, setValue, watch } = useForm({
     defaultValues: useMemo(
       () => ({
         city: filters?.city || "",

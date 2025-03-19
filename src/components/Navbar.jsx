@@ -46,7 +46,7 @@ function Navbar() {
       >
         <>
           {/* <TopNavbar /> */}
-          <nav className="w-full bg-white top-0 px-4 lg:px-16 z-50 shadow-sm">
+          <nav className="w-full bg-white top-0 px-16 z-50 shadow-sm">
             <div className="w-full flex justify-between items-center py-4">
               <div className="text-2xl font-bold text-primary cursor-pointer">
                 <NavLink
@@ -55,7 +55,7 @@ function Navbar() {
                 >
                   <img src={brandlogo} alt="brandlogo" className="w-10 h-10" />
                   <div className="flex flex-col justify-start">
-                    <span className="text-primary text-2xl">
+                    <span className="hidden xl:block text-primary text-2xl">
                       Marriage Vendors
                     </span>
                     {/* <span className="text-primary text-xs">Wedding Orgniser</span> */}
