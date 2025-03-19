@@ -15,7 +15,7 @@ const AdminDashBoard = () => {
     { name: "Vendor Search", path: "vendorSearch" },
     { name: "Service Search", path: "serviceSearch" },
     { name: "User Search", path: "userSearch" },
-    { name: "Bill & transactions", path: "" },
+    { name: "Bill & transactions", path: "transactions" },
     { name: "Reports", path: "" },
     { name: "Give Admin", path: "" },
   ];

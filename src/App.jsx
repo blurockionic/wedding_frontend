@@ -27,6 +27,7 @@ const AdminGeneralAnalytics = lazy(() => import("./pages/admin/generalAnalytics.
 const AdminVendorSearch = lazy(() => import("./pages/admin/VendorSearch.jsx"));
 const AdminServiceSearch = lazy(() => import("./pages/admin/ServiceSearch.jsx"));
 const AdminUserSearch = lazy(() => import("./pages/admin/UserSearch.jsx"));
+const AdminTransactions = lazy(() => import("./pages/admin/Transactions.jsx"));
 
 const Setting = lazy(() => import("./pages/vendorDashboard/Setting.jsx"));
 const ContactUs = lazy(() => import("./pages/contactus/ContactUs.jsx"));
@@ -132,6 +133,7 @@ const router = createBrowserRouter([
           { path: "vendorSearch", element: wrapWithSuspense(AdminVendorSearch) },
           { path: "serviceSearch", element: wrapWithSuspense(AdminServiceSearch) },
           { path: "userSearch", element: wrapWithSuspense(AdminUserSearch) },
+          { path: "transactions", element: wrapWithSuspense(AdminTransactions) },
           // { path: "favoriteList", element: wrapWithSuspense(FavoriteListPage) },
           // { path: "checklist", element: wrapWithSuspense(Checklist) },
           // { path: "weddingbudget", element: wrapWithSuspense(WeddingBudgetCalculator)}

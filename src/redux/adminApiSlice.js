@@ -34,7 +34,13 @@ export const adminApiSlice = createApi({
         body: searchData,
       }),
     }),
+    getTransactions: builder.query({
+      query: () => ({
+        url: `/transactions`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useGetGeneralAnalyticsQuery, useSearchVendorsMutation, useSearchServicesMutation, useSearchUsersMutation } = adminApiSlice;
+export const { useGetGeneralAnalyticsQuery, useSearchVendorsMutation, useSearchServicesMutation, useSearchUsersMutation, useGetTransactionsQuery } = adminApiSlice;
