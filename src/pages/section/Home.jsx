@@ -211,7 +211,7 @@ export default function Home() {
         </script>
       </Helmet>
 
-      <div className="  grid md:pl-16   lg:grid-cols-2 grid-cols-1 justify-between gap-24  items-center ">
+      <div className="  grid md:pl-16   lg:grid-cols-2 grid-cols-1 justify-between gap-24  items-center h-screen">
         {/* Left Section */}
 
         <div className="relative  flex flex-col gap-6  text-center items-start md:text-left ">
