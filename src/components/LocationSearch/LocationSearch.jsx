@@ -4,12 +4,14 @@ import React, {
   useCallback,
   useRef,
   useEffect,
+  memo,
+ 
 } from "react";
 import { GoLocation } from "react-icons/go";
 import CustomInput from "../global/inputfield/CustomInput";
 import { useGetLocationQuery } from "../../redux/serviceSlice";
 
-export default function LocationSearch({ setSearchLocation, customClass }) {
+ function  LocationSearch({ setSearchLocation, customClass }) {
   const [location, setLocation] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const dropdownRef = useRef(null); // Ref to track dropdown clicks
@@ -20,6 +22,8 @@ export default function LocationSearch({ setSearchLocation, customClass }) {
     [originalLocationData]
   );
 
+
+  
   // Memoize filtered locations
   const filteredLocations = useMemo(() => {
     if (!originalLocationData) return {};
@@ -59,6 +63,8 @@ export default function LocationSearch({ setSearchLocation, customClass }) {
     [setSearchLocation]
   );
 
+  
+
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -70,12 +76,12 @@ export default function LocationSearch({ setSearchLocation, customClass }) {
   }, []);
 
   return (
-    <div className="relative " ref={dropdownRef}>
+    <div className="relative  " ref={dropdownRef}>
       <CustomInput
         type="text"
         value={location}
         placeholder="In Location"
-        className={`w-full outline-none focus:border-white bg-white md:bg-transparent ${customClass}`}
+        className={`w-full outline-none  focus:border-white bg-white ${customClass}`}
         aria-label="Location"
         onChange={handleSearchLocationChange}
         onFocus={handleFocus}
@@ -103,3 +109,5 @@ export default function LocationSearch({ setSearchLocation, customClass }) {
     </div>
   );
 }
+
+export default memo(LocationSearch);

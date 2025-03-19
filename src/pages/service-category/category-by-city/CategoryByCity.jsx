@@ -1,26 +1,25 @@
 import { Link, useParams } from "react-router-dom";
-import {  useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useGetServicesQuery } from "../../../redux/serviceSlice";
 import ServiceList from "../../../components/ServiceList";
 import Sidebar from "../../../components/Sidebar";
 import { FilterIcon, X } from "lucide-react";
 
-
 const CategoryByCity = () => {
   const { category, subcategory, state, city } = useParams();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-
 
   // State for Filters
   const [filters, setFilters] = useState({
     city: city || "",
     state: state || "",
     status: "active",
-      minPrice: "",
-      maxPrice: "",
-      rating: "",
-      sort_by: "",
-      sort_order: "",
+    minPrice: "",
+    maxPrice: "",
+    rating: "",
+    sort_by: "",
+    sort_order: "",
+    service_type: subcategory || "",
   });
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -28,20 +27,23 @@ const CategoryByCity = () => {
 
   // Handle Filter Changes
   const handleFilterChange = (newFilters) => {
-    console.log(newFilters)
+    console.log(newFilters);
     setFilters((prev) => ({
       ...prev,
       ...newFilters,
     }));
-    setCurrentPage(1); // Reset to first page when filters change
+    setCurrentPage(1); 
   };
 
   // Memoized Filters for API Call
-  const memoizedFilters = useMemo(() => ({
-    ...filters,
-    page: currentPage,
-    limit: itemsPerPage,
-  }), [filters, currentPage]);
+  const memoizedFilters = useMemo(
+    () => ({
+      ...filters,
+      page: currentPage,
+      limit: itemsPerPage,
+    }),
+    [filters, currentPage]
+  );
 
   // Fetch Data
   const { data, error, isLoading } = useGetServicesQuery(memoizedFilters);
@@ -50,47 +52,66 @@ const CategoryByCity = () => {
   return (
     <div className="flex flex-col lg:flex-row px-4 lg:px-16 py-4 gap-6 relative">
       {/* Button to show filters on mobile */}
-      <div 
+      <div
         className="lg:hidden text-primary  px-4 py-2 rounded-md mb-4 flex gap-2 cursor-pointer border-b"
         onClick={() => setIsFilterOpen(true)}
       >
-        <FilterIcon className=""/>
+        <FilterIcon className="" />
         <span>Filter</span>
       </div>
 
       {/* Blur Background Overlay (only when sidebar is open) */}
       {isFilterOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40"
           onClick={() => setIsFilterOpen(false)} // Click outside to close
         ></div>
       )}
 
       {/* Sidebar with Filters */}
-      <aside 
+      <aside
         className={`fixed lg:static top-0 left-0 w-3/4 sm:w-1/2 lg:w-1/4 h-screen bg-white shadow-md p-4 rounded-lg z-50 transition-transform duration-300 ease-in-out 
-          ${isFilterOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
+          ${
+            isFilterOpen ? "translate-x-0" : "-translate-x-full"
+          } lg:translate-x-0`}
       >
         {/* Close button for mobile view */}
-        <div 
+        <div
           className="lg:hidden  text-white px-3 py-1 rounded-md mb-4 flex justify-end"
           onClick={() => setIsFilterOpen(false)}
         >
-          <X className="bg-red-500 rounded-full"/>
+          <X className="bg-red-500 rounded-full" />
         </div>
 
         <h2 className="text-lg font-semibold">Filters</h2>
-        <Sidebar filters={filters}  onFilterChange={handleFilterChange} />
+        <Sidebar isLoading={isLoading} filters={filters} onFilterChange={handleFilterChange} />
       </aside>
 
       {/* Service Listings */}
       <div className="w-full lg:w-3/4">
         <span className="text-xs md:text-sm">
           <Link to={`/all`}>Wedding</Link> &gt;
-          <Link > {category}</Link> &gt;
-          <Link to={`/all/${category}/${subcategory}`}> {subcategory}</Link> &gt;
-          <Link to={`/all/${category}/${subcategory}/${state}`} className="capitalize"> {state}</Link> &gt;
-          <Link to={`/all/${category}/${subcategory}/${state}/${city}`} className="capitalize"> {city}</Link>
+          <Link> {category}</Link> &gt;
+          <Link to={`/all/${category}/${subcategory}`}>
+            {" "}
+            {subcategory}
+          </Link>{" "}
+          &gt;
+          <Link
+            to={`/all/${category}/${subcategory}/${state}`}
+            className="capitalize"
+          >
+            {" "}
+            {state}
+          </Link>{" "}
+          &gt;
+          <Link
+            to={`/all/${category}/${subcategory}/${state}/${city}`}
+            className="capitalize"
+          >
+            {" "}
+            {city}
+          </Link>
         </span>
 
         <h1 className="text-2xl font-bold mt-2">
