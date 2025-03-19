@@ -63,7 +63,7 @@ const ServiceCard = React.memo(({ service, category}) => {
     )}`;
   }, [service]);
 
-  console.log(service)
+
   return (
     <div
       className="group relative w-[250px] bg-white  md:w-[300px] border border-gray-400 p-3 bg-muted rounded shadow-lg overflow-hidden transform transition-all duration-300  hover:shadow-xl"
