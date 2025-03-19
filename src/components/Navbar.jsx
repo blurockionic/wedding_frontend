@@ -155,7 +155,7 @@ function Navbar() {
                   onMouseLeave={() => setDropdown("")}
                 >
                   <span className="cursor-pointer hover:text-dustyRose">
-                    Wedding Venue
+                     Venue
                   </span>
                   {dropdown === "wedding venue" && (
                     <div className="absolute left-0 top-full bg-white shadow-lg w-48 py-4 z-40">
@@ -187,7 +187,7 @@ function Navbar() {
                   onMouseLeave={() => setDropdown("")}
                 >
                   <span className="cursor-pointer hover:text-dustyRose">
-                    Wedding Vendor
+                     Vendor
                   </span>
                   {dropdown === "wedding vendor" && (
                     <div className="absolute left-0 top-full bg-white shadow-lg w-96 py-4 z-40">
