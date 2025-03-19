@@ -40,7 +40,7 @@ const testimonials = [
 
 const Testimonials = () => {
   return (
-    <section className="text-gray-600 py-10 md:py-20 bg-gray-50 px-4">
+    <section className="text-gray-600 py-10 md:py-20 bg-red-50 px-4 md:px-20">
       <div className="w-full">
         <h2 className="capitalize text-3xl sm:text-4xl lg:text-5xl mb-10 font-bold text-center leading-tight">
           Explore by the <br />

@@ -164,12 +164,12 @@ export default function Home() {
         </script>
       </Helmet>
 
-      <div className="  grid md:pl-16 md:pt-20  lg:grid-cols-2 grid-cols-1 justify-between gap-10  items-center">
+      <div className="  grid md:pl-16   lg:grid-cols-2 grid-cols-1 justify-between gap-24  items-center md:py-10">
         {/* Left Section */}
 
-        <div className="relative   flex flex-col gap-6  text-center items-start md:text-left">
+        <div className="relative  flex flex-col gap-6  text-center items-start md:text-left ">
           <img
-            className="hidden lg:block absolute  left-0 -top-10  "
+            className="hidden lg:block absolute -left-16 top-5  "
             src="/heroSection/Vector1.png"
             alt="Vector1"
           />
@@ -186,7 +186,7 @@ export default function Home() {
             </div>
           )}
 
-          <div className="text-center  w-full my-10 md:text-left">
+          <div className="text-center w-full my-10 md:text-left md:mt-16">
             <p
               className="text-lg md:text-3xl lg:text-4xl text-white md:text-black font-bold tracking-tight leading-tight"
               data-aos="fade-up"
@@ -196,7 +196,7 @@ export default function Home() {
               Your one-stop destination for
             </p>
             <p
-              className="text-[2.5rem] lg:mt-2 md:text-6xl lg:text-[94px] font-bold tracking-tight custom-animate text-white md:text-primary"
+              className="text-[2.5rem] lg:mt-2 sm:text-4xl md:text-5xl lg:text-[94px] font-bold tracking-tight custom-animate text-white md:text-primary"
               data-aos="fade-up"
               style={
                 isMobile
@@ -212,7 +212,7 @@ export default function Home() {
               Dream Wedding
             </p>
           </div>
-          <section className="   ml-0 w-full md:flex-row items-center justify-start  mx-auto  flex-col  flex">
+          <section className="ml-0 w-full md:flex-row items-center justify-start  mx-auto flex-col  flex ">
             {/* Input Group */}
             <div className="   relative  my-5 md:flex justify-start items-center rounded-lg  border focus-within:ring-1 focus-within:ring-primary transition duration-300  ">
               <VendorSearch  setCategory={setCategory}  />
@@ -242,26 +242,26 @@ export default function Home() {
             />
           </section>
 
-          {!isMobile && <div>{insightCard()}</div>}
+          {!isMobile && <div className="w-full">{insightCard()}</div>}
 
           {/* Stats Section */}
 
           <img
-            className="relative  hidden lg:block -left-14 "
+            className="relative  hidden lg:block -left-14 bottom-8 "
             src="/heroSection/Vectorheart.png"
             alt="Vectorheart"
           />
         </div>
 
         {/* Right Section */}
-        <div className="hidden relative lg:flex flex-1 justify-center items-center w-full   md:h-[500px] lg:h-[600px]">
+        <div className="hidden relative lg:flex flex-1 justify-center items-center w-full  md:h-[500px] lg:h-full ">
           <div className="">
             <CircularAnimation />
           </div>
           <div className="">
             {" "}
             <img
-              className="absolute  top-10 right-40 hidden md:block"
+              className="absolute top-10 right-24 hidden md:block"
               src="/heroSection/Vectorheartbuzz.png"
               alt="heartbuzz"
             />
