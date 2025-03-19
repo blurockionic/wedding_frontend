@@ -211,7 +211,7 @@ export default function Home() {
         </script>
       </Helmet>
 
-      <div className="  grid md:pl-16   lg:grid-cols-2 grid-cols-1 justify-between gap-24  items-center md:h-screen">
+      <div className="  grid md:pl-16   lg:grid-cols-2 grid-cols-1 justify-between gap-24  items-center md:py-10">
         {/* Left Section */}
 
         <div className="relative  flex flex-col gap-6  text-center items-start md:text-left ">
@@ -233,7 +233,7 @@ export default function Home() {
             </div>
           )}
 
-          <div className="text-center w-full my-10 md:text-left md:mt-20">
+          <div className="text-center w-full my-10 md:text-left md:mt-16">
             <p
               className="text-lg md:text-3xl lg:text-4xl text-white md:text-black font-bold tracking-tight leading-tight"
               data-aos="fade-up"
