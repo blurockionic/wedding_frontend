@@ -154,7 +154,7 @@ const Section = ({ title, services, bgColor }) => {
       {/* Scrollable Services List */}
       <div
         ref={scrollContainer}
-        className="relative  mx-auto flex overflow-x-auto scroll-smooth hide-scrollbar pb-5  md:py-10 gap-4"
+        className="relative  mx-auto flex overflow-x-auto scroll-smooth hide-scrollbar pb-5 md:pb-10 gap-4"
       >
         <ServiceList services={services} />
       </div>
