@@ -19,7 +19,7 @@ const CustomInput = (props) => {
       className={`flex items-center rounded-md px-2 py-1 border focus:outline-none focus:ring-2 focus:ring-primary ${className}`} // Replaced with custom color for focus ring
       style={style}
     >
-      {leftIcon && <div className="mr-2 text-primary">{leftIcon}</div>}{" "}
+      {leftIcon && <div className="mr-1 text-primary">{leftIcon}</div>}{" "}
       <input
         type={type}
         placeholder={placeholder}

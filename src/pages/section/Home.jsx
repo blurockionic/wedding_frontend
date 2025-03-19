@@ -118,35 +118,38 @@ export default function Home() {
     return (
       <>
         <div
-          className={`flex w-full flex-grow px-2    my-10 gap-6 ${
+          className={`flex w-full flex-grow px-4 my-10 gap-6 md:justify-start md:gap-12 lg:justify-start lg:gap-12 ${
             !isMobile ? "justify-between " : "justify-around"
           } items-center `}
         >
           {[
             {
               count: heroSectionAnalyticsData?.verifiedUsers,
-              desc: " Verified Users",
+              desc: "Users",
+              prefix: "Verified",
               background: "text-[#F20574]",
             },
             {
               count: heroSectionAnalyticsData?.verifiedVendors,
-              desc: " Verified Vendors",
+              desc: "Vendors",
+              prefix: "Verified",
               background: "text-[#B14DA1]",
             },
             {
               count: heroSectionAnalyticsData?.activeServices,
-              desc: " Offering Services",
+              desc: "Services",
+              prefix: "Verified",
               background: "text-[#C1000DB2]",
             },
-          ].map(({ count, desc, background }, index) => (
+          ].map(({ count, desc, prefix, background }, index) => (
             <div
               key={index}
               className="border px-2 rounded-md py-2 bg-white bg-opacity-20 backdrop-blur-lg min-w-[80px] flex-grow  md:w-auto md:min-w-[120px] md:max-w-[180px] text-center shadow-md"
             >
               <p className="text-md md:text-3xl font-bold">{count}+</p>
               <div className="mt-2 bg-slate-600 h-1 w-full rounded"></div>
-              <p className={` ${background} text-[8px] md:text-lg mt-2`}>
-                {desc}
+              <p className={` flex items-center justify-center ${background} text-[8px] md:text-lg mt-2`}>
+                <span className="hidden md:block">{prefix}</span>{desc}
               </p>
             </div>
           ))}
@@ -211,7 +214,7 @@ export default function Home() {
         </script>
       </Helmet>
 
-      <div className="  grid md:pl-16   lg:grid-cols-2 grid-cols-1 justify-between gap-24  items-center md:py-10">
+      <div className="  grid md:pl-14 xl:pl-16   xl:grid-cols-2 grid-cols-1 justify-between   items-center md:py-10">
         {/* Left Section */}
 
         <div className="relative  flex flex-col gap-6  text-center items-start md:text-left ">
@@ -235,7 +238,7 @@ export default function Home() {
 
           <div className="text-center w-full my-10 md:text-left md:mt-16">
             <p
-              className="text-lg md:text-3xl lg:text-4xl text-white md:text-black font-bold tracking-tight leading-tight"
+              className="text-[4vw] md:text-[3vw] lg:text-[3vw] text-white md:text-black font-bold tracking-tight leading-tight"
               data-aos="fade-up"
               data-aos-delay="400"
               data-aos-once="true"
@@ -243,7 +246,7 @@ export default function Home() {
               Your one-stop destination for
             </p>
             <p
-              className="text-[2.5rem] lg:mt-2 sm:text-4xl md:text-5xl lg:text-[94px] font-bold tracking-tight custom-animate text-white md:text-primary"
+              className="text-[10vw]  md:text-[6.4vw] lg:text-[6.4vw] lg:mt-2    font-bold tracking-tight custom-animate text-white md:text-primary"
               data-aos="fade-up"
               style={
                 isMobile
@@ -259,9 +262,9 @@ export default function Home() {
               Dream Wedding
             </p>
           </div>
-          <section className="ml-0 w-full md:flex-row items-center justify-start  mx-auto flex-col  flex ">
+          <section className="ml-0 w-full md:flex-row  justify-start  mx-auto flex-col flex  px-10 md:px-0">
             {/* Input Group */}
-            <div className="   relative  my-5 md:flex justify-start items-center rounded-lg  border focus-within:ring-1 focus-within:ring-primary transition duration-300  ">
+            <div className="   relative  md:flex justify-start items-center rounded-lg  border focus-within:ring-1 focus-within:ring-primary transition duration-300  ">
               <div ref={serviceTypeRef} className=" relative  ">
                 <CustomInput
                   type="text"
@@ -308,9 +311,9 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="md:hidden flex flex-col gap-5">
+            <div className="md:hidden flex flex-col gap-5 mt-2 md:mt-0">
               <LocationSearch
-                customClass={""}
+                customClass={"  "}
                 setSearchLocation={setSearchLocation}
               />
             </div>
@@ -334,7 +337,7 @@ export default function Home() {
         </div>
 
         {/* Right Section */}
-        <div className="hidden relative lg:flex flex-1 justify-center items-center w-full  md:h-[500px] lg:h-full ">
+        <div className="hidden relative xl:flex flex-1 justify-center items-center w-full  md:h-[500px] xl:h-full ">
           <div className="">
             <CircularAnimation />
           </div>
