@@ -61,12 +61,12 @@ const sections = [
 
 const AboutLanding = () => {
   return (
-    <div className="container mx-auto flex justify-between h-full py-[200px]">
-      <div className="flex flex-col font-Sansation sticky px-6 md:px-0">
+    <div className="mx-auto flex justify-between h-full w-full md:px-20 px-4 mb-20">
+      <div className="flex flex-col font-Sansation sticky  md:px-0">
         {sections.map((section) => (
           <section
             key={section.id}
-            className={`px-6 py-6 md:px-20 flex items-center justify-center flex-col md:flex-row sticky md:p-10 shadow-lg rounded-xl ${section.bgColor}`}
+            className={`px-5 py-6 md:px-20 flex items-center justify-center flex-col md:flex-row sticky md:p-10 shadow-lg rounded-xl ${section.bgColor}`}
             style={{ top: section.top }} // Dynamic top value applied here
           >
             {/* Left Side: Text and Features */}
