@@ -119,7 +119,7 @@ const Section = ({ title, services, bgColor }) => {
   }, []);
   return (
     <div
-      className={`w-[90%] my-10 rounded-2xl px-5 mx-auto md:px-4 lg:px-10   pt-4 md:pt-10 transition-opacity`}
+      className={`w-[90%] my-10 rounded-2xl px-5 mx-auto md:px-4 lg:px-10  pt-4 md:pt-10 transition-opacity`}
       style={{ backgroundColor: bgColor, opacity: services.length ? 1 : 0.5 }}
     >
       {/* Heading & Buttons Row */}

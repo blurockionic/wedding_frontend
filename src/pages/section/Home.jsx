@@ -243,7 +243,7 @@ export default function Home() {
               Your one-stop destination for
             </p>
             <p
-              className="text-[2.5rem] lg:mt-2 md:text-6xl lg:text-[94px] font-bold tracking-tight custom-animate text-white md:text-primary"
+              className="text-[2.5rem] lg:mt-2 sm:text-4xl md:text-5xl lg:text-[94px] font-bold tracking-tight custom-animate text-white md:text-primary"
               data-aos="fade-up"
               style={
                 isMobile
