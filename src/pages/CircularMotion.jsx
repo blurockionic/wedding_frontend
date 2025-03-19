@@ -7,8 +7,8 @@ const images = [img1,img2, img3, img4, img5,img6];
 const CircularAnimation = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const totalImages = images.length;
-  const startAngle = 310;
-  const endAngle = 100;
+  const startAngle = 320;
+  const endAngle = 90;
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -18,7 +18,7 @@ const CircularAnimation = () => {
   }, [totalImages]);
 
   return (
-    <div className="scale-125 relative flex items-center justify-center w-[min(90vw,300px)] h-[min(90vw,300px)] rounded-full border-l-[2px] border-primary   ">
+    <div className="scale-125 relative flex items-center justify-center w-[min(100vw,400px)] h-[min(100vw,400px)] rounded-full border-l-[2px] border-primary ">
       {/* Images in Left Arc */}
       {images.map((src, index) => {
         const adjustedIndex =
@@ -29,7 +29,7 @@ const CircularAnimation = () => {
           (adjustedIndex * (endAngle - startAngle)) / (totalImages - 1);
 
         const radian = (angle * Math.PI) / 180;
-        const radius = "min(43vw, 150px)";
+        const radius = "min(43vw, 200px)";
 
         return (
           <motion.div
@@ -48,8 +48,8 @@ const CircularAnimation = () => {
                       left: "50%",
                       top: "50%",
                       transform: "translate(-50%, -50%)",
-                      height:"190px",
-                      width:"190px",
+                      height:"280px",
+                      width:"280px",
                     }
               }
             transition={{ duration: 2, ease: "easeInOut" }}

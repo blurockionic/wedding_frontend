@@ -75,7 +75,7 @@ export default function LocationSearch({ setSearchLocation, customClass }) {
         type="text"
         value={location}
         placeholder="In Location"
-        className={`w-full outline-none focus:border-white bg-white ${customClass}`}
+        className={`w-full outline-none focus:border-white  ${customClass}`}
         aria-label="Location"
         onChange={handleSearchLocationChange}
         onFocus={handleFocus}
