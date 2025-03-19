@@ -3,21 +3,20 @@ import "aos/dist/aos.css";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../../components/global/button/CustomButton";
-import CustomInput from "../../components/global/inputfield/CustomInput";
-import { GoSearch } from "react-icons/go";
+
 import { Helmet } from "react-helmet-async";
-import { allCategories } from "../../static/static";
+
 import { toast } from "react-toastify";
 import LocationSearch from "../../components/LocationSearch/LocationSearch";
 import CircularAnimation from "../CircularMotion";
 import img from "../../../public/heroSection/image 49.png";
 import { useGetHeroSectionAnalyticsQuery } from "../../redux/adminApiSlice";
+import VendorSearch from "../../components/vendorSearch/VendorSearch";
 
 export default function Home() {
   const navigate = useNavigate();
-  const [search, setSearch] = useState("");
-  const [suggestions, setSuggestions] = useState([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
+
+
   const [category, setCategory] = useState("");
   const [searchLocation, setSearchLocation] = useState("");
   const [backgroundImg, setBackGroundImg] = useState(img);
@@ -32,49 +31,8 @@ export default function Home() {
     });
   }, []);
 
-  const handleSearchChange = (e) => {
-    const value = e.target.value;
-    setSearch(value);
-    if (!value.trim()) {
-      const allCategoriesArray = Object.entries(allCategories).map(
-        ([category, subcategories]) => ({
-          category,
-          subcategories,
-        })
-      );
-
-      setSuggestions(allCategoriesArray);
-      setShowSuggestions(true);
-      return;
-    }
-
-    if (value.trim()) {
-      const filtered = Object.entries(allCategories)
-        .map(([category, subcategories]) => ({
-          category,
-          subcategories: subcategories.filter((sub) =>
-            sub.toLowerCase().includes(value.toLowerCase())
-          ),
-        }))
-        .filter((item) => item.subcategories.length > 0);
-
-      setSuggestions(filtered);
-      console.log(filtered);
-
-      setShowSuggestions(true);
-    }
-  };
-  const handleFocus = useCallback(() => {
-    if (!search.trim()) {
-      setSuggestions(() =>
-        Object.entries(allCategories).map(([category, subcategories]) => ({
-          category,
-          subcategories,
-        }))
-      );
-    }
-    setShowSuggestions(true);
-  }, [search]);
+ 
+ 
   useEffect(() => {
     function handleClickOutside(event) {
       if (
@@ -96,12 +54,7 @@ export default function Home() {
   }, []);
 
   // set value on input field
-  const handleSuggestionClick = (category, subcategory) => {
-    setSearch(`${subcategory}`);
-    setCategory(`${category}/${subcategory}`);
-    setShowSuggestions(false);
-  };
-
+ 
   const handleNavigate = () => {
     if (category && searchLocation) {
       navigate(`/all/${category}/${searchLocation}`);
@@ -262,40 +215,7 @@ export default function Home() {
           <section className="   ml-0 w-full md:flex-row items-center justify-start  mx-auto  flex-col  flex">
             {/* Input Group */}
             <div className="   relative  my-5 md:flex justify-start items-center rounded-lg  border focus-within:ring-1 focus-within:ring-primary transition duration-300  ">
-              <div ref={serviceTypeRef} className=" relative  ">
-                <CustomInput
-                  type="text"
-                  placeholder="Select Vendor"
-                  className="outline-none   focus:ring-0 focus:ring-none bg-white  border-none  "
-                  aria-label="Select Vendor"
-                  value={search}
-                  onChange={handleSearchChange}
-                  onFocus={handleFocus}
-                  leftIcon={<GoSearch size={20} />}
-                />
-
-                {showSuggestions && suggestions.length > 0 && (
-                  <ul className=" absolute  bg-white border border-gray-300 w-full rounded shadow-lg mt-1 z-20 overflow-auto  max-h-[200px]">
-                    {suggestions.map(({ category, subcategories }) => (
-                      <li key={category} className="px-4 py-2  cursor-pointer">
-                        <ul className=" text-sm grid grid-cols-1  gap-2">
-                          {subcategories.map((sub, index) => (
-                            <li
-                              key={sub}
-                              className="text-gray-700 hover:bg-gray-200 p-2 rounded-md"
-                              onClick={() =>
-                                handleSuggestionClick(category, sub)
-                              }
-                            >
-                              {sub}
-                            </li>
-                          ))}
-                        </ul>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
+              <VendorSearch  setCategory={setCategory}  />
               <div className="absolute hidden md:block left-1/2 transform -translate-x-1/2   -mt-2">
                 <span className="  text-4xl text-pink-400">|</span>
               </div>

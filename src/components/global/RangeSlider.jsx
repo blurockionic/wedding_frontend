@@ -19,6 +19,7 @@ const RangeSlider = ({ min, max, start, onChange }) => {
         range={{ min, max }}
         start={start}
         connect
+        step={100}
         onSlide={(updatedValues) => setValues(updatedValues.map(Number))}
       />
       <div className="flex justify-between text-sm pt-4 text-pink-500">
