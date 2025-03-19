@@ -9,7 +9,6 @@ import OutletPage from "./pages/OutletPage.jsx";
 const LandingPage = lazy(() => import("./pages/LandingPage.jsx"));
 const Signup = lazy(() => import("./pages/auth/Signup.jsx"));
 const Login = lazy(() => import("./pages/auth/Login.jsx"));
-const ServicesPage = lazy(() => import("./pages/ServicePage.jsx"));
 const ServiceDetail = lazy(() => import("./pages/serviceDeatails.jsx"));
 
 const VendorRegistration = lazy(() =>
@@ -199,7 +198,6 @@ const router = createBrowserRouter([
         path: "vendor-change-password",
         element: wrapWithSuspense(VendorChangePassword),
       },
-      { path: "/services", element: wrapWithSuspense(ServicesPage) },
       { path: "/service/:id", element: wrapWithSuspense(ServiceDetail) },
 
       // Protect user admin routes
