@@ -14,7 +14,7 @@ import { FaRupeeSign } from "react-icons/fa";
 
 function Card({ pricing }) {
   return (
-    <Link to="/preview_2">
+    <Link to="/update_editor">
       <motion.div
         className="p-4 bg-white shadow-md rounded-lg text-center h-[440px] cursor-pointer"
         initial={{ opacity: 0, y: 50 }}
