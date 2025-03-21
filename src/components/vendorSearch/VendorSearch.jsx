@@ -9,6 +9,10 @@ export default function VendorSearch({ setCategory, service_type }) {
   const [search, setSearch] = useState("");
   const dropdownRef = useRef(null);
 
+  useEffect(()=>{
+    setSearch(service_type)
+  },[service_type])
+
   const handleSuggestionClick = (category, subcategory) => {
     setSearch(`${subcategory}`);
     setCategory(`${category}/${subcategory}`);
@@ -77,7 +81,7 @@ export default function VendorSearch({ setCategory, service_type }) {
         placeholder="Select Vendor"
         className="outline-none   focus:ring-0 focus:ring-none bg-white  border-none  capitalize"
         aria-label="Select Vendor"
-        value={search || service_type}
+        value={search}
         onChange={handleSearchChange}
         onFocus={handleFocus}
         leftIcon={<GoSearch size={20} />}

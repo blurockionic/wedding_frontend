@@ -5,6 +5,7 @@ import RangeSlider from "./global/RangeSlider";
 import { useNavigate, useLocation } from "react-router-dom";
 import LocationSearch from "./LocationSearch/LocationSearch";
 import VendorSearch from "./vendorSearch/VendorSearch";
+import { Loader } from "lucide-react";
 
 const Sidebar = memo(({ filters, onFilterChange, isLoading, city, service_type }) => {
   const { register, handleSubmit,  reset, setValue, watch } = useForm({
@@ -22,6 +23,7 @@ const Sidebar = memo(({ filters, onFilterChange, isLoading, city, service_type }
       [filters]
     ),
   });
+
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -172,7 +174,7 @@ const Sidebar = memo(({ filters, onFilterChange, isLoading, city, service_type }
             type="submit"
             className="w-full capitalize bg-green-500 text-white py-2 rounded"
           >
-            {isLoading ? "Fetching..." : "Find"}
+            {isLoading ? <Loader size={24} className="animate-spin"/> : "Apply"}
           </button>
         </div>
       </form>

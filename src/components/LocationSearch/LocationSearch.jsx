@@ -21,6 +21,10 @@ function LocationSearch({ setSearchLocation, customClass, city }) {
     [originalLocationData]
   );
 
+   useEffect(()=>{
+      setLocation(city)
+    },[city])
+
   // Memoize filtered locations
   const filteredLocations = useMemo(() => {
     if (!locationData) return {};
@@ -74,7 +78,7 @@ function LocationSearch({ setSearchLocation, customClass, city }) {
     <div className="relative  " ref={dropdownRef}>
       <CustomInput
         type="text"
-        value={location || city}
+        value={location}
         placeholder="In Location"
         className={`w-full outline-none capitalize focus:border-white bg-white ${customClass}`}
         aria-label="Location"
