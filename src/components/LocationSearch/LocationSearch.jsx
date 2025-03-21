@@ -28,7 +28,7 @@ function LocationSearch({ setSearchLocation, customClass, city }) {
   // Memoize filtered locations
   const filteredLocations = useMemo(() => {
     if (!locationData) return {};
-    if (!location.trim()) return locationData;
+    if (!location?.trim()) return locationData;
 
     return Object.entries(locationData).reduce(
       (acc, [state, cities]) => {
@@ -75,7 +75,7 @@ function LocationSearch({ setSearchLocation, customClass, city }) {
   }, []);
 
   return (
-    <div className="relative  " ref={dropdownRef}>
+    <div className="relative" ref={dropdownRef}>
       <CustomInput
         type="text"
         value={location}
@@ -84,6 +84,7 @@ function LocationSearch({ setSearchLocation, customClass, city }) {
         aria-label="Location"
         onChange={handleSearchLocationChange}
         onFocus={handleFocus}
+        customInputStyle={"capitalize"}
         leftIcon={<GoLocation size={20} />}
       />
       {showSuggestions && Object.keys(filteredLocations || {}).length > 0 && (

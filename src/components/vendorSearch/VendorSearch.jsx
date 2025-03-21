@@ -79,12 +79,13 @@ export default function VendorSearch({ setCategory, service_type }) {
       <CustomInput
         type="text"
         placeholder="Select Vendor"
-        className="outline-none   focus:ring-0 focus:ring-none bg-white  border-none  capitalize"
+        className="outline-none focus:ring-0 focus:ring-none bg-white  border-none  "
         aria-label="Select Vendor"
         value={search}
         onChange={handleSearchChange}
         onFocus={handleFocus}
         leftIcon={<GoSearch size={20} />}
+        customInputStyle={"capitalize"}
       />
 
       {showSuggestions && suggestions.length > 0 && (
