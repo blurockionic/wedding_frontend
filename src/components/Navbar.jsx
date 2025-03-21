@@ -1,26 +1,20 @@
-import React, { useEffect, useState } from "react";
+import  {  useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import NavbarRoutesConfig from "../assets/NavabarRouteConfig";
-import { useSelector, useDispatch } from "react-redux";
-import { useLogoutMutation } from "../redux/apiSlice.auth";
+import { useSelector,  } from "react-redux";
 import {
   allCategories,
 } from "../static/static";
-import TopNavbar from "./topnavbar/TopNavbar";
-import CustomText from "./global/text/CustomText";
 import Avatar from "../../public/user.png";
 import brandlogo from "../../public/logo/brandlogo.png";
 
 function Navbar() {
-  const { isLoggedIn, user } = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
+  const {  user } = useSelector((state) => state.auth);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [logoutMutation] = useLogoutMutation();
   const [dropdown, setDropdown] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [weddingVenue, setWeddingVenue] = useState(null);
 
   const handleOnProfile = () => {
     navigate("/profile");
@@ -356,11 +350,6 @@ function Navbar() {
                           alt="Profile"
                           className="w-8 h-8 rounded-full"
                         />
-                        {/* <CustomText
-                          variant="paragraph"
-                          className="text-sm hidden lg:block"
-                          text="Profile"
-                        /> */}
                       </div>
                     </li>
                   )}

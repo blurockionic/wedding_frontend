@@ -6,7 +6,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import LocationSearch from "./LocationSearch/LocationSearch";
 import VendorSearch from "./vendorSearch/VendorSearch";
 
-const Sidebar = memo(({ filters, onFilterChange, isLoading }) => {
+const Sidebar = memo(({ filters, onFilterChange, isLoading, city, service_type }) => {
   const { register, handleSubmit,  reset, setValue, watch } = useForm({
     defaultValues: useMemo(
       () => ({
@@ -43,6 +43,17 @@ const Sidebar = memo(({ filters, onFilterChange, isLoading }) => {
     navigate(pathSegments.join("/"), { replace: true });
   }, [category, location.pathname, navigate, setValue]);
 
+  const handleFilterChange = useCallback(
+    (data) => {
+      if (JSON.stringify(data) !== JSON.stringify(filters)) {
+        onFilterChange(data);
+      }
+    },
+    [onFilterChange, filters]
+  );
+
+
+
   const setSearchLocation = useCallback(
     (selectedCity) => {
       if (!selectedCity) return;
@@ -71,16 +82,7 @@ const Sidebar = memo(({ filters, onFilterChange, isLoading }) => {
     [setValue, navigate, location, watch]
   );
 
-  console.log(1);
-
-  const handleFilterChange = useCallback(
-    (data) => {
-      if (JSON.stringify(data) !== JSON.stringify(filters)) {
-        onFilterChange(data);
-      }
-    },
-    [onFilterChange, filters]
-  );
+  
 
   const sortByOptions = useMemo(
     () => [
@@ -99,13 +101,14 @@ const Sidebar = memo(({ filters, onFilterChange, isLoading }) => {
     []
   );
 
+
   return (
     <div className="w-full p-4">
       <form onSubmit={handleSubmit(handleFilterChange)} className="space-y-4">
-        <LocationSearch setSearchLocation={setSearchLocation} />
+        <LocationSearch setSearchLocation={setSearchLocation} city={city}/>
 
         <div className="border rounded-md">
-          <VendorSearch setCategory={setCategory} />
+          <VendorSearch setCategory={setCategory} service_type={service_type}/>
         </div>
 
         <div className="flex flex-col">

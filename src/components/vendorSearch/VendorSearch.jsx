@@ -3,7 +3,7 @@ import CustomInput from "../../components/global/inputfield/CustomInput";
 import { GoSearch } from "react-icons/go";
 import { allCategories } from "../../static/static";
 
-export default function VendorSearch({ setCategory }) {
+export default function VendorSearch({ setCategory, service_type }) {
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [search, setSearch] = useState("");
@@ -75,9 +75,9 @@ export default function VendorSearch({ setCategory }) {
       <CustomInput
         type="text"
         placeholder="Select Vendor"
-        className="outline-none   focus:ring-0 focus:ring-none bg-white  border-none  "
+        className="outline-none   focus:ring-0 focus:ring-none bg-white  border-none  capitalize"
         aria-label="Select Vendor"
-        value={search}
+        value={search || service_type}
         onChange={handleSearchChange}
         onFocus={handleFocus}
         leftIcon={<GoSearch size={20} />}

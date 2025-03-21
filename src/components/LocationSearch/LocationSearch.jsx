@@ -10,7 +10,7 @@ import { GoLocation } from "react-icons/go";
 import CustomInput from "../global/inputfield/CustomInput";
 import { useGetLocationQuery } from "../../redux/serviceSlice";
 
-function LocationSearch({ setSearchLocation, customClass }) {
+function LocationSearch({ setSearchLocation, customClass, city }) {
   const [location, setLocation] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const dropdownRef = useRef(null); // Ref to track dropdown clicks
@@ -74,9 +74,9 @@ function LocationSearch({ setSearchLocation, customClass }) {
     <div className="relative  " ref={dropdownRef}>
       <CustomInput
         type="text"
-        value={location}
+        value={location || city}
         placeholder="In Location"
-        className={`w-full outline-none  focus:border-white bg-white ${customClass}`}
+        className={`w-full outline-none capitalize focus:border-white bg-white ${customClass}`}
         aria-label="Location"
         onChange={handleSearchLocationChange}
         onFocus={handleFocus}
