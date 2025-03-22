@@ -1,0 +1,52 @@
+name: Auto Update README
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Runs every midnight
+  workflow_dispatch: # Allows manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Fetch Repository Stats
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          REPO_OWNER=$(echo "${{ github.repository }}" | cut -d'/' -f1)
+          REPO_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f2)
+
+          STARS=$(curl -s https://api.github.com/repos/$REPO_OWNER/$REPO_NAME | jq '.stargazers_count')
+          FORKS=$(curl -s https://api.github.com/repos/$REPO_OWNER/$REPO_NAME | jq '.forks_count')
+
+          echo "STARS=$STARS" >> $GITHUB_ENV
+          echo "FORKS=$FORKS" >> $GITHUB_ENV
+
+      - name: Update README
+        run: |
+          echo "## 🚀 Latest Update" > README.md
+          echo "" >> README.md
+          echo "✅ Last Commit: $(git log -1 --pretty=format:'%h - %s')" >> README.md
+          echo "" >> README.md
+          echo "🌟 Current Version: v1.0.0" >> README.md
+          echo "" >> README.md
+          echo "📅 Updated on: $(date)" >> README.md
+          echo "" >> README.md
+          echo "💻 Build Status: ![CI/CD Status](https://github.com/${{ github.repository }}/actions/workflows/update-readme.yml/badge.svg)" >> README.md
+          echo "" >> README.md
+          echo "⭐️ Stars: $STARS | 🍴 Forks: $FORKS" >> README.md
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add README.md
+          git commit -m "🤖 Auto-update README (Midnight)"
+          git push

@@ -7,6 +7,7 @@ import { userUpdate } from "../../redux/authSlice";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../../components/global/button/CustomButton";
 import { FaRegThumbsDown, FaRegThumbsUp } from "react-icons/fa";
+import { MdOutlineVerified } from "react-icons/md";
 
 const UserProfile = () => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ const UserProfile = () => {
   const [updateUser, { isLoading }] = useUpdateUserMutation();
 
   useEffect(() => {
-    if (userData?.role !== "USER") {
+    if (userData?.role!=="USER" && userData?.role!=="ADMIN" && userData?.role!=="SUPER_ADMIN") {
       navigate("/");
     }
   }, [userData, navigate]);
@@ -153,19 +154,19 @@ const UserProfile = () => {
   return (
     <div className="w-full max-w-5xl mx-auto p-6 rounded-lg">
       <div className="text-center mb-8">
-        <h1 className="text-2xl sm:text-4xl font-serif font-bold text-pink-700 mb-2">
+        <h1 className="text-2xl sm:text-4xl  font-bold text-primary mb-2">
           {isEditing ? "Edit Your Profile" : "Your Wedding Journey"}
         </h1>
-        <p className="text-sm sm:text-lg text-gray-600">
+        <p className="text-sm sm:text-md text-gray-600">
           {isEditing
             ? "Update your details to cherish your special moments."
             : "Celebrate your love story with your personalized profile."}
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:mt-10">
         <div className="w-full bg-white rounded-lg p-6 border border-pink-200 flex flex-col items-center">
-          <h2 className="text-xl sm:text-2xl text-center font-serif text-pink-600 mb-4">
+          <h2 className="text-lg sm:text-xl text-center  text-primary mb-4">
             Profile Photo
           </h2>
           <div className="w-24 sm:w-32 h-24 sm:h-32 rounded-full overflow-hidden border-4 border-pink-300 mb-4">
@@ -202,16 +203,16 @@ const UserProfile = () => {
             isEditing ? "bg-green-100 border-dashed border-4" : "bg-white"
           } rounded-lg p-6 border border-pink-200`}
         >
-          <div className="text-xl flex justify-between sm:text-2xl font-serif text-pink-600 mb-4">
+          <div className="text-xl flex justify-between sm:text-2xl text-pink-600 mb-4">
             <span> Personal Information</span>
-            <span className="flex">
-              {" "}
-              Verified: {"  "}
+            <span className="flex text-green-500 items-center gap-2">
+              
               {userData?.is_verified ? (
-                <FaRegThumbsUp />
+                <MdOutlineVerified />
               ) : (
                 <FaRegThumbsDown />
-              )}{" "}
+              )}
+              Verified
             </span>
           </div>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

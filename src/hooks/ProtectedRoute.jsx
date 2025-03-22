@@ -57,9 +57,7 @@ const ProtectedRoute = ({ allowedRoles, component: Component }) => {
 
       if (!isLoggedIn) {
         navigate("/", { replace: true });
-        toast.error("You are not logged in. Please login to access this page.");
-        
-        
+        // toast.error("You are not logged in. Please login to access this page.");
       }
       return;
     }

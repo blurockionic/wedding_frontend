@@ -28,6 +28,12 @@ const provider = new GoogleAuthProvider();
 // Google Sign-In Function
 export const signInWithGoogle = async () => {
   try {
+
+    if (auth.currentUser) {
+      await auth.signOut(); 
+    }
+
+
     const result = await signInWithPopup(auth, provider);
     const googleUser = result.user;
     const idToken = await googleUser.getIdToken(); // Await to ensure token retrieval

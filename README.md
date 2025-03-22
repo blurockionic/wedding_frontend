@@ -1,8 +1,11 @@
-# React + Vite
+## 🚀 Latest Update
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+✅ Last Commit: e18d285 - testimonial update
 
-Currently, two official plugins are available:
+🌟 Current Version: v1.0.0
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+📅 Updated on: Tue Mar 18 00:55:42 UTC 2025
+
+💻 Build Status: ![CI/CD Status](https://github.com/blurockionic/wedding_frontend/actions/workflows/update-readme.yml/badge.svg)
+
+⭐️ Stars: 0 | 🍴 Forks: 1

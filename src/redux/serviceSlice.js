@@ -1,18 +1,16 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import baseQueryWithReauth from "./baseQueryWithReauth";
 
 export const serviceApi = createApi({
   reducerPath: "serviceApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.VITE_API_URL}/api/v1`,
-    credentials: "include",
-  }),
+  baseQuery:baseQueryWithReauth,
   tagTypes: ["Cart", "Services"],
   endpoints: (builder) => ({
     // Get all services with dynamic filters
     getServices: builder.query({
       query: (filters) => {
         let queryStr = "/services";
-        console.log(filters)
+
         // Check if filters are provided
         if (filters && Object.keys(filters).length > 0) {
           // Filter out undefined or empty values
@@ -26,7 +24,6 @@ export const serviceApi = createApi({
 
         return queryStr;
       },
-      
     }),
 
     // Get service by ID
@@ -144,8 +141,8 @@ export const serviceApi = createApi({
         method: "POST",
         body: data,
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       }),
     }),
 
@@ -156,23 +153,24 @@ export const serviceApi = createApi({
       }),
     }),
 
-    getMostViewdServices:builder.query({
-      query:()=>({
-        url:`services/getMostViewedServices`,
-        method:"GET"
+    getMostViewdServices: builder.query({
+      query: () => ({
+        url: `services/getMostViewedServices`,
+        method: "GET",
+      }),
+    }),
 
-      })
-
-    })
-
-
+    getLocation: builder.query({
+      query: () => "services/get-location",
+    }),
   }),
 });
 
 // Export hooks for each endpoint
 export const {
- useGetMostViewdServicesQuery,
+  useGetMostViewdServicesQuery,
   useGetServicesQuery,
+  useGetLocationQuery,
   useSwitchServiceMutation,
   useGetServiceByIdQuery,
   useGetCartMutation,
@@ -189,5 +187,5 @@ export const {
   useDeleteFAQMutation,
   useCreateFeedbackMutation,
   useUpdateFeedbackMutation,
- useGenerateAIDescriptionMutation
+  useGenerateAIDescriptionMutation,
 } = serviceApi;

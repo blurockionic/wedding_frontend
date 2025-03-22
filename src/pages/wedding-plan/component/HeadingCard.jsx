@@ -3,7 +3,7 @@ const HeadingCard = ({user}) => {
   return (
     <section className=" p-1 w-full flex items-center">
       <motion.div
-        className="relative w-full p-8 rounded-2xl overflow-hidden shadow-lg text-white flex flex-col justify-center items-center "
+        className="relative w-full p-2 rounded-2xl overflow-hidden shadow-lg text-white flex flex-col justify-center items-center "
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
@@ -27,8 +27,8 @@ const HeadingCard = ({user}) => {
 
         {/* Content */}
         <div className="relative z-10 text-center ">
-            <h1 className="text-5xl font-semibold p-2 capitalize">Hi, {user?.user_name}</h1>
-          <h1 className="text-2xl font-semibold">Plan your dream wedding with Marriage Vendors ❤️</h1>
+            <h1 className="text-4xl font-semibold p-2 capitalize">Hi, {user?.user_name}</h1>
+          <h1 className="text-lg font-semibold">Plan your dream wedding with Marriage Vendors ❤️</h1>
         </div>
       </motion.div>
     </section>

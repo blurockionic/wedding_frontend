@@ -1,138 +1,105 @@
 import Aos from "aos";
 import "aos/dist/aos.css";
-import { useEffect, useState } from "react";
+import {  useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../../components/global/button/CustomButton";
-import CustomInput from "../../components/global/inputfield/CustomInput";
-import { GoLocation, GoSearch } from "react-icons/go";
-import Discover from "../../components/home/home-discover/Discover.jsx";
+
 import { Helmet } from "react-helmet-async";
-import { allCategories } from "../../static/static";
-import { useGetServicesQuery } from "../../redux/serviceSlice";
+
 import { toast } from "react-toastify";
+import LocationSearch from "../../components/LocationSearch/LocationSearch";
+import CircularAnimation from "../CircularMotion";
+import img from "../../../public/heroSection/image 49.png";
+import { useGetHeroSectionAnalyticsQuery } from "../../redux/adminApiSlice";
+import VendorSearch from "../../components/vendorSearch/VendorSearch";
 
 export default function Home() {
   const navigate = useNavigate();
-  const [search, setSearch] = useState("");
-  const [location, setLocation] = useState("");
-  const [suggestions, setSuggestions] = useState([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [locationSuggestions, setLocationSuggestions] = useState({});
-  const [showlocationSuggestions, setShowlocationSuggestions] = useState(false);
-  const [originalLocationData, setOriginalLocationData] = useState({});
-  const [categroy, setCategory] = useState("")
-  const [searchLocation, setSearchLocation] = useState("")
+  const [category, setCategory] = useState("");
+  const [searchLocation, setSearchLocation] = useState("");
+  const [backgroundImg, setBackGroundImg] = useState(img);
+  const [isMobile, setIsMobile] = useState(false);
+  const { data: heroSectionAnalyticsData, isLoading } =
+    useGetHeroSectionAnalyticsQuery();
 
-  const { data, error, isLoading } = useGetServicesQuery();
 
   useEffect(() => {
     Aos.init({
       duration: 1000,
     });
-    // fetchStatesAndCities();
   }, []);
 
-  //handle on change vendors
-  const handleSearchChange = (e) => {
-    const value = e.target.value;
-    setSearch(value);
-    if (value) {
-      const filtered = Object.entries(allCategories)
-        .map(([category, subcategories]) => ({
-          category,
-          subcategories: subcategories.filter((sub) =>
-            sub.toLowerCase().includes(value.toLowerCase())
-          ),
-        }))
-        .filter((item) => item.subcategories.length > 0);
+ 
+ 
 
-      setSuggestions(filtered);
-      setShowSuggestions(true);
-    } else {
-      setShowSuggestions(false);
-    }
-  };
 
   useEffect(() => {
-
-    if (!data?.ServiceResult) return;
-
-    const filterData = data.ServiceResult.reduce((acc, service) => {
-      if (service.state) {
-        acc[service.state] = acc[service.state] || [];
-        acc[service.state].push(service.city);
-      }
-      return acc;
-    }, {});
-
-    //set data
-    setOriginalLocationData(filterData); // Store original data
-    setLocationSuggestions(filterData);
-  }, [data]);
-
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // set value on input field
-  const handleSuggestionClick = (category, subcategory) => {
-    // console.log(category, subcategory)
-    setSearch(`${subcategory}`);
-    // this for search
-    setCategory(`${category}/${subcategory}`)
-    setShowSuggestions(false);
-  };
-
-  //handle on location
-  const handleSearchLocationChange = (e) => {
-    const searchLocation = e.target.value;
-    setLocation(searchLocation);
-
-    if (searchLocation) {
-      const filteredLocation = Object.entries(originalLocationData).reduce(
-        (acc, [state, cities]) => {
-          const filteredCities = cities.filter((city) =>
-            city.toLowerCase().startsWith(searchLocation.toLowerCase())
-          );
-
-          if (filteredCities.length > 0) {
-            acc[state] = filteredCities;
-          }
-          return acc;
-        },
-        {}
-      );
-
-      setLocationSuggestions(filteredLocation);
-      setShowlocationSuggestions(Object.keys(filteredLocation).length > 0);
-    } else {
-      setShowlocationSuggestions(false);
-      setLocationSuggestions(originalLocationData); // Reset to original data
-    }
-  };
-
-  //set wedding location
-  const handleLocationClick = (state, city) => {
-    setLocation(`${city}`);
-    //this is for search
-    setSearchLocation(`${state}/${city}`)
-    setShowlocationSuggestions(false);
-  };
-
-  // navigate to specific services 
+ 
   const handleNavigate = () => {
-    if(categroy && searchLocation){
-      navigate(`/all/${categroy}/${searchLocation}`);
-    }else if(searchLocation){
-      toast.error("Please select vendor")
-    }else if(categroy){
-      navigate(`/all/${categroy}`)
-    }
-    else{
+    if (category && searchLocation) {
+      navigate(`/all/${category}/${searchLocation}`);
+    } else if (searchLocation) {
+      toast.error("Please select vendor");
+    } else if (category) {
+      navigate(`/all/${category}`);
+    } else {
       navigate(`/all`);
     }
   };
 
+  const insightCard = () => {
+    return (
+      <>
+        <div
+          className={`flex w-full flex-grow px-4 my-10 gap-6 md:justify-start md:gap-12 lg:justify-start lg:gap-12 ${
+            !isMobile ? "justify-between " : "justify-around"
+          } items-center `}
+        >
+          {[
+            {
+              count: heroSectionAnalyticsData?.verifiedUsers,
+              desc: "Users",
+              prefix: "Verified",
+              background: "text-[#F20574]",
+            },
+            {
+              count: heroSectionAnalyticsData?.verifiedVendors,
+              desc: "Vendors",
+              prefix: "Verified",
+              background: "text-[#B14DA1]",
+            },
+            {
+              count: heroSectionAnalyticsData?.activeServices,
+              desc: "Services",
+              prefix: "Verified",
+              background: "text-[#C1000DB2]",
+            },
+          ].map(({ count, desc, prefix, background }, index) => (
+            <div
+              key={index}
+              className="border px-2 rounded-md py-2 bg-white bg-opacity-20 backdrop-blur-lg min-w-[80px] flex-grow  md:w-auto md:min-w-[120px] md:max-w-[180px] text-center shadow-md"
+            >
+              <p className="text-md md:text-3xl font-bold">{count}+</p>
+              <div className="mt-2 bg-slate-600 h-1 w-full rounded"></div>
+              <p className={` flex items-center justify-center ${background} text-[8px] md:text-lg mt-2`}>
+                <span className="hidden md:block">{prefix}</span>{desc}
+              </p>
+            </div>
+          ))}
+        </div>
+      </>
+    );
+  };
+
   return (
     <>
-      {/* SEO Optimization */}
       <Helmet>
         <title>Home | Marriage Vendors</title>
         <meta
@@ -187,135 +154,111 @@ export default function Home() {
         </script>
       </Helmet>
 
-      <div
-        className="h-[80vh] w-full z-10 relative flex items-center justify-center"
-        style={{
-          backgroundImage: `linear-gradient(360deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), url('/herobg.jpg')`,
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
-        }}
-        aria-hidden="true"
-      >
-        {/* Content Section */}
-        <div className="p-4 mt-48 md:pl-24 space-y-6 rounded-lg z-40 flex justify-center items-center flex-col w-full">
-          <p
-            className="text-3xl md:text-6xl lg:text-7xl font-bold text-white flex flex-col items-center text-center"
-            data-aos="fade-up"
-            data-aos-delay="400"
-            data-aos-once="true"
-          >
-            <span className="text-4xl md:text-4xl lg:text-[66px] mb-3">
-              Your one-stop destination for{" "}
-            </span>
-            <span className="text-[#fecd17]">Dream Wedding</span>
-          </p>
+      <div className="  grid md:pl-14 xl:pl-16   xl:grid-cols-2 grid-cols-1 justify-between   items-center ">
+        {/* Left Section */}
 
-          {/* Mobile Search Button */}
-          <CustomButton
-            leftIcon={<GoSearch size={20} className="text-white" />}
-            text="Search"
-            className="w-1/2 lg:hidden bg-primary px-10 py-2 rounded text-white md:ml-[-50px] lg:ml-0"
-            onClick={handleNavigate}
-          >
-            Discover
-          </CustomButton>
+        <div className="relative  flex flex-col gap-6  text-center items-start md:text-left ">
+          <img
+            className="hidden lg:block absolute -left-16 top-5  "
+            src="/heroSection/Vector1.png"
+            alt="Vector1"
+          />
+
+          {isMobile && (
+            <div className="absolute inset-0 z-[-50]">
+              <img
+                className="w-full h-full object-cover"
+                src={backgroundImg}
+                alt="Background"
+              />
+              {/* Dark Overlay */}
+              <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+            </div>
+          )}
+
+          <div className="text-center w-full my-10 md:text-left md:mt-16">
+            <p
+              className="text-[4vw] md:text-[3vw] lg:text-[3vw] text-white md:text-black font-bold tracking-tight leading-tight"
+              data-aos="fade-up"
+              data-aos-delay="400"
+              data-aos-once="true"
+            >
+              Your one-stop destination for
+            </p>
+            <p
+              className="text-[10vw]  md:text-[6.4vw] lg:text-[6.4vw] lg:mt-2    font-bold tracking-tight custom-animate text-white md:text-primary"
+              data-aos="fade-up"
+              style={
+                isMobile
+                  ? {
+                      WebkitTextStroke: "0.1px pink", // Adjust thickness for clarity
+                      WebkitTextFillColor: "white", // Keeps the inner text white
+                    }
+                  : {}
+              }
+              data-aos-delay="500"
+              data-aos-once="true"
+            >
+              Dream Wedding
+            </p>
+          </div>
+          <section className="ml-0 w-full md:flex-row  justify-start  mx-auto flex-col flex  px-10 md:px-0">
+            {/* Input Group */}
+            <div className="   relative  md:flex justify-start items-center rounded-lg  border focus-within:ring-1 focus-within:ring-primary transition duration-300  ">
+              <VendorSearch setCategory={setCategory}/>
+              <div className="absolute hidden md:block left-1/2 transform -translate-x-1/2   -mt-2">
+                <span className="  text-4xl text-pink-400">|</span>
+              </div>
+
+              <div className="hidden md:block relative overflow-visible z-10">
+                <LocationSearch
+                  customClass={"border-none rounded-none "}
+                  setSearchLocation={setSearchLocation}
+                />
+              </div>
+            </div>
+
+            <div className="md:hidden flex flex-col gap-5 mt-2 md:mt-0">
+              <LocationSearch
+                customClass={"  "}
+                setSearchLocation={setSearchLocation}
+              />
+            </div>
+
+            <CustomButton
+              text="search"
+              className="justify-center bg-primary my-5 md:my-0 md:ml-5 px-10 py-3 text-white  border-none"
+              onClick={handleNavigate}
+            />
+          </section>
+
+          {!isMobile && <div className="w-full">{insightCard()}</div>}
+
+          {/* Stats Section */}
+
+          <img
+            className="relative  hidden lg:block -left-14 bottom-8 "
+            src="/heroSection/Vectorheart.png"
+            alt="Vectorheart"
+          />
         </div>
 
-        {/* Search Section */}
-        <section className="hidden z-50 absolute bottom-0 w-full lg:flex items-center justify-center flex-col gap-1 bg-gradient-to-t from-white bg-opacity-70">
-          {/* Input Group */}
-          <div className="flex gap-4 bg-white p-6 rounded-lg shadow-lg ">
-            {/* Vendor Input */}
-            <div className="w-[400px]">
-              <CustomInput
-                type="text"
-                placeholder="Select Vendor"
-                className="outline-none bg-white w-full focus:border-white"
-                aria-label="Select Vendor"
-                value={search}
-                onChange={handleSearchChange}
-                onFocus={() => setShowSuggestions(true)} 
-                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-                leftIcon={<GoSearch size={20} />}
-              />
-            
-              {showSuggestions && suggestions.length > 0 && (
-                <ul className="absolute bg-white border border-gray-300 rounded w-[400px] shadow-lg mt-1 z-20 overflow-auto max-h-[200px]">
-                  {suggestions.map(({ category, subcategories }, index) => (
-                    <li key={index} className="px-4 py-2  cursor-pointer">
-                      {/* {category} */}
-                      <ul className=" text-sm grid grid-cols-1  gap-2">
-                        {subcategories.map((sub, index) => (
-                          <li
-                            key={index}
-                            className="text-gray-700 hover:bg-gray-200 p-2 rounded-md"
-                            onClick={() => handleSuggestionClick(category, sub)}
-                          >
-                            {sub}
-                          </li>
-                        ))}
-                      </ul>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-
-            {/* Location Input */}
-            <div className="relative w-[400px]">
-              <CustomInput
-                type="text"
-                value={location}
-                placeholder="In Location"
-                className="w-full outline-none focus:border-white bg-white "
-                aria-label="Location"
-                onChange={handleSearchLocationChange}
-               
-                leftIcon={<GoLocation size={20} />}
-              />
-              {showlocationSuggestions &&
-                Object.keys(locationSuggestions).length > 0 && (
-                  <ul className="absolute bg-white border border-gray-300 rounded w-full shadow-lg mt-1 z-20 overflow-auto max-h-[300px]">
-                    {Object.entries(locationSuggestions).map(
-                      ([state, cities]) => (
-                        <li key={state} className="border-b border-gray-200">
-                          
-                          
-                            <ul className=" bg-white">
-                              {cities.map((city, index) => (
-                                <li
-                                  key={index}
-                                  className="px-4 py-2 hover:bg-gray-200 cursor-pointer capitalize"
-                                  onClick={() => handleLocationClick(state,city)}
-                                >
-                                  {city}
-                                </li>
-                              ))}
-                            </ul>
-                         
-                          
-                        </li>
-                      )
-                    )}
-                  </ul>
-                )}
-            </div>
-
-            {/* Discover Button */}
-            <CustomButton
-              text="Discover"
-              className="bg-primary px-10 py-2 rounded text-white"
-              onClick={handleNavigate}
-            >
-              Discover
-            </CustomButton>
+        {/* Right Section */}
+        <div className="hidden relative xl:flex flex-1 justify-center items-center w-full  md:h-[500px] xl:h-full ">
+          <div className="">
+            <CircularAnimation />
           </div>
-        </section>
+          <div className="">
+            {" "}
+            <img
+              className="absolute top-10 right-24 hidden md:block"
+              src="/heroSection/Vectorheartbuzz.png"
+              alt="heartbuzz"
+            />
+          </div>
+        </div>
       </div>
-
-     
-    
+      {isMobile && insightCard()}
     </>
   );
 }

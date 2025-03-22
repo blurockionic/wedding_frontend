@@ -1,18 +1,11 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
-
-
+import { createApi } from "@reduxjs/toolkit/query/react";
+import baseQueryWithReauth from "./baseQueryWithReauth";
 
 // Define the API endpoints
 export const apiAuthSlice = createApi({
   reducerPath: "authSlice",
-  
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.VITE_API_URL}/api/v1`, 
-    credentials: "include",
-  }),
 
-
+  baseQuery: baseQueryWithReauth,
 
   endpoints: (builder) => ({
     login: builder.mutation({
@@ -31,7 +24,6 @@ export const apiAuthSlice = createApi({
       }),
     }),
 
-   
     logout: builder.mutation({
       query: () => ({
         url: `/users/logout`,
@@ -80,7 +72,6 @@ export const apiAuthSlice = createApi({
   }),
 });
 
-
 export const {
   useLoginMutation,
   useGoogleLoginMutation,
@@ -88,7 +79,6 @@ export const {
   useSignupMutation,
   useUpdateUserMutation,
   useReqResetPasswordMutation,
- useChangePasswordMutation,
+  useChangePasswordMutation,
   useDeleteUserMutation,
-  
 } = apiAuthSlice;

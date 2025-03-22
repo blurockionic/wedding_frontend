@@ -1,22 +1,20 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import baseQueryWithReauth from "./baseQueryWithReauth";
 
 export const checklistApiSlice = createApi({
   reducerPath: "checklistApiSlice",
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.VITE_API_URL}/api/v1/checklist`,
-    credentials: "include",
-  }),
+  baseQuery:baseQueryWithReauth,
   endpoints: (builder) => ({
     saveChecklist: builder.mutation({
       query: (checklistData) => ({
-        url: `/save`,
+        url: `/checklist/save`,
         method: "POST",
         body: checklistData,
       }),
     }),
     getChecklist: builder.query({
       query: () => ({
-        url: `/get`,
+        url: `/checklist/get`,
         method: "GET",
       }),
     }),

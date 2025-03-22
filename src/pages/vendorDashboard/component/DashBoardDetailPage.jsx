@@ -6,7 +6,7 @@ import {
   useSwitchServiceMutation,
   useUpdateFAQMutation,
 } from "../../../redux/serviceSlice";
-import ReactMarkdown from "react-markdown";
+
 import Slider from "../../../components/Slider";
 import Mediatab from "./Tabs/Mediatab";
 import FAQsTab from "./Tabs/FAQsTab";
@@ -22,6 +22,8 @@ import { userlogout } from "../../../redux/authSlice";
 import { useDispatch } from "react-redux";
 import { useVendorLogoutMutation } from "../../../redux/vendorSlice";
 import { ToggleSwitch } from "flowbite-react";
+import CustomMArkdown from "../../../components/EditTemplatePreview/CustomMArkdown";
+
 const DashBoardDetailPage = () => {
   const [vendorLogout] = useVendorLogoutMutation();
 
@@ -154,7 +156,7 @@ const DashBoardDetailPage = () => {
         <ToggleSwitch
           className="text-cyan-400 border border-cyan-400 rounded-md  px-4 py-2"
           checked={switch1}
-          label= {switch1 ? "Active" : "Archived"}
+          label={switch1 ? "Active" : "Archived"}
           onChange={handleSwitch}
         />
 
@@ -198,27 +200,30 @@ const DashBoardDetailPage = () => {
           <h1 className="text-4xl font-bold text-foreground capitalize dark:text-white mb-4">
             {service?.service_name || "Service Name"}
           </h1>
-          <p className="text-gray-600 capitalize dark:text-white mb-2">
-            <span className="font-semibold">Service Type:</span>{" "}
-            {service?.service_type}
-          </p>
-          <p className="text-gray-600 capitalize dark:text-white">
-            <span className="font-semibold">Price:</span> ₹
-            {service?.min_price}/{service?.service_unit}
-          </p>
+          <div className="flex justify-items-stretch items-center md:gap-40">
+            <p className="text-gray-600 capitalize dark:text-white  flex flex-col gap-1">
+              <span className="font-thin">Service category:</span>{" "}
+              <span className="border border-primary px-3 py-2 text-primary rounded-md">
+                {service?.service_type}
+              </span>
+            </p>
+            <p className="text-gray-600 capitalize dark:text-white flex flex-col">
+              <span className="font-thin">Price:</span>
 
-          <ReactMarkdown className="prose prose-lg text-gray-800">
-            {service?.description}
-          </ReactMarkdown>
+              <span className="border border-green-300 px-3 py-2 text-primary rounded-md">
+                ₹{service?.min_price}/{service?.service_unit}
+              </span>
+            </p>
+          </div>
         </div>
       </div>
 
       {/* Media Section */}
       <div className="md:px-4">
-        <h2 className="text-2xl font-bold text-foreground capitalize dark:text-white mb-4">
+        <h2 className="text-lg font-thin text-foreground capitalize dark:text-white mb-4">
           Media
         </h2>
-        {service?.media?.[0] &&
+        {service?.media?.[0] ? (
           ["image_urls", "video_urls"].map(
             (mediaType) =>
               service?.media?.[0]?.[mediaType]?.length > 0 && (
@@ -229,91 +234,114 @@ const DashBoardDetailPage = () => {
                   type={mediaType === "image_urls" ? "image" : "video"}
                 />
               )
-          )}
+          )
+        ) : (
+          <>
+            <p className="w-full flex justify-center items-center bg-gray-50 p-4 rounded-lg">
+              No media uploaded!
+            </p>
+          </>
+        )}
+      </div>
+
+      <div className="w-full mt-5 md:px-4">
+        <h2 className="text-lg font-thin text-foreground capitalize dark:text-white mb-4">
+          Description
+        </h2>
+        <CustomMArkdown content={service?.description} />
       </div>
 
       {/* FAQ Section */}
       <div className="mt-8 md:px-4">
-        <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
+        <h2 className="text-lg font-thin text-gray-800 dark:text-white mb-4">
           FAQs
         </h2>
+
         <div>
-          <div>
-            {service?.faqs?.map((faq, index) => (
-              <div
-                key={index}
-                className="flex justify-between items-center border bg-gray-50 dark:bg-gray-800 px-5 py-3 rounded-md mb-3"
-              >
-                <div className="rounded-lg w-full">
-                  {isEditFAQ && index === indexNumber ? (
-                    <form
-                      onSubmit={handleSubmit(handleSaveFAQ)}
-                      className="space-y-2"
-                    >
-                      <input
-                        type="text"
-                        {...register("question", {
-                          required: "Question is required",
-                        })}
-                        placeholder="Edit Question"
-                        className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
-                      />
-                      <textarea
-                        {...register("answer", {
-                          required: "Answer is required",
-                        })}
-                        placeholder="Edit Answer"
-                        rows="3"
-                        className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
-                      ></textarea>
-                      <div className="flex gap-3">
-                        <button
-                          type="submit"
-                          className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
-                        >
-                          Save
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setIsEditFAQ(false);
-                            setIndexNumber(null);
-                            reset();
-                          }}
-                          className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    </form>
-                  ) : (
+          {service?.faqs?.length > 0 ? (
+            <>
+              {service?.faqs?.map((faq, index) => (
+                <div
+                  key={index}
+                  className="flex justify-between items-center border bg-gray-50 dark:bg-gray-800 px-5 py-3 rounded-md mb-3"
+                >
+                  <div className="rounded-lg w-full">
+                    {isEditFAQ && index === indexNumber ? (
+                      <form
+                        onSubmit={handleSubmit(handleSaveFAQ)}
+                        className="space-y-2"
+                      >
+                        <input
+                          type="text"
+                          {...register("question", {
+                            required: "Question is required",
+                          })}
+                          placeholder="Edit Question"
+                          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+                        />
+                        <textarea
+                          {...register("answer", {
+                            required: "Answer is required",
+                          })}
+                          placeholder="Edit Answer"
+                          rows="3"
+                          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+                        ></textarea>
+                        <div className="flex gap-3">
+                          <button
+                            type="submit"
+                            className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+                          >
+                            Save
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setIsEditFAQ(false);
+                              setIndexNumber(null);
+                              reset();
+                            }}
+                            className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </form>
+                    ) : (
+                      <>
+                        <h3 className="capitalize text-lg font-semibold text-gray-800 dark:text-white">
+                          Q{index + 1}: {faq.question}
+                        </h3>
+                        <p className="text-gray-600 dark:text-gray-300">
+                          {faq.answer}
+                        </p>
+                      </>
+                    )}
+                  </div>
+                  <div className="flex gap-5">
                     <>
-                      <h3 className="capitalize text-lg font-semibold text-gray-800 dark:text-white">
-                        Q{index + 1}: {faq.question}
-                      </h3>
-                      <p className="text-gray-600 dark:text-gray-300">
-                        {faq.answer}
-                      </p>
+                      <CiEdit
+                        onClick={() => handleOnUpdateFAQ(index)}
+                        size={24}
+                        className="cursor-pointer text-green-500"
+                      />
+                      <MdDeleteOutline
+                        onClick={() => handleOnDeleteFAQ(index)}
+                        size={24}
+                        className="cursor-pointer text-red-500"
+                      />
                     </>
-                  )}
+                  </div>
                 </div>
-                <div className="flex gap-5">
-                  <>
-                    <CiEdit
-                      onClick={() => handleOnUpdateFAQ(index)}
-                      size={24}
-                      className="cursor-pointer text-green-500"
-                    />
-                    <MdDeleteOutline
-                      onClick={() => handleOnDeleteFAQ(index)}
-                      size={24}
-                      className="cursor-pointer text-red-500"
-                    />
-                  </>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </>
+          ) : (
+            <>
+              <p className="w-full flex justify-center items-center bg-gray-50 p-4 rounded-lg">
+                No FAQs updated!
+              </p>
+            </>
+          )}
         </div>
       </div>
       <div className="mt-8 md:px-4 w-full">

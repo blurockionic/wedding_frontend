@@ -9,7 +9,6 @@ import OutletPage from "./pages/OutletPage.jsx";
 const LandingPage = lazy(() => import("./pages/LandingPage.jsx"));
 const Signup = lazy(() => import("./pages/auth/Signup.jsx"));
 const Login = lazy(() => import("./pages/auth/Login.jsx"));
-const ServicesPage = lazy(() => import("./pages/ServicePage.jsx"));
 const ServiceDetail = lazy(() => import("./pages/serviceDeatails.jsx"));
 
 const VendorRegistration = lazy(() =>
@@ -23,6 +22,7 @@ import { wrap } from "framer-motion";
 const Billing = lazy(() => import("./pages/vendorDashboard/Billing.jsx"));
 
 const Checklist = lazy(() => import("./pages/userDashboard/checklist/Checklist.jsx"));
+const Admin = lazy(() => import("./pages/admin/Dashboard.jsx"));
 
 const Blog = lazy(() => import("./pages/blog-section/blog-section/Blog.jsx"));
 const BlogDashboard = lazy(() => import("./pages/blog-section/admin-section/BlogDashboard.jsx"));
@@ -101,10 +101,11 @@ const View_1 = lazy(() => import("./pages/ViewTemplate/View_1.jsx"));
 const Payment = lazy(() => import("./pages/InvitationPayment/Payment.jsx"));
 const Preview = lazy(() => import("./pages/EditTemplate/Preview.jsx"));
 const Preview_1 = lazy(() => import("./pages/EditTemplate/Preview_1.jsx"));
-const Preview_2 = lazy(() => import("./pages/EditTemplate/Preview_2.jsx"));
+const Update_Editor = lazy(() => import("./pages/EditTemplate/Update_Editor.jsx"));
 const Card = lazy(() => import("./pages/InvitationCard/Card.jsx"));
 const Guest = lazy(() => import("./pages/AddGuests/Guest.jsx"));
 const Modify = lazy(() => import("./pages/UpdatedTemplate/Modify.jsx"));
+const Editor = lazy(() => import("./pages/editor/Editor.jsx"));
 
 
 const WeddingDairy  = lazy(()=> import("./pages/wedding-plan/WeddingPlan.jsx"))
@@ -131,14 +132,20 @@ const router = createBrowserRouter([
       // { path: "/", element: wrapWithSuspense(Blog)},
 
       { path: "/", element: wrapWithSuspense(LandingPage) },
+      { path: "/admin", element: wrapWithSuspense(Admin) },
       { path: "/signup", element: wrapWithSuspense(Signup) },
       { path: "/templates", element: wrapWithSuspense(Template) },
       { path: "/browse", element: wrapWithSuspense(Review) },
       { path: "/card", element: wrapWithSuspense(Card) },
       { path: "/guests", element: wrapWithSuspense(Guest) },
 
+      //editor
+      { path: "/editor", element: wrapWithSuspense(Editor) },
+
       { path: "/guests/see-template/template", element: wrapWithSuspense(Modify) },
-      { path: "/guests/see-template/template1", element: wrapWithSuspense(Modify) },
+
+      // { path: "/guests/see-template/template1", element: wrapWithSuspense(Modify_1) },
+
 
       {
         path: "/guests/see-template/:template",
@@ -148,12 +155,12 @@ const router = createBrowserRouter([
       { path: "/payment", element: wrapWithSuspense(Payment) },
       { path: "/preview", element: wrapWithSuspense(Preview) },
       { path: "/preview_1", element: wrapWithSuspense(Preview_1) },
-      { path: "/preview_2", element: wrapWithSuspense(Preview_2) },
+      { path: "/update_editor", element: wrapWithSuspense(Update_Editor) },
       { path: "/view", element: wrapWithSuspense(View) },
       { path: "/view_1", element: wrapWithSuspense(View_1) },
       { path: "/login", element: wrapWithSuspense(Login) },
       { path: "/contactus", element: wrapWithSuspense(ContactUs) },
-      { path: "/weddingplan", element: wrapWithSuspense(WeddingDairy) },
+
       // dynamic route for category
       { path: "/all", element: wrapWithSuspense(AllCategories) },
       { path: "/all/:category", element: wrapWithSuspense(Category) },
@@ -198,7 +205,6 @@ const router = createBrowserRouter([
         path: "vendor-change-password",
         element: wrapWithSuspense(VendorChangePassword),
       },
-      { path: "/services", element: wrapWithSuspense(ServicesPage) },
       { path: "/service/:id", element: wrapWithSuspense(ServiceDetail) },
 
       // Protect user admin routes
@@ -215,7 +221,8 @@ const router = createBrowserRouter([
           { path: "", index: true, element: wrapWithSuspense(UserProfile) },
           { path: "favoriteList", element: wrapWithSuspense(FavoriteListPage) },
           { path: "checklist", element: wrapWithSuspense(Checklist) },
-          { path: "weddingbudget", element: wrapWithSuspense(WeddingBudgetCalculator)}
+          { path: "weddingbudget", element: wrapWithSuspense(WeddingBudgetCalculator)},
+          { path: "weddingplan", element: wrapWithSuspense(WeddingDairy) },
         ],
       },
 
