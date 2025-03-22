@@ -40,7 +40,34 @@ export const adminApiSlice = createApi({
         method: "GET",
       }),
     }),
+    giveAdmin: builder.mutation({
+      query: (email) => ({
+        url: `/give-admin/${email}`,
+        method: "PATCH",
+      }),
+    }),
+    revokeAdmin: builder.mutation({
+      query: (email) => ({
+        url: `/revoke-admin/${email}`,
+        method: "PATCH",
+      }),
+    }),
+    giveSuperAdmin: builder.mutation({
+      query: (email) => ({
+        url: `/give-superadmin/${email}`,
+        method: "PATCH",
+      }),
+    }),
   }),
 });
 
-export const { useGetGeneralAnalyticsQuery, useSearchVendorsMutation, useSearchServicesMutation, useSearchUsersMutation, useGetTransactionsQuery } = adminApiSlice;
+export const { 
+  useGetGeneralAnalyticsQuery, 
+  useSearchVendorsMutation, 
+  useSearchServicesMutation, 
+  useSearchUsersMutation, 
+  useGetTransactionsQuery, 
+  useGiveAdminMutation, 
+  useRevokeAdminMutation, 
+  useGiveSuperAdminMutation, 
+} = adminApiSlice;

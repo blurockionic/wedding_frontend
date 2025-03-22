@@ -28,6 +28,9 @@ const AdminVendorSearch = lazy(() => import("./pages/admin/VendorSearch.jsx"));
 const AdminServiceSearch = lazy(() => import("./pages/admin/ServiceSearch.jsx"));
 const AdminUserSearch = lazy(() => import("./pages/admin/UserSearch.jsx"));
 const AdminTransactions = lazy(() => import("./pages/admin/Transactions.jsx"));
+const AdminGive = lazy(() => import("./pages/admin/GiveAdmin.jsx"));
+const AdminRevoke = lazy(() => import("./pages/admin/RevokeAdmin.jsx"));
+const AdminGiveSuper = lazy(() => import("./pages/admin/GiveSuperAdmin.jsx"));
 
 const Setting = lazy(() => import("./pages/vendorDashboard/Setting.jsx"));
 const ContactUs = lazy(() => import("./pages/contactus/ContactUs.jsx"));
@@ -134,6 +137,9 @@ const router = createBrowserRouter([
           { path: "serviceSearch", element: wrapWithSuspense(AdminServiceSearch) },
           { path: "userSearch", element: wrapWithSuspense(AdminUserSearch) },
           { path: "transactions", element: wrapWithSuspense(AdminTransactions) },
+          { path: "giveAdmin", element: wrapWithSuspense(AdminGive) },
+          { path: "revokeAdmin", element: wrapWithSuspense(AdminRevoke) },
+          { path: "giveSuperAdmin", element: wrapWithSuspense(AdminGiveSuper) },
           // { path: "favoriteList", element: wrapWithSuspense(FavoriteListPage) },
           // { path: "checklist", element: wrapWithSuspense(Checklist) },
           // { path: "weddingbudget", element: wrapWithSuspense(WeddingBudgetCalculator)}
@@ -210,7 +216,7 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute
             component={() => wrapWithSuspense(UserDashboard)}
-            allowedRoles={["user", "admin"]}
+            allowedRoles={["user", "admin", "super_admin"]}
           />
         ), 
         // Protected route
@@ -228,7 +234,7 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute
             component={() => wrapWithSuspense(VendorDashboard)}
-            allowedRoles={["vendor", "admin"]}
+            allowedRoles={["vendor", "admin", "super_admin"]}
           />
         ), // Protected route
         children: [

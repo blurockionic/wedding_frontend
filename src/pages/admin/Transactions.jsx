@@ -6,7 +6,7 @@ export default function Transactions() {
   const { data: transactions, isLoading, error } = useGetTransactionsQuery();
 
   if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  if (error) return <p>Error: {error.data.message}</p>;
 
   console.log(transactions);
   return (

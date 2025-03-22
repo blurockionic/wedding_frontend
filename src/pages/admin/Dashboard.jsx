@@ -3,11 +3,14 @@ import { useLogoutMutation } from "../../redux/apiSlice.auth";
 import { useDispatch } from "react-redux";
 import { userlogout } from "../../redux/authSlice";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const AdminDashBoard = () => {
   const navigate = useNavigate();
   const [logout] = useLogoutMutation();
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
+  const userRole = user?.role?.toLowerCase();
 
   // Array of links and their paths
   const navItems = [
@@ -17,8 +20,13 @@ const AdminDashBoard = () => {
     { name: "User Search", path: "userSearch" },
     { name: "Bill & transactions", path: "transactions" },
     { name: "Reports", path: "" },
-    { name: "Give Admin", path: "" },
   ];
+
+  if (userRole === "super_admin") {
+    navItems.push({ name: "Give Admin", path: "giveAdmin" });
+    navItems.push({ name: "Revoke Admin", path: "revokeAdmin" });
+    navItems.push({ name: "Give Super Admin", path: "giveSuperAdmin" });
+  }
 
   const handleLogout = async () => {
     try {

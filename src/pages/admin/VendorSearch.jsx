@@ -52,7 +52,7 @@ export default function VendorSearch() {
       </form>
 
       {isLoading && <p>Loading...</p>}
-      {error && <p>Error: {error.message}</p>}
+      {error && <p>Error: {error.data.message}</p>}
 
       {results.length > 0 && (
         <table className="min-w-full bg-white">
