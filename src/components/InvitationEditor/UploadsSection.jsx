@@ -31,7 +31,7 @@ const UploadsSection = ({ onImageUpload }) => {
   };
 
   return (
-    <div className="h-full bg-gray-100 text-black overflow-y-auto md:w-72 w-full p-4">
+    <div className="h-screen bg-gray-100 text-black overflow-y-auto w-full p-4 md:-mt-[50px]">
       <div className="mb-4">
         <input type="text" placeholder="Search uploads..." className="w-full p-2 rounded-full border border-gray-300 focus:outline-none focus:border-purple-500" />
         <div className="flex items-center gap-2">
@@ -55,9 +55,9 @@ const UploadsSection = ({ onImageUpload }) => {
           </button>
         ))}
       </div>
-      <div className="border-2 border-dashed border-gray-400 rounded-lg p-6 flex flex-col items-center justify-center text-center h-64" onDrop={handleDrop} onDragOver={handleDragOver}>
+      <div className="border-2 border-dashed border-gray-400 rounded-lg p-6 flex flex-col items-center justify-center text-center h-84" onDrop={handleDrop} onDragOver={handleDragOver}>
         <p className="text-gray-600 mb-4">Drag media here to upload or connect an account...</p>
-        <div className="flex gap-6">
+        <div className="flex gap-1 flex-wrap">
           <button className="p-2 hover:bg-gray-200 rounded-full"><FcGoogle className="w-8 h-8" /></button>
           <button className="p-2 hover:bg-gray-200 rounded-full"><SiDropbox className="w-8 h-8 text-blue-500" /></button>
           <button className="p-2 hover:bg-gray-200 rounded-full"><FaGoogleDrive className="w-8 h-8 text-blue-600" /></button>

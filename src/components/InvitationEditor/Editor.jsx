@@ -16,6 +16,7 @@ const Editor = ({
   setSelectedElement,
   onEditorClick,
   onElementSelect,
+  backgroundImage,
 }) => {
   const updateTextField = (field, value) => {
     setInvitationText((prev) => ({
@@ -33,8 +34,17 @@ const Editor = ({
     if (selectedElement === field) setSelectedElement(null);
   };
 
+  // Outer div background style (replaces bg-gray-300)
+  const outerBackgroundStyle = backgroundImage
+    ? { backgroundImage: `url(${backgroundImage})`, backgroundSize: "cover", backgroundPosition: "center" }
+    : { backgroundColor: "#D1D5DB" }; // Tailwind's gray-300 hex value
+
   return (
-    <div className="flex-1 p-4 md:p-8 overflow-y-auto bg-gray-300" onClick={onEditorClick}>
+    <div
+      className="flex-1 p-4 md:p-8 overflow-y-auto h-[91.6vh]"
+      style={outerBackgroundStyle}
+      onClick={onEditorClick}
+    >
       <div
         ref={editorRef}
         className="max-w-[90vw] md:max-w-[63vh] h-[65vh] md:h-[95vh] mx-auto rounded-xl p-6 md:p-12 shadow-2xl border border-white/10 relative overflow-hidden"
@@ -163,18 +173,24 @@ const Editor = ({
           ))}
           {customTextElements.map((element, index) => (
             <CustomTextElement
-              key={index}
+              key={element.id || index}
+              id={element.id || `custom-${index}`}
               text={element.text}
               onChange={(newText) => {
                 const updatedElements = [...customTextElements];
                 updatedElements[index].text = newText;
                 setCustomTextElements(updatedElements);
               }}
-              onRemove={() => setCustomTextElements(customTextElements.filter((_, i) => i !== index))}
+              onRemove={() => {
+                setCustomTextElements(customTextElements.filter((_, i) => i !== index));
+                if (selectedElement === (element.id || `custom-${index}`)) setSelectedElement(null);
+              }}
               initialPosition={element.initialPosition}
               index={index}
               textStyle={element.style}
               defaultSize={element.defaultSize}
+              isSelected={selectedElement === (element.id || `custom-${index}`)}
+              onSelect={() => onElementSelect(element.id || `custom-${index}`)}
             />
           ))}
         </div>

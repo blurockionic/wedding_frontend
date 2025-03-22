@@ -2,15 +2,24 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import EditableText from "./EditableText";
 
-const CustomTextElement = ({ text, onChange, onRemove, initialPosition, index, textStyle, defaultSize }) => {
+const CustomTextElement = ({
+  id,
+  text,
+  onChange,
+  onRemove,
+  initialPosition,
+  index,
+  textStyle,
+  defaultSize,
+  isSelected,
+  onSelect,
+}) => {
   const [position, setPosition] = useState(initialPosition || { x: 100, y: 100 });
   const [size, setSize] = useState(defaultSize || 16);
-  const [isSelected, setIsSelected] = useState(false);
   const [value, setValue] = useState(text || "Enter text here");
 
   const handleDragEnd = (e, info) => {
     setPosition({ x: position.x + info.delta.x, y: position.y + info.delta.y });
-    setIsSelected(true);
   };
 
   const handleTextChange = (newText) => {
@@ -24,10 +33,10 @@ const CustomTextElement = ({ text, onChange, onRemove, initialPosition, index, t
       dragMomentum={false}
       onDragEnd={handleDragEnd}
       onClick={(e) => {
-        e.stopPropagation();
-        setIsSelected(!isSelected);
+        e.stopPropagation(); // Prevent editor click from deselecting
+        onSelect(); // Trigger selection to open StyleOptions
       }}
-      style={{ x: position.x, y: position.y, position: "absolute", zIndex: 20 , transformOrigin: "center" }}
+      style={{ x: position.x, y: position.y, position: "absolute", zIndex: 20, transformOrigin: "center" }}
       className="relative"
     >
       <EditableText
@@ -39,7 +48,15 @@ const CustomTextElement = ({ text, onChange, onRemove, initialPosition, index, t
       />
       {isSelected && (
         <div className="absolute top-full left-0 w-full space-y-2">
-          <input type="range" min="10" max="50" value={size} onChange={(e) => setSize(Number(e.target.value))} onClick={(e) => e.stopPropagation()} className="w-full accent-rose-400" />
+          <input
+            type="range"
+            min="10"
+            max="50"
+            value={size}
+            onChange={(e) => setSize(Number(e.target.value))}
+            onClick={(e) => e.stopPropagation()} // Prevent range click from bubbling
+            className="w-full accent-rose-400"
+          />
         </div>
       )}
     </motion.div>
