@@ -1,12 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import baseQueryWithReauth from "./baseQueryWithReauth";
 
 // Define the payment API with RTK Query
 export const paymentApi = createApi({
   reducerPath: "paymentApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.VITE_API_URL}/api/v1/`, // Backend URL
-    credentials: "include", 
-  }),
+  baseQuery:baseQueryWithReauth,
 
   endpoints: (builder) => ({
     // Endpoint to create an order

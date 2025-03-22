@@ -1,11 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import baseQueryWithReauth from "./baseQueryWithReauth";
 
 export const uploadSlice = createApi({
   reducerPath: "uploadSlice",
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.VITE_API_URL}/api/v1`,
-    credentials: "include",
-  }),
+  baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     upl: builder.mutation({
       query: (data) => ({

@@ -1,11 +1,9 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import baseQueryWithReauth from "./baseQueryWithReauth";
 
 export const adminApiSlice = createApi({
   reducerPath: "adminApiSlice",
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.VITE_API_URL}/api/v1/`,
-    credentials: "include",
-  }),
+  baseQuery:baseQueryWithReauth,
   endpoints: (builder) => ({
     getGeneralAnalytics: builder.query({
       query: () => ({
