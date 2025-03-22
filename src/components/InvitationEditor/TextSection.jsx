@@ -31,24 +31,17 @@ const TextSection = ({ addCustomTextElement }) => {
       lineHeight: textEffects.lineHeight,
     };
     const finalText = textEffects.emoji ? `${text} ${textEffects.emoji}` : text;
-    addCustomTextElement(finalText, size, style);
+    addCustomTextElement(finalText, size, style, `custom-text-${Date.now()}`);
   };
 
   return (
-    <div className="h-full bg-white text-black overflow-y-auto md:w-72 w-full">
+    <div className="h-screen bg-white text-black overflow-y-auto w-full md:-mt-[50px]">
       <div className="p-4">
         <div className="mb-4">
-          <input
-            type="text"
-            placeholder=" Search fonts....."
-            className="w-full p-2 rounded-full border border-gray-300 focus:outline-none focus:border-pink-500"
-          />
+          <input type="text" placeholder=" Search fonts....." className="w-full p-2 rounded-full border border-gray-300 focus:outline-none focus:border-pink-500" />
         </div>
         <div className="mb-4">
-          <button
-            className="w-full bg-rose-600 text-white py-2 rounded-lg hover:bg-pink-700 transition-colors"
-            onClick={() => applyTextStyle("Enter text here", 16)}
-          >
+          <button className="w-full bg-rose-600 text-white py-2 rounded-lg hover:bg-pink-700 transition-colors" onClick={() => applyTextStyle("Enter text here", 16)}>
             Add a text box
           </button>
         </div>

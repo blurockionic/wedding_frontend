@@ -14,21 +14,7 @@ import image_2 from "../../../public/image_2.jpg";
 import image_16 from "../../../public/image_6.jpg";
 
 const templates = [
-  {
-    id: 1,
-    image: image_7,
-    name: "Classic Elegance",
-    invitationData: {
-      eventHeading: "WE INVITE YOU",
-      eventSubheading: "TO CELEBRATE OUR WEDDING",
-      groomName: "Aarav",
-      brideName: "Aarohi",
-      eventDate: "Saturday, May 24th",
-      weddingTime: "2:00 PM",
-      weddingLocation: "Grace Church, Greentown",
-      description: "A reception will follow immediately after the ceremony.",
-    },
-  },
+  { id: 1, image: image_7, name: "Classic Elegance", invitationData: { eventHeading: "WE INVITE YOU", eventSubheading: "TO CELEBRATE OUR WEDDING", groomName: "Aarav", brideName: "Aarohi", eventDate: "Saturday, May 24th", weddingTime: "2:00 PM", weddingLocation: "Grace Church, Greentown", description: "A reception will follow immediately after the ceremony." } },
   { id: 2, image: image_5, name: "Modern Romance" },
   { id: 3, image: image_2, name: "Rustic Charm" },
   { id: 4, image: image_16, name: "Garden Party" },
@@ -66,6 +52,12 @@ const designs = [
   { id: 12, type: "flower", src: "https://media-public.canva.com/vXATQ/MAFoZRvXATQ/1/wm_s.png", name: "Yellow Rose" },
   { id: 13, type: "flower", src: "https://media-public.canva.com/BrHgo/MAFoZSBrHgo/1/wm_s.png", name: "White Rose" },
   { id: 14, type: "flower", src: "https://media-public.canva.com/MAAvXYuX-EI/2/screen.png", name: "Calendula" },
+  { id: 15, type: "wallpaper", src: "https://cdn.pixabay.com/photo/2022/11/10/00/57/lake-7581726_1280.jpg", name: "Floral Elegance" },
+  { id: 16, type: "wallpaper", src: "https://cdn.pixabay.com/photo/2022/12/22/18/48/summer-7672782_1280.jpg", name: "Pastel Waves" },
+  { id: 17, type: "wallpaper", src: "https://cdn.pixabay.com/photo/2022/10/05/00/52/fantasy-7499397_1280.jpg", name: "Golden Leaves" },
+  { id: 18, type: "wallpaper", src: "https://cdn.pixabay.com/photo/2015/06/19/21/24/avenue-815297_960_720.jpg", name: "Soft Sky" },
+  { id: 19, type: "wallpaper", src: "https://images.unsplash.com/photo-1513151233558-d860c5398176", name: "Pink Bloom" },
+  { id: 20, type: "wallpaper", src: "https://cdn.pixabay.com/photo/2022/08/09/16/19/sea-7375377_960_720.jpg", name: "Abstract Art" },
 ];
 
 const UpdateImageEditor = () => {
@@ -82,6 +74,7 @@ const UpdateImageEditor = () => {
   const [customTextElements, setCustomTextElements] = useState([]);
   const [isStyleOptionsOpen, setIsStyleOptionsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState(null);
+  const [backgroundImage, setBackgroundImage] = useState(null);
 
   const editorRef = useRef(null);
 
@@ -114,7 +107,8 @@ const UpdateImageEditor = () => {
     setDesignElements([]);
     setCustomTextElements([]);
     setSelectedElement(null);
-    setIsStyleOptionsOpen(false); 
+    setIsStyleOptionsOpen(false);
+    setBackgroundImage(null);
   };
 
   const handleSectionToggle = (section) => {
@@ -133,16 +127,20 @@ const UpdateImageEditor = () => {
     setIsStyleOptionsOpen(true);
   };
 
+  const handleWallpaperSelect = (wallpaperUrl) => {
+    setBackgroundImage(wallpaperUrl);
+  };
+
   const popupVariants = {
     hidden: { opacity: 0, scale: 0.95, y: 20, transition: { duration: 0.2 } },
     visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.2 } },
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-white">
-      <header className="py-1 px-4 md:py-1 md:px-8 flex items-center justify-between border-b border-white/10 md:bg-gray-300 bg-white">
-        <div className="flex items-center ">
-          <h1 className="text-xl md:text-2xl font-bold text-[#F20574] bg-white"></h1>
+    <div className="min-h-screen text-white">
+      <header className="py-1 px-4 md:py-1 md:px-8 flex items-center justify-between border-b border-white/10 bg-gray-300">
+        <div className="flex items-center gap-2">
+          <h1 className="text-xl md:text-2xl font-bold text-[#F20574]"></h1>
         </div>
         <button
           className="px-11 py-2 bg-[#F20574] hover:bg-rose-600 rounded-md flex items-center gap-2 transition-colors"
@@ -151,7 +149,6 @@ const UpdateImageEditor = () => {
           Download
         </button>
       </header>
-      
       <div className="flex flex-col md:flex-row h-[calc(100vh-5rem)]">
         <Sidebar activeSection={activeSection} handleSectionToggle={handleSectionToggle} />
 
@@ -170,12 +167,13 @@ const UpdateImageEditor = () => {
                   <ElementsSection
                     designs={designs}
                     addDesignElement={(design) => setDesignElements([...designElements, { ...design, initialPosition: { x: 50, y: -250 } }])}
+                    onWallpaperSelect={handleWallpaperSelect}
                   />
                 )}
                 {activeSection === "text" && (
                   <TextSection
-                    addCustomTextElement={(text, size, style) =>
-                      setCustomTextElements([...customTextElements, { text, initialPosition: { x: 100, y: 100 }, defaultSize: size, style }])
+                    addCustomTextElement={(text, size, style, id) =>
+                      setCustomTextElements([...customTextElements, { text, initialPosition: { x: 100, y: 100 }, defaultSize: size, style, id }])
                     }
                   />
                 )}
@@ -191,7 +189,7 @@ const UpdateImageEditor = () => {
                 exit="hidden"
                 variants={popupVariants}
               >
-                <motion.div className="bg-white w-full max-w-md max-h-[80vh] rounded-xl shadow-2xl overflow-hidden relative">
+                <motion.div className="bg-white w-full max-w-md max-h-[80vh] rounded-xl shadow-2xl overflow-y-auto relative">
                   <button
                     className="absolute top-3 right-3 p-1 rounded-full bg-rose-500 hover:bg-rose-600 transition-colors z-10"
                     onClick={() => setActiveSection(null)}
@@ -210,12 +208,13 @@ const UpdateImageEditor = () => {
                       <ElementsSection
                         designs={designs}
                         addDesignElement={(design) => setDesignElements([...designElements, { ...design, initialPosition: { x: 50, y: -250 } }])}
+                        onWallpaperSelect={handleWallpaperSelect}
                       />
                     )}
                     {activeSection === "text" && (
                       <TextSection
-                        addCustomTextElement={(text, size, style) =>
-                          setCustomTextElements([...customTextElements, { text, initialPosition: { x: 100, y: 100 }, defaultSize: size, style }])
+                        addCustomTextElement={(text, size, style, id) =>
+                          setCustomTextElements([...customTextElements, { text, initialPosition: { x: 100, y: 100 }, defaultSize: size, style, id }])
                         }
                       />
                     )}
@@ -242,6 +241,7 @@ const UpdateImageEditor = () => {
           setSelectedElement={setSelectedElement}
           onEditorClick={handleEditorClick}
           onElementSelect={handleElementSelect}
+          backgroundImage={backgroundImage}
         />
 
         <StyleOptions
@@ -263,14 +263,22 @@ const UpdateImageEditor = () => {
           animations={animations}
           updateSelectedElementStyle={(newStyle) => {
             if (selectedElement) {
-              setInvitationText((prev) => ({
-                ...prev,
-                [selectedElement]: {
-                  ...prev[selectedElement],
-                  style: { ...prev[selectedElement].style, ...newStyle },
-                  animation: selectedAnimation.variant,
-                },
-              }));
+              if (invitationText[selectedElement]) {
+                setInvitationText((prev) => ({
+                  ...prev,
+                  [selectedElement]: {
+                    ...prev[selectedElement],
+                    style: { ...prev[selectedElement].style, ...newStyle },
+                    animation: selectedAnimation.variant,
+                  },
+                }));
+              } else {
+                setCustomTextElements((prev) =>
+                  prev.map((el) =>
+                    el.id === selectedElement ? { ...el, style: { ...el.style, ...newStyle } } : el
+                  )
+                );
+              }
             }
           }}
         />

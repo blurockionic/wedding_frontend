@@ -1,10 +1,11 @@
 import React, { useRef } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
-const ElementsSection = ({ designs, addDesignElement }) => {
+const ElementsSection = ({ designs, addDesignElement, onWallpaperSelect }) => {
   const flowerRef = useRef(null);
   const borderRef = useRef(null);
   const simpleRef = useRef(null);
+  const wallpaperRef = useRef(null);
 
   const scrollLeft = (ref) => ref.current.scrollBy({ left: -200, behavior: "smooth" });
   const scrollRight = (ref) => ref.current.scrollBy({ left: 200, behavior: "smooth" });
@@ -12,9 +13,10 @@ const ElementsSection = ({ designs, addDesignElement }) => {
   const flowers = designs.filter((design) => design.type === "flower");
   const borders = designs.filter((design) => design.type === "border");
   const simples = designs.filter((design) => design.type === "simple");
+  const wallpapers = designs.filter((design) => design.type === "wallpaper");
 
   return (
-    <div className="h-full text-black overflow-y-auto md:w-72 bg-white w-full">
+    <div className="h-screen text-black overflow-y-auto bg-white w-full md:-mt-[50px]">
       <div className="p-4">
         <div className="mb-4">
           <input
@@ -79,6 +81,26 @@ const ElementsSection = ({ designs, addDesignElement }) => {
               ))}
             </div>
             <button onClick={() => scrollRight(simpleRef)} className="absolute -right-3 p-1 bg-gray-500 text-white rounded-full hover:bg-rose-600 transition-transform transform hover:scale-110 z-10 -mt-4">
+              <FaArrowRight className="w-3 h-3" />
+            </button>
+          </div>
+        </div>
+        {/* Wallpapers Slider */}
+        <div className="mb-6">
+          <h3 className="text-lg font-semibold mb-2 text-purple-500">Wallpapers</h3>
+          <div className="relative flex items-center">
+            <button onClick={() => scrollLeft(wallpaperRef)} className="absolute -left-2 p-1 bg-gray-500 text-white rounded-full hover:bg-rose-600 transition-transform transform hover:scale-110 z-10 -mt-4">
+              <FaArrowLeft className="w-3 h-3" />
+            </button>
+            <div ref={wallpaperRef} className="flex space-x-2 overflow-hidden pb-2 scroll-smooth w-full px-10">
+              {wallpapers.map((design) => (
+                <div key={design.id} className="relative rounded-lg overflow-hidden cursor-pointer transition-transform hover:scale-[1.02] bg-white/10 p-2 flex-shrink-0" onClick={() => onWallpaperSelect(design.src)}>
+                  <img src={design.src} alt={design.name} className="w-16 h-16 object-cover" />
+                  <span className="text-xs text-center block mt-1">{design.name}</span>
+                </div>
+              ))}
+            </div>
+            <button onClick={() => scrollRight(wallpaperRef)} className="absolute -right-3 p-1 bg-gray-500 text-white rounded-full hover:bg-rose-600 transition-transform transform hover:scale-110 z-10 -mt-4">
               <FaArrowRight className="w-3 h-3" />
             </button>
           </div>
