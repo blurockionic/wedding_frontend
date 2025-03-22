@@ -10,6 +10,7 @@ import { uploadSlice } from "./uploadSlice";
 import { vendorApi } from "./vendorSlice";
 import { paymentApi } from "./payment";
 import { checklistApiSlice } from "./checklistApiSlice";
+import { blogApiSlice } from "./blogSlice";
 
 import { apiGuestSlice } from "./apiSlice.guest";
 import { userDataTemplateSlice } from "./TemplateSlice";
@@ -29,8 +30,8 @@ const rootReducer = combineReducers({
   [checklistApiSlice.reducerPath]: checklistApiSlice.reducer,
   [apiGuestSlice.reducerPath]:apiGuestSlice.reducer,
   [userDataTemplateSlice.reducerPath]:userDataTemplateSlice.reducer,
-  [weddingPlanForEventApi.reducerPath  ]:weddingPlanForEventApi.reducer
-
+  [weddingPlanForEventApi.reducerPath  ]:weddingPlanForEventApi.reducer,
+  [blogApiSlice.reducerPath  ]:blogApiSlice.reducer
 });
 
 // Configure Persist
@@ -57,7 +58,8 @@ export const store = configureStore({
       paymentApi.middleware,
       checklistApiSlice.middleware,
       userDataTemplateSlice.middleware,
-      weddingPlanForEventApi.middleware
+      weddingPlanForEventApi.middleware,
+      blogApiSlice.middleware
       
     ),
 });

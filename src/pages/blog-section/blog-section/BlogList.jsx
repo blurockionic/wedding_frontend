@@ -1,61 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useGetAllBlogsQuery } from "../../../redux/blogSlice.js";
 
 const BlogList = () => {
+  const { data, error, isLoading } = useGetAllBlogsQuery();
   const [blogs, setBlogs] = useState([]);
 
   useEffect(() => {
-    // Fetch blog posts from an API or use hard-coded data
-    const fetchBlogs = async () => {
-      // Example hard-coded blog data
-      const blogData = [
-        {
-          id: 1,
-          title: 'My First Blog Post',
-          excerpt: 'This is a summary of my first blog post...',
-          coverImage: 'https://via.placeholder.com/600x300',
-          date: '2025-01-01',
-          hashtags: ['first', 'blog'],
-          readTime: '5 min read'
-        },
-        {
-          id: 2,
-          title: 'Another Interesting Post',
-          excerpt: 'Here is a short description of another interesting post...',
-          coverImage: 'https://via.placeholder.com/600x300',
-          date: '2025-02-15',
-          hashtags: ['interesting', 'post'],
-          readTime: '8 min read'
-        },
-        {
-          id: 3,
-          title: 'Web Development Trends 2025',
-          excerpt: 'Explore the latest trends in web development that will dominate in 2025...',
-          coverImage: 'https://via.placeholder.com/600x300',
-          date: '2025-03-01',
-          hashtags: ['webdev', 'trends', 'tech'],
-          readTime: '10 min read'
-        },
-        // Add more blog posts as needed
-      ];
+    if (data && data.success) {
+      const transformedBlogs = data.data.map(blog => ({
+        id: blog.id,
+        title: blog.title,
+        coverImage: 'https://via.placeholder.com/600x300',
+        date: blog.createdAt,
+        hashtags: blog.tags,
+        readTime: `${Math.ceil(blog.content.length / 500)} min read`
+      }));
+      setBlogs(transformedBlogs);
+    }
+  }, [data]);
 
-      setBlogs(blogData);
-    };
-
-    fetchBlogs();
-  }, []);
-
-  // Sort blogs by date to find the latest blog
   const sortedBlogs = blogs.sort((a, b) => new Date(b.date) - new Date(a.date));
   const heroBlog = sortedBlogs[0];
-  // Limit to only 2 articles in Latest Articles section
-  const otherBlogs = sortedBlogs.slice(1, 3); 
+  const otherBlogs = sortedBlogs.slice(1);
 
-  // Format date function
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
+
+  if (isLoading) {
+    return <div className="text-center py-12">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center py-12 text-red-500">Error loading blogs: {error.message}</div>;
+  }
 
   return (
     <div className="bg-white min-h-screen py-12 px-4 sm:px-6">
@@ -82,13 +62,9 @@ const BlogList = () => {
                 <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4 leading-tight">
                   {heroBlog.title}
                 </h2>
-                
-                <p className="text-xl text-gray-200 mb-6 max-w-2xl">
-                  {heroBlog.excerpt}
-                </p>
-                
+
                 <Link 
-                  to={`/blog/${heroBlog.id}`} 
+                  to={`/blogs/${heroBlog.id}`} // Dynamic link to the blog post
                   className="inline-flex items-center px-6 py-3 rounded-lg bg-[#f20574] text-white font-medium text-lg transition-all hover:bg-[#d30062] hover:shadow-lg self-start"
                 >
                   Read Article
@@ -101,14 +77,7 @@ const BlogList = () => {
           </div>
         )}
 
-        {/* Section Title for Other Posts */}
-        <div className="flex items-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-800">Latest Articles</h2>
-          <div className="flex-grow mx-4 h-px bg-gradient-to-r from-[#f20574] to-transparent"></div>
-          <span className="text-sm text-gray-500 whitespace-nowrap">Max 2 articles</span>
-        </div>
-
-        {/* Other Blog Posts Grid - limited to 2 articles */}
+        {/* Other Blog Posts Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {otherBlogs.map(blog => (
             <div 
@@ -132,13 +101,11 @@ const BlogList = () => {
                 </div>
                 
                 <h3 className="text-xl font-bold text-gray-800 mb-3 hover:text-[#f20574] transition duration-300">
-                  <Link to={`/blog/${blog.id}`}>
+                  <Link to={`/blogs/${blog.id}`}> {/* Dynamic link to the blog post */}
                     {blog.title}
                   </Link>
                 </h3>
-                
-                <p className="text-gray-600 mb-4 flex-grow">{blog.excerpt}</p>
-                
+
                 <div className="mt-auto">
                   <div className="flex flex-wrap gap-2 mb-4">
                     {blog.hashtags.map(tag => (
@@ -152,7 +119,7 @@ const BlogList = () => {
                   </div>
                   
                   <Link 
-                    to={`/blog/${blog.id}`} 
+                    to={`/blogs/${blog.id}`} // Dynamic link to the blog post
                     className="text-[#f20574] font-medium inline-flex items-center hover:text-[#d30062] transition duration-300"
                   >
                     Read more

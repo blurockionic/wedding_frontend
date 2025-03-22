@@ -28,6 +28,7 @@ const Blog = lazy(() => import("./pages/blog-section/blog-section/Blog.jsx"));
 const BlogDashboard = lazy(() => import("./pages/blog-section/admin-section/BlogDashboard.jsx"));
 const NewBlogPost = lazy(() => import("./pages/blog-section/admin-section/NewBlogPost.jsx"));
 const BlogList = lazy(() => import("./pages/blog-section/blog-section/BlogList.jsx"));
+const UpdateBlogPost = lazy(() => import("./pages/blog-section/admin-section/UpdateBlogPost.jsx"));
 
 const Setting = lazy(() => import("./pages/vendorDashboard/Setting.jsx"));
 const ContactUs = lazy(() => import("./pages/contactus/ContactUs.jsx"));
@@ -125,6 +126,10 @@ const router = createBrowserRouter([
       { path: "/blog_dashboard", element: wrapWithSuspense(BlogDashboard)},
       { path: "/new-blog-post", element: wrapWithSuspense(NewBlogPost)},
       { path: "/blogs", element: wrapWithSuspense(BlogList)},
+      { path: "/blogs/:id", element: wrapWithSuspense(Blog)},
+      { path: "/update-blog-post/:id", element: wrapWithSuspense(UpdateBlogPost) },
+      // { path: "/", element: wrapWithSuspense(Blog)},
+
       { path: "/", element: wrapWithSuspense(LandingPage) },
       { path: "/signup", element: wrapWithSuspense(Signup) },
       { path: "/templates", element: wrapWithSuspense(Template) },
@@ -133,7 +138,7 @@ const router = createBrowserRouter([
       { path: "/guests", element: wrapWithSuspense(Guest) },
 
       { path: "/guests/see-template/template", element: wrapWithSuspense(Modify) },
-      { path: "/guests/see-template/template1", element: wrapWithSuspense(Modify_1) },
+      { path: "/guests/see-template/template1", element: wrapWithSuspense(Modify) },
 
       {
         path: "/guests/see-template/:template",
