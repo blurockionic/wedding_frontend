@@ -3,11 +3,15 @@ import CustomInput from "../../components/global/inputfield/CustomInput";
 import { GoSearch } from "react-icons/go";
 import { allCategories } from "../../static/static";
 
-export default function VendorSearch({ setCategory }) {
+export default function VendorSearch({ setCategory, service_type }) {
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [search, setSearch] = useState("");
   const dropdownRef = useRef(null);
+
+  useEffect(()=>{
+    setSearch(service_type)
+  },[service_type])
 
   const handleSuggestionClick = (category, subcategory) => {
     setSearch(`${subcategory}`);
@@ -75,12 +79,13 @@ export default function VendorSearch({ setCategory }) {
       <CustomInput
         type="text"
         placeholder="Select Vendor"
-        className="outline-none   focus:ring-0 focus:ring-none bg-white  border-none  "
+        className="outline-none focus:ring-0 focus:ring-none bg-white  border-none  "
         aria-label="Select Vendor"
         value={search}
         onChange={handleSearchChange}
         onFocus={handleFocus}
         leftIcon={<GoSearch size={20} />}
+        customInputStyle={"capitalize"}
       />
 
       {showSuggestions && suggestions.length > 0 && (

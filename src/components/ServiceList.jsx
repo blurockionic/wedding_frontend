@@ -3,8 +3,8 @@ import ServiceCard from "./ServiceCard";
 const ServiceList = ({ services, category, state, subCategory, city }) => {
   if (!services.length) {
     return (
-      <div className="flex items-center justify-center">
-        <p className="text-foreground text-4xl md:text-8xl">No services found.</p>
+      <div className="flex items-center justify-center ">
+        <p className="text-foreground text-[6vw] bg-gray-50 w-full text-center rounded-md">No services found.</p>
       </div>
     );
   }

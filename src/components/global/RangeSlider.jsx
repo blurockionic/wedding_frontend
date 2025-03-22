@@ -5,16 +5,13 @@ import "nouislider/distribute/nouislider.css";
 const RangeSlider = ({ min, max, start, onChange }) => {
   const [values, setValues] = useState(start);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      onChange(values);
-    }, 300);
 
-    return () => clearTimeout(timeout);
-  }, [values, onChange]);
-
+  useEffect(()=>{
+    onChange(values)
+  },[values])
+ 
   return (
-    <div className=" p-3">
+    <div className="p-3">
       <Nouislider
         range={{ min, max }}
         start={start}

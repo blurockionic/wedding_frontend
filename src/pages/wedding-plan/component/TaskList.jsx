@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
-// Task component remains the same but can be imported from here
+// Task component with responsive improvements
 const EventTask = ({
   task,
   index,
@@ -18,17 +18,17 @@ const EventTask = ({
   isMediumScreenOrSmaller,
   onUpdateTask,
   editingIndexes,
-  toggleEditing
+  toggleEditing,
 }) => {
   // Defensive check for undefined task
   if (!task) {
     console.error(`EventTask: task is undefined at index ${index}`);
     return <div>Task data is missing.</div>;
   }
-  
+
   // Local state to track input value while editing
   const [inputValue, setInputValue] = useState(task.name);
-  
+
   // Update local state when task changes
   useEffect(() => {
     setInputValue(task.name);
@@ -37,31 +37,31 @@ const EventTask = ({
   return (
     <li
       key={task.id}
-      className={`flex items-center p-3 rounded-md transition-all duration-300 ease-in-out ${
+      className={`flex flex-wrap md:flex-nowrap items-center p-2 md:p-3 rounded-md transition-all duration-300 ease-in-out ${
         task.done ? "bg-gray-50 text-gray-400" : "bg-white text-gray-700"
       } ${
-        task.priority === "High" ? "border-l-4 border-red-400" :
-        task.priority === "Medium" ? "border-l-4 border-yellow-400" :
-        "border-l-4 border-green-400"
+        task.priority === "High"
+          ? "border-l-4 border-red-400"
+          : task.priority === "Medium"
+            ? "border-l-4 border-yellow-400"
+            : "border-l-4 border-green-400"
       } hover:shadow-md`}
       onMouseEnter={() => onToggleStatus(index, "enter")}
       onMouseLeave={() => onToggleStatus(index, "leave")}
     >
-      <div 
-        className="cursor-pointer mr-3"
+      <div
+        className="cursor-pointer mr-2 md:mr-3 flex-shrink-0"
         onClick={() => onToggleStatus(task.id, task.done)}
       >
         <FaCheckCircle
           className={`transition-all duration-150 ${
-            task.done
-              ? "text-primary"
-              : "text-gray-300 hover:text-primary"
+            task.done ? "text-primary" : "text-gray-300 hover:text-primary"
           }`}
           size={20}
         />
       </div>
 
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0 mr-2">
         {editingIndexes[`${index}-taskName`] ? (
           <input
             className="mt-1 border rounded p-1 w-full"
@@ -91,12 +91,12 @@ const EventTask = ({
       </div>
 
       {task.scheduleDate && (
-        <span className="text-xs bg-gray-100 text-gray-800 rounded-full px-2 py-1 mr-2">
+        <span className="text-xs bg-gray-100 text-gray-800 rounded-full px-2 py-1 mr-2 mt-1 md:mt-0 flex-shrink-0">
           {new Date(task.scheduleDate).toLocaleDateString()}
         </span>
       )}
 
-      <div className="flex flex-shrink-0 w-auto justify-end items-center space-x-3">
+      <div className="flex flex-shrink-0 ml-auto md:ml-0 mt-2 md:mt-0 w-full md:w-auto justify-end items-center space-x-3">
         <div className="relative">
           {task.scheduleDate ? (
             <BiBell
@@ -106,22 +106,14 @@ const EventTask = ({
             />
           ) : (
             <BiBellPlus
-              className={`transition-all duration-300 ease-in-out text-gray-300 hover:text-primary cursor-pointer ${
-                hoveredIndex === index || isMediumScreenOrSmaller
-                  ? "visible opacity-100"
-                  : "invisible opacity-0"
-              }`}
+              className="transition-all duration-300 ease-in-out text-gray-300 hover:text-primary cursor-pointer"
               size={18}
               onClick={() => onOpenModal(index)}
             />
           )}
         </div>
         <FaTimes
-          className={`transition-all duration-300 ease-in-out text-gray-300 hover:text-red-500 ${
-            hoveredIndex === index || isMediumScreenOrSmaller
-              ? "visible opacity-100"
-              : "invisible opacity-0"
-          }`}
+          className="transition-all duration-300 ease-in-out text-gray-300 hover:text-red-500 cursor-pointer"
           size={18}
           onClick={() => onRemoveTask(index)}
         />
@@ -140,13 +132,13 @@ EventTask.propTypes = {
   isMediumScreenOrSmaller: PropTypes.bool.isRequired,
   onUpdateTask: PropTypes.func.isRequired,
   editingIndexes: PropTypes.object.isRequired,
-  toggleEditing: PropTypes.func.isRequired
+  toggleEditing: PropTypes.func.isRequired,
 };
 
-// Reusable media query hook
+// Reusable media query hook with additional breakpoints
 export const useMediaQuery = (query) => {
   const [matches, setMatches] = useState(
-    typeof window !== "undefined" ? window.matchMedia(query).matches : false
+    typeof window !== "undefined" ? window.matchMedia(query).matches : false,
   );
 
   useEffect(() => {
@@ -169,22 +161,29 @@ const TaskList = ({
   updateEventTask,
   refetch,
   setRefetch,
-  title = "Your Tasks"
+  title = "Your Tasks",
 }) => {
   const [selectedTaskIndex, setSelectedTaskIndex] = useState(null);
   const [showCalendar, setShowCalendar] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [editingIndexes, setEditingIndexes] = useState({});
-  
+
+  // Multiple breakpoints for more granular control
   const isMediumScreenOrSmaller = useMediaQuery("(max-width: 1024px)");
+  const isSmallScreen = useMediaQuery("(max-width: 640px)");
 
   // Toggle task status (done/undone)
   const handleTaskStatus = async (taskId, currentStatus) => {
     try {
-      console.log("Toggling status for taskId:", taskId, "Current status:", currentStatus);
+      console.log(
+        "Toggling status for taskId:",
+        taskId,
+        "Current status:",
+        currentStatus,
+      );
       await updateTaskStatus({
         taskId,
-        status: !currentStatus
+        status: !currentStatus,
       }).unwrap();
       refetch();
       if (setRefetch) setRefetch(true);
@@ -204,7 +203,7 @@ const TaskList = ({
     try {
       await deleteEventTask({
         eventId,
-        taskId
+        taskId,
       }).unwrap();
       toast.success("Task removed");
       refetch();
@@ -224,10 +223,13 @@ const TaskList = ({
   // Set schedule date for a task
   const handleSetScheduleDate = async (date) => {
     if (selectedTaskIndex === null) return;
-    
+
     const task = tasks[selectedTaskIndex];
     if (!task) {
-      console.error("handleSetScheduleDate: Task not found at index", selectedTaskIndex);
+      console.error(
+        "handleSetScheduleDate: Task not found at index",
+        selectedTaskIndex,
+      );
       return;
     }
     try {
@@ -235,10 +237,10 @@ const TaskList = ({
         taskId: task.id,
         data: {
           ...task,
-          scheduleDate: date ? date.toISOString() : null
-        }
+          scheduleDate: date ? date.toISOString() : null,
+        },
       }).unwrap();
-      
+
       toast.success(date ? "Task scheduled" : "Schedule removed");
       setShowCalendar(false);
       refetch();
@@ -275,7 +277,7 @@ const TaskList = ({
     try {
       await updateEventTask({
         taskId: task.id,
-        data: updatedTask
+        data: updatedTask,
       }).unwrap();
       refetch();
       if (setRefetch) setRefetch(true);
@@ -288,19 +290,20 @@ const TaskList = ({
   // Create Google Calendar link
   const createGoogleCalendarLink = (task) => {
     if (!task || !task.scheduleDate) return null;
-    
+
     // Format task details for Google Calendar
     const encodedTitle = encodeURIComponent(task.name);
     const encodedDetails = encodeURIComponent(
-      `Reminder to complete your task: "${task.name}"\n\nMake sure to finish it before the deadline!`
+      `Reminder to complete your task: "${task.name}"\n\nMake sure to finish it before the deadline!`,
     );
-    
+
     // Format the date for Google Calendar (YYYYMMDDTHHMMSSZ format)
-    const formattedDate = new Date(task.scheduleDate)
-      .toISOString()
-      .replace(/[-:]/g, "")
-      .split(".")[0] + "Z";
-    
+    const formattedDate =
+      new Date(task.scheduleDate)
+        .toISOString()
+        .replace(/[-:]/g, "")
+        .split(".")[0] + "Z";
+
     // Create the Google Calendar URL
     return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodedTitle}&details=${encodedDetails}&dates=${formattedDate}/${formattedDate}`;
   };
@@ -318,7 +321,7 @@ const TaskList = ({
       ) : tasks.length === 0 ? (
         <p className="text-gray-500 italic py-4">No tasks yet.</p>
       ) : (
-        <ul className="space-y-3">
+        <ul className="space-y-2 md:space-y-3">
           {tasks.map((task, index) => (
             <EventTask
               key={task?.id || index}
@@ -344,36 +347,48 @@ const TaskList = ({
         </ul>
       )}
 
-      {/* Calendar Modal */}
+      {/* Calendar Modal - Responsive improvements */}
       {showCalendar && selectedTaskIndex !== null && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center" onClick={() => setShowCalendar(false)}>
-          <div className="bg-white rounded-xl shadow-2xl p-6 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center p-4"
+          onClick={() => setShowCalendar(false)}
+        >
+          <div
+            className="bg-white rounded-xl shadow-2xl p-3 md:p-6 w-full max-w-md"
+            onClick={(e) => e.stopPropagation()}
+          >
             {/* Header */}
-            <div className="flex justify-between items-start pb-3">
+            <div className="flex justify-between items-start pb-2 md:pb-3">
               <div>
-                <h2 className="text-2xl font-bold text-primary mb-1">Schedule Task</h2>
-                <p className="text-gray-500 text-sm">(Select a completion date)</p>
+                <h2 className="text-xl md:text-2xl font-bold text-primary mb-0 md:mb-1">
+                  Schedule Task
+                </h2>
+                <p className="text-gray-500 text-xs md:text-sm">
+                  (Select a completion date)
+                </p>
               </div>
               <button
                 type="button"
                 className="text-gray-400 hover:text-primary transition-all duration-300"
                 onClick={() => setShowCalendar(false)}
               >
-                <FaTimes size={22} />
+                <FaTimes size={20} />
               </button>
             </div>
 
             {/* Task Name & Date */}
-            <div className="px-4 py-3">
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">
+            <div className="px-2 md:px-4 py-2 md:py-3">
+              <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-2 line-clamp-2">
                 {tasks[selectedTaskIndex]?.name || "Task name not available"}
               </h3>
-              <div className="bg-gray-100 p-3 rounded-lg border border-gray-300">
-                <p className="text-gray-700">
+              <div className="bg-gray-100 p-2 md:p-3 rounded-lg border border-gray-300">
+                <p className="text-sm md:text-base text-gray-700">
                   Complete by:{" "}
                   {tasks[selectedTaskIndex]?.scheduleDate ? (
                     <span className="font-semibold text-primary">
-                      {new Date(tasks[selectedTaskIndex].scheduleDate).toLocaleDateString()}
+                      {new Date(
+                        tasks[selectedTaskIndex].scheduleDate,
+                      ).toLocaleDateString()}
                     </span>
                   ) : (
                     <span className="font-semibold text-gray-500">Not Set</span>
@@ -381,45 +396,51 @@ const TaskList = ({
                 </p>
               </div>
             </div>
-            
-            {/* Calendar Picker */}
-            <div className="flex justify-center my-4">
+
+            {/* Calendar Picker - More responsive */}
+            <div className="flex justify-center my-3 md:my-4">
               <Calendar
                 onChange={(date) => handleSetScheduleDate(date)}
-                value={tasks[selectedTaskIndex]?.scheduleDate ? new Date(tasks[selectedTaskIndex].scheduleDate) : null}
-                className="w-full border rounded-lg p-2"
+                value={
+                  tasks[selectedTaskIndex]?.scheduleDate
+                    ? new Date(tasks[selectedTaskIndex].scheduleDate)
+                    : null
+                }
+                className="w-full border rounded-lg p-1 md:p-2 text-sm md:text-base"
               />
             </div>
-            
+
             {/* Google Calendar Button */}
             {tasks[selectedTaskIndex]?.scheduleDate && (
-              <div className="flex justify-center my-4">
+              <div className="flex justify-center my-3 md:my-4">
                 <a
                   href={createGoogleCalendarLink(tasks[selectedTaskIndex])}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 flex items-center justify-center shadow-md"
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 md:py-3 px-4 md:px-6 rounded-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 flex items-center justify-center shadow-md text-sm md:text-base"
                 >
-                  <FaCalendarAlt className="mr-2" /> Set Reminder on Google Calendar
+                  <FaCalendarAlt className="mr-2" />
+                  <span className="hidden sm:inline">Set Reminder on</span>
+                  <span>Google Calendar</span>
                 </a>
               </div>
             )}
-            
+
             {/* Action Buttons */}
-            <div className="flex justify-between items-center mt-6">
+            <div className="flex flex-wrap md:flex-nowrap justify-between items-center gap-2 mt-4 md:mt-6">
               {tasks[selectedTaskIndex]?.scheduleDate && (
                 <button
                   type="button"
-                  className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-md flex items-center gap-2 transition-all"
+                  className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-3 md:px-4 rounded-md flex items-center gap-1 md:gap-2 transition-all text-sm md:text-base"
                   onClick={() => handleSetScheduleDate(null)}
                 >
                   <FaTimes /> Remove Date
                 </button>
               )}
-              
+
               <button
                 type="button"
-                className="bg-primary hover:bg-opacity-90 text-white font-medium py-2 px-6 rounded-md transition-all ml-auto"
+                className="bg-primary hover:bg-opacity-90 text-white font-medium py-2 px-4 md:px-6 rounded-md transition-all ml-auto text-sm md:text-base"
                 onClick={() => setShowCalendar(false)}
               >
                 Close
@@ -441,7 +462,7 @@ TaskList.propTypes = {
   updateEventTask: PropTypes.func.isRequired,
   refetch: PropTypes.func.isRequired,
   setRefetch: PropTypes.func,
-  title: PropTypes.string
+  title: PropTypes.string,
 };
 
 export default TaskList;
