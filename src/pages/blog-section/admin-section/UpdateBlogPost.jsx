@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import BlogPreview from '../blog-section/BlogPreview';
-import { useCreateBlogMutation, useUpdateBlogMutation } from '../../../redux/blogSlice';
+import { useUpdateBlogMutation, useGetBlogByIdQuery } from '../../../redux/blogSlice';
 
-const NewBlogPost = () => {
+const UpdateBlogPost = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const [createBlog] = useCreateBlogMutation();
+  const { id } = useParams();
   const [updateBlog] = useUpdateBlogMutation();
+  const { data: blog, isLoading, isError } = useGetBlogByIdQuery(id);
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -19,9 +19,6 @@ const NewBlogPost = () => {
   const [tagInput, setTagInput] = useState('');
   const [saving, setSaving] = useState(false);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
-  const [currentDate] = useState(new Date());
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [blogId, setBlogId] = useState(null);
 
   // Custom toolbar options for Quill editor
   const modules = {
@@ -33,21 +30,26 @@ const NewBlogPost = () => {
     }
   };
 
+  // Pre-fill form fields with existing blog data
+  useEffect(() => {
+    if (blog) {
+      setTitle(blog.title || ''); // Set title
+      setContent(blog.content || ''); // Set content
+      setTags(blog.tags || []); // Set tags (ensure it's an array)
+      setCoverImagePreview(blog.coverImage || ''); // Set cover image preview
+    }
+  }, [blog]); // Dependency on `blog` ensures this runs when data is fetched
+
   const saveDraft = async () => {
     setSaving(true);
     const blogData = { title, content, tags, coverImage };
     try {
-      if (isEditMode) {
-        await updateBlog({ id: blogId, blogData });
-        alert('Blog post updated successfully!');
-      } else {
-        await createBlog(blogData);
-        alert('Blog post created successfully!');
-      }
+      await updateBlog({ id, blogData });
+      alert('Blog post updated successfully!');
       navigate('/blog_dashboard');
     } catch (error) {
-      console.error('Error saving blog post:', error);
-      alert('Error saving blog post.');
+      console.error('Error updating blog post:', error);
+      alert('Error updating blog post.');
     } finally {
       setSaving(false);
     }
@@ -98,28 +100,8 @@ const NewBlogPost = () => {
     }
   };
 
-  // Load data from query parameters
-  useEffect(() => {
-    const id = searchParams.get('id');
-    const title = searchParams.get('title');
-    const content = searchParams.get('content');
-    const tags = searchParams.get('tags')?.split(',') || [];
-
-    if (id) {
-      setIsEditMode(true);
-      setBlogId(id);
-      setTitle(title || '');
-      setContent(content || '');
-      setTags(tags);
-    }
-  }, [searchParams]);
-
-  // Format date for display
-  const formattedDate = currentDate.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error loading blog post.</div>;
 
   return (
     <div className="flex flex-col h-screen bg-gray-50">
@@ -161,7 +143,7 @@ const NewBlogPost = () => {
             onClick={saveDraft}
             disabled={saving || isPreviewMode}
           >
-            {saving ? 'Saving...' : isEditMode ? 'Update' : 'Publish'}
+            {saving ? 'Saving...' : 'Update'}
           </button>
         </div>
       </div>
@@ -305,16 +287,17 @@ const NewBlogPost = () => {
               </div>
 
               {/* Quill Editor */}
-              <div className="flex-grow px-6 py-4 overflow-y-auto">
+              <div className="w-[1000px] h-[500px] px-6 py-4 overflow-y-auto">
                 <ReactQuill
                   value={content}
                   onChange={setContent}
                   modules={modules}
                   theme="snow"
                   placeholder="Write your blog content here..."
-                  className="h-full"
+                  className="h-full w-full"
                 />
               </div>
+
             </>
           ) : (
             /* Preview Mode */
@@ -331,4 +314,4 @@ const NewBlogPost = () => {
   );
 };
 
-export default NewBlogPost;
+export default UpdateBlogPost;
