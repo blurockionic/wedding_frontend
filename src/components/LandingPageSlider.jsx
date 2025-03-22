@@ -86,7 +86,7 @@ const LandingPageSlider = React.memo(({ title, services ,bgColor}) => {
             >
               <ServiceCard service={service} />
             </div>
-          ))}
+          ))} 
       </div>
 
       {/* Arrows */}

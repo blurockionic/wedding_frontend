@@ -49,9 +49,12 @@ const Analytics = () => {
       </div>
 
       {/* recent lead  */}
-      <div className="p-2 h-[490px] w-full md:w-full shadow-lg rounded-md  border border-primary mt-4 md:mt-5">
-          <h1 className="text-2xl font-thin text-start">Recent Activities</h1>
-          <RecentActivityTable recentLead ={recentLead?.data}/>
+      <div className="p-4  bg-[#FEB3B1B2] w-full md:w-full shadow-lg rounded-md  mt-4 md:mt-5">
+        <div className="bg-white h-[490px] p-4 rounded-lg">
+        <h1 className="text-2xl font-thin text-start">Recent Activities</h1>
+        <RecentActivityTable recentLead ={recentLead?.data}/>
+        </div>
+         
         </div>
       </div>
     </>

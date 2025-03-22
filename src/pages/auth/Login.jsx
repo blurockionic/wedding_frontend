@@ -1,4 +1,3 @@
-import React from "react";
 import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -63,6 +62,16 @@ export default function Login() {
         dispatch(hydrateFavorites(allCart));
         reset();
         toast.success(message);
+
+
+        const from = location.state?.from || "/";
+        if (user.role == "ADMIN" || user.role == "SUPER_ADMIN"){
+          navigate("/admin");
+        }
+        else{
+          navigate(from);
+        }
+        
 
       }
     } catch (error) {
@@ -143,7 +152,7 @@ export default function Login() {
         </script>
       </Helmet>
       <div className="min-h-screen flex items-center justify-center md:py-10">
-        <div className="flex items-center justify-center space-x-10">
+        <div className="flex items-center justify-center md:space-x-10">
           <div className="hidden md:block w-3/4">
             <img
               src={loginImage}
@@ -154,15 +163,15 @@ export default function Login() {
           <div className="h-[600px] sm:bg-white bg-transparent sm:shadow-md rounded-lg sm:px-8 px-4 w-full space-y-6">
             <CustomText
               variant="heading"
-              className="text-3xl font-bold text-black"
+              className="text-3xl font-bold text-black mt-2"
             >
               Welcome to Marriage Vendors
             </CustomText>
-            <CustomText variant="paragraph" className="text-sm text-gray-600">
+            <CustomText variant="paragraph" className="text-sm text-gray-600 ">
               Enter your credentials to access your account
             </CustomText>
 
-            <form onSubmit={handleSubmit(handleLogin)} className="space-y-4">
+            <form onSubmit={handleSubmit(handleLogin)} className="space-y-4 ">
               <InputField
                 label="Email"
                 id="email"
@@ -203,7 +212,7 @@ export default function Login() {
       text-muted font-bold py-2 px-4 rounded transition`}
                 />
 
-                <div className="mt-4 flex items-center justify-between w-full gap-x-5">
+                <div className="my-8 flex items-center justify-between w-full gap-x-5">
                   <div className="h-[1px] px-3 w-full bg-gray-300"></div>
                   <span>or</span>
                   <div className="h-[1px] px-3 w-full bg-gray-300"></div>

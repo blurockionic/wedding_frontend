@@ -1,30 +1,20 @@
-import React, { useEffect, useState } from "react";
+import  {  useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import NavbarRoutesConfig from "../assets/NavabarRouteConfig";
-import { useSelector, useDispatch } from "react-redux";
-import { useLogoutMutation } from "../redux/apiSlice.auth";
+import { useSelector,  } from "react-redux";
 import {
   allCategories,
-  brides,
-  grooms,
-  weddingVendors,
-  weddingVenues,
 } from "../static/static";
-import TopNavbar from "./topnavbar/TopNavbar";
-import CustomText from "./global/text/CustomText";
 import Avatar from "../../public/user.png";
 import brandlogo from "../../public/logo/brandlogo.png";
 
 function Navbar() {
-  const { isLoggedIn, user } = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
+  const {  user } = useSelector((state) => state.auth);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [logoutMutation] = useLogoutMutation();
   const [dropdown, setDropdown] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [weddingVenue, setWeddingVenue] = useState(null);
 
   const handleOnProfile = () => {
     navigate("/profile");
@@ -37,7 +27,6 @@ function Navbar() {
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
-  console.log(allCategories);
 
   return (
     <>
@@ -50,8 +39,8 @@ function Navbar() {
         }`}
       >
         <>
-          <TopNavbar />
-          <nav className="w-full bg-white top-0 px-4 lg:px-16 z-50 shadow-sm">
+          {/* <TopNavbar /> */}
+          <nav className="w-full bg-white top-0 px-6 md:px-16 z-50 shadow-sm">
             <div className="w-full flex justify-between items-center py-4">
               <div className="text-2xl font-bold text-primary cursor-pointer">
                 <NavLink
@@ -60,7 +49,7 @@ function Navbar() {
                 >
                   <img src={brandlogo} alt="brandlogo" className="w-10 h-10" />
                   <div className="flex flex-col justify-start">
-                    <span className="text-primary text-2xl">
+                    <span className="hidden xl:block text-primary text-2xl">
                       Marriage Vendors
                     </span>
                     {/* <span className="text-primary text-xs">Wedding Orgniser</span> */}
@@ -107,9 +96,9 @@ function Navbar() {
 
               <ul
                 className={`
-              flex flex-col lg:flex-row lg:gap-8 gap-4
+              flex flex-col lg:flex-row lg:gap-4 gap-4
               absolute lg:relative z-50
-              rounded-lg m-2
+              rounded-lg 
               bg-white text-gray-600 font-medium
               h-screen lg:h-0 w-1/2 left-0 top-0
               lg:w-auto lg:top-auto lg:items-center
@@ -160,7 +149,7 @@ function Navbar() {
                   onMouseLeave={() => setDropdown("")}
                 >
                   <span className="cursor-pointer hover:text-dustyRose">
-                    Wedding Venue
+                     Venue
                   </span>
                   {dropdown === "wedding venue" && (
                     <div className="absolute left-0 top-full bg-white shadow-lg w-48 py-4 z-40">
@@ -192,7 +181,7 @@ function Navbar() {
                   onMouseLeave={() => setDropdown("")}
                 >
                   <span className="cursor-pointer hover:text-dustyRose">
-                    Wedding Vendor
+                     Vendor
                   </span>
                   {dropdown === "wedding vendor" && (
                     <div className="absolute left-0 top-full bg-white shadow-lg w-96 py-4 z-40">
@@ -291,69 +280,93 @@ function Navbar() {
                     Invitation
                   </NavLink>
                 </li>
+                <li>
+                  <NavLink
+                    to="/vendorLogin"
+                    className="cursor-pointer border px-2 py-1 rounded-md"
+                  >
+                    Vendor Login
+                  </NavLink>
+                </li>
 
-                {user?.role !== "USER" ? (
-                  <>
+                  {(user?.role!=="ADMIN" && user?.role!=="SUPER_ADMIN") ? (
+                    <>
+                    </>
+                  ) : (
+                    <>
                     <li className="lg:inline-block">
-                      <NavLink
-                        to="/login"
-                        onClick={() => setIsMenuOpen(false)}
-                        className={({ isActive }) =>
-                          isActive
-                            ? "text-primary px-3 py-1 border border-primary  rounded-md"
-                            : "px-3 py-1 text-primary border border-primary rounded-md"
-                        }
-                      >
-                        Login
-                      </NavLink>
-                    </li>
+                        <NavLink
+                          to="/admin"
+                          onClick={() => setIsMenuOpen(false)}
+                          className={({ isActive }) =>
+                            isActive
+                              ? "text-primary px-3 py-1 border border-primary  rounded-md"
+                              : "px-3 py-1 text-primary border border-primary rounded-md"
+                          }
+                        >
+                          ADMIN
+                        </NavLink>
+                      </li>
+                    </>
+                  )}
+
+                  {( user?.role!=="USER" && user?.role!=="ADMIN" && user?.role!=="SUPER_ADMIN" ) ? (
+                    <>
+                      <li className="lg:inline-block">
+                        <NavLink
+                          to="/login"
+                          onClick={() => setIsMenuOpen(false)}
+                          className={({ isActive }) =>
+                            isActive
+                              ? "text-primary px-3 py-1 border border-primary  rounded-md"
+                              : "px-3 py-1 text-primary border border-primary rounded-md"
+                          }
+                        >
+                          Login
+                        </NavLink>
+                      </li>
+                      <li className="lg:inline-block">
+                        <NavLink
+                          to="/signup"
+                          onClick={() => setIsMenuOpen(false)}
+                          className={({ isActive }) =>
+                            isActive
+                              ? "text-white px-3 py-1.5 bg-primary rounded-md"
+                              : "text-white px-3 py-1.5 bg-primary rounded-md"
+                          }
+                        >
+                          Sign up
+                        </NavLink>
+                      </li>
+                    </>
+                  ) : (
                     <li className="lg:inline-block">
-                      <NavLink
-                        to="/signup"
-                        onClick={() => setIsMenuOpen(false)}
-                        className={({ isActive }) =>
-                          isActive
-                            ? "text-white px-3 py-1 bg-primary rounded-md"
-                            : "text-white px-3 py-1 bg-primary rounded-md"
-                        }
+                      <div
+                        onClick={handleOnProfile}
+                        className="flex items-center gap-x-2 cursor-pointer"
                       >
-                        Sign up
-                      </NavLink>
+                        <img
+                          src={user?.profile_photo || Avatar}
+                          alt="Profile"
+                          className="w-8 h-8 rounded-full"
+                        />
+                      </div>
                     </li>
-                  </>
-                ) : (
-                  <li className="lg:inline-block">
-                    <div
-                      onClick={handleOnProfile}
-                      className="flex items-center gap-x-2 cursor-pointer"
-                    >
-                      <img
-                        src={user?.profile_photo || Avatar}
-                        alt="Profile"
-                        className="w-8 h-8 rounded-full"
-                      />
-                      <CustomText
-                        variant="paragraph"
-                        className="text-sm hidden lg:block"
-                        text="Profile"
-                      />
-                    </div>
-                  </li>
-                )}
-              </ul>
-            </div>
-            {/* Background Overlay */}
-            <div
-              className={`fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ${
-                isMenuOpen
-                  ? "opacity-100 backdrop-blur-md"
-                  : "opacity-0 pointer-events-none"
-              } z-40`}
-              onClick={() => setIsMenuOpen(false)}
-            />
-          </nav>
-        </>
-      </div>
+                  )}
+                </ul>
+              </div>
+              {/* Background Overlay */}
+              <div
+                className={`fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ${
+                  isMenuOpen
+                    ? "opacity-100 backdrop-blur-md"
+                    : "opacity-0 pointer-events-none"
+                } z-40`}
+                onClick={() => setIsMenuOpen(false)}
+              />
+            </nav>
+          </>
+        </div>
     </>
   );
 }

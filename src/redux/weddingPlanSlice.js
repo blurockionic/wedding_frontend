@@ -43,6 +43,15 @@ export const weddingPlanForEventApi = createApi({
       invalidatesTags: ["WeddingPlan"],
     }),
 
+    updateEvent: builder.mutation({
+      query: ({ eventId, data }) => ({
+        url: `/${eventId}`,
+        method: "PUT",
+        body: data,  // This will include all the required fields
+      }),
+      invalidatesTags: ["WeddingPlan"],
+    }),
+
     // Create sub-event of an event
     createSubEvent: builder.mutation({
       query: ({ data, eventId }) => ({
@@ -71,13 +80,12 @@ export const weddingPlanForEventApi = createApi({
     }),
 
     // Create event task
+    
     createEventTask: builder.mutation({
-      query: ({ tasks, eventId }) => ({
+      query: ({ data, eventId }) => ({
         url: `/task/${eventId}`,
         method: "POST",
-        body: {
-          items: tasks
-        },
+        body: data,  // Simply pass the data object directly
       }),
       invalidatesTags: ["EventTask"],
     }),
@@ -103,8 +111,8 @@ export const weddingPlanForEventApi = createApi({
 
     // Delete event task
     deleteEventTask: builder.mutation({
-      query: (taskId) => ({
-        url: `/task/${taskId}`,
+      query: ({ eventId, taskId }) => ({
+        url: `/task/${eventId}/${taskId}`,
         method: "DELETE",
       }),
       invalidatesTags: ["EventTask"],
@@ -134,6 +142,7 @@ export const {
   useGetWeddingPlanQuery,
   useCreateEventMutation,
   useDeleteEventMutation,
+  useUpdateEventMutation,
   useCreateSubEventMutation,
   useAddServiceMutation,
   useCreateEventTaskMutation,

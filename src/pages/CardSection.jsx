@@ -1,5 +1,4 @@
-
-import React from 'react'
+import PropTypes from 'prop-types';
 export default function CardSection({ cards }) {
   return (
     <div className="flex flex-col gap-4 w-full">
@@ -13,4 +12,8 @@ export default function CardSection({ cards }) {
     </div>
   );
 }
+
+CardSection.propTypes = {
+  cards: PropTypes.array.isRequired,
+};
 
