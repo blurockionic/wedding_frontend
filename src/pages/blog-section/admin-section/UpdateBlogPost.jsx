@@ -7,10 +7,12 @@ import { useUpdateBlogMutation, useGetBlogByIdQuery } from '../../../redux/blogS
 
 const UpdateBlogPost = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { id } = useParams(); // Get the blog ID from the URL params
   const [updateBlog] = useUpdateBlogMutation();
-  const { data: blog, isLoading, isError } = useGetBlogByIdQuery(id);
+  const { data: blog, isLoading, isError } = useGetBlogByIdQuery(id); // Fetch blog data by ID
+  
 
+  // State variables for form fields
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [coverImage, setCoverImage] = useState('');
@@ -19,6 +21,16 @@ const UpdateBlogPost = () => {
   const [tagInput, setTagInput] = useState('');
   const [saving, setSaving] = useState(false);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
+
+  // Pre-fill form fields with existing blog data
+  useEffect(() => {
+    if (blog) {
+      setTitle(blog.data.title || ''); // Set title
+      setContent(blog.data.content || ''); // Set content
+      setTags(blog.data.tags || []); // Set tags (ensure it's an array)
+      setCoverImagePreview(blog.data.coverImage || ''); // Set cover image preview
+    }
+  }, [blog]); // Dependency on `blog` ensures this runs when data is fetched
 
   // Custom toolbar options for Quill editor
   const modules = {
@@ -30,23 +42,14 @@ const UpdateBlogPost = () => {
     }
   };
 
-  // Pre-fill form fields with existing blog data
-  useEffect(() => {
-    if (blog) {
-      setTitle(blog.title || ''); // Set title
-      setContent(blog.content || ''); // Set content
-      setTags(blog.tags || []); // Set tags (ensure it's an array)
-      setCoverImagePreview(blog.coverImage || ''); // Set cover image preview
-    }
-  }, [blog]); // Dependency on `blog` ensures this runs when data is fetched
-
+  // Save or update the blog post
   const saveDraft = async () => {
     setSaving(true);
     const blogData = { title, content, tags, coverImage };
     try {
-      await updateBlog({ id, blogData });
+      await updateBlog({ id, blogData }).unwrap(); // Update the blog post
       alert('Blog post updated successfully!');
-      navigate('/blog_dashboard');
+      navigate('/blog_dashboard'); // Navigate back to the dashboard
     } catch (error) {
       console.error('Error updating blog post:', error);
       alert('Error updating blog post.');
@@ -100,6 +103,7 @@ const UpdateBlogPost = () => {
     }
   };
 
+  // Display loading or error states
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error loading blog post.</div>;
 
@@ -287,19 +291,18 @@ const UpdateBlogPost = () => {
               </div>
 
               {/* Quill Editor */}
-              <div className="w-[1000px] h-[500px] px-6 py-4 overflow-y-auto">
-                <ReactQuill
-                  value={content}
-                  onChange={setContent}
-                  modules={modules}
-                  theme="snow"
-                  placeholder="Write your blog content here..."
-                  className="h-full w-full"
-                />
-              </div>
-
-            </>
-          ) : (
+                      <div className="px-6 py-4 overflow-y-auto border-none" style={{ width: '990px' }}>
+                      <ReactQuill
+                        value={content}
+                        onChange={setContent}
+                        modules={modules}
+                        theme="snow"
+                        placeholder="Write your blog content here..."
+                        className="h-full"
+                      />
+                      </div>
+                    </>
+                    ) : (
             /* Preview Mode */
             <BlogPreview
               title={title}
