@@ -1,67 +1,61 @@
 import { useState, useEffect, useRef } from "react";
 import { useDeleteMediaMutation } from "../redux/uploadSlice";
-import { FcDeleteDatabase } from "react-icons/fc";
-import { FiDelete, FiTrash } from "react-icons/fi";
+import { FiTrash } from "react-icons/fi";
 
-const Slider = ({ data, type, serviceId }) => {
+const Slider = ({ data, type, serviceId,refetch }) => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [showNavButtons, setShowNavButtons] = useState(false);
   const sliderRef = useRef(null);
-  const [deleteMediaMutation, { isLoading }] = useDeleteMediaMutation();
+  const [deleteMediaMutation] = useDeleteMediaMutation();
 
-  // Track scroll position and determine overflow
+  // Track loading state per item
+  const [loadingStates, setLoadingStates] = useState({});
+
   useEffect(() => {
     const handleResize = () => {
       if (sliderRef.current) {
-        const isOverflowing =
-          sliderRef.current.scrollWidth > sliderRef.current.clientWidth;
-        setShowNavButtons(isOverflowing);
+        setShowNavButtons(
+          sliderRef.current.scrollWidth > sliderRef.current.clientWidth
+        );
       }
     };
-
     window.addEventListener("resize", handleResize);
-    handleResize(); // Check initially on mount
-
+    handleResize();
     return () => window.removeEventListener("resize", handleResize);
   }, [data]);
 
-  // Smooth scroll to the left or right
   const scroll = (direction) => {
     const slider = sliderRef.current;
     const scrollAmount =
       direction === "next" ? slider.clientWidth : -slider.clientWidth;
-    slider.scrollBy({
-      left: scrollAmount,
-      behavior: "smooth",
-    });
+    slider.scrollBy({ left: scrollAmount, behavior: "smooth" });
     setScrollPosition(slider.scrollLeft);
   };
 
-  // Delete media item
-  const handleDelete = (publicId) => {
-    deleteMediaMutation({ publicId, serviceId })
-      .unwrap()
-      .then(() => {
-        console.log(`Media with ID: ${publicId} has been deleted`);
-      })
-      .catch((error) => {
-        console.error("Error deleting media:", error);
-      });
+  const handleDelete = async (publicId) => {
+    setLoadingStates((prev) => ({ ...prev, [publicId]: true })); // Set loading for this item
+
+    try {
+      await deleteMediaMutation({ publicId, serviceId }).unwrap();
+      console.log(`Media with ID: ${publicId} has been deleted`);
+      refetch();
+    } catch (error) {
+      console.error("Error deleting media:", error);
+    } finally {
+      setLoadingStates((prev) => ({ ...prev, [publicId]: false })); // Reset loading state
+    }
   };
 
   return (
     <div className="relative">
-      {/* Scrollable Slider */}
       <div
         ref={sliderRef}
-        id={`slider-${type}`}
         className="flex overflow-x-auto space-x-4 py-4 scroll-smooth"
-        style={{ scrollBehavior: "smooth" }}
       >
         {data?.length > 0 ? (
           data.map((item, index) => (
             <div
-              key={index}
+              key={item.public_id}
               className="flex-none w-64 sm:w-72 lg:w-96 bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden relative"
             >
               {type === "image" ? (
@@ -80,17 +74,14 @@ const Slider = ({ data, type, serviceId }) => {
                 </video>
               ) : null}
 
-              {/* Delete Button */}
               <button
-              title="Delete Media"
-                onClick={() => handleDelete(item.public_id)} // Assuming each item has an 'id'
+                title="Delete Media"
+                onClick={() => handleDelete(item.public_id)}
                 className="absolute top-2 right-2 bg-slate-600 text-white p-2 rounded-full shadow-lg hover:bg-red-500"
               >
-                {!isLoading ? (
-                  <FiTrash />
-                ) : (
+                {loadingStates[item.public_id] ? (
                   <svg
-                    className="w-5 h-5 mr-2 text-white animate-spin"
+                    className="w-5 h-5 animate-spin text-white"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -109,6 +100,8 @@ const Slider = ({ data, type, serviceId }) => {
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.963 7.963 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     ></path>
                   </svg>
+                ) : (
+                  <FiTrash />
                 )}
               </button>
             </div>
@@ -120,28 +113,21 @@ const Slider = ({ data, type, serviceId }) => {
         )}
       </div>
 
-      {/* Left Navigation Button */}
       {showNavButtons && (
-        <div className="absolute top-1/2 left-2 transform -translate-y-1/2 z-10">
-          <button
-            onClick={() => scroll("prev")}
-            className="bg-gray-800 text-white p-2 rounded-full shadow-lg hover:bg-gray-700"
-          >
-            &lt;
-          </button>
-        </div>
+        <button
+          onClick={() => scroll("prev")}
+          className="absolute top-1/2 left-2 transform -translate-y-1/2 z-10 bg-gray-800 text-white p-2 rounded-full shadow-lg hover:bg-gray-700"
+        >
+          &lt;
+        </button>
       )}
-
-      {/* Right Navigation Button */}
       {showNavButtons && (
-        <div className="absolute top-1/2 right-2 transform -translate-y-1/2 z-10">
-          <button
-            onClick={() => scroll("next")}
-            className="bg-gray-800 text-white p-2 rounded-full shadow-lg hover:bg-gray-700"
-          >
-            &gt;
-          </button>
-        </div>
+        <button
+          onClick={() => scroll("next")}
+          className="absolute top-1/2 right-2 transform -translate-y-1/2 z-10 bg-gray-800 text-white p-2 rounded-full shadow-lg hover:bg-gray-700"
+        >
+          &gt;
+        </button>
       )}
     </div>
   );
