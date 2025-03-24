@@ -232,6 +232,7 @@ const DashBoardDetailPage = () => {
                   data={service?.media?.[0]?.[mediaType]}
                   serviceId={service.id}
                   type={mediaType === "image_urls" ? "image" : "video"}
+                  refetch={refetch}
                 />
               )
           )
