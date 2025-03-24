@@ -58,7 +58,7 @@ export const adminApiSlice = createApi({
     }),
 
     getHeroSectionAnalytics: builder.query({
-      query: ()=>"/admin/analytics/heroSectionAnalytics",
+      query: ()=>"/analytics/heroSectionAnalytics",
     }),
   }),
 });
