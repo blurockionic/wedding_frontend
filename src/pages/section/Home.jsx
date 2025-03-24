@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import LocationSearch from "../../components/LocationSearch/LocationSearch";
 import CircularAnimation from "../CircularMotion";
 import img from "../../../public/heroSection/image 49.png";
-import { useGetHeroSectionAnalyticsQuery } from "../../redux/adminApiSlice";
+import {  useGetHeroSectionAnalyticsQuery } from "../../redux/adminApiSlice";
 import VendorSearch from "../../components/vendorSearch/VendorSearch";
 
 export default function Home() {
@@ -19,8 +19,7 @@ export default function Home() {
   const [searchLocation, setSearchLocation] = useState("");
   const [backgroundImg, setBackGroundImg] = useState(img);
   const [isMobile, setIsMobile] = useState(false);
-  const { data: heroSectionAnalyticsData, isLoading } =
-    useGetHeroSectionAnalyticsQuery();
+  const { data: heroSectionAnalyticsData, isLoading } =  useGetHeroSectionAnalyticsQuery();
 
 
   useEffect(() => {

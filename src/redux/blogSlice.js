@@ -30,7 +30,7 @@ export const blogApiSlice = createApi({
     // Fetch all blogs
     getAllBlogs: builder.query({
       query: () => ({
-        url: `/allBlog/`,
+        url: `/allBlog`,
         method: "GET",
       }),
     }),

@@ -21,19 +21,31 @@ import { wrap } from "framer-motion";
 
 const Billing = lazy(() => import("./pages/vendorDashboard/Billing.jsx"));
 
-const Checklist = lazy(() => import("./pages/userDashboard/checklist/Checklist.jsx"));
+const Checklist = lazy(() =>
+  import("./pages/userDashboard/checklist/Checklist.jsx")
+);
 const Admin = lazy(() => import("./pages/admin/Dashboard.jsx"));
 
 const Blog = lazy(() => import("./pages/blog-section/blog-section/Blog.jsx"));
-const BlogDashboard = lazy(() => import("./pages/blog-section/admin-section/BlogDashboard.jsx"));
-const NewBlogPost = lazy(() => import("./pages/blog-section/admin-section/NewBlogPost.jsx"));
-const BlogList = lazy(() => import("./pages/blog-section/blog-section/BlogList.jsx"));
-const UpdateBlogPost = lazy(() => import("./pages/blog-section/admin-section/UpdateBlogPost.jsx"));
+const BlogDashboard = lazy(() =>
+  import("./pages/blog-section/admin-section/BlogDashboard.jsx")
+);
+const NewBlogPost = lazy(() =>
+  import("./pages/blog-section/admin-section/NewBlogPost.jsx")
+);
+const BlogList = lazy(() =>
+  import("./pages/blog-section/blog-section/BlogList.jsx")
+);
+const UpdateBlogPost = lazy(() =>
+  import("./pages/blog-section/admin-section/UpdateBlogPost.jsx")
+);
 
 const Setting = lazy(() => import("./pages/vendorDashboard/Setting.jsx"));
 const ContactUs = lazy(() => import("./pages/contactus/ContactUs.jsx"));
 const Analytics = lazy(() => import("./pages/vendorDashboard/Analytics.jsx"));
-const WeddingBudgetCalculator  = lazy(()=> import("./pages/userDashboard/budget-calculator/WeddingBudgetCalculator.jsx"))
+const WeddingBudgetCalculator = lazy(() =>
+  import("./pages/userDashboard/budget-calculator/WeddingBudgetCalculator.jsx")
+);
 const VendorServicesPage = lazy(() =>
   import("./pages/vendorDashboard/VendorServicePage.jsx")
 );
@@ -101,15 +113,26 @@ const View_1 = lazy(() => import("./pages/ViewTemplate/View_1.jsx"));
 const Payment = lazy(() => import("./pages/InvitationPayment/Payment.jsx"));
 const Preview = lazy(() => import("./pages/EditTemplate/Preview.jsx"));
 const Preview_1 = lazy(() => import("./pages/EditTemplate/Preview_1.jsx"));
-const Update_Editor = lazy(() => import("./pages/EditTemplate/Update_Editor.jsx"));
+const Update_Editor = lazy(() =>
+  import("./pages/EditTemplate/Update_Editor.jsx")
+);
 const Card = lazy(() => import("./pages/InvitationCard/Card.jsx"));
 const Guest = lazy(() => import("./pages/AddGuests/Guest.jsx"));
 const Modify = lazy(() => import("./pages/UpdatedTemplate/Modify.jsx"));
 const Editor = lazy(() => import("./pages/editor/Editor.jsx"));
-
-
-const WeddingDairy  = lazy(()=> import("./pages/wedding-plan/WeddingPlan.jsx"))
-
+const WeddingDairy = lazy(() => import("./pages/wedding-plan/WeddingPlan.jsx"));
+const AdminGeneralAnalytics = lazy(() =>
+  import("./pages/admin/generalAnalytics.jsx")
+);
+const AdminVendorSearch = lazy(() => import("./pages/admin/VendorSearch.jsx"));
+const AdminServiceSearch = lazy(() =>
+  import("./pages/admin/ServiceSearch.jsx")
+);
+const AdminUserSearch = lazy(() => import("./pages/admin/UserSearch.jsx"));
+const AdminTransactions = lazy(() => import("./pages/admin/Transactions.jsx"));
+const AdminGive = lazy(() => import("./pages/admin/GiveAdmin.jsx"));
+const AdminRevoke = lazy(() => import("./pages/admin/RevokeAdmin.jsx"));
+const AdminGiveSuper = lazy(() => import("./pages/admin/GiveSuperAdmin.jsx"));
 function wrapWithSuspense(Component) {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -124,15 +147,53 @@ const router = createBrowserRouter([
     path: "/",
     element: <OutletPage />,
     children: [
-      { path: "/blog_dashboard", element: wrapWithSuspense(BlogDashboard)},
-      { path: "/new-blog-post", element: wrapWithSuspense(NewBlogPost)},
-      { path: "/blogs", element: wrapWithSuspense(BlogList)},
-      { path: "/blogs/:id", element: wrapWithSuspense(Blog)},
-      { path: "/update-blog-post/:id", element: wrapWithSuspense(UpdateBlogPost) },
+      { path: "/blog_dashboard", element: wrapWithSuspense(BlogDashboard) },
+      { path: "/new-blog-post", element: wrapWithSuspense(NewBlogPost) },
+      { path: "/blogs", element: wrapWithSuspense(BlogList) },
+      { path: "/blogs/:id", element: wrapWithSuspense(Blog) },
+      {
+        path: "/update-blog-post/:id",
+        element: wrapWithSuspense(UpdateBlogPost),
+      },
       // { path: "/", element: wrapWithSuspense(Blog)},
 
       { path: "/", element: wrapWithSuspense(LandingPage) },
-      { path: "/admin", element: wrapWithSuspense(Admin) },
+      {
+        path: "/admin",
+        element: (
+          <ProtectedRoute
+            component={() => wrapWithSuspense(Admin)}
+            allowedRoles={["admin", "super_admin"]}
+          />
+        ),
+        // Protected route
+        children: [
+          {
+            path: "",
+            index: true,
+            element: wrapWithSuspense(AdminGeneralAnalytics),
+          },
+          {
+            path: "vendorSearch",
+            element: wrapWithSuspense(AdminVendorSearch),
+          },
+          {
+            path: "serviceSearch",
+            element: wrapWithSuspense(AdminServiceSearch),
+          },
+          { path: "userSearch", element: wrapWithSuspense(AdminUserSearch) },
+          {
+            path: "transactions",
+            element: wrapWithSuspense(AdminTransactions),
+          },
+          { path: "giveAdmin", element: wrapWithSuspense(AdminGive) },
+          { path: "revokeAdmin", element: wrapWithSuspense(AdminRevoke) },
+          { path: "giveSuperAdmin", element: wrapWithSuspense(AdminGiveSuper) },
+          // { path: "favoriteList", element: wrapWithSuspense(FavoriteListPage) },
+          // { path: "checklist", element: wrapWithSuspense(Checklist) },
+          // { path: "weddingbudget", element: wrapWithSuspense(WeddingBudgetCalculator)}
+        ],
+      },
       { path: "/signup", element: wrapWithSuspense(Signup) },
       { path: "/templates", element: wrapWithSuspense(Template) },
       { path: "/browse", element: wrapWithSuspense(Review) },
@@ -142,10 +203,12 @@ const router = createBrowserRouter([
       //editor
       { path: "/editor", element: wrapWithSuspense(Editor) },
 
-      { path: "/guests/see-template/template", element: wrapWithSuspense(Modify) },
+      {
+        path: "/guests/see-template/template",
+        element: wrapWithSuspense(Modify),
+      },
 
       // { path: "/guests/see-template/template1", element: wrapWithSuspense(Modify_1) },
-
 
       {
         path: "/guests/see-template/:template",
@@ -185,7 +248,7 @@ const router = createBrowserRouter([
         element: wrapWithSuspense(VenderBiodata),
       },
 
-      { path: "/about", element: wrapWithSuspense(AboutPage) }, 
+      { path: "/about", element: wrapWithSuspense(AboutPage) },
       {
         path: "/user-forgot-password",
         element: wrapWithSuspense(UserForgotPassword),
@@ -215,13 +278,16 @@ const router = createBrowserRouter([
             component={() => wrapWithSuspense(UserDashboard)}
             allowedRoles={["user", "admin"]}
           />
-        ), 
+        ),
         // Protected route
         children: [
           { path: "", index: true, element: wrapWithSuspense(UserProfile) },
           { path: "favoriteList", element: wrapWithSuspense(FavoriteListPage) },
           { path: "checklist", element: wrapWithSuspense(Checklist) },
-          { path: "weddingbudget", element: wrapWithSuspense(WeddingBudgetCalculator)},
+          {
+            path: "weddingbudget",
+            element: wrapWithSuspense(WeddingBudgetCalculator),
+          },
           { path: "weddingplan", element: wrapWithSuspense(WeddingDairy) },
         ],
       },

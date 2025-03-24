@@ -11,11 +11,66 @@ export const adminApiSlice = createApi({
         method: "GET",
       }),
     }),
+    searchVendors: builder.mutation({
+      query: (searchData) => ({
+        url: `/admin/vendor-search`,
+        method: "POST",
+        body: searchData,
+      }),
+    }),
+    searchServices: builder.mutation({
+      query: (searchData) => ({
+        url: `/admin/service-search`,
+        method: "POST",
+        body: searchData,
+      }),
+    }),
+    searchUsers: builder.mutation({
+      query: (searchData) => ({
+        url: `/admin/user-search`,
+        method: "POST",
+        body: searchData,
+      }),
+    }),
+    getTransactions: builder.query({
+      query: () => ({
+        url: `/admin/transactions`,
+        method: "GET",
+      }),
+    }),
+    giveAdmin: builder.mutation({
+      query: (email) => ({
+        url: `/admin/give-admin/${email}`,
+        method: "PATCH",
+      }),
+    }),
+    revokeAdmin: builder.mutation({
+      query: (email) => ({
+        url: `/admin/revoke-admin/${email}`,
+        method: "PATCH",
+      }),
+    }),
+    giveSuperAdmin: builder.mutation({
+      query: (email) => ({
+        url: `/admin/give-superadmin/${email}`,
+        method: "PATCH",
+      }),
+    }),
 
     getHeroSectionAnalytics: builder.query({
-      query: ()=>"/analytics/heroSectionAnalytics",
+      query: ()=>"/admin/analytics/heroSectionAnalytics",
     }),
   }),
 });
 
-export const { useGetGeneralAnalyticsQuery,useGetHeroSectionAnalyticsQuery } = adminApiSlice;
+export const { 
+  useGetGeneralAnalyticsQuery, 
+  useSearchVendorsMutation, 
+  useSearchServicesMutation, 
+  useSearchUsersMutation, 
+  useGetTransactionsQuery, 
+  useGiveAdminMutation, 
+  useRevokeAdminMutation, 
+  useGiveSuperAdminMutation, 
+  useGetHeroSectionAnalyticsQuery
+} = adminApiSlice;
