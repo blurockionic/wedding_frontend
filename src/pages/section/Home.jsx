@@ -57,7 +57,7 @@ export default function Home() {
     return (
       <>
         <div
-          className={`flex w-full flex-grow px-4 my-10 gap-6 md:justify-start md:gap-12 lg:justify-start lg:gap-12 ${
+          className={` flex w-full flex-grow px-4 my-10 gap-6 md:justify-start md:gap-12 lg:justify-start lg:gap-12 ${
             !isMobile ? "justify-between " : "justify-around"
           } items-center `}
         >
@@ -153,7 +153,7 @@ export default function Home() {
         </script>
       </Helmet>
 
-      <div className="  grid md:pl-14 xl:pl-16   xl:grid-cols-2 grid-cols-1 justify-between   items-center ">
+      <div className=" md:h-screen  grid md:pl-14 xl:pl-16   xl:grid-cols-2 grid-cols-1 justify-between   items-center ">
         {/* Left Section */}
 
         <div className="relative  flex flex-col gap-6  text-center items-start md:text-left ">
