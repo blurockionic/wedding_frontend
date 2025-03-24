@@ -17,7 +17,6 @@ const VendorRegistration = lazy(() =>
 import VendorDashboard from "./pages/vendorDashboard/Dashboard.jsx";
 const Subscription = lazy(() => import("./pages/Subscription.jsx"));
 import { HelmetProvider } from "react-helmet-async";
-import { wrap } from "framer-motion";
 
 const Billing = lazy(() => import("./pages/vendorDashboard/Billing.jsx"));
 
@@ -122,7 +121,7 @@ const Modify = lazy(() => import("./pages/UpdatedTemplate/Modify.jsx"));
 const Editor = lazy(() => import("./pages/editor/Editor.jsx"));
 const WeddingDairy = lazy(() => import("./pages/wedding-plan/WeddingPlan.jsx"));
 const AdminGeneralAnalytics = lazy(() =>
-  import("./pages/admin/generalAnalytics.jsx")
+  import("./pages/admin/GeneralAnalytics.jsx")
 );
 const AdminVendorSearch = lazy(() => import("./pages/admin/VendorSearch.jsx"));
 const AdminServiceSearch = lazy(() =>
