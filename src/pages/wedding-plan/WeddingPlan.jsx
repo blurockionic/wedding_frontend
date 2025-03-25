@@ -13,8 +13,7 @@ import autoTable from "jspdf-autotable";
 import moment from "moment";
 import { useSelector } from "react-redux";
 import CreateTaskForm from "./component/CreateTaskForm";
-import pdfMake from "pdfmake/build/pdfmake";
-import "pdfmake/build/vfs_fonts";
+
 
 const WeddingPlan = () => {
   const { user } = useSelector((state) => state.auth);
@@ -67,689 +66,159 @@ const WeddingPlan = () => {
     setIsActiveVendor((prev) => !prev);
   };
 
-  //handle on download plan
   const handleOnDownloadPlan = (events) => {
-    // More subtle color palette
-    const weddingPink = "#E91E63"; // Main accent color (slightly muted)
-    const weddingRed = "#C62828"; // Deeper red for headings
-    const weddingGold = "#E6C200"; // More subtle gold
-    const weddingCream = "#FFF8E6"; // Background cream color
-    const weddingLightPink = "#FCE4EC"; // Very light pink for sections
-    const textColor = "#424242"; // Darker grey for better readability
-
-    // Format date function
-    const formatDate = (dateString) => {
-      const date = new Date(dateString);
-      return date.toLocaleDateString("en-IN", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      });
+    const doc = new jsPDF();
+    
+    // Soft color palette
+    const colors = {
+      headerBlue: [41, 128, 185],    // Soft professional blue
+      labelGray: [100, 100, 120],    // Soft gray for labels
+      textDark: [50, 50, 70],        // Dark text color
+      lightBackground: [240, 248, 255] // Very light blue background
     };
-
-    // Format time function
-    const formatTime = (dateTimeString) => {
-      const date = new Date(dateTimeString);
-      return date.toLocaleTimeString("en-IN", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      });
-    };
-
-    const content = [];
-
-    // Title with decorative elements
-    content.push({
-      stack: [
-        {
-          canvas: [
-            {
-              type: "rect",
-              x: 125,
-              y: 0,
-              w: 300,
-              h: 50,
-              r: 5,
-              lineWidth: 2,
-              lineColor: weddingPink,
-              fillOpacity: 0.05,
-              fillColor: weddingLightPink,
-            },
-          ],
-        },
-        {
-          text: "॥ Indian Wedding Event Plan ॥",
-          fontSize: 22,
-          bold: true,
-          color: weddingRed,
-          alignment: "center",
-          margin: [0, 15, 0, 0],
-        },
-      ],
-      margin: [0, 10, 0, 30],
-    });
-
+  
     events.forEach((event, index) => {
-      // Event header with decorative circle
-      content.push({
-        stack: [
-          {
-            canvas: [
-              {
-                type: "ellipse",
-                x: 257.5,
-                y: 15,
-                r1: 100,
-                r2: 1,
-                lineWidth: 1,
-                lineColor: weddingGold,
-              },
-            ],
-            absolutePosition: { x: 40, y: content.length * 20 + 90 },
-          },
-          {
-            text: `Event ${index + 1}: ${event.eventName}`,
-            fontSize: 18,
-            color: weddingRed,
-            bold: true,
-            alignment: "center",
-            margin: [0, 0, 0, 20],
-          },
-        ],
-      });
-
-      // Event details - top row with two boxes side by side
-      content.push({
-        columns: [
-          {
-            width: "48%",
-            stack: [
-              {
-                canvas: [
-                  {
-                    type: "rect",
-                    x: 0,
-                    y: 0,
-                    w: 235,
-                    h: 70,
-                    r: 10,
-                    lineWidth: 1,
-                    lineColor: weddingPink,
-                    fillOpacity: 0.03,
-                    fillColor: weddingLightPink,
-                  },
-                ],
-              },
-              {
-                text: "Event Name",
-                fontSize: 12,
-                bold: true,
-                color: weddingRed,
-                alignment: "center",
-                margin: [0, 5, 0, 5],
-              },
-              {
-                text: event.eventName,
-                fontSize: 14,
-                color: textColor,
-                alignment: "center",
-                margin: [0, 0, 0, 5],
-              },
-              {
-                text: "Date",
-                fontSize: 12,
-                bold: true,
-                color: weddingRed,
-                alignment: "center",
-                margin: [0, 5, 0, 5],
-              },
-              {
-                text: formatDate(event.eventDate),
-                fontSize: 14,
-                color: textColor,
-                alignment: "center",
-                margin: [0, 0, 0, 0],
-              },
-            ],
-            margin: [0, 0, 10, 0],
-          },
-          {
-            width: "48%",
-            stack: [
-              {
-                canvas: [
-                  {
-                    type: "rect",
-                    x: 0,
-                    y: 0,
-                    w: 235,
-                    h: 70,
-                    r: 10,
-                    lineWidth: 1,
-                    lineColor: weddingPink,
-                    fillOpacity: 0.03,
-                    fillColor: weddingLightPink,
-                  },
-                ],
-              },
-              {
-                text: "Timings",
-                fontSize: 12,
-                bold: true,
-                color: weddingRed,
-                alignment: "center",
-                margin: [0, 5, 0, 5],
-              },
-              {
-                text: `${formatTime(event.eventStartTime)} - ${formatTime(event.eventEndTime)}`,
-                fontSize: 14,
-                color: textColor,
-                alignment: "center",
-                margin: [0, 0, 0, 5],
-              },
-              {
-                text: "Budget",
-                fontSize: 12,
-                bold: true,
-                color: weddingRed,
-                alignment: "center",
-                margin: [0, 5, 0, 5],
-              },
-              {
-                text: `₹${event.eventBudget}`,
-                fontSize: 14,
-                color: textColor,
-                alignment: "center",
-                margin: [0, 0, 0, 0],
-              },
-            ],
-            margin: [10, 0, 0, 0],
-          },
-        ],
-        margin: [0, 0, 0, 15],
-      });
-
-      // Description box - full width
-      content.push({
-        stack: [
-          {
-            canvas: [
-              {
-                type: "rect",
-                x: 0,
-                y: 0,
-                w: 490,
-                h: 55,
-                r: 10,
-                lineWidth: 1,
-                lineColor: weddingPink,
-                fillOpacity: 0.02,
-                fillColor: weddingLightPink,
-              },
-            ],
-          },
-          {
-            text: "Description",
-            fontSize: 12,
-            bold: true,
-            color: weddingRed,
-            alignment: "center",
-            margin: [0, 5, 0, 5],
-          },
-          {
-            text: event.eventDescription || "No description provided",
-            fontSize: 14,
-            color: textColor,
-            alignment: "center",
-            margin: [40, 5, 40, 0],
-          },
-        ],
-        margin: [0, 0, 0, 20],
-      });
-
-      // Vendors Section with decorative elements
-      if (event.eventVendors?.length > 0) {
-        content.push({
-          columns: [
-            {
-              width: 100,
-              stack: [
-                {
-                  canvas: [
-                    {
-                      type: "line",
-                      x1: 0,
-                      y1: 5,
-                      x2: 100,
-                      y2: 5,
-                      lineWidth: 1,
-                      lineColor: weddingGold,
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              width: "*",
-              text: "Vendors & Services",
-              fontSize: 16,
-              color: weddingRed,
-              bold: true,
-              alignment: "center",
-            },
-            {
-              width: 100,
-              stack: [
-                {
-                  canvas: [
-                    {
-                      type: "line",
-                      x1: 0,
-                      y1: 5,
-                      x2: 100,
-                      y2: 5,
-                      lineWidth: 1,
-                      lineColor: weddingGold,
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-          margin: [0, 10, 0, 15],
-        });
-
-        // Create vendor cards in a cleaner layout
-        const vendorRows = [];
-        for (let i = 0; i < event.eventVendors.length; i += 2) {
-          const vendorRow = {
-            columns: [],
-          };
-
-          // First vendor in the row
-          vendorRow.columns.push({
-            width: "48%",
-            stack: [
-              {
-                canvas: [
-                  {
-                    type: "rect",
-                    x: 0,
-                    y: 0,
-                    w: 230,
-                    h: 60,
-                    r: 5,
-                    lineWidth: 1,
-                    lineColor: weddingPink,
-                    fillOpacity: 0.02,
-                    fillColor: weddingLightPink,
-                  },
-                ],
-              },
-              {
-                columns: [
-                  {
-                    width: "*",
-                    text: event.eventVendors[i].name,
-                    fontSize: 14,
-                    bold: true,
-                    color: weddingRed,
-                    margin: [10, 8, 0, 0],
-                  },
-                  {
-                    width: "auto",
-                    text: `₹${event.eventVendors[i].price}`,
-                    fontSize: 14,
-                    bold: true,
-                    color: textColor,
-                    margin: [0, 8, 10, 0],
-                  },
-                ],
-              },
-              {
-                text: `Unit: ${event.eventVendors[i].unit}`,
-                fontSize: 12,
-                color: textColor,
-                margin: [10, 8, 10, 0],
-              },
-            ],
-            margin: [0, 0, 10, 10],
-          });
-
-          // Second vendor in the row (if exists)
-          if (i + 1 < event.eventVendors.length) {
-            vendorRow.columns.push({
-              width: "48%",
-              stack: [
-                {
-                  canvas: [
-                    {
-                      type: "rect",
-                      x: 0,
-                      y: 0,
-                      w: 230,
-                      h: 60,
-                      r: 5,
-                      lineWidth: 1,
-                      lineColor: weddingPink,
-                      fillOpacity: 0.02,
-                      fillColor: weddingLightPink,
-                    },
-                  ],
-                },
-                {
-                  columns: [
-                    {
-                      width: "*",
-                      text: event.eventVendors[i + 1].name,
-                      fontSize: 14,
-                      bold: true,
-                      color: weddingRed,
-                      margin: [10, 8, 0, 0],
-                    },
-                    {
-                      width: "auto",
-                      text: `₹${event.eventVendors[i + 1].price}`,
-                      fontSize: 14,
-                      bold: true,
-                      color: textColor,
-                      margin: [0, 8, 10, 0],
-                    },
-                  ],
-                },
-                {
-                  text: `Unit: ${event.eventVendors[i + 1].unit}`,
-                  fontSize: 12,
-                  color: textColor,
-                  margin: [10, 8, 10, 0],
-                },
-              ],
-              margin: [10, 0, 0, 10],
-            });
-          } else {
-            // Add empty space if no second vendor
-            vendorRow.columns.push({
-              width: "48%",
-              text: "",
-              margin: [10, 0, 0, 0],
-            });
-          }
-
-          vendorRows.push(vendorRow);
-        }
-
-        // Add vendor rows to content
-        vendorRows.forEach((row) => content.push(row));
-
-        // Total expense with subtle styling
-        content.push({
-          columns: [
-            { width: "30%", text: "" },
-            {
-              width: "40%",
-              stack: [
-                {
-                  canvas: [
-                    {
-                      type: "rect",
-                      x: 0,
-                      y: 0,
-                      w: 200,
-                      h: 30,
-                      r: 5,
-                      lineWidth: 1,
-                      lineColor: weddingRed,
-                      fillOpacity: 0.05,
-                      fillColor: weddingLightPink,
-                    },
-                  ],
-                },
-                {
-                  text: `Total Expense: ₹${event.eventVendors.reduce(
-                    (sum, vendor) => sum + parseFloat(vendor.price),
-                    0,
-                  )}`,
-                  fontSize: 14,
-                  bold: true,
-                  color: weddingRed,
-                  alignment: "center",
-                  margin: [0, 8, 0, 0],
-                },
-              ],
-            },
-            { width: "30%", text: "" },
-          ],
-          margin: [0, 10, 0, 20],
-        });
-      } else {
-        // No vendors message with better alignment
-        content.push({
-          stack: [
-            {
-              canvas: [
-                {
-                  type: "rect",
-                  x: 145,
-                  y: 0,
-                  w: 200,
-                  h: 30,
-                  r: 5,
-                  lineWidth: 1,
-                  lineColor: weddingPink,
-                  fillOpacity: 0.02,
-                  fillColor: weddingLightPink,
-                },
-              ],
-            },
-            {
-              text: "No vendors available.",
-              fontSize: 14,
-              color: textColor,
-              italics: true,
-              alignment: "center",
-              margin: [0, 8, 0, 0],
-            },
-          ],
-          margin: [0, 10, 0, 20],
-        });
+      // New page for each event
+      if (index > 0) {
+        doc.addPage();
       }
-
-      // Decorative separator - more subtle and aligned
-      content.push({
-        columns: [
-          {
-            width: "35%",
-            stack: [
-              {
-                canvas: [
-                  {
-                    type: "line",
-                    x1: 0,
-                    y1: 7,
-                    x2: 165,
-                    y2: 7,
-                    lineWidth: 1,
-                    lineColor: weddingGold,
-                  },
-                ],
-              },
-            ],
+  
+      // Page dimensions
+      const pageWidth = doc.internal.pageSize.width;
+      const margin = 20;
+  
+      // Subtle background fill
+      doc.setFillColor(colors.lightBackground[0], colors.lightBackground[1], colors.lightBackground[2]);
+      doc.rect(10, 10, pageWidth - 20, doc.internal.pageSize.height - 20, 'F');
+  
+      // Decorative soft border
+      doc.setDrawColor(220, 220, 240);
+      doc.setLineWidth(1);
+      doc.rect(10, 10, pageWidth - 20, doc.internal.pageSize.height - 20);
+  
+      // Title
+      doc.setFontSize(22);
+      doc.setTextColor(colors.headerBlue[0], colors.headerBlue[1], colors.headerBlue[2]);
+      doc.text("Event Plan Details", pageWidth / 2, 30, { align: 'center' });
+  
+      // Event Name
+      doc.setFontSize(18);
+      doc.setTextColor(colors.textDark[0], colors.textDark[1], colors.textDark[2]);
+      doc.text(`Event ${index + 1}: ${event.eventName}`, pageWidth / 2, 45, { align: 'center' });
+  
+      // Prepare data for table
+      const tableData = [
+        { label: "Event Name", value: event.eventName },
+        { label: "Event Date", value: moment(event.eventDate).format('DD-MM-YYYY') },
+        { label: "Start Time", value: moment(event.eventStartTime).format("hh:mm A") },
+        { label: "End Time", value: moment(event.eventEndTime).format("hh:mm A") },
+        { 
+          label: "Budget", 
+          value: `₹ ${parseFloat(event.eventBudget).toLocaleString('en-IN', { 
+            minimumFractionDigits: 2, 
+            maximumFractionDigits: 2 
+          })}` 
+        },
+        { label: "Description", value: event.eventDescription }
+      ];
+  
+      // Create table
+      autoTable(doc, {
+        startY: 60,
+        body: tableData.map(item => [item.label, item.value]),
+        theme: 'plain',
+        styles: { 
+          fontSize: 11,
+          cellPadding: 4,
+          textColor: colors.textDark
+        },
+        columnStyles: {
+          0: { 
+            fontStyle: 'bold', 
+            cellWidth: 60,
+            textColor: colors.labelGray
           },
-          {
-            width: "30%",
-            stack: [
-              {
-                canvas: [
-                  {
-                    type: "polyline",
-                    lineWidth: 1,
-                    closePath: true,
-                    points: [
-                      { x: 0, y: 0 },
-                      { x: 75, y: 15 },
-                      { x: 150, y: 0 },
-                    ],
-                    color: weddingRed,
-                    fillOpacity: 0.1,
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            width: "35%",
-            stack: [
-              {
-                canvas: [
-                  {
-                    type: "line",
-                    x1: 0,
-                    y1: 7,
-                    x2: 165,
-                    y2: 7,
-                    lineWidth: 1,
-                    lineColor: weddingGold,
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-        margin: [0, 15, 0, 15],
+          1: { 
+            cellWidth: 120,
+            textColor: [0, 0, 0]  // Ensure budget is clearly visible
+          }
+        },
+        margin: { left: margin, right: margin },
+        tableWidth: 'wrap',
+        showHead: 'never',
+        showLines: false,
+        alternateRowStyles: {
+          fillColor: [245, 250, 255]  // Very light blue alternate row
+        }
       });
-    });
-
-    // Footer with better alignment
-    const footer = (currentPage, pageCount) => {
-      return {
-        columns: [
-          { width: "35%", text: "" },
-          {
-            width: "30%",
-            stack: [
-              {
-                canvas: [
-                  {
-                    type: "line",
-                    x1: 0,
-                    y1: 5,
-                    x2: 150,
-                    y2: 5,
-                    lineWidth: 1,
-                    lineColor: weddingPink,
-                  },
-                ],
-              },
-              {
-                text: `Page ${currentPage} of ${pageCount}`,
-                alignment: "center",
-                fontSize: 10,
-                color: weddingRed,
-                margin: [0, 5, 0, 0],
-              },
-            ],
+  
+      // Vendors Section
+      if (event.eventVendors?.length > 0) {
+        const totalExpense = event.eventVendors.reduce((sum, vendor) => 
+          sum + parseFloat(vendor.price), 0);
+  
+        const vendorData = event.eventVendors.map((vendor) => [
+          vendor.name,
+          `₹ ${parseFloat(vendor.price).toLocaleString('en-IN', { 
+            minimumFractionDigits: 2, 
+            maximumFractionDigits: 2 
+          })}`,
+          vendor.unit
+        ]);
+  
+        doc.setFontSize(16);
+        doc.setTextColor(colors.headerBlue[0], colors.headerBlue[1], colors.headerBlue[2]);
+        doc.text("Vendors", pageWidth / 2, doc.lastAutoTable.finalY + 15, { align: 'center' });
+  
+        autoTable(doc, {
+          startY: doc.lastAutoTable.finalY + 20,
+          body: vendorData,
+          theme: 'plain',
+          styles: { 
+            fontSize: 10,
+            cellPadding: 3,
+            textColor: colors.textDark
           },
-          { width: "35%", text: "" },
-        ],
-        margin: [0, 10, 0, 0],
-      };
-    };
-
-    // PDF Definition with more subtle border design
-    const docDefinition = {
-      content,
-      footer,
-      pageSize: "A4",
-      pageMargins: [40, 60, 40, 60],
-      background: (currentPage) => {
-        return {
-          canvas: [
-            // Main border with more subtle coloring
-            {
-              type: "rect",
-              x: 20,
-              y: 20,
-              w: 555,
-              h: 800,
-              lineWidth: 2,
-              color: weddingCream,
-              lineColor: weddingPink,
+          columnStyles: {
+            0: { 
+              cellWidth: 80, 
+              textColor: colors.labelGray 
             },
-            // Inner border - more subtle
-            {
-              type: "rect",
-              x: 30,
-              y: 30,
-              w: 535,
-              h: 780,
-              lineWidth: 0.5,
-              lineColor: weddingGold,
+            1: { 
+              cellWidth: 40,
+              textColor: [0, 0, 0]  // Ensure prices are clearly visible
             },
-            // Corner decorations - more subtle and properly aligned
-            // Top left
-            {
-              type: "polyline",
-              lineWidth: 1,
-              closePath: true,
-              points: [
-                { x: 20, y: 20 },
-                { x: 40, y: 30 },
-                { x: 30, y: 40 },
-              ],
-              color: weddingGold,
-              fillOpacity: 0.3,
-            },
-            // Top right
-            {
-              type: "polyline",
-              lineWidth: 1,
-              closePath: true,
-              points: [
-                { x: 575, y: 20 },
-                { x: 555, y: 30 },
-                { x: 565, y: 40 },
-              ],
-              color: weddingGold,
-              fillOpacity: 0.3,
-            },
-            // Bottom left
-            {
-              type: "polyline",
-              lineWidth: 1,
-              closePath: true,
-              points: [
-                { x: 20, y: 820 },
-                { x: 40, y: 810 },
-                { x: 30, y: 800 },
-              ],
-              color: weddingGold,
-              fillOpacity: 0.3,
-            },
-            // Bottom right
-            {
-              type: "polyline",
-              lineWidth: 1,
-              closePath: true,
-              points: [
-                { x: 575, y: 820 },
-                { x: 555, y: 810 },
-                { x: 565, y: 800 },
-              ],
-              color: weddingGold,
-              fillOpacity: 0.3,
-            },
-          ],
-        };
-      },
-    };
-
-    // Generate and download PDF with formatted date
-    const today = new Date();
-    const formattedDate = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, "0")}-${today.getDate().toString().padStart(2, "0")}`;
-    pdfMake
-      .createPdf(docDefinition)
-      .download(`wedding-plan-${formattedDate}.pdf`);
+            2: { cellWidth: 40 }
+          },
+          margin: { left: margin, right: margin },
+          tableWidth: 'wrap',
+          showHead: 'never',
+          showLines: false,
+          alternateRowStyles: {
+            fillColor: [245, 250, 255]  // Very light blue alternate row
+          }
+        });
+  
+        // Total Expense
+        doc.setFontSize(12);
+        doc.setTextColor(colors.headerBlue[0], colors.headerBlue[1], colors.headerBlue[2]);
+        doc.text(`Total Vendor Expense: ₹ ${totalExpense.toLocaleString('en-IN', { 
+          minimumFractionDigits: 2, 
+          maximumFractionDigits: 2 
+        })}`, 
+          pageWidth / 2, 
+          doc.lastAutoTable.finalY + 10, 
+          { align: 'center' }
+        );
+      } else {
+        doc.setFontSize(12);
+        doc.setTextColor(colors.headerBlue[0], colors.headerBlue[1], colors.headerBlue[2]);
+        doc.text("No vendors available.", pageWidth / 2, doc.lastAutoTable.finalY + 15, { align: 'center' });
+      }
+    });
+  
+    // Save the PDF
+    doc.save("Event_Plan_Details.pdf");
   };
 
   //handle to select suggestion
