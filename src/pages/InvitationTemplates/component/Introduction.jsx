@@ -67,7 +67,7 @@ export const Introduction = () => {
           </span>
         </Link>
       </div>
-      <span className="mt-10 text-xs w-auto text-gray-500 italic px-2 py-1  rounded-md">
+      <span className="hidden md:block mt-10 text-xs w-auto text-gray-500 italic px-2 py-1  rounded-md">
         Hint: Drag elements to design invitation card
       </span>
 

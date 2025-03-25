@@ -75,7 +75,7 @@ const UserDashBoard = () => {
                     {item.name}
                     
                     {
-                      (item.path === "/profile" && userData.is_verified) && (<><span className="flex justify-start gap-1 items-center text-xs text-green-500 bg-white px-2 py-.5 rounded-full"><MdOutlineVerified /> Verified</span></>)
+                      (item.path === "/profile" && userData?.is_verified) && (<><span className="flex justify-start gap-1 items-center text-xs text-green-500 bg-white px-2 py-.5 rounded-full ml-5"><MdOutlineVerified /> Verified</span></>)
                     }
                   </p>
                 </NavLink>
