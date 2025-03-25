@@ -48,7 +48,7 @@ console.log(service);
     if (service && service.media && service.media.length > 0 && service.media[0] && service.media[0].image_urls && service.media[0].image_urls.length > 0 && service.media[0].image_urls[0].path) {
       return service.media[0].image_urls[0].path;
     } else {
-      return `https://via.placeholder.com/300x200?text=${service?.service_type || "No Image"}`; // Provide a default or placeholder
+      return `https://via.placehold.co/300x200?text=${service?.service_type || "No Image"}`; // Provide a default or placeholder
     }
   }, [service]);
 

@@ -1,4 +1,4 @@
-import PropTypes from "prop-types"; // Import PropTypes for prop validation
+import PropTypes from "prop-types"; 
 
 const CustomInput = (props) => {
   const {
@@ -24,7 +24,7 @@ const CustomInput = (props) => {
       <input
         type={type}
         placeholder={placeholder}
-        value={value}
+        value={value ?? ""} 
         onFocus={onFocus}
         onChange={onChange}
         disabled={disabled}
