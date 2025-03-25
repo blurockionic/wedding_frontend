@@ -6,18 +6,20 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { useLogoutMutation } from "../../redux/apiSlice.auth";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { userlogout } from "../../redux/authSlice";
 import { toast } from "react-toastify";
 import { GoChecklist } from "react-icons/go";
 import { Heart, User } from "lucide-react";
 import { LuNotebookPen } from "react-icons/lu";
+import { MdOutlineVerified } from "react-icons/md";
 
 const UserDashBoard = () => {
-  const location = useLocation(); // Get the current location
+  const location = useLocation(); 
   const navigate = useNavigate();
   const [logout] = useLogoutMutation();
   const dispatch = useDispatch();
+  const userData = useSelector((state) => state.auth.user);
 
   // Array of links and their paths
   const navItems = [
@@ -45,7 +47,7 @@ const UserDashBoard = () => {
     }
   };
 
-  console.log(location.pathname)
+ 
 
   return (
     <div className=" ">
@@ -71,7 +73,10 @@ const UserDashBoard = () => {
                   <p className="flex items-center gap-2">
                     {item.icon}
                     {item.name}
-                    {console.log(item.path)}
+                    
+                    {
+                      (item.path === "/profile" && userData.is_verified) && (<><span className="flex justify-start gap-1 items-center text-xs text-green-500 bg-white px-2 py-.5 rounded-full"><MdOutlineVerified /> Verified</span></>)
+                    }
                   </p>
                 </NavLink>
               </li>
