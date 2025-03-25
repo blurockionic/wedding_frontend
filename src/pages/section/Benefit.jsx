@@ -61,7 +61,7 @@ const Benefits = () => {
           </h1>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 min-h-screen">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 ">
           {/* To-Do List */}
           <div className="bg-purple-200 group  text-foreground p-6 rounded-2xl shadow-lg col-span-1 md:col-span-3 lg:row-span-2 lg:col-span-2 flex flex-col justify-between gap-5 sm:gap-6 md:gap-10 ">
             <div>

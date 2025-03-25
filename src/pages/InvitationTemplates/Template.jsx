@@ -1,6 +1,7 @@
 import Quote from "../Quote";
 import Footer from "../Footer";
 import { Introduction } from "./component/Introduction";
+import FeatureSection from "./component/FeatureSection";
 function Template() {
   return (
     <>
@@ -8,6 +9,9 @@ function Template() {
       <Introduction />
 
       <Quote />
+
+      {/* feature section  */}
+      <FeatureSection/>
 
       <Footer></Footer>
     </>
