@@ -4,10 +4,11 @@ import { LuNotebookPen } from "react-icons/lu";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
 import { useLogoutMutation } from "../../redux/apiSlice.auth";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { userlogout } from "../../redux/authSlice";
 import { toast } from "react-toastify";
 import { custom } from "zod";
+import { MdOutlineVerified } from "react-icons/md";
 
 const navItems = [
   { name: "Profile", path: "/profile", icon: <User size={20} /> },
@@ -28,11 +29,13 @@ const navItems = [
   },
 ];
 
-export default function UserSideBar({customClass}) {
+export default function UserSideBar({ customClass }) {
   const navigate = useNavigate();
   const [logout] = useLogoutMutation();
   const dispatch = useDispatch();
   const location = useLocation();
+
+  const userData = useSelector((state) => state.auth.user);
 
   const handleLogout = async () => {
     try {
@@ -51,7 +54,9 @@ export default function UserSideBar({customClass}) {
     }
   };
   return (
-    <div className={`w-full lg:w-[307px] p-4 border-r border-pink-200 bg-pink-50  lg:h-screen ${customClass}`}>
+    <div
+      className={`w-full lg:w-[307px] p-4 border-r border-pink-200 bg-pink-50  lg:h-screen ${customClass}`}
+    >
       <h2 className="text-2xl   font-semibold mb-6 text-center lg:text-left w-full px-4 md:mt-6">
         User Dashboard
       </h2>
@@ -67,10 +72,20 @@ export default function UserSideBar({customClass}) {
               }
               end // Ensure exact match for root path "/"
             >
-              <p className="flex items-center gap-2">
+              <span className="flex items-center justify-between">
+                <span className="flex items-center gap-2">
                 {item.icon}
                 {item.name}
-              </p>
+                </span>
+                {item.path === "/profile" && userData?.is_verified && (
+                  <>
+                    <span className="flex justify-start gap-1 items-center text-xs text-green-500 bg-white px-2 py-.5 rounded-full ml-5">
+                      <MdOutlineVerified /> Verified
+                    </span>
+                  </>
+                )}
+              </span>
+              
             </NavLink>
           </li>
         ))}
