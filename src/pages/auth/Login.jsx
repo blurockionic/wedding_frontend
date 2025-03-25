@@ -63,7 +63,6 @@ export default function Login() {
         reset();
         toast.success(message);
 
-
         const from = location.state?.from || "/";
         if (user.role == "ADMIN" || user.role == "SUPER_ADMIN"){
           navigate("/admin");
@@ -71,7 +70,6 @@ export default function Login() {
         else{
           navigate(from);
         }
-        
 
       }
     } catch (error) {

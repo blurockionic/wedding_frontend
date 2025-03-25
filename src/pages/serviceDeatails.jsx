@@ -30,8 +30,8 @@ const mockServiceData = (id) => ({
     phone: "+1 (123) 456-7890",
   },
   media: [
-    "https://via.placeholder.com/400x300?text=Wedding+Photo+1",
-    "https://via.placeholder.com/400x300?text=Wedding+Photo+2",
+    "https://via.placehold.co/400x300?text=Wedding+Photo+1",
+    "https://via.placehold.co/400x300?text=Wedding+Photo+2",
   ],
   reviews: [
     {

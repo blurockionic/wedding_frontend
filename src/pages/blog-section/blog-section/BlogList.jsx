@@ -11,7 +11,7 @@ const BlogList = () => {
       const transformedBlogs = data.data.map(blog => ({
         id: blog.id,
         title: blog.title,
-        coverImage: 'https://via.placeholder.com/600x300',
+        coverImage: 'https://via.placehold.co/600x300',
         date: blog.createdAt,
         hashtags: blog.tags,
         readTime: `${Math.ceil(blog.content.length / 500)} min read`

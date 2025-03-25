@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import LocationSearch from "../../components/LocationSearch/LocationSearch";
 import CircularAnimation from "../CircularMotion";
 import img from "../../../public/heroSection/image 49.png";
-import { useGetHeroSectionAnalyticsQuery } from "../../redux/adminApiSlice";
+import {  useGetHeroSectionAnalyticsQuery } from "../../redux/adminApiSlice";
 import VendorSearch from "../../components/vendorSearch/VendorSearch";
 
 export default function Home() {
@@ -19,8 +19,7 @@ export default function Home() {
   const [searchLocation, setSearchLocation] = useState("");
   const [backgroundImg, setBackGroundImg] = useState(img);
   const [isMobile, setIsMobile] = useState(false);
-  const { data: heroSectionAnalyticsData, isLoading } =
-    useGetHeroSectionAnalyticsQuery();
+  const { data: heroSectionAnalyticsData, isLoading } =  useGetHeroSectionAnalyticsQuery();
 
 
   useEffect(() => {
@@ -58,7 +57,7 @@ export default function Home() {
     return (
       <>
         <div
-          className={`flex w-full flex-grow px-4 my-10 gap-6 md:justify-start md:gap-12 lg:justify-start lg:gap-12 ${
+          className={` flex w-full flex-grow  my-10 gap-6 md:justify-start md:gap-12 lg:justify-start lg:gap-12 ${
             !isMobile ? "justify-between " : "justify-around"
           } items-center `}
         >
@@ -88,7 +87,7 @@ export default function Home() {
             >
               <p className="text-md md:text-3xl font-bold">{count}+</p>
               <div className="mt-2 bg-slate-600 h-1 w-full rounded"></div>
-              <p className={` flex items-center justify-center ${background} text-[8px] md:text-lg mt-2`}>
+              <p className={` flex items-center justify-center ${background} text-[8px] md:text-lg mt-2 gap-1`}>
                 <span className="hidden md:block">{prefix}</span>{desc}
               </p>
             </div>
@@ -154,7 +153,7 @@ export default function Home() {
         </script>
       </Helmet>
 
-      <div className="  grid md:pl-14 xl:pl-16   xl:grid-cols-2 grid-cols-1 justify-between   items-center ">
+      <div className="   grid md:pl-14 xl:pl-16   xl:grid-cols-2 grid-cols-1 justify-between   items-center ">
         {/* Left Section */}
 
         <div className="relative  flex flex-col gap-6  text-center items-start md:text-left ">
