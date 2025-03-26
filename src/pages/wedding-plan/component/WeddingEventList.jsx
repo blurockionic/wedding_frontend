@@ -225,9 +225,9 @@ const WeddingEventList = ({
           {/* Main Event Card Header */}
           <div className="flex flex-col sm:flex-row justify-between items-start p-3 sm:p-5 border-b border-gray-100">
             <div className="flex items-center gap-3 mb-3 sm:mb-0 w-full sm:w-auto">
-              <div className="flex items-center justify-center w-8 h-8 bg-primary/10 text-primary rounded-full">
+              {/* <div className="flex items-center justify-center w-8 h-8 bg-primary/10 text-primary rounded-full">
                 {index + 1}
-              </div>
+              </div> */}
 
               {/* Event Name */}
               <div className="flex flex-col">
