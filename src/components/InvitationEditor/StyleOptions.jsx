@@ -2,6 +2,14 @@ import React from "react";
 import { Menu, Layers } from "lucide-react";
 import { motion } from "framer-motion";
 
+const hexToRgb = (hex) => {
+  const bigint = parseInt(hex.replace("#", ""), 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+  return `rgb(${r}, ${g}, ${b})`;
+};
+
 const StyleOptions = ({
   isStyleOptionsOpen,
   setIsStyleOptionsOpen,
@@ -21,7 +29,6 @@ const StyleOptions = ({
   animations,
   updateSelectedElementStyle,
 }) => {
-
   return (
     <div className={`w-full md:w-72 border-t md:border-l border-white/10 p-4 md:p-6 overflow-y-auto relative bg-slate-700 ${isStyleOptionsOpen ? "block" : "md:hidden"}`}>
       <button className="md:hidden flex items-center gap-2 text-rose-400 mb-4" onClick={() => setIsStyleOptionsOpen(!isStyleOptionsOpen)}>
@@ -40,7 +47,7 @@ const StyleOptions = ({
                   style={{ backgroundColor: color }}
                   onClick={() => {
                     setSelectedColor(color);
-                    updateSelectedElementStyle({ color });
+                    updateSelectedElementStyle({ color: hexToRgb(color) }); // Force RGB
                   }}
                 />
               ))}
@@ -120,7 +127,9 @@ const StyleOptions = ({
               className={`w-full px-4 py-3 rounded-lg border border-rose-400/50 ${glowEffect ? "bg-rose-500/20" : "bg-black/30"}`}
               onClick={() => {
                 setGlowEffect(!glowEffect);
-                updateSelectedElementStyle({ filter: !glowEffect ? `drop-shadow(0 0 8px ${selectedColor}80)` : "none" });
+                updateSelectedElementStyle({
+                  filter: !glowEffect ? `drop-shadow(0 0 8px ${hexToRgb(selectedColor)})` : "none", // Force RGB
+                });
               }}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}

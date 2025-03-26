@@ -18,11 +18,22 @@ const Editor = ({
   onElementSelect,
   backgroundImage,
 }) => {
+  //log for states rendering
+  console.log("Editor rendered with props:", {
+    selectedTemplate,
+    backgroundImage,
+    invitationText,
+    designElementsCount: designElements.length,
+    customTextElementsCount: customTextElements.length,
+    selectedElement,
+  });
   const updateTextField = (field, value) => {
     setInvitationText((prev) => ({
       ...prev,
       [field]: { ...prev[field], text: value },
     }));
+    console.log(`Updated invitationText field '${field}':`, updated);
+      return updated;
   };
 
   const deleteInvitationTextField = (field) => {
@@ -34,27 +45,46 @@ const Editor = ({
     if (selectedElement === field) setSelectedElement(null);
   };
 
-  // Outer div background style (replaces bg-gray-300)
-  const outerBackgroundStyle = backgroundImage
-    ? { backgroundImage: `url(${backgroundImage})`, backgroundSize: "cover", backgroundPosition: "center" }
-    : { backgroundColor: "#D1D5DB" }; // Tailwind's gray-300 hex value
+  // Log props for debugging
+  console.log("Editor - backgroundImage:", backgroundImage, "selectedTemplate:", selectedTemplate);
+
+  // Inner div background style: Prioritize wallpaper if it exists
+  const innerBackgroundStyle = backgroundImage
+    ? { 
+        backgroundImage: `url(${backgroundImage})`, 
+        backgroundSize: "cover", 
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat"
+      }
+    : selectedTemplate
+    ? { background: "transparent" } // Allow template image to show if no wallpaper
+    : { background: "linear-gradient(to bottom, rgb(30, 41, 59), rgb(15, 23, 42))" };
 
   return (
     <div
       className="flex-1 p-4 md:p-8 overflow-y-auto h-[91.6vh]"
-      style={outerBackgroundStyle}
+      style={{ backgroundColor: "#D1D5DB" }}
       onClick={onEditorClick}
     >
       <div
         ref={editorRef}
         className="max-w-[90vw] md:max-w-[63vh] h-[65vh] md:h-[95vh] mx-auto rounded-xl p-6 md:p-12 shadow-2xl border border-white/10 relative overflow-hidden"
-        style={{ background: "linear-gradient(to bottom, rgb(30, 41, 59), rgb(15, 23, 42))" }}
+        style={innerBackgroundStyle}
       >
-        {selectedTemplate && (
+        {selectedTemplate && !backgroundImage && ( // Show template image only if no wallpaper
           <img
             src={selectedTemplate.image}
             alt="Background"
-            style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", objectFit: "100% 100%", objectPosition: "center", zIndex: 0 }}
+            style={{ 
+              position: "absolute", 
+              top: 0, 
+              left: 0, 
+              width: "100%", 
+              height: "100%", 
+              objectFit: "100% 100%", 
+              objectPosition: "center", 
+              zIndex: 0 
+            }}
           />
         )}
         <div className="relative z-10">
@@ -194,9 +224,9 @@ const Editor = ({
             />
           ))}
         </div>
-      </div>
-    </div>
-  );
-};
-
-export default Editor;
+        </div>
+        </div>
+      );
+    };
+    
+    export default Editor;
