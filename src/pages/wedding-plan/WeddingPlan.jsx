@@ -66,7 +66,6 @@ const WeddingPlan = () => {
     setIsActiveVendor((prev) => !prev);
   };
 
-  //handle on download plan
   const handleOnDownloadPlan = (events) => {
     const doc = new jsPDF();
 
@@ -209,7 +208,6 @@ const WeddingPlan = () => {
             handleOnEventActive={handleOnActive}
             handleOnDownloadPlan={() => handleOnDownloadPlan(data.events)}
           />
-
           <WeddingEventList
             events={events}
             handleOnAddSubEvent={handleOnAddSubEvent}

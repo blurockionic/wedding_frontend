@@ -35,6 +35,7 @@
     "marked": "^15.0.6",
     "moment": "^2.30.1",
     "nouislider-react": "^3.4.2",
+    "pdfmake": "^0.2.18",
     "prisma": "^6.2.1",
     "react": "^18.3.1",
     "react-calendar": "^5.1.0",
