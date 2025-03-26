@@ -8,12 +8,12 @@ const ActionHeader = ({
   eventSummary,
 }) => {
   return (
-    <>
-      <div className="px-2 py-3">
+    <div className="flex flex-col mx-4 lg:mr-0  gap-10">
+      <div className=" ">
         <EventSummary summary={eventSummary} />
       </div>
 
-      <div className="flex justify-end items-center px-4 py-3  border-b gap-4">
+      <div className="flex justify-end items-center    gap-4">
         {/* <div
           onClick={handleOnShare}
           className="flex justify-center items-center border border-dashed border-green-500 text-green-500 px-5 py-2 rounded-md cursor-pointer"
@@ -27,7 +27,9 @@ const ActionHeader = ({
           className="flex justify-center items-center border border-dashed border-primary text-primary px-5 py-2 rounded-md cursor-pointer"
         >
           <Download />
-          <p className="ml-2 flex items-center gap-1"><span className="hidden md:block">Download </span> Plan</p>
+          <p className="ml-2 flex items-center gap-1">
+            <span className="hidden md:block">Download </span> Plan
+          </p>
         </div>
 
         <button
@@ -38,7 +40,7 @@ const ActionHeader = ({
           <p className="ml-2">Event</p>
         </button>
       </div>
-    </>
+    </div>
   );
 };
 

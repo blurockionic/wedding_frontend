@@ -239,11 +239,13 @@ function Navbar() {
                 )}
               </ul>
 
-              <User
-                onClick={toggleProfile}
-                className="lg:hidden cursor-pointer"
-                size={34}
-              />
+              {user?.role === "USER" && (
+                <User
+                  onClick={toggleProfile}
+                  className="lg:hidden cursor-pointer"
+                  size={34}
+                />
+              )}
             </div>
             {/* Background Overlay */}
             <div

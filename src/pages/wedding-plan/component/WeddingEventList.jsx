@@ -25,14 +25,13 @@ import { toast } from "react-toastify";
 import ServiceCard from "./ServiceCard";
 
 import PropTypes from "prop-types";
-import { FaCheckCircle, FaTimes } from "react-icons/fa";
-import { BiBell, BiBellPlus } from "react-icons/bi";
+
 import { useEffect } from "react";
 import TaskList from "./TaskList";
 
 const WeddingEventList = ({
   events,
-  handleOnAddSubEvent,
+
   handleOnAddTask,
   handleOnAddVendor,
   handleOnDeleteService,
@@ -41,9 +40,7 @@ const WeddingEventList = ({
   const [eventData, setEventData] = useState(events);
   const [isActiveActions, setIsActiveActions] = useState(false);
   const [activeIndex, setActiveIndex] = useState(null);
-  const [selectedTaskIndex, setSelectedTaskIndex] = useState(null);
-  const [showCalendar, setShowCalendar] = useState(false);
-  const [hoveredIndex, setHoveredIndex] = useState(null);
+
 
   const [deleteEvent, { isLoading, error }] = useDeleteEventMutation();
   const [updateEvent, { isLoading: isUpdating }] = useUpdateEventMutation();
@@ -82,7 +79,7 @@ const WeddingEventList = ({
   // Custom hook for media query
   const useMediaQuery = (query) => {
     const [matches, setMatches] = useState(
-      typeof window !== "undefined" ? window.matchMedia(query).matches : false,
+      typeof window !== "undefined" ? window.matchMedia(query).matches : false
     );
 
     useEffect(() => {
@@ -122,8 +119,8 @@ const WeddingEventList = ({
   const handleChange = (index, field, value) => {
     setEventData((prevData) =>
       prevData.map((event, i) =>
-        i === index ? { ...event, [field]: value } : event,
-      ),
+        i === index ? { ...event, [field]: value } : event
+      )
     );
   };
 
@@ -173,43 +170,43 @@ const WeddingEventList = ({
     setActiveIndex((prev) => (prev === index ? null : index));
   };
 
-  // Handle hover events for tasks (for visual effects)
-  const handleHover = (index, action) => {
-    if (action === "enter") {
-      setHoveredIndex(index);
-    } else if (action === "leave") {
-      setHoveredIndex(null);
-    }
-  };
+  // // Handle hover events for tasks (for visual effects)
+  // const handleHover = (index, action) => {
+  //   if (action === "enter") {
+  //     setHoveredIndex(index);
+  //   } else if (action === "leave") {
+  //     setHoveredIndex(null);
+  //   }
+  // };
 
-  // Open calendar modal to set schedule date
-  const openModal = (index) => {
-    setSelectedTaskIndex(index);
-    setShowCalendar(true);
-  };
+  // // Open calendar modal to set schedule date
+  // const openModal = (index) => {
+  //   setSelectedTaskIndex(index);
+  //   setShowCalendar(true);
+  // };
 
-  // Toggle task status (done/undone)
-  const handleTaskStatus = async (taskId, currentStatus) => {
-    try {
-      console.log(
-        "Toggling status for taskId:",
-        taskId,
-        "Current status:",
-        currentStatus,
-      );
-      await updateTaskStatus({
-        taskId,
-        status: !currentStatus,
-      }).unwrap();
-      refetch();
-    } catch (err) {
-      console.error("Error updating task status:", err);
-    }
-  };
+  // // Toggle task status (done/undone)
+  // const handleTaskStatus = async (taskId, currentStatus) => {
+  //   try {
+  //     console.log(
+  //       "Toggling status for taskId:",
+  //       taskId,
+  //       "Current status:",
+  //       currentStatus
+  //     );
+  //     await updateTaskStatus({
+  //       taskId,
+  //       status: !currentStatus,
+  //     }).unwrap();
+  //     refetch();
+  //   } catch (err) {
+  //     console.error("Error updating task status:", err);
+  //   }
+  // };
 
   if (!events || events.length === 0) {
     return (
-      <div className="flex justify-center items-center bg-gray-100 p-6">
+      <div className="flex ml-2  justify-center items-center bg-gray-100  py-6">
         No event data available
       </div>
     );
@@ -427,7 +424,7 @@ const WeddingEventList = ({
                           handleChange(
                             index,
                             "eventDescription",
-                            e.target.value,
+                            e.target.value
                           )
                         }
                         autoFocus
@@ -473,7 +470,7 @@ const WeddingEventList = ({
                             handleChange(
                               index,
                               "eventStartTime",
-                              e.target.value,
+                              e.target.value
                             )
                           }
                           autoFocus
