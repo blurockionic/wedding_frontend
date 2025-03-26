@@ -306,7 +306,7 @@ const ChecklistCategory = ({ title, items }) => {
                   <div className="relative">
                     {item.scheduleDate ? (
                       <BiBell
-                        className="text-pink-500 cursor-pointer hover:text-pink-700 transition-all duration-300 ease-in-out cursor-pointer"
+                        className="text-pink-500  hover:text-pink-700 transition-all duration-300 ease-in-out cursor-pointer"
                         size={18}
                         onClick={(e) => {
                           e.stopPropagation();
@@ -615,15 +615,15 @@ const Checklist = () => {
       <div className="relative font-montserrat ">
         <div className=" inset-0 ">
           <img
-            className="w-full h-full object-cover"
+               className="w-full h-[15vh]  md:h-[30vh] object-cover"
             src={imagebg1}
             alt="bg image"
           />
         </div>
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white  p-6 text-center">
-          <h2 className="text-[4vw] font-bold mb-2">Your Perfect Day, Perfectly Planned
+          <h2 className="md:text-[3vw] text-[4vw] font-bold mb-2">Your Perfect Day, Perfectly Planned
          </h2>
-          <h5 className="text-[2vw] font-light">
+          <h5 className="md:text-[2vw] text-[2.5vw]  font-light">
           The Ultimate Wedding Checklist!
           </h5>
         </div>

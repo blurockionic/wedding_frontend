@@ -45,16 +45,16 @@ export default function FavoriteList() {
   return (
     <div>
       <div className="relative font-montserrat ">
-        <div className=" inset-0 ">
+        <div className=" inset-0  ">
           <img
-            className="w-full h-full object-cover"
+            className="w-full h-[15vh]  md:h-[30vh] object-cover"
             src={imagebg1}
             alt="bg image"
           />
         </div>
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-white  p-6 text-center">
-          <h2 className="text-[5vw] font-bold mb-2">From Wishes to Reality!</h2>
-          <h5 className="text-[2vw] font-light">
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-white  text-center">
+          <h2 className="md:text-[4vw] text-[5vw]  font-bold ">From Wishes to Reality!</h2>
+          <h5 className="md:text-[2vw] text-[2.5vw] font-light">
             Curate your favorites and plan with ease.
           </h5>
         </div>

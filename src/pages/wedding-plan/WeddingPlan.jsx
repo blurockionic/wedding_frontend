@@ -183,13 +183,13 @@ const WeddingPlan = () => {
           <div className="relative font-montserrat ">
             <div className=" inset-0 ">
               <img
-                className="w-full h-full object-cover"
+                className="w-full h-[15vh]  md:h-[25vh] object-cover"
                 src={imagebg1}
                 alt="bg image"
               />
             </div>
             <div className="absolute inset-0 flex flex-col items-center justify-center text-white   text-center">
-              <h2 className="text-[5vw] md:text-[4vw] lg:text-[3vw] font-bold mb-2">
+              <h2 className="text-[5vw] md:text-[4vw] lg:text-[3vw] font-bold">
                 From Wishes to Reality!
               </h2>
               <h5 className="text-[2.5vw] md:text-[2vw] lg:text-[1.5vw] font-light">
@@ -197,18 +197,18 @@ const WeddingPlan = () => {
               </h5>
             </div>
           </div>
-          
+          <div className=" lg:hidden w-full lg:w-1/3">
+            <WeddingPlanSideNavber
+              handleToSelectSuggestion={handleToSelectSuggestion}
+            />
+          </div>
           <ActionHeader
             eventSummary={data.event_summary}
             handleOnShare={handleOnShare}
             handleOnEventActive={handleOnActive}
             handleOnDownloadPlan={() => handleOnDownloadPlan(data.events)}
           />
-          <div className=" lg:hidden w-full lg:w-1/3">
-            <WeddingPlanSideNavber
-              handleToSelectSuggestion={handleToSelectSuggestion}
-            />
-          </div>
+         
           <WeddingEventList
             events={events}
             handleOnAddSubEvent={handleOnAddSubEvent}

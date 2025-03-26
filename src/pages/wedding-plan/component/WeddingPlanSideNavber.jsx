@@ -54,7 +54,7 @@ const WeddingPlanSideNavbar = ({ handleToSelectSuggestion }) => {
   return (
     <aside className="    border-r border-gray-200  bg-white">
       {/* Header */}
-      <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
+      <div className="px-4 py-3 border-b text-center  border-gray-200 bg-gray-50">
         <h2 className="text-xl font-semibold text-gray-800">Wedding Planner</h2>
         <p className="text-sm text-gray-500">Explore cultural wedding events</p>
       </div>

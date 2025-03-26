@@ -181,8 +181,8 @@ const UserProfile = () => {
               />
             </div>
             <div className="flex flex-col md:items-start mt-4  md:mt-0">
-              <p className="hidden md:block">Your Name</p>
-              <h2 className="text-lg uppercase   text-start sm:text-xl text-white  md:mt-0">
+              <p className="hidden text-xs md:block">Your Name</p>
+              <h2 className="text-lg uppercase  font-semibold text-start sm:text-xl text-white  md:mt-0">
                 {userData?.user_name}
               </h2>
             </div>
@@ -203,14 +203,14 @@ const UserProfile = () => {
 
             <div className=" flex ">
               {[
-                { count: 5, what: "checklist created" },
+                { count: 5, what: "checklist " },
                 { count: 5, what: "wishlist" },
-                { count: 5, what: "event created" },
-                { count: 5, what: "posts" },
+                { count: 5, what: "event " },
+              
               ].map((item, index, array) => (
                 <div
                   key={item.what}
-                  className={`flex flex-col justify-center items-center  gap-2 p-2 ${
+                  className={`flex flex-col capitalize justify-center items-center  gap-2 p-2 ${
                     index !== array.length - 1
                       ? "border-r-2 border-gray-300"
                       : ""
