@@ -189,25 +189,26 @@ const WeddingPlan = () => {
               />
             </div>
             <div className="absolute inset-0 flex flex-col items-center justify-center text-white   text-center">
-              <h2 className="text-[4vw] font-bold mb-2">
+              <h2 className="text-[3vw] font-bold mb-2">
                 From Wishes to Reality!
               </h2>
-              <h5 className="text-[2vw] font-light">
+              <h5 className="text-[1vw] font-light">
                 Curate your favorites and plan with ease.
               </h5>
             </div>
           </div>
-          <div className=" lg:hidden w-full lg:w-1/3">
-            <WeddingPlanSideNavber
-              handleToSelectSuggestion={handleToSelectSuggestion}
-            />
-          </div>
+          
           <ActionHeader
             eventSummary={data.event_summary}
             handleOnShare={handleOnShare}
             handleOnEventActive={handleOnActive}
             handleOnDownloadPlan={() => handleOnDownloadPlan(data.events)}
           />
+          <div className=" lg:hidden w-full lg:w-1/3">
+            <WeddingPlanSideNavber
+              handleToSelectSuggestion={handleToSelectSuggestion}
+            />
+          </div>
           <WeddingEventList
             events={events}
             handleOnAddSubEvent={handleOnAddSubEvent}

@@ -200,11 +200,7 @@ function Navbar() {
                       <NavLink
                         to="/login"
                         onClick={() => setIsMenuOpen(false)}
-                        className={({ isActive }) =>
-                          isActive
-                            ? "text-primary px-3 py-1 border border-primary  rounded-md"
-                            : "px-3 py-1 text-primary border border-primary rounded-md"
-                        }
+                        className='text-primary px-3 py-1 border border-primary  rounded-md'
                       >
                         Login
                       </NavLink>
@@ -213,11 +209,7 @@ function Navbar() {
                       <NavLink
                         to="/signup"
                         onClick={() => setIsMenuOpen(false)}
-                        className={({ isActive }) =>
-                          isActive
-                            ? "text-white px-3 py-1.5 bg-primary rounded-md"
-                            : "text-white px-3 py-1.5 bg-primary rounded-md"
-                        }
+                        className="text-white px-3 py-1.5 bg-primary rounded-md whitespace-nowrap"
                       >
                         Sign up
                       </NavLink>
