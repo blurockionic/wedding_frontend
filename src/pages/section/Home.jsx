@@ -57,7 +57,7 @@ export default function Home() {
     return (
       <>
         <div
-          className={` flex w-full flex-grow  my-10 gap-6 md:justify-start md:gap-12 lg:justify-start lg:gap-12 ${
+          className={` flex w-full flex-grow  my-10 gap-6 md:justify-start md:gap-12 lg:justify-start lg:gap-12 px-10 md:px-0 ${
             !isMobile ? "justify-between " : "justify-around"
           } items-center `}
         >
