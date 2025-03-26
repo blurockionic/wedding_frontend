@@ -161,7 +161,7 @@ const UserProfile = () => {
     <div className="w-full   mx-auto rounded-lg">
       <div className="relative text-center  h-fit">
         {/* Background Image */}
-        <div className="absolute inset-0 min-h-[300px]">
+        <div className="absolute inset-0 ">
           <img
             className="w-full h-full object-cover"
             src={imagebg1}

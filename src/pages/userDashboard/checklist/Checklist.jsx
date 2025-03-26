@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FaCheckCircle, FaPlus, FaTimes, FaSave, FaTrash, FaCalendarAlt } from "react-icons/fa";
+import {
+  FaCheckCircle,
+  FaPlus,
+  FaTimes,
+  FaSave,
+  FaTrash,
+  FaCalendarAlt,
+} from "react-icons/fa";
 import { BiBell, BiBellPlus } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
@@ -21,6 +28,7 @@ import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import imagebg1 from "../../../../public/userprofile/imagebg1.png";
 
 // Custom hook to detect screen size (no changes)
 const useMediaQuery = (query) => {
@@ -124,38 +132,39 @@ const ChecklistCategory = ({ title, items }) => {
     const structuredData = {
       "@context": "https://schema.org",
       "@type": "Checklist",
-      "name": "Wedding Planning Checklist",
-      "description": "Comprehensive wedding planning checklist to organize your tasks and manage vendors for your perfect wedding.",
-      "author": {
+      name: "Wedding Planning Checklist",
+      description:
+        "Comprehensive wedding planning checklist to organize your tasks and manage vendors for your perfect wedding.",
+      author: {
         "@type": "Organization",
-        "name": "Marriage Vendors",
-        "url": "https://www.marriagevendors.com"
+        name: "Marriage Vendors",
+        url: "https://www.marriagevendors.com",
       },
-      "image": "https://www.marriagevendors.com/images/wedding-checklist.jpg",
-      "publisher": {
+      image: "https://www.marriagevendors.com/images/wedding-checklist.jpg",
+      publisher: {
         "@type": "Organization",
-        "name": "Marriage Vendors",
-        "logo": {
+        name: "Marriage Vendors",
+        logo: {
           "@type": "ImageObject",
-          "url": "https://www.marriagevendors.com/logo.png"
-        }
+          url: "https://www.marriagevendors.com/logo.png",
+        },
       },
-      "datePublished": "2024-01-01",
-      "mainEntityOfPage": {
+      datePublished: "2024-01-01",
+      mainEntityOfPage: {
         "@type": "WebPage",
-        "@id": "https://www.marriagevendors.com/checklist"
+        "@id": "https://www.marriagevendors.com/checklist",
       },
-      "itemListOrder": "Unordered",
-      "itemListElement": [
+      itemListOrder: "Unordered",
+      itemListElement: [
         "Venue Booking",
         "Catering Selection",
         "Photographer Hiring",
         "Wedding Attire",
         "Guest List Management",
-        "Vendor Coordination"
-      ]
+        "Vendor Coordination",
+      ],
     };
-  
+
     return (
       <div>
         <Helmet>
@@ -164,24 +173,54 @@ const ChecklistCategory = ({ title, items }) => {
             name="description"
             content="Organize your wedding planning with our comprehensive checklist. Track tasks, manage vendors, and ensure nothing is missed for your perfect wedding day."
           />
-          <meta name="keywords" content="wedding checklist, wedding planning, wedding tasks, marriage vendors, wedding organization" />
+          <meta
+            name="keywords"
+            content="wedding checklist, wedding planning, wedding tasks, marriage vendors, wedding organization"
+          />
           <meta name="author" content="Marriage Vendors" />
-          <link rel="canonical" href="https://www.marriagevendors.com/checklist" />
-          
+          <link
+            rel="canonical"
+            href="https://www.marriagevendors.com/checklist"
+          />
+
           {/* Open Graph / Facebook */}
           <meta property="og:type" content="website" />
-          <meta property="og:url" content="https://www.marriagevendors.com/checklist" />
-          <meta property="og:title" content="Wedding Planning Checklist | Marriage Vendors" />
-          <meta property="og:description" content="Organize your wedding planning with our comprehensive checklist. Track tasks, manage vendors, and ensure nothing is missed for your perfect wedding day." />
-          <meta property="og:image" content="https://www.marriagevendors.com/images/wedding-checklist-social.jpg" />
-  
+          <meta
+            property="og:url"
+            content="https://www.marriagevendors.com/checklist"
+          />
+          <meta
+            property="og:title"
+            content="Wedding Planning Checklist | Marriage Vendors"
+          />
+          <meta
+            property="og:description"
+            content="Organize your wedding planning with our comprehensive checklist. Track tasks, manage vendors, and ensure nothing is missed for your perfect wedding day."
+          />
+          <meta
+            property="og:image"
+            content="https://www.marriagevendors.com/images/wedding-checklist-social.jpg"
+          />
+
           {/* Twitter */}
           <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:url" content="https://www.marriagevendors.com/checklist" />
-          <meta name="twitter:title" content="Wedding Planning Checklist | Marriage Vendors" />
-          <meta name="twitter:description" content="Organize your wedding planning with our comprehensive checklist. Track tasks, manage vendors, and ensure nothing is missed for your perfect wedding day." />
-          <meta name="twitter:image" content="https://www.marriagevendors.com/images/wedding-checklist-social.jpg" />
-  
+          <meta
+            name="twitter:url"
+            content="https://www.marriagevendors.com/checklist"
+          />
+          <meta
+            name="twitter:title"
+            content="Wedding Planning Checklist | Marriage Vendors"
+          />
+          <meta
+            name="twitter:description"
+            content="Organize your wedding planning with our comprehensive checklist. Track tasks, manage vendors, and ensure nothing is missed for your perfect wedding day."
+          />
+          <meta
+            name="twitter:image"
+            content="https://www.marriagevendors.com/images/wedding-checklist-social.jpg"
+          />
+
           {/* Structured Data */}
           <script type="application/ld+json">
             {JSON.stringify(structuredData)}
@@ -307,7 +346,7 @@ const ChecklistCategory = ({ title, items }) => {
           );
         })}
       </ul>
-      
+
       {/* Render Modal Conditionally */}
       {scheduleIndex !== null && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
@@ -319,8 +358,12 @@ const ChecklistCategory = ({ title, items }) => {
             {/* Header */}
             <div className="flex justify-between items-start pb-3">
               <div>
-                <h2 className="text-2xl font-bold text-pink-600 mb-1">Schedule Task</h2>
-                <p className="text-gray-500 text-sm">(Select a completion date)</p>
+                <h2 className="text-2xl font-bold text-pink-600 mb-1">
+                  Schedule Task
+                </h2>
+                <p className="text-gray-500 text-sm">
+                  (Select a completion date)
+                </p>
               </div>
               <button
                 type="button"
@@ -341,7 +384,9 @@ const ChecklistCategory = ({ title, items }) => {
                   Complete by:{" "}
                   {items[scheduleIndex]?.scheduleDate ? (
                     <span className="font-semibold text-pink-600">
-                      {new Date(items[scheduleIndex].scheduleDate).toLocaleDateString()}
+                      {new Date(
+                        items[scheduleIndex].scheduleDate
+                      ).toLocaleDateString()}
                     </span>
                   ) : (
                     <span className="font-semibold text-gray-500">Not Set</span>
@@ -354,7 +399,11 @@ const ChecklistCategory = ({ title, items }) => {
             <div className="flex justify-center my-4">
               <Calendar
                 onChange={(date) => handleDateChange(date, scheduleIndex)} // Ensure this doesn't close modal
-                value={items[scheduleIndex]?.scheduleDate ? new Date(items[scheduleIndex].scheduleDate) : null}
+                value={
+                  items[scheduleIndex]?.scheduleDate
+                    ? new Date(items[scheduleIndex].scheduleDate)
+                    : null
+                }
                 className="w-full border rounded-lg p-2"
               />
             </div>
@@ -363,23 +412,28 @@ const ChecklistCategory = ({ title, items }) => {
             {items[scheduleIndex]?.scheduleDate && (
               <div className="flex justify-center my-4">
                 <a
-                    href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
-                      items[scheduleIndex].name
-                    )}&details=${encodeURIComponent(
-                      `Reminder to complete your task: "${items[scheduleIndex].name}"\n\nMake sure to finish it before the deadline!`
-                    )}&dates=${new Date(items[scheduleIndex].scheduleDate)
+                  href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
+                    items[scheduleIndex].name
+                  )}&details=${encodeURIComponent(
+                    `Reminder to complete your task: "${items[scheduleIndex].name}"\n\nMake sure to finish it before the deadline!`
+                  )}&dates=${
+                    new Date(items[scheduleIndex].scheduleDate)
                       .toISOString()
                       .replace(/[-:]/g, "")
-                      .split(".")[0]}Z/${new Date(items[scheduleIndex].scheduleDate)
+                      .split(".")[0]
+                  }Z/${
+                    new Date(items[scheduleIndex].scheduleDate)
                       .toISOString()
                       .replace(/[-:]/g, "")
-                      .split(".")[0]}Z`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 flex items-center justify-center shadow-md"
-                  >
-                    <FaCalendarAlt className="mr-2" /> Set Reminder on Google Calendar
-                  </a>
+                      .split(".")[0]
+                  }Z`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 flex items-center justify-center shadow-md"
+                >
+                  <FaCalendarAlt className="mr-2" /> Set Reminder on Google
+                  Calendar
+                </a>
               </div>
             )}
 
@@ -406,8 +460,6 @@ const ChecklistCategory = ({ title, items }) => {
           </div>
         </div>
       )}
-
-
 
       {/* Add new item Form */}
       <div className="mt-4">
@@ -453,7 +505,10 @@ const ChecklistCategory = ({ title, items }) => {
                 <button type="button" className="flex-shrink-0">
                   <FaPlus size={20} />
                 </button>
-                <input type="text" className="flex-grow p-2 border rounded-md" />
+                <input
+                  type="text"
+                  className="flex-grow p-2 border rounded-md"
+                />
               </div>
               <p className="text-sm ml-8 invisible">Placeholder</p>
             </form>
@@ -470,11 +525,7 @@ const Checklist = () => {
   const navigate = useNavigate();
   const [saveChecklistApi, { isLoading: isSavingApi }] =
     useSaveChecklistMutation();
-  const {
-    data: fetchedChecklist,
-    isLoading,
-    isError,
-  } = useGetChecklistQuery();
+  const { data: fetchedChecklist, isLoading, isError } = useGetChecklistQuery();
   const checklistData = useSelector((state) => state.checklist);
   const testData = useSelector((state) => state.auth.user);
   const [progress, setProgress] = useState(0);
@@ -521,8 +572,7 @@ const Checklist = () => {
 
   const handleSave = async (isUpdate) => {
     try {
-      
-      if (!isLoading){     
+      if (!isLoading) {
         const payload = { checklistItems: checklistData };
         const resultAction = await saveChecklistApi(payload);
         toast.dismiss();
@@ -557,13 +607,29 @@ const Checklist = () => {
           content="Contact us to book an appointment or reach out for more information."
         />
         <meta name="author" content="Wedding Vendors" />
-        <link rel="canonical" href="https://www.marriagevendors.com/contactus" />
+        <link
+          rel="canonical"
+          href="https://www.marriagevendors.com/contactus"
+        />
       </Helmet>
-
-      <div className="max-w-7xl px-2 lg:px-10 mx-auto py-10">
-        <div className="text-3xl md:text-4xl font-bold text-gray-800 mb-8">
-          Wedding Checklist
+      <div className="relative font-montserrat ">
+        <div className=" inset-0 ">
+          <img
+            className="w-full h-full object-cover"
+            src={imagebg1}
+            alt="bg image"
+          />
         </div>
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-white  p-6 text-center">
+          <h2 className="text-[4vw] font-bold mb-2">Your Perfect Day, Perfectly Planned
+         </h2>
+          <h5 className="text-[2vw] font-light">
+          The Ultimate Wedding Checklist!
+          </h5>
+        </div>
+      </div>
+      <div className="max-w-7xl px-2 lg:px-10 mx-auto py-10">
+       
 
         {isLoading ? (
           <div className="text-center text-pink-600">Loading checklist...</div>
@@ -646,7 +712,6 @@ const Checklist = () => {
           </>
         )}
       </div>
-
     </div>
   );
 };
