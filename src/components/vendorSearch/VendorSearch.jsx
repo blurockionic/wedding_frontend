@@ -28,7 +28,7 @@ export default function VendorSearch({ setCategory, service_type }) {
       );
     }
     setShowSuggestions(true);
-  }, [search]);
+  }, [dropdownRef]);
 
  
 

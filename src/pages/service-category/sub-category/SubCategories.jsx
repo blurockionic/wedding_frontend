@@ -57,12 +57,12 @@ const SubCategories = () => {
     <div className="bg-white min-h-screen">
       {/* Breadcrumb Navigation */}
       <nav className="bg-gray-100 py-3 px-4 md:px-16">
-        <div className="container mx-auto flex items-center text-sm text-gray-600">
+        <div className=" mx-auto flex items-center text-sm text-gray-600">
           <Link to="/all" className="hover:text-primary transition">Wedding</Link>
           <span className="mx-2">/</span>
-          <Link to={`/all/${category}`} className="hover:text-primary transition">{category}</Link>
+          <Link  className="hover:text-primary transition">{category}</Link>
           <span className="mx-2">/</span>
-          <Link to={`/all/${category}/${subCategory}`} className="font-semibold text-primary">
+          <Link to={`/all/${category}/${subCategory}`} className="capitalize font-semibold text-primary">
             {subCategory}
           </Link>
         </div>
@@ -70,7 +70,7 @@ const SubCategories = () => {
 
       {/* Page Header */}
       <header className="px-4 md:px-16 py-6 bg-gradient-to-r from-primary/10 to-primary/5">
-        <div className="container mx-auto">
+        <div className=" mx-auto">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
             Search for {subCategory}
           </h1>
@@ -82,25 +82,25 @@ const SubCategories = () => {
 
       {/* State Selection Section */}
       <section className="px-4 md:px-16 py-8">
-        <div className="container mx-auto">
+        <div className=" mx-auto">
           <h2 className="text-2xl font-semibold text-gray-800 mb-6">
             {`Select ${subCategory} by Region`}
           </h2>
           
           <div className="overflow-x-auto">
-            <div className="flex space-x-4 pb-4">
+            <div className="flex space-x-4 pb-4 ">
               {Object.keys(stateServiceCount || {}).length > 0 ? (
                 Object.entries(stateServiceCount).map(([state, count]) => (
                   <div 
                     key={state} 
-                    className="flex-shrink-0 w-48 text-center cursor-pointer hover:scale-105 transition-transform"
+                    className="flex-shrink-0 w-48 text-center cursor-pointer hover:scale-105 transition-transform p-4"
                     onClick={() => handleStateClick(state)}
                   >
                     <div className="bg-white shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition">
                       <img
                         src={getRandomImage()}
                         alt={`${state} wedding services`}
-                        className="h-48 w-full object-cover"
+                        className="h-20 w-full object-cover"
                       />
                       <div className="p-4">
                         <h3 className="font-semibold text-gray-800 capitalize">{state}</h3>
