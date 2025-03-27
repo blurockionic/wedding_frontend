@@ -59,18 +59,27 @@ const CategoryByState = () => {
 
   return (
     <>
+     
+      
       {/* Breadcrumb Navigation */}
-      <span className="px-4 md:px-16 text-xs md:text-sm">
-        <Link to={`/all`}>Wedding</Link> &gt;
-        <Link >{category}</Link> &gt;
-        <Link to={`/all/${category}/${subcategory}`}>{subcategory}</Link> &gt;
-        <Link
+      <nav className="bg-gray-100 py-3 px-4 md:px-16">
+        <div className="container mx-auto flex items-center text-sm text-gray-600">
+          <Link to="/all" className="hover:text-primary transition">Wedding</Link>
+          <span className="mx-2">/</span>
+          <Link  className="hover:text-primary transition">{category}</Link>
+          <span className="mx-2">/</span>
+          <Link to={`/all/${category}/${subcategory}`} className=" capitalize">
+            {subcategory}
+          </Link>
+          <span className="mx-2">/</span>
+          <Link
           to={`/all/${category}/${subcategory}/${state}`}
-          className="capitalize"
+          className="font-semibold text-primary capitalize"
         >
           {state}
         </Link>
-      </span>
+        </div>
+      </nav>
       <h1 className="px-4 md:px-16 text-2xl font-semibold">
         Search for {subcategory} in {state}
       </h1>

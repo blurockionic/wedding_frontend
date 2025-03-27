@@ -103,18 +103,30 @@ const CategoryByCity = () => {
 
         {/* Service Listings */}
         <div className="w-full lg:w-3/4">
-          <span className="text-xs md:text-sm">
-            <Link to={`/all`}>Wedding</Link> &gt;
-            <Link> {category}</Link> &gt;
-            <Link to={`/all/${category}/${subcategory}`}> {subcategory}</Link> &gt;
-            <Link to={`/all/${category}/${subcategory}/${state}`} className="capitalize">
-              {state}
-            </Link>{" "}
-            &gt;
-            <Link to={`/all/${category}/${subcategory}/${state}/${city}`} className="capitalize">
+         
+          {/* Breadcrumb Navigation */}
+      <nav className=" py-3  ">
+        <div className="container mx-auto flex items-center text-sm text-gray-600">
+          <Link to="/all" className="hover:text-primary transition">Wedding</Link>
+          <span className="mx-2">/</span>
+          <Link  className="hover:text-primary transition">{category}</Link>
+          <span className="mx-2">/</span>
+          <Link to={`/all/${category}/${subcategory}`} className="capitalize">
+            {subcategory}
+          </Link>
+          <span className="mx-2">/</span>
+          <Link
+          to={`/all/${category}/${subcategory}/${state}`}
+          className="capitalize"
+        >
+          {state}
+        </Link>
+        <span className="mx-2">/</span>
+        <Link to={`/all/${category}/${subcategory}/${state}/${city}`}className="font-semibold text-primary capitalize">
               {city}
             </Link>
-          </span>
+        </div>
+      </nav>
 
           <h1 className="text-2xl font-bold mt-2">
             <span className="capitalize">{subcategory}</span> in <span className="capitalize">{city}</span>,{" "}
