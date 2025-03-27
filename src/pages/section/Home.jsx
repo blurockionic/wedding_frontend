@@ -83,10 +83,10 @@ export default function Home() {
           ].map(({ count, desc, prefix, background }, index) => (
             <div
               key={index}
-              className="md:border px-2 rounded-md py-2 bg-white bg-opacity-20 md:backdrop-blur-lg min-w-[80px] flex-grow  md:w-auto md:min-w-[120px] md:max-w-[180px] text-center md:shadow-md"
+              className="border px-2 rounded-md py-2 bg-white bg-opacity-20 md:backdrop-blur-lg min-w-[80px] flex-grow  md:w-auto md:min-w-[120px] md:max-w-[180px] text-center md:shadow-md"
             >
               <p className="text-xl md:text-3xl font-bold">{count}+</p>
-              <div className="mt-2 bg-slate-600 hidden md:h-1 w-full rounded"></div>
+              <hr className="mt-2 bg-slate-600"/>
               <p className={` flex items-center justify-center ${background} text-md md:text-lg mt-2 gap-1`}>
                 <span className="hidden md:block">{prefix}</span>{desc}
               </p>
