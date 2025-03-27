@@ -97,12 +97,12 @@ const WeddingPlan = () => {
       doc.rect(10, 10, pageWidth - 20, doc.internal.pageSize.height - 20);
   
       // Title
-      doc.setFontSize(22);
+      doc.setFontSize(18);
       doc.setTextColor(colors.headerBlue[0], colors.headerBlue[1], colors.headerBlue[2]);
       doc.text("Event Plan Details", pageWidth / 2, 30, { align: 'center' });
   
       // Event Name
-      doc.setFontSize(18);
+      doc.setFontSize(14);
       doc.setTextColor(colors.textDark[0], colors.textDark[1], colors.textDark[2]);
       doc.text(`Event ${index + 1}: ${event.eventName}`, pageWidth / 2, 45, { align: 'center' });
   
@@ -114,7 +114,7 @@ const WeddingPlan = () => {
         { label: "End Time", value: moment(event.eventEndTime).format("hh:mm A") },
         { 
           label: "Budget", 
-          value: `₹ ${parseFloat(event.eventBudget).toLocaleString('en-IN', { 
+          value: `${parseFloat(event.eventBudget).toLocaleString('en-IN', { 
             minimumFractionDigits: 2, 
             maximumFractionDigits: 2 
           })}` 
@@ -200,7 +200,7 @@ const WeddingPlan = () => {
         });
   
         // Total Expense
-        doc.setFontSize(12);
+        doc.setFontSize(10);
         doc.setTextColor(colors.headerBlue[0], colors.headerBlue[1], colors.headerBlue[2]);
         doc.text(`Total Vendor Expense: ₹ ${totalExpense.toLocaleString('en-IN', { 
           minimumFractionDigits: 2, 
@@ -211,7 +211,7 @@ const WeddingPlan = () => {
           { align: 'center' }
         );
       } else {
-        doc.setFontSize(12);
+        doc.setFontSize(10);
         doc.setTextColor(colors.headerBlue[0], colors.headerBlue[1], colors.headerBlue[2]);
         doc.text("No vendors available.", pageWidth / 2, doc.lastAutoTable.finalY + 15, { align: 'center' });
       }
