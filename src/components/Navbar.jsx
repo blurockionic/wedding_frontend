@@ -115,11 +115,11 @@ function Navbar() {
                   <img
                     src={brandlogo}
                     alt="brandlogo"
-                    className={`w-10 h-10 md:w-8 md:h-8 lg:w-10 lg:h-10`}
+                    className={` ${user != null ? "w-10 h-10" : "w-7 h-7"} md:w-8 md:h-8 lg:w-10 lg:h-10`}
                   />
                   <span
                     className={` xl:block text-primary  lg:text-2xl ${
-                      user != null ? "hidden lg:block text-lg" : "text-xl "
+                      user != null ? "hidden md:block text-lg" : "text-xl "
                     }`}
                   >
                     Marriage Vendors
