@@ -13,7 +13,7 @@ import autoTable from "jspdf-autotable";
 import moment from "moment";
 import { useSelector } from "react-redux";
 import CreateTaskForm from "./component/CreateTaskForm";
-
+import imagebg1 from "../../../public/userprofile/imagebg1.png";
 
 const WeddingPlan = () => {
   const { user } = useSelector((state) => state.auth);
@@ -24,7 +24,6 @@ const WeddingPlan = () => {
   const [isActiveVendor, setIsActiveVendor] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [events, setEvents] = useState([]);
-
   const [isRefetchData, setIsRefetchData] = useState(false);
   const [eventId, setEventId] = useState(null);
   const [preLoadEvent, setPreLoadEvent] = useState("");
@@ -32,7 +31,6 @@ const WeddingPlan = () => {
   // refetch the data
   useEffect(() => {
     refetch();
-    console.log("this is working");
     setIsRefetchData(false);
     //close the form
     setIsActiveWeddingPlanForm(false);
@@ -68,155 +66,70 @@ const WeddingPlan = () => {
 
   const handleOnDownloadPlan = (events) => {
     const doc = new jsPDF();
-    
-    // Soft color palette
-    const colors = {
-      headerBlue: [41, 128, 185],    // Soft professional blue
-      labelGray: [100, 100, 120],    // Soft gray for labels
-      textDark: [50, 50, 70],        // Dark text color
-      lightBackground: [240, 248, 255] // Very light blue background
-    };
-  
+
+    doc.setFontSize(18);
+    doc.text("Event Plan Details", 10, 10);
+
+    let currentY = 20; // Track the Y position
+
     events.forEach((event, index) => {
-      // New page for each event
-      if (index > 0) {
-        doc.addPage();
-      }
-  
-      // Page dimensions
-      const pageWidth = doc.internal.pageSize.width;
-      const margin = 20;
-  
-      // Subtle background fill
-      doc.setFillColor(colors.lightBackground[0], colors.lightBackground[1], colors.lightBackground[2]);
-      doc.rect(10, 10, pageWidth - 20, doc.internal.pageSize.height - 20, 'F');
-  
-      // Decorative soft border
-      doc.setDrawColor(220, 220, 240);
-      doc.setLineWidth(1);
-      doc.rect(10, 10, pageWidth - 20, doc.internal.pageSize.height - 20);
-  
-      // Title
-      doc.setFontSize(22);
-      doc.setTextColor(colors.headerBlue[0], colors.headerBlue[1], colors.headerBlue[2]);
-      doc.text("Event Plan Details", pageWidth / 2, 30, { align: 'center' });
-  
-      // Event Name
-      doc.setFontSize(18);
-      doc.setTextColor(colors.textDark[0], colors.textDark[1], colors.textDark[2]);
-      doc.text(`Event ${index + 1}: ${event.eventName}`, pageWidth / 2, 45, { align: 'center' });
-  
-      // Prepare data for table
-      const tableData = [
-        { label: "Event Name", value: event.eventName },
-        { label: "Event Date", value: moment(event.eventDate).format('DD-MM-YYYY') },
-        { label: "Start Time", value: moment(event.eventStartTime).format("hh:mm A") },
-        { label: "End Time", value: moment(event.eventEndTime).format("hh:mm A") },
-        { 
-          label: "Budget", 
-          value: `₹ ${parseFloat(event.eventBudget).toLocaleString('en-IN', { 
-            minimumFractionDigits: 2, 
-            maximumFractionDigits: 2 
-          })}` 
-        },
-        { label: "Description", value: event.eventDescription }
-      ];
-  
-      // Create table
+      // Add Event Title
+      doc.setFontSize(14);
+      doc.text(`Event ${index + 1}: ${event.eventName}`, 10, currentY);
+
+      // Event Table
       autoTable(doc, {
-        startY: 60,
-        body: tableData.map(item => [item.label, item.value]),
-        theme: 'plain',
-        styles: { 
-          fontSize: 11,
-          cellPadding: 4,
-          textColor: colors.textDark
-        },
-        columnStyles: {
-          0: { 
-            fontStyle: 'bold', 
-            cellWidth: 60,
-            textColor: colors.labelGray
-          },
-          1: { 
-            cellWidth: 120,
-            textColor: [0, 0, 0]  // Ensure budget is clearly visible
-          }
-        },
-        margin: { left: margin, right: margin },
-        tableWidth: 'wrap',
-        showHead: 'never',
-        showLines: false,
-        alternateRowStyles: {
-          fillColor: [245, 250, 255]  // Very light blue alternate row
-        }
+        startY: currentY + 5,
+        head: [["Field", "Value"]],
+        body: [
+          ["Event Name", event.eventName],
+          ["Event Date", moment(event.eventDate).format("DD-MM-YYYY")],
+          ["Start Time", moment(event.eventStartTime).format("hh:mm A")],
+          ["End Time", moment(event.eventEndTime).format("hh:mm A")],
+          ["Budget", `${event.eventBudget}`],
+          ["Description", event.eventDescription],
+        ],
       });
-  
-      // Vendors Section
+
+      let totalExpense = 0; // Initialize total expense
+
+      // Vendors Table (if available)
       if (event.eventVendors?.length > 0) {
-        const totalExpense = event.eventVendors.reduce((sum, vendor) => 
-          sum + parseFloat(vendor.price), 0);
-  
-        const vendorData = event.eventVendors.map((vendor) => [
-          vendor.name,
-          `₹ ${parseFloat(vendor.price).toLocaleString('en-IN', { 
-            minimumFractionDigits: 2, 
-            maximumFractionDigits: 2 
-          })}`,
-          vendor.unit
-        ]);
-  
-        doc.setFontSize(16);
-        doc.setTextColor(colors.headerBlue[0], colors.headerBlue[1], colors.headerBlue[2]);
-        doc.text("Vendors", pageWidth / 2, doc.lastAutoTable.finalY + 15, { align: 'center' });
-  
+        totalExpense = event.eventVendors.reduce(
+          (sum, vendor) => sum + parseFloat(vendor.price),
+          0
+        );
+
+        doc.text("Vendors", 10, doc.lastAutoTable.finalY + 10);
         autoTable(doc, {
-          startY: doc.lastAutoTable.finalY + 20,
-          body: vendorData,
-          theme: 'plain',
-          styles: { 
-            fontSize: 10,
-            cellPadding: 3,
-            textColor: colors.textDark
-          },
-          columnStyles: {
-            0: { 
-              cellWidth: 80, 
-              textColor: colors.labelGray 
-            },
-            1: { 
-              cellWidth: 40,
-              textColor: [0, 0, 0]  // Ensure prices are clearly visible
-            },
-            2: { cellWidth: 40 }
-          },
-          margin: { left: margin, right: margin },
-          tableWidth: 'wrap',
-          showHead: 'never',
-          showLines: false,
-          alternateRowStyles: {
-            fillColor: [245, 250, 255]  // Very light blue alternate row
-          }
+          startY: doc.lastAutoTable.finalY + 15,
+          head: [["Vendor Name", "Price", "Unit"]],
+          body: event.eventVendors.map((vendor) => [
+            vendor.name,
+            `${vendor.price}`,
+            vendor.unit,
+          ]),
         });
-  
-        // Total Expense
-        doc.setFontSize(12);
-        doc.setTextColor(colors.headerBlue[0], colors.headerBlue[1], colors.headerBlue[2]);
-        doc.text(`Total Vendor Expense: ₹ ${totalExpense.toLocaleString('en-IN', { 
-          minimumFractionDigits: 2, 
-          maximumFractionDigits: 2 
-        })}`, 
-          pageWidth / 2, 
-          doc.lastAutoTable.finalY + 10, 
-          { align: 'center' }
+
+        // Display total expense
+        doc.text(
+          `Total Expense: ${totalExpense}`,
+          10,
+          doc.lastAutoTable.finalY + 10
         );
       } else {
-        doc.setFontSize(12);
-        doc.setTextColor(colors.headerBlue[0], colors.headerBlue[1], colors.headerBlue[2]);
-        doc.text("No vendors available.", pageWidth / 2, doc.lastAutoTable.finalY + 15, { align: 'center' });
+        doc.text("No vendors available.", 10, doc.lastAutoTable.finalY + 10);
+      }
+
+      currentY = doc.lastAutoTable.finalY + 20; // Update position for next event
+
+      // Add a new page if needed
+      if (index < events.length - 1 && currentY > 250) {
+        doc.addPage();
+        currentY = 20;
       }
     });
-  
+
     // Save the PDF
     doc.save("Event_Plan_Details.pdf");
   };
@@ -263,15 +176,37 @@ const WeddingPlan = () => {
 
   return (
     <div className="flex-col relative">
-      <section className="p-3 w-full flex ">
-        <div className="w-full p-3 h-screen overflow-scroll">
-          <HeadingCard user={user} />
+      <section className=" w-full flex lg:flex-row flex-col ">
+        <div className="w-full flex flex-col gap-6 lg:gap-10  lg:h-screen overflow-y-scroll">
+          <div className="relative font-montserrat ">
+            <div className=" inset-0 ">
+              <img
+                className="w-full h-[15vh]  md:h-[25vh] object-cover"
+                src={imagebg1}
+                alt="bg image"
+              />
+            </div>
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-white   text-center">
+              <h2 className="text-[5vw] sm:text-[3vw] md:text-[2vw] lg:text-[3vw] font-bold mb-2">
+                From Wishes to Reality!
+              </h2>
+              <h5 className="text-[2.5vw] md:text-[2vw] lg:text-[1.5vw] font-light">
+                Curate your favorites and plan with ease.
+              </h5>
+            </div>
+          </div>
+          <div className=" lg:hidden w-full lg:w-1/3">
+            <WeddingPlanSideNavber
+              handleToSelectSuggestion={handleToSelectSuggestion}
+            />
+          </div>
           <ActionHeader
             eventSummary={data.event_summary}
             handleOnShare={handleOnShare}
             handleOnEventActive={handleOnActive}
             handleOnDownloadPlan={() => handleOnDownloadPlan(data.events)}
           />
+
           <WeddingEventList
             events={events}
             handleOnAddSubEvent={handleOnAddSubEvent}
@@ -280,9 +215,11 @@ const WeddingPlan = () => {
             handleOnDeleteService={handleOnDeleteService}
           />
         </div>
-        <WeddingPlanSideNavber
-          handleToSelectSuggestion={handleToSelectSuggestion}
-        />
+        <div className="hidden lg:block w-full lg:w-1/3">
+          <WeddingPlanSideNavber
+            handleToSelectSuggestion={handleToSelectSuggestion}
+          />
+        </div>
       </section>
 
       {/* Backdrop Blur Effect */}

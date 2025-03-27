@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import CustomButton from "../../components/global/button/CustomButton";
 
 import imagebg1 from "../../../public/userprofile/imagebg1.png";
+import { use } from "react";
+import { useGetWeddingPlanQuery } from "../../redux/weddingPlanSlice";
 
 const UserProfile = () => {
   const navigate = useNavigate();
@@ -20,6 +22,17 @@ const UserProfile = () => {
   const [previewUrl, setPreviewUrl] = useState(userData?.profile_pic || "");
 
   const [updateUser, { isLoading }] = useUpdateUserMutation();
+  const checklist = useSelector((state) => state.checklist);
+
+  const totalTasks = checklist.reduce((count, category) => count + category.items.length, 0);
+  const favoriteList = useSelector((state) => {
+    return state.favorites.favorites || [];
+  });
+
+  const { data:eventData, error, refetch } = useGetWeddingPlanQuery();
+
+  
+
 
   useEffect(() => {
     if (
@@ -161,7 +174,7 @@ const UserProfile = () => {
     <div className="w-full   mx-auto rounded-lg">
       <div className="relative text-center  h-fit">
         {/* Background Image */}
-        <div className="absolute inset-0 min-h-[300px]">
+        <div className="absolute inset-0 ">
           <img
             className="w-full h-full object-cover"
             src={imagebg1}
@@ -181,8 +194,8 @@ const UserProfile = () => {
               />
             </div>
             <div className="flex flex-col md:items-start mt-4  md:mt-0">
-              <p className="hidden md:block">Your Name</p>
-              <h2 className="text-lg uppercase   text-start sm:text-xl text-white  md:mt-0">
+              <p className="hidden text-xs md:block">Your Name</p>
+              <h2 className="text-lg uppercase  font-semibold text-start sm:text-xl text-white  md:mt-0">
                 {userData?.user_name}
               </h2>
             </div>
@@ -203,14 +216,13 @@ const UserProfile = () => {
 
             <div className=" flex ">
               {[
-                { count: 5, what: "checklist created" },
-                { count: 5, what: "wishlist" },
-                { count: 5, what: "event created" },
-                { count: 5, what: "posts" },
+                { count: totalTasks, what: "checklist " },
+                { count: favoriteList.length, what: "wishlist" },
+                { count: eventData?.events.length, what: "event " },
               ].map((item, index, array) => (
                 <div
                   key={item.what}
-                  className={`flex flex-col justify-center items-center  gap-2 p-2 ${
+                  className={`flex flex-col capitalize justify-center items-center  gap-2 p-2 ${
                     index !== array.length - 1
                       ? "border-r-2 border-gray-300"
                       : ""
