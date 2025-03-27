@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import CustomButton from "../../components/global/button/CustomButton";
 
 import imagebg1 from "../../../public/userprofile/imagebg1.png";
-import { use } from "react";
+
 import { useGetWeddingPlanQuery } from "../../redux/weddingPlanSlice";
 
 const UserProfile = () => {
@@ -24,15 +24,15 @@ const UserProfile = () => {
   const [updateUser, { isLoading }] = useUpdateUserMutation();
   const checklist = useSelector((state) => state.checklist);
 
-  const totalTasks = checklist.reduce((count, category) => count + category.items.length, 0);
+  const totalTasks = checklist.reduce(
+    (count, category) => count + category.items.length,
+    0
+  );
   const favoriteList = useSelector((state) => {
     return state.favorites.favorites || [];
   });
 
-  const { data:eventData, error, refetch } = useGetWeddingPlanQuery();
-
-  
-
+  const { data: eventData, error, refetch } = useGetWeddingPlanQuery();
 
   useEffect(() => {
     if (
@@ -154,6 +154,11 @@ const UserProfile = () => {
                     ? {
                         value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                         message: "Invalid email format",
+                      }
+                    : field === "phone_number"
+                    ? {
+                        value: /^[0-9]{10}$/,
+                        message: "Invalid phone number format",
                       }
                     : undefined,
               })}
