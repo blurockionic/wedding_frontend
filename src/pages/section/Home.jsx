@@ -1,6 +1,6 @@
 import Aos from "aos";
 import "aos/dist/aos.css";
-import {  useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../../components/global/button/CustomButton";
 
@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import LocationSearch from "../../components/LocationSearch/LocationSearch";
 import CircularAnimation from "../CircularMotion";
 import img from "../../../public/heroSection/image 49.png";
-import {  useGetHeroSectionAnalyticsQuery } from "../../redux/adminApiSlice";
+import { useGetHeroSectionAnalyticsQuery } from "../../redux/adminApiSlice";
 import VendorSearch from "../../components/vendorSearch/VendorSearch";
 
 export default function Home() {
@@ -19,18 +19,14 @@ export default function Home() {
   const [searchLocation, setSearchLocation] = useState("");
   const [backgroundImg, setBackGroundImg] = useState(img);
   const [isMobile, setIsMobile] = useState(false);
-  const { data: heroSectionAnalyticsData, isLoading } =  useGetHeroSectionAnalyticsQuery();
-
+  const { data: heroSectionAnalyticsData, isLoading } =
+    useGetHeroSectionAnalyticsQuery();
 
   useEffect(() => {
     Aos.init({
       duration: 1000,
     });
   }, []);
-
- 
- 
-
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -40,7 +36,7 @@ export default function Home() {
   }, []);
 
   // set value on input field
- 
+
   const handleNavigate = () => {
     if (category && searchLocation) {
       navigate(`/all/${category}/${searchLocation}`);
@@ -86,9 +82,12 @@ export default function Home() {
               className="border px-2 rounded-md py-2 bg-white bg-opacity-20 md:backdrop-blur-lg min-w-[80px] flex-grow  md:w-auto md:min-w-[120px] md:max-w-[180px] text-center md:shadow-md"
             >
               <p className="text-xl md:text-3xl font-bold">{count}+</p>
-              <hr className="mt-2 bg-slate-600"/>
-              <p className={` flex items-center justify-center ${background} text-md md:text-lg mt-2 gap-1`}>
-                <span className="hidden md:block">{prefix}</span>{desc}
+              <hr className="mt-2 bg-slate-600" />
+              <p
+                className={` flex items-center justify-center ${background} text-md md:text-lg mt-2 gap-1`}
+              >
+                <span className="hidden md:block">{prefix}</span>
+                {desc}
               </p>
             </div>
           ))}
@@ -203,8 +202,8 @@ export default function Home() {
           </div>
           <section className="ml-0 w-full md:flex-row  justify-start  mx-auto flex-col flex  px-10 md:px-0">
             {/* Input Group */}
-            <div className="   relative  md:flex justify-start items-center rounded-lg  border focus-within:ring-1 focus-within:ring-primary transition duration-300  ">
-              <VendorSearch setCategory={setCategory}/>
+            <div className="   relative  overflow-hidden md:flex justify-start items-center rounded-lg  border focus-within:ring-1 focus-within:ring-primary transition duration-300  ">
+              <VendorSearch setCategory={setCategory} />
               <div className="absolute hidden md:block left-1/2 transform -translate-x-1/2   -mt-2">
                 <span className="  text-4xl text-pink-400">|</span>
               </div>
