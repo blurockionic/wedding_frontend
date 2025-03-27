@@ -24,7 +24,6 @@ const WeddingPlan = () => {
   const [isActiveVendor, setIsActiveVendor] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [events, setEvents] = useState([]);
-
   const [isRefetchData, setIsRefetchData] = useState(false);
   const [eventId, setEventId] = useState(null);
   const [preLoadEvent, setPreLoadEvent] = useState("");
@@ -32,7 +31,6 @@ const WeddingPlan = () => {
   // refetch the data
   useEffect(() => {
     refetch();
-    console.log("this is working");
     setIsRefetchData(false);
     //close the form
     setIsActiveWeddingPlanForm(false);
@@ -208,7 +206,7 @@ const WeddingPlan = () => {
             handleOnEventActive={handleOnActive}
             handleOnDownloadPlan={() => handleOnDownloadPlan(data.events)}
           />
-         
+
           <WeddingEventList
             events={events}
             handleOnAddSubEvent={handleOnAddSubEvent}

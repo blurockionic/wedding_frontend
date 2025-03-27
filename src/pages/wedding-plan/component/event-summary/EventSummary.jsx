@@ -9,6 +9,9 @@ const EventSummary = ({ summary = {} }) => {
     grand_total = 0,
   } = summary;
 
+
+  
+
   const summaryItems = [
     {
       label: "Total Events",

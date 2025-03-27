@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import CustomButton from "../../components/global/button/CustomButton";
 
 import imagebg1 from "../../../public/userprofile/imagebg1.png";
+import { use } from "react";
+import { useGetWeddingPlanQuery } from "../../redux/weddingPlanSlice";
 
 const UserProfile = () => {
   const navigate = useNavigate();
@@ -20,6 +22,17 @@ const UserProfile = () => {
   const [previewUrl, setPreviewUrl] = useState(userData?.profile_pic || "");
 
   const [updateUser, { isLoading }] = useUpdateUserMutation();
+  const checklist = useSelector((state) => state.checklist);
+
+  const totalTasks = checklist.reduce((count, category) => count + category.items.length, 0);
+  const favoriteList = useSelector((state) => {
+    return state.favorites.favorites || [];
+  });
+
+  const { data:eventData, error, refetch } = useGetWeddingPlanQuery();
+
+  
+
 
   useEffect(() => {
     if (
@@ -203,10 +216,9 @@ const UserProfile = () => {
 
             <div className=" flex ">
               {[
-                { count: 5, what: "checklist " },
-                { count: 5, what: "wishlist" },
-                { count: 5, what: "event " },
-              
+                { count: totalTasks, what: "checklist " },
+                { count: favoriteList.length, what: "wishlist" },
+                { count: eventData?.events.length, what: "event " },
               ].map((item, index, array) => (
                 <div
                   key={item.what}
