@@ -72,8 +72,8 @@ export default function FavoriteList() {
             })}
           </div>
         ) : (
-          <div className="flex items-center justify-center h-64">
-            <p className="text-foreground font-bold text-8xl">
+          <div className="flex items-center justify-center w-full bg-gray-50 rounded-md">
+            <p className="text-foreground font-bold text-[5vw] ">
               {"No favorites found."}
             </p>
           </div>
