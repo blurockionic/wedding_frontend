@@ -96,8 +96,8 @@ const Cards = () => {
         src={fr}
         alt="Example image"
         rotate="0deg"
-        top="20%"
-        left="-1%"
+        top="35%"
+        left="89%"
         className="w-10 md:w-20 hidden md:block"
       />
       <Card
@@ -106,9 +106,9 @@ const Cards = () => {
         src={fr}
         alt="Example image"
         rotate="180deg"
-        top="40%"
-        left="29%"
-        className="w-10 md:w-20 hidden md:block"
+        top="29%"
+        left="68%"
+        className="w-10 md:w-20 hidden md:block "
       />
       <Card
         containerRef={containerRef}
