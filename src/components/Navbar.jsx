@@ -75,7 +75,13 @@ function Navbar() {
         <>
           {/* <TopNavbar /> */}
           <nav className="w-full bg-white top-0 px-6 md:px-16 z-50 shadow-sm">
-            <div className="w-full flex justify-between items-center py-4">
+            <div
+              className={`w-full lg:flex lg:justify-between lg:items-center  py-4 ${
+                user != null
+                  ? "flex justify-between items-center"
+                  : "flex justify-start items-center gap-4"
+              }`}
+            >
               <button
                 className="block lg:hidden text-gray-800"
                 onClick={toggleMenu}
@@ -100,14 +106,22 @@ function Navbar() {
               <div className="text-2xl font-bold text-primary cursor-pointer">
                 <NavLink
                   to="/"
-                  className="flex  flex-col lg:gap-3 lg:flex-row items-center cursor-pointer"
+                  className={`flex ${
+                    user != null
+                      ? "flex-col items-center"
+                      : "flex-row items-center gap-2"
+                  } lg:gap-3 lg:flex-row  cursor-pointer`}
                 >
                   <img
                     src={brandlogo}
                     alt="brandlogo"
-                    className=" w-8 h-8 lg:w-10 lg:h-10"
+                    className={`w-10 h-10 md:w-8 md:h-8 lg:w-10 lg:h-10`}
                   />
-                  <span className=" xl:block text-primary text-xs lg:text-2xl">
+                  <span
+                    className={` xl:block text-primary  lg:text-2xl ${
+                      user != null ? "hidden lg:block text-lg" : "text-xl "
+                    }`}
+                  >
                     Marriage Vendors
                   </span>
                 </NavLink>
@@ -116,16 +130,27 @@ function Navbar() {
               <ul
                 className={`
               flex flex-col lg:flex-row lg:gap-4 gap-4
-              absolute lg:relative z-50
-              rounded-lg 
+              absolute lg:relative z-50 rounded-tr-lg rounded-br-lg
               bg-white text-gray-600 font-medium
-              h-screen lg:h-0 w-1/2 left-0 top-0
+              h-screen lg:h-0 w-3/4 left-0 top-0
               lg:w-auto lg:top-auto lg:items-center
               px-4 py-4 lg:py-0 lg:px-0 transition-transform
-              duration-300 ease-in-out ${
+              duration-300 ease-in-out  ${
                 isMenuOpen ? "translate-x-0" : "-translate-x-full"
               } lg:translate-x-0`}
               >
+                <div className="flex items-center gap-2 lg:hidden">
+                  <img
+                    src={brandlogo}
+                    alt="brandlogo"
+                    className={`w-5 h-5`}
+                  />
+                  <span className={`text-primary text-xl `}>
+                    Marriage Vendors
+                  </span>
+                </div>
+                <hr />
+                
                 {NavbarRoutesConfig.map((route) => (
                   <li key={route.path} className="lg:inline-block">
                     <NavLink
@@ -141,7 +166,6 @@ function Navbar() {
                     </NavLink>
                   </li>
                 ))}
-
                 {categories.map(({ title, key, gridCols, width }) => (
                   <DropdownMenu
                     key={key}
@@ -155,19 +179,11 @@ function Navbar() {
                     width={width}
                   />
                 ))}
-                <li>
-                  <NavLink
-                    to="/templates"
-                    className="cursor-pointer hover:text-dustyRose"
-                  >
-                    Invitation
-                  </NavLink>
+                <li className="cursor-pointer">
+                  <NavLink to="/templates">Invitation</NavLink>
                 </li>
-                <li>
-                  <NavLink
-                    to="/vendorLogin"
-                    className="cursor-pointer border px-2 py-1 rounded-md"
-                  >
+                <li className="cursor-pointer border px-2 py-2 lg:px-2 lg:py-1 rounded-md hover:bg-pink-50 ">
+                  <NavLink to="/vendorLogin" className="">
                     Vendor Login
                   </NavLink>
                 </li>
@@ -196,36 +212,43 @@ function Navbar() {
                 user?.role !== "ADMIN" &&
                 user?.role !== "SUPER_ADMIN" ? (
                   <>
-                    <li className="lg:inline-block">
+                    <li className="text-primary lg:inline-block cursor-pointer border border-primary px-2 py-2 lg:px-2 lg:py-1 rounded-md hover:bg-pink-50">
                       <NavLink
                         to="/login"
                         onClick={() => setIsMenuOpen(false)}
-                        className='text-primary px-3 py-1 border border-primary  rounded-md'
+                       
                       >
                         Login
                       </NavLink>
                     </li>
-                    <li className="lg:inline-block">
+                    <li 
+                    className="hidden xl:block cursor-pointer whitespace-nowrap bg-primary border border-primary px-2 py-2 lg:px-2 lg:py-1 rounded-md hover:bg-pink-50 hover:text-primary text-white"
+                    >
                       <NavLink
                         to="/signup"
                         onClick={() => setIsMenuOpen(false)}
-                        className="text-white px-3 py-1.5 bg-primary rounded-md whitespace-nowrap"
                       >
                         Sign up
                       </NavLink>
                     </li>
                   </>
                 ) : (
-                  <li className="lg:inline-block">
+                  <li className="lg:inline-block border px-2 py-2 rounded-md lg:border-none lg:p-0 w-full lg:w-auto">
                     <div
                       onClick={handleOnProfile}
-                      className="flex items-center gap-x-2 cursor-pointer"
+                      className="flex items-center gap-x-2 cursor-pointer w-full"
                     >
                       <img
                         src={user?.profile_photo || Avatar}
                         alt="Profile"
-                        className="w-8 h-8 rounded-full"
+                        className="w-12 h-12 lg:w-8 lg:h-8 rounded-full"
                       />
+                      <p className="lg:hidden flex flex-col gap-1 items-start justify-between w-full pr-5">
+                        <span className="capitalize">{user?.user_name}</span>
+                        <span className="lowercase text-xs rounded-full border px-3 py-1">
+                          {user?.role}
+                        </span>
+                      </p>
                     </div>
                   </li>
                 )}

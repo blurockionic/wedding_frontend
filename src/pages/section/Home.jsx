@@ -57,7 +57,7 @@ export default function Home() {
     return (
       <>
         <div
-          className={` flex w-full flex-grow  my-10 gap-6 md:justify-start md:gap-12 lg:justify-start lg:gap-12 px-10 md:px-0 ${
+          className={` flex w-full flex-grow  my-10  md:justify-start gap-2 md:gap-12 lg:justify-start lg:gap-12 px-8  md:px-0 ${
             !isMobile ? "justify-between " : "justify-around"
           } items-center `}
         >
@@ -83,11 +83,11 @@ export default function Home() {
           ].map(({ count, desc, prefix, background }, index) => (
             <div
               key={index}
-              className="border px-2 rounded-md py-2 bg-white bg-opacity-20 backdrop-blur-lg min-w-[80px] flex-grow  md:w-auto md:min-w-[120px] md:max-w-[180px] text-center shadow-md"
+              className="md:border px-2 rounded-md py-2 bg-white bg-opacity-20 md:backdrop-blur-lg min-w-[80px] flex-grow  md:w-auto md:min-w-[120px] md:max-w-[180px] text-center md:shadow-md"
             >
-              <p className="text-md md:text-3xl font-bold">{count}+</p>
-              <div className="mt-2 bg-slate-600 h-1 w-full rounded"></div>
-              <p className={` flex items-center justify-center ${background} text-[8px] md:text-lg mt-2 gap-1`}>
+              <p className="text-xl md:text-3xl font-bold">{count}+</p>
+              <div className="mt-2 bg-slate-600 hidden md:h-1 w-full rounded"></div>
+              <p className={` flex items-center justify-center ${background} text-md md:text-lg mt-2 gap-1`}>
                 <span className="hidden md:block">{prefix}</span>{desc}
               </p>
             </div>
