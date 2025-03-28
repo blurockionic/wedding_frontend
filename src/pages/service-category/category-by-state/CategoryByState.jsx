@@ -92,7 +92,7 @@ const CategoryByState = () => {
       <div className="px-4 md:px-16 mt-4 overflow-x-auto whitespace-nowrap flex gap-4 py-2 scrollbar-hide">
         {cityServiceCount && Object.keys(cityServiceCount).length > 0 ? (
           Object.entries(cityServiceCount).map(([city, count]) => (
-            <div key={city} className="flex flex-col items-center gap-1 md:gap-2">
+            <div key={city} className="flex flex-col items-center gap-1 md:gap-2 ">
               <img
                 src={getRandomImage()}
                 alt="Wedding Venue"

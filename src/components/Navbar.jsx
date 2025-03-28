@@ -158,14 +158,16 @@ function Navbar() {
                       onClick={() => setIsMenuOpen(false)}
                       className={({ isActive }) =>
                         isActive
-                          ? "text-dustyRose-dark border-b-2 border-primary pb-1"
-                          : "hover:text-dustyRose"
+                          ? "text-primary border-b-2 border-primary pb-1"
+                          : "hover:text-primary"
                       }
                     >
                       {route.name}
                     </NavLink>
                   </li>
                 ))}
+
+                {/* drop down  */}
                 {categories.map(({ title, key, gridCols, width }) => (
                   <DropdownMenu
                     key={key}
@@ -311,14 +313,14 @@ const DropdownMenu = ({
 }) => {
   return (
     <li
-      className="relative lg:inline-block"
+      className="relative lg:inline-block "
       onMouseEnter={() => setDropdown(categoryKey)}
       onMouseLeave={() => setDropdown("")}
     >
-      <span className="cursor-pointer hover:text-dustyRose">{title}</span>
+      <span className="cursor-pointer hover:text-primary">{title}</span>
       {dropdown === categoryKey && (
         <div
-          className={`absolute left-0 top-full bg-white shadow-lg ${width} py-4 z-40`}
+          className={`absolute left-0 top-full bg-white shadow-lg ${width} py-4 z-40 `}
         >
           <ul className={`grid grid-cols-${gridCols} gap-4 px-4`}>
             {Object.entries(allCategories)
@@ -328,7 +330,7 @@ const DropdownMenu = ({
                   <li key={index}>
                     <button
                       onClick={() => handleNavigate(category, subcategory)}
-                      className="block text-left w-full hover:text-dustyRose"
+                      className="block text-left w-full hover:text-primary"
                     >
                       {subcategory}
                     </button>
