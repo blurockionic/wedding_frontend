@@ -67,8 +67,8 @@ export default function UserSideBar({ customClass }) {
               to={item.path}
               className={({ isActive }) =>
                 isActive && location.pathname === item.path
-                  ? "text-pink-500  block rounded-md py-2 px-4 bg-pink-100"
-                  : "text-black block rounded-md py-2 px-4 hover:text-pink-500 hover:bg-pink-50"
+                  ? "text-primary  block rounded-md py-3 px-4 bg-pink-100 border border-primary"
+                  : "text-black block rounded-md py-3 px-4 hover:text-primary hover:bg-pink-50"
               }
               end // Ensure exact match for root path "/"
             >
@@ -79,7 +79,7 @@ export default function UserSideBar({ customClass }) {
                 </span>
                 {item.path === "/profile" && userData?.is_verified && (
                   <>
-                    <span className="flex justify-start gap-1 items-center text-xs text-green-500 bg-white px-2 py-.5 rounded-full ml-5">
+                    <span className="flex justify-start gap-1 items-center text-xs text-green-500 bg-white px-1 py-.5 rounded-full ml-5">
                       <MdOutlineVerified /> Verified
                     </span>
                   </>

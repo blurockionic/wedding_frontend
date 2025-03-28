@@ -100,6 +100,7 @@ const CreateYourWeddingPlan = ({setRefetch, preLoadEvent}) => {
                 })}
                 className="mt-1 border rounded p-2"
                 type="date"
+                min={new Date().toISOString().split("T")[0]}
               />
               {errors.eventDate && (
                 <span className="text-red-500 text-xs">
@@ -109,12 +110,10 @@ const CreateYourWeddingPlan = ({setRefetch, preLoadEvent}) => {
             </div>
             <div className="flex flex-col w-full">
               <p className="text-xs px-1">
-                Start From <span className="text-red-500">*</span>
+                Start From 
               </p>
               <input
-                {...register("startTime", {
-                  required: "Start time is required",
-                })}
+                {...register("startTime")}
                 className="mt-1 border rounded p-2"
                 type="time"
               />
@@ -126,10 +125,10 @@ const CreateYourWeddingPlan = ({setRefetch, preLoadEvent}) => {
             </div>
             <div className="flex flex-col w-full">
               <p className="text-xs px-1">
-                End At <span className="text-red-500">*</span>
+                End At 
               </p>
               <input
-                {...register("endTime", { required: "End time is required" })}
+                {...register("endTime")}
                 className="mt-1 border rounded p-2"
                 type="time"
               />
@@ -143,12 +142,10 @@ const CreateYourWeddingPlan = ({setRefetch, preLoadEvent}) => {
             {/* Event Description */}
             <div className="flex flex-col w-full">
               <p className="text-xs  px-1">
-                Event Description <span className="text-red-500">*</span>
+                Event Description 
               </p>
               <textarea
-                {...register("eventDescription", {
-                  required: "Event Description is required",
-                })}
+                {...register("eventDescription")}
                 className="mt-1 border rounded p-2"
                 cols={10}
                 placeholder="Event Description"

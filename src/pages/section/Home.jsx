@@ -184,7 +184,7 @@ export default function Home() {
               Your one-stop destination for
             </p>
             <p
-              className="text-[10vw]  md:text-[6.4vw] lg:text-[6.4vw] lg:mt-2    font-bold tracking-tight custom-animate text-white md:text-primary"
+              className="text-[10vw]  md:text-[6.4vw] lg:text-[5.5vw] lg:mt-2    font-bold tracking-tight custom-animate text-white md:text-primary"
               data-aos="fade-up"
               style={
                 isMobile

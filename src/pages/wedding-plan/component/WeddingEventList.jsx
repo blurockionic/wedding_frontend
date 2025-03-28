@@ -4,6 +4,8 @@ import {
   CalendarDays,
   CalendarMinus,
   CalendarPlus,
+  Check,
+  CheckCircle,
   ChevronDown,
   ChevronUp,
   HandCoins,
@@ -250,7 +252,7 @@ const WeddingEventList = ({
                       {isUpdating ? (
                         <Loader2 className="animate-spin" size={16} />
                       ) : (
-                        "✓"
+                        <Check size={24} className="text-white"/>
                       )}
                     </button>
                   </div>
@@ -291,7 +293,7 @@ const WeddingEventList = ({
                       {isUpdating ? (
                         <Loader2 className="animate-spin" size={16} />
                       ) : (
-                        "✓"
+                        <Check size={24} className="text-white"/>
                       )}
                     </button>
                   </div>
@@ -329,7 +331,7 @@ const WeddingEventList = ({
                       {isUpdating ? (
                         <Loader2 className="animate-spin" size={16} />
                       ) : (
-                        "✓"
+                        <Check size={24} className="text-white"/>
                       )}
                     </button>
                   </div>
@@ -438,7 +440,7 @@ const WeddingEventList = ({
                         {isUpdating ? (
                           <Loader2 className="animate-spin" size={16} />
                         ) : (
-                          "✓"
+                          <Check size={24} className="text-white"/>
                         )}
                       </button>
                     </div>
@@ -484,7 +486,7 @@ const WeddingEventList = ({
                           {isUpdating ? (
                             <Loader2 className="animate-spin" size={16} />
                           ) : (
-                            "✓"
+                            <Check size={24} className="text-white"/>
                           )}
                         </button>
                       </div>
@@ -524,7 +526,7 @@ const WeddingEventList = ({
                           {isUpdating ? (
                             <Loader2 className="animate-spin" size={16} />
                           ) : (
-                            "✓"
+                            <Check size={24} className="text-white"/>
                           )}
                         </button>
                       </div>
