@@ -1,10 +1,9 @@
 import  { useState, useEffect, useMemo } from "react";
 import { useGetServicesQuery } from "../../../redux/serviceSlice";
 import {  useLocation } from "react-router-dom";
-import Sidebar from "../../../components/Sidebar";
-import ServiceList from "../../../components/ServiceList";
 import ServiceListForEvent from "./ServiceListForEvent";
 import { Filter, X } from "lucide-react";
+import Filterbar from "./Filterbar";
 
 function AddVendors({eventId}) {
   const location = useLocation();
@@ -89,11 +88,11 @@ function AddVendors({eventId}) {
 
         {/* Sidebar */}
         <div
-          className={`absolute md:relative z-10 bg-muted w-full md:w-1/4 md:h-auto transition-all duration-300 ease-in-out ${
+          className={`md:mt-10 rounded-xl absolute md:relative z-10 bg-muted w-full md:w-2/4 lg:w-1/4 md:h-auto transition-all duration-300 ease-in-out ${
             isSidebarOpen ? "translate-x-0" : "-translate-x-full hidden"
           }`}
         >
-          <Sidebar
+          <Filterbar
             searchType={searchType}
             searchLocation={searchLocation}
             onFilterChange={handleFilterChange}

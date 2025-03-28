@@ -8,6 +8,9 @@ import { toggleFavorite } from "../../../redux/favoriteSlice";
 import { toast } from "react-toastify";
 import { PlusCircle, PlusCircleIcon } from "lucide-react";
 import { useAddServiceMutation } from "../../../redux/weddingPlanSlice";
+import { GoLocation } from "react-icons/go";
+import { MdCurrencyRupee, MdRoomService } from "react-icons/md";
+import { GiTwoCoins } from "react-icons/gi";
 
 const VendorCardForEvent = ({
   service,
@@ -82,27 +85,24 @@ const VendorCardForEvent = ({
     }
   };
 
-  const imageUrl = useMemo(() => {
-    if (
-      service &&
-      service.media &&
-      service.media.length > 0 &&
-      service.media[0] &&
-      service.media[0].image_urls &&
-      service.media[0].image_urls.length > 0 &&
-      service.media[0].image_urls[0].path
-    ) {
-      return service.media[0].image_urls[0].path;
-    } else {
-      return `https://via.placehold.co/300x200?text=${
-        service?.service_type || "No Image"
-      }`; // Provide a default or placeholder
-    }
-  }, [service]);
+ const imageUrl = useMemo(() => {
+     if (
+       service?.media?.length > 0 &&
+       service.media[0]?.image_urls?.length > 0 &&
+       service.media[0].image_urls[0]?.path
+     ) {
+       return service.media[0].image_urls[0].path;
+     }
+   
+    
+     return `https://placehold.co/300x200?text=${encodeURIComponent(
+       service?.service_type || "No Image"
+     )}`;
+   }, [service]);
 
   return (
     <div
-      className="group relative bg-white rounded shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
+      className="group p-4 relative bg-white rounded shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
       onClick={handleCardClick}
       aria-label={`View details of ${service?.service_name}`}
     >
@@ -111,7 +111,7 @@ const VendorCardForEvent = ({
         <img
           src={imageUrl}
           alt={service?.service_name}
-          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110 rounded-md"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50"></div>
 
@@ -123,9 +123,9 @@ const VendorCardForEvent = ({
           onClick={(e) => handleFavoriteClick(e, service?.id)}
         >
           {isFavorite ? (
-            <HeartFilled color={`red`} size={20} />
-          ) : (
             <HeartOutline color="red" size={20} />
+          ) : (
+            <HeartFilled color={`red`} size={20} />
           )}
         </button>
         <button
@@ -135,18 +135,18 @@ const VendorCardForEvent = ({
           onClick={(e) => handleAddOnEvent(e, service?.id)}
         >
           {isFavorite ? (
-            <PlusCircle color={`white`} size={30}  fill="red"/>
+            <PlusCircle color="red" size={20} fill="none" />
           ) : (
-            <PlusCircle color="red" size={24} fill="none"/>
+            <PlusCircle color={`white`} size={20} fill="red" />
           )}
         </button>
       </div>
 
       {/* Content Section */}
-      <div className="p-4">
+      <div className="my-2">
         <div className="flex justify-between items-center">
           <h3
-            className="text-lg font-semibold text-gray-800 truncate capitalize"
+            className="text-lg font-bold text-gray-800 truncate capitalize"
             title={service?.service_name}
           >
             {service?.service_name}
@@ -154,17 +154,28 @@ const VendorCardForEvent = ({
           <span className="text-sm text-gray-500">⭐ {service?.rating}</span>
         </div>
         <div className="flex items-center justify-between text-sm text-gray-500 mt-1">
-          <span>
-            <strong className="font-thin">Vendor:</strong>{" "}
-            <span className="capitalize">{service?.vendor?.name}</span>
+          <span className="flex items-center gap-1">
+            <strong className="font-semibold capitalize">
+              <span>
+                <GoLocation className="text-red-500" />
+              </span>
+            </strong>{" "}
+            <span className="capitalize">{service?.city}</span>
           </span>
-          {/* <span className="capitalize">
-            {service.vendor.business_name || "No business name available"}
-          </span> */}
+          <span className="capitalize flex items-center gap-1">
+            <MdRoomService size={16} />
+            {service?.service_type}
+          </span>
         </div>
         <div className="mt-2 flex items-center justify-between">
-          <span className="text-sm text-gray-700 font-semibold">
-            Price:₹{service?.min_price}/{service?.service_unit}
+          <span className="text-sm text-gray-700 font-semibold flex items-center gap-1 ">
+            <GiTwoCoins size={16} />
+            From{" "}
+            <span className="flex items-center">
+              <MdCurrencyRupee />
+              {service?.min_price}
+            </span>{" "}
+            / {service?.service_unit}
           </span>
         </div>
       </div>
