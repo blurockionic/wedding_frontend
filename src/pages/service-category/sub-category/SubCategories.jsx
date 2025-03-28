@@ -93,7 +93,7 @@ const SubCategories = () => {
                 Object.entries(stateServiceCount).map(([state, count]) => (
                   <div 
                     key={state} 
-                    className="flex-shrink-0 w-48 text-center cursor-pointer hover:scale-105 transition-transform p-4"
+                    className="flex-shrink-0  text-center cursor-pointer hover:scale-105 transition-transform p-4"
                     onClick={() => handleStateClick(state)}
                   >
                     <div className="bg-white shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition">
