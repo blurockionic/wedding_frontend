@@ -24,6 +24,7 @@ export const weddingVenues = [
   "Wedding Halls",
   "Wedding Resorts",
 ];
+
 export const weddingVendors = [
   "Caterers",
   "Wedding Invitation",
