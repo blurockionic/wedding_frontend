@@ -30,6 +30,89 @@ import { BiAnalyse } from "react-icons/bi";
 import signup_bg from "../../../../public/signup/sign-bg.webp";
 import brandlogo from "../../../../public/logo/brandlogo.png";
 import { Loader2 } from "lucide-react";
+import CustomButton from "../../../components/global/button/CustomButton";
+
+const serviceTypes = [
+  {
+    icon: FiUsers,
+    title: "Reach engaged couples",
+    description:
+      "Couples can find your Storefront and request information about your business.",
+    cardStyle: "bg-white hover:shadow-xl transition-shadow duration-300",
+    iconStyle: "text-blue-500",
+    titleStyle: "text-blue-800",
+    descriptionStyle: "text-gray-700",
+  },
+  {
+    icon: MdOutlinePersonAddAlt,
+    title: "Get more leads",
+    description:
+      "Call directly to potential clients via email or your account Dashboard.",
+    cardStyle: "bg-white hover:shadow-xl transition-shadow duration-300",
+    iconStyle: "text-pink-500",
+    titleStyle: "text-pink-800",
+    descriptionStyle: "text-gray-700",
+  },
+  {
+    icon: MdEventAvailable,
+    title: "Book more weddings",
+    description:
+      "Advertise on Wedd to drive more bookings and grow your business.",
+    cardStyle: "bg-white hover:shadow-xl transition-shadow duration-300",
+    iconStyle: "text-purple-500",
+    titleStyle: "text-purple-800",
+    descriptionStyle: "text-gray-700",
+  },
+  {
+    icon: BiAnalyse,
+    title: "Dedicated Analytics",
+    description: "Analyze your leads and grow your business effortlessly.",
+    cardStyle: "bg-white hover:shadow-xl transition-shadow duration-300",
+    iconStyle: "text-green-500",
+    titleStyle: "text-green-800",
+    descriptionStyle: "text-gray-700",
+  },
+  {
+    icon: FaMapMarkerAlt,
+    title: "Wedding Venues",
+    description:
+      "Showcase your venue to couples searching for their dream wedding destination.",
+    cardStyle: "bg-white hover:shadow-xl transition-shadow duration-300",
+    iconStyle: "text-purple-500",
+    titleStyle: "text-purple-800",
+    descriptionStyle: "text-gray-700",
+  },
+  {
+    icon: FaStore,
+    title: "Wedding Vendors",
+    description:
+      "Connect with engaged couples and grow your business effortlessly.",
+    cardStyle: "bg-white hover:shadow-xl transition-shadow duration-300",
+    iconStyle: "text-green-500",
+    titleStyle: "text-green-800",
+    descriptionStyle: "text-gray-700",
+  },
+  {
+    icon: FaFemale,
+    title: "Brides",
+    description:
+      "Promote your services directly to brides planning their big day.",
+    cardStyle: "bg-white hover:shadow-xl transition-shadow duration-300",
+    iconStyle: "text-pink-500",
+    titleStyle: "text-pink-800",
+    descriptionStyle: "text-gray-700",
+  },
+  {
+    icon: FaMale,
+    title: "Grooms",
+    description:
+      "Offer your expertise to grooms preparing for their wedding journey.",
+    cardStyle: "bg-white hover:shadow-xl transition-shadow duration-300",
+    iconStyle: "text-blue-500",
+    titleStyle: "text-blue-800",
+    descriptionStyle: "text-gray-700",
+  },
+];
 
 const vendorLoginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -123,94 +206,92 @@ export default function VendorLogin() {
         </script>
       </Helmet>
 
-      <div className=" bg-gradient-to-b from-yellow-100  to-pink-100">
-        <div className="flex justify-center items-center cusrsor-pointer py-4 ">
-          <NavLink
-            to="/"
-            className="flex flex-col items-center gap-3 cursor-pointer mt-10"
-          >
-            <img src={brandlogo} alt="brandlogo" className="w-16 h-16" />
-            <div className="flex flex-col justify-start">
-              <span className="text-primary text-3xl">Marriage Vendors</span>
-              {/* <span className="text-primary text-xs">Wedding Organiser</span> */}
-            </div>
-          </NavLink>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 px-5 sm:px-10 md:px-16 lg:px-20 py-10 gap-10 ">
-          <div className="space-y-12 md:space-y-24">
-            <div className="space-y-5 px-4">
-              <h1
-                className="text-primary 
-        text-3xl md:text-5xl lg:text-6xl
-        font-thin
+      <div className=" bg-gradient-to-b from-yellow-100 p-[3vw] md:p-[7vw] py-10  to-pink-100">
+        <div className="flex justify-center items-center cusrsor-pointer  "></div>
+        <div className=" flex flex-col sm:flex-row items-center gap-5 justify-between  ">
+          <div className="   ">
+            <NavLink
+              to="/"
+              className=" flex-col flex md:flex-row space-x-2  items-center justify-center md:justify-start mx-auto   cursor-pointer "
+            >
+              <img src={brandlogo} alt="brandlogo" className="w-14 h-14" />
+              <div className="flex flex-col justify-start">
+                <span className="text-primary    text-2xl">
+                  Marriage Vendors
+                </span>
+              </div>
+            </NavLink>
+            <div className="flex flex-col items-center  mx-auto">
+              <div className="space-y-4 md:space-y-10">
+                <h1
+                  className=" text-black  my-10
+       text-xl md:text-5xl  text-center md:text-start  lg:text-6xl 
+        
         "
-              >
-                Discover the smarter way to connect with couples
-              </h1>
-              <ul className="space-y-2 texl-md sm:text-lg md:text-xl">
-                <li className="flex items-center justify-start">
-                  <svg
-                    className="w-3.5 h-3.5 me-2 text-green-500 dark:text-green-400 flex-shrink-0"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
-                  </svg>
-                  <span className="font-thin">
-                    Showcase your <strong>services</strong> on our site!
+                >
+                  Discover the smarter way to <br />{" "}
+                  <span className=" text-3xl md:text-5xl capitalize md:lowercase lg:text-6xl  text-primary  ">
+                    connect with couples
                   </span>
-                </li>
-                <li className="flex items-center justify-start">
-                  <svg
-                    className="w-3.5 h-3.5 me-2 text-green-500 dark:text-green-400 flex-shrink-0"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
-                  </svg>
-                  <span className="font-thin">
-                    Connect with Local Couples <strong>Ready to Book</strong>
-                  </span>
-                </li>
-                <li className="flex items-center justify-start">
-                  <svg
-                    className="w-3.5 h-3.5 me-2 text-green-500 dark:text-green-400 flex-shrink-0"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
-                  </svg>
-                  <span className="font-thin">
-                    Join a Network of Over <strong>+100</strong> Trusted
-                    Professionals
-                  </span>
-                </li>
-              </ul>
+                </h1>
+                <ul className="px-2 md:px-0 space-y-4 sm:text-lg md:text-sm">
+                  {[
+                    {
+                      text: "Promote Your Services on Our Platform",
+                    },
+                    {
+                      text: "Connect with Local Couples Ready to Book",
+                    },
+                    {
+                      text: "Join a Network of Over 76,000 Trusted Professionals",
+                    },
+                  ].map((benefit, index) => (
+                    <li key={index} className="flex gap-3 capitalize items-center  justify-start">
+                      <svg
+                        className="w-3.5 h-3.5  text-green-300 dark:text-green-400 flex-shrink-0"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                      </svg>
+                      <span className="font-thin  ">
+                        {benefit.text
+                          .split(" ")
+                          .map((word, i) =>
+                            word.startsWith("+") ||
+                            word.toLowerCase() === "services" ||
+                            word.toLowerCase() === "book" ||
+                            word.toLowerCase() === "trusted" ? (
+                              <strong key={i}>{word} </strong>
+                            ) : (
+                              word + " "
+                            )
+                          )}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
           {/* vendor login  */}
-          <div className="flex items-center justify-center md:mt-3">
+          <div className="flex items-center justify-center md:justify-end ">
             <div
-              className="w-full 
-      sm:w-96 sm:bg-card bg-transparent
-       sm:shadow-custom 
-      rounded-lg sm:px-8 px-4 py-10 
+              className=" 
+       bg-white md:min-w-96
+      border border-gray-300 shadow-sm  md:mt-0
+      rounded-lg   p-4 smD:p-8 
       space-y-6"
             >
               <div>
                 <CustomText
                   variant="heading"
-                  className="text-3xl font-semibold mb-1  text-primary-foreground"
+                  className="text-[28px] text-center font-semibold mb-1  text-primary-foreground"
                 >
                   Vendor Login
                 </CustomText>
-                
               </div>
 
               <form onSubmit={handleSubmit(handleLogin)} className="space-y-6">
@@ -219,7 +300,9 @@ export default function VendorLogin() {
                   type="email"
                   placeholder="Enter your email"
                   icon={<GoMail size={19} className="text-primary" />}
-                  register={() => register("email", { required: "Email is required" })} 
+                  register={() =>
+                    register("email", { required: "Email is required" })
+                  }
                   id="email"
                   error={errors.email}
                 />
@@ -230,34 +313,35 @@ export default function VendorLogin() {
                   isShow={isShowPassword}
                   setIsShow={setIsShowPassword}
                   id="password"
-                  register={() => register("password", { required: "Password is required" })} 
-                  label="Enter your password"
+                  register={() =>
+                    register("password", { required: "Password is required" })
+                  }
+                  label="Password"
                   error={errors.password}
                 />
 
                 <Link
                   to="/vendor-forgot-password"
-                  className="text-sm text-muted-foreground hover:underline block text-end"
+                  className="text-sm flex se text-muted-foreground hover:underline justify-end w-full text-end"
                 >
                   Forgot Password?
                 </Link>
 
-                <button
+                <CustomButton
                   type="submit"
-                  disabled={loading || !isValid}
-                  className={`w-full ${
-                    loading ? "bg-muted" : "bg-primary text-white"
-                  } disabled:cursor-not-allowed cursor-pointer flex  items-center justify-center w-full disabled:bg-muted border-2 border-ring hover:bg-dustyRose text-accent-foreground font-bold py-2  rounded focus:outline-none  focus:ring-ring transition`}
-                >
-                  {loading ? <Loader2 className="animate-spin text-primary"/> : (<><span className="text-white">Login</span></>)}
-                </button>
+                  text={loading ? "Logging in..." : "Login"}
+                  disabled={loading}
+                  className={`w-full ${loading ? "text-primary" : "bg-primary"} 
+                      disabled:cursor-not-allowed cursor-pointer border-2 hover:bg-dustyRose
+                      text-muted font-bold py-2 px-4 rounded transition`}
+                />
               </form>
               <div className="text-center">
                 <CustomText variant="paragraph" className="text-sm">
                   Don&apos;t have an account?{" "}
                   <Link
                     to="/vendorSignup"
-                    className="font-bold text-primary hover:underline"
+                    className=" text-primary hover:underline"
                   >
                     Sign Up
                   </Link>
@@ -270,81 +354,9 @@ export default function VendorLogin() {
 
       {/* Categories  */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-5 md:px-16 py-10 mb-10">
-        <ServiceTypeCard
-          icon={FiUsers}
-          title="Reach engaged couples"
-          description="Couples can find your Storefront and request information about your business."
-          cardStyle="bg-white hover:shadow-xl transition-shadow duration-300"
-          iconStyle="text-blue-500"
-          titleStyle="text-blue-800"
-          descriptionStyle="text-gray-700"
-        />
-
-        <ServiceTypeCard
-          icon={MdOutlinePersonAddAlt}
-          title="Get more leads"
-          description="Call directly to potential clients via email or your account Dashboard."
-          cardStyle="bg-white hover:shadow-xl transition-shadow duration-300"
-          iconStyle="text-pink-500"
-          titleStyle="text-pink-800"
-          descriptionStyle="text-gray-700"
-        />
-
-        <ServiceTypeCard
-          icon={MdEventAvailable}
-          title="Book more weddings"
-          description="Advertise on Wedd to drive more bookings and grow your business."
-          cardStyle="bg-white hover:shadow-xl transition-shadow duration-300"
-          iconStyle="text-purple-500"
-          titleStyle="text-purple-800"
-          descriptionStyle="text-gray-700"
-        />
-        <ServiceTypeCard
-          icon={BiAnalyse}
-          title="Dedicated Analytics"
-          description="Analysis your leads and grow your business effortlessly."
-          cardStyle="bg-white hover:shadow-xl transition-shadow duration-300"
-          iconStyle="text-green-500"
-          titleStyle="text-green-800"
-          descriptionStyle="text-gray-700"
-        />
-
-        <ServiceTypeCard
-          icon={FaMapMarkerAlt}
-          title="Wedding Venues"
-          description="Showcase your venue to couples searching for their dream wedding destination."
-          cardStyle="bg-white hover:shadow-xl transition-shadow duration-300"
-          iconStyle="text-purple-500"
-          titleStyle="text-purple-800"
-          descriptionStyle="text-gray-700"
-        />
-        <ServiceTypeCard
-          icon={FaStore}
-          title="Wedding Vendors"
-          description="Connect with engaged couples and grow your business effortlessly."
-          cardStyle="bg-white hover:shadow-xl transition-shadow duration-300"
-          iconStyle="text-green-500"
-          titleStyle="text-green-800"
-          descriptionStyle="text-gray-700"
-        />
-        <ServiceTypeCard
-          icon={FaFemale}
-          title="Brides"
-          description="Promote your services directly to brides planning their big day."
-          cardStyle="bg-white hover:shadow-xl transition-shadow duration-300"
-          iconStyle="text-pink-500"
-          titleStyle="text-pink-800"
-          descriptionStyle="text-gray-700"
-        />
-        <ServiceTypeCard
-          icon={FaMale}
-          title="Grooms"
-          description="Offer your expertise to grooms preparing for their wedding journey."
-          cardStyle="bg-white hover:shadow-xl transition-shadow duration-300"
-          iconStyle="text-blue-500"
-          titleStyle="text-blue-800"
-          descriptionStyle="text-gray-700"
-        />
+        {serviceTypes.map((service, index) => (
+          <ServiceTypeCard key={index} {...service} />
+        ))}
 
         {/* //dashboard  */}
       </div>

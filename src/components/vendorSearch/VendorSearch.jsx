@@ -3,15 +3,11 @@ import CustomInput from "../../components/global/inputfield/CustomInput";
 import { GoSearch } from "react-icons/go";
 import { allCategories } from "../../static/static";
 
-export default function VendorSearch({ setCategory, service_type }) {
+export default function VendorSearch({ setCategory }) {
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [search, setSearch] = useState("");
   const dropdownRef = useRef(null);
-
-  useEffect(()=>{
-    setSearch(service_type)
-  },[service_type])
 
   const handleSuggestionClick = (category, subcategory) => {
     setSearch(`${subcategory}`);
@@ -29,8 +25,6 @@ export default function VendorSearch({ setCategory, service_type }) {
     }
     setShowSuggestions(true);
   }, [dropdownRef]);
-
- 
 
   const handleSearchChange = (e) => {
     const value = e.target.value;

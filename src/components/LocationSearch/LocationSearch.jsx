@@ -80,7 +80,7 @@ function LocationSearch({ setSearchLocation, customClass, city }) {
         type="text"
         value={location}
         placeholder="In Location"
-        className={`w-full outline-none capitalize focus:border-white bg-white ${customClass}`}
+        className={`w-full   outline-none capitalize  ${customClass}`}
         aria-label="Location"
         onChange={handleSearchLocationChange}
         onFocus={handleFocus}

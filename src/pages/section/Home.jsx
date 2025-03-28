@@ -202,13 +202,13 @@ export default function Home() {
           </div>
           <section className="ml-0 w-full md:flex-row  justify-start  mx-auto flex-col flex  px-10 md:px-0">
             {/* Input Group */}
-            <div className="   relative  overflow-hidden md:flex justify-start items-center rounded-lg  border focus-within:ring-1 focus-within:ring-primary transition duration-300  ">
+            <div className="   relative   md:flex justify-start items-center rounded-lg  border focus-within:ring-1 focus-within:ring-primary transition duration-300  ">
               <VendorSearch setCategory={setCategory} />
               <div className="absolute hidden md:block left-1/2 transform -translate-x-1/2   -mt-2">
                 <span className="  text-4xl text-pink-400">|</span>
               </div>
 
-              <div className="hidden md:block relative overflow-visible z-10">
+              <div className="hidden md:block  rounded-md relative overflow-visible z-10">
                 <LocationSearch
                   customClass={"border-none rounded-none "}
                   setSearchLocation={setSearchLocation}
@@ -216,7 +216,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="md:hidden flex flex-col gap-5 mt-2 md:mt-0">
+            <div className="md:hidden rounded-md  flex flex-col gap-5 mt-2 md:mt-0">
               <LocationSearch
                 customClass={"  "}
                 setSearchLocation={setSearchLocation}

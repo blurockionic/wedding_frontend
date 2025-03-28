@@ -96,7 +96,7 @@ export default function Footer() {
           Discover trusted wedding vendors for every need at Marriage Vendors! From stunning venues to photographers, caterers, and more, find everything to plan your perfect day. Compare services, read reviews, and book with confidence. Start creating your dream wedding today!
           </p>
           {/* Social Media Links */}
-          <div className="flex gap-6 mt-4 text-xl text-gray-600">
+          <div className="flex  gap-4  md:gap-6mt-4 text-xl text-gray-600">
             <a
               href="https://www.facebook.com/profile.php?id=61572736825039"
               target="_blank"

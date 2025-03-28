@@ -60,7 +60,7 @@ function VendorRegistration() {
 
   return (
     <FormProvider {...methods}>
-      {/* SEO Optimization */}
+    
       <Helmet>
         <title>
           Vendor Signup - Join Marriage Vendors & Grow Your Business
@@ -106,18 +106,18 @@ function VendorRegistration() {
         </script>
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-b from-yellow-100  to-pink-100   grid grid-cols-1 md:grid-cols-5">
-        <div className="col-span-2 hidden md:block">
+      <div className="min-h-screen bg-gradient-to-b from-yellow-100  to-pink-100  flex flex-col md:grid md:grid-cols-5">
+        <div className="col-span-2  md:block "> 
           {/* sign up  */}
           <div
-            className="relative h-screen flex items-center justify-center bg-cover bg-center"
+            className="relative md:h-screen flex items-center justify-center bg-cover bg-center"
             style={{ backgroundImage: `url(${signup_bg})` }}
           >
             {/* Overlay with backdrop blur */}
-            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+            <div className="absolute inset-0  bg-black/50 backdrop-blur-sm"></div>
 
             {/* Content on top of the image */}
-            <div className="relative z-10 text-center text-white px-6 ">
+            <div className="relative z-10 p-10 text-center text-white px-6 ">
               <NavLink
                 to="/"
                 className="cursor-pointer flex flex-col items-center gap-3 justify-center w-full "
@@ -130,11 +130,11 @@ function VendorRegistration() {
                   {/* <span className="text-background text-xs">Wedding Organiser</span> */}
                 </div>
               </NavLink>
-              <h2 className="text-4xl md:text-5xl font-bold mb-4 mt-40">
+              <h2 className="text-4xl md:text-5xl font-bold mb-4 md:mt-20 mt-5">
                 Join Us Today!
               </h2>
-              <p className="text-lg md:text-xl mb-6">
-                Sign up now to connect with engaged couples and grow your
+              <p className=" hidden md:block text-lg md:text-xl mb-6">
+                Sign up now to connect with <br /> engaged couples and grow your
                 business.
               </p>
             </div>
