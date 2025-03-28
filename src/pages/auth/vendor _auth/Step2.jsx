@@ -7,11 +7,18 @@ import {
   weddingVenues,
   sectorTypes,
 } from "../../../static/static";
+import { InputField } from "../../../components/global/inputfield/InputField";
+import { GoPerson } from "react-icons/go";
 
 const Step2 = () => {
   const [serviceOptions, setServiceOptions] = useState([]);
   const [selectedServices, setSelectedServices] = useState([]);
-  const { register, formState: { errors }, setValue, control } = useFormContext();
+  const {
+    register,
+    formState: { errors },
+    setValue,
+    control,
+  } = useFormContext();
 
   // Watch the value of business_category
   const selectedCategory = useWatch({ control, name: "business_category" });
@@ -34,15 +41,16 @@ const Step2 = () => {
       default:
         setServiceOptions([]);
     }
-    setSelectedServices([]); 
+    setSelectedServices([]);
   }, [selectedCategory]);
 
   // Handle the selection or deselection of a service
   const handleServiceSelect = (service) => {
-    setSelectedServices((prevServices) =>
-      prevServices.includes(service)
-        ? prevServices.filter((s) => s !== service) // Deselect if already selected
-        : [...prevServices, service] // Add to selected if not selected
+    setSelectedServices(
+      (prevServices) =>
+        prevServices.includes(service)
+          ? prevServices.filter((s) => s !== service) // Deselect if already selected
+          : [...prevServices, service] // Add to selected if not selected
     );
   };
 
@@ -52,33 +60,27 @@ const Step2 = () => {
   }, [selectedServices, setValue]);
 
   return (
-    <div className="bg-white p-6 rounded-lg">
+    <div className="bg-white rounded-lg">
       <h2 className="text-2xl font-semibold mb-6 text-gray-800">
         Business Information
       </h2>
 
       {/* Business Name Field */}
-      <div className="mb-6">
-        <label className="block text-lg font-medium text-gray-700">
-          Business Name <span className="text-red-500">*</span>
-        </label>
-        <input
-          autoFocus
-          type="text"
-          {...register("business_name", { required: "Business name is required" })}
-          placeholder="Enter Business Name"
-          className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-dustyRose-light"
-        />
-        {errors.business_name && (
-          <span className="text-red-500 text-sm mt-1">
-            {errors.business_name.message}
-          </span>
-        )}
-      </div>
+      
+
+      <InputField
+        label={"business_name"}
+        type="text"
+        placeholder="Enter Business Name"
+        id="business_name"
+        icon={<GoPerson size={19} className="text-primary" />} // Corrected icon
+        register={() => register("business_name", { required: "business_name is required" })}
+        error={errors.business_name}
+      />
 
       {/* Business Category Field */}
       <div className="mb-6">
-        <label className="block text-lg font-medium text-gray-700">
+        <label className="block  text-muted-foreground text-sm font-semibold mb-2">
           Service Category <span className="text-red-500">*</span>
         </label>
         <select
@@ -104,7 +106,7 @@ const Step2 = () => {
       {/* Service Type Field */}
       {serviceOptions.length > 0 && (
         <div className="mb-6">
-          <label className="block text-lg font-medium text-gray-700">
+          <label className="block  text-muted-foreground text-sm font-semibold mb-2">
             Service Type
           </label>
           <div className="mt-2 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -124,14 +126,15 @@ const Step2 = () => {
           </div>
         </div>
       )}
-      
+
       {/* Description Field */}
       <div className="mb-6">
-        <label className="block text-lg font-medium text-gray-700">
-          Description 
+        <label className="block  text-muted-foreground text-sm font-semibold ">
+          Description
         </label>
         <textarea
-          {...register("description", )}
+          rows={5}
+          {...register("description")}
           placeholder="Enter a brief description of your business"
           className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-dustyRose-light"
         />

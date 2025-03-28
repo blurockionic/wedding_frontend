@@ -9,7 +9,7 @@ const Step5 = () => {
   } = useFormContext();
 
   return (
-    <div className="bg-white p-8 rounded-lg">
+    <div className="bg-white rounded-lg">
       <h2 className="text-2xl font-semibold mb-8 text-[#1a1a1a]">
         Social Media Profiles
       </h2>
@@ -41,9 +41,7 @@ const Step5 = () => {
               {errors.social_networks.facebook.message}
             </p>
           )}
-          <p className="text-sm text-[#666666] mt-1">
-            Enter your Facebook business page URL
-          </p>
+          
         </div>
 
         {/* Instagram URL Field */}
@@ -72,9 +70,7 @@ const Step5 = () => {
               {errors.social_networks.instagram.message}
             </p>
           )}
-          <p className="text-sm text-[#666666] mt-1">
-            Enter your Instagram profile URL
-          </p>
+          
         </div>
       </div>
     </div>

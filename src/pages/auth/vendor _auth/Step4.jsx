@@ -67,7 +67,7 @@ const Step4 = () => {
   };
 
   return (
-    <div className="bg-white p-8 rounded-lg">
+    <div className="bg-white rounded-lg">
       <h2 className="text-2xl font-semibold mb-8 text-[#1a1a1a]">
         Upload Business Logo
       </h2>
@@ -76,14 +76,14 @@ const Step4 = () => {
         {/* Upload Area */}
         <div className="relative">
           <div 
-            className="border-2 border-dashed border-[#d6d6d6] rounded-lg p-8 text-center hover:border-[#d43fa6] transition-colors cursor-pointer bg-[#f2f2f2]"
+            className="border-2 border-dashed border-primary rounded-lg p-8 text-center hover:border-[#d43fa6] transition-colors cursor-pointer bg-[#f2f2f2]"
             onClick={handleFileSelect}
           >
             <UploadCloud className="mx-auto h-12 w-12 text-[#666666] mb-4" />
-            <p className="text-[#262626] font-medium mb-2">
+            <p className="text-[#262626] text-sm font-medium mb-2">
               Click to upload your business logo
             </p>
-            <p className="text-sm text-[#666666]">
+            <p className="text-xs text-[#666666]">
               SVG, PNG, JPG or GIF (Max. 2MB)
             </p>
           </div>

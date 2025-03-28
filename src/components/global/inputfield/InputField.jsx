@@ -20,7 +20,7 @@ export const InputField = ({
   <div className="my-4">
     <label
       htmlFor={id}
-      className="block font-montserrat text-muted-foreground text-sm font-bold mb-2"
+      className="block  text-muted-foreground text-sm font-semibold mb-2"
     >
       {label}
     </label>
@@ -41,7 +41,7 @@ export const InputField = ({
         placeholder={placeholder}
         className={`w-full ${
           icon ? "px-10" : ""
-        } py-2  ${style?style:""} border h-auto border-border focus:ring-ring focus:outline-none rounded`}
+        } py-2  ${style?style:""} border  placeholder:text-sm h-auto border-border focus:ring-ring focus:outline-none rounded`}
       />
       {error && (
         <CustomText

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import useProtectAfterLogin from "../../../hooks/useProtectAfterLogin";
 import { useVendorSignupMutation } from "../../../redux/vendorSlice";
@@ -13,6 +13,7 @@ import Step6 from "./Step6";
 import signup_bg from "../../../../public/signup/sign-bg.webp";
 import brandlogo from "../../../../public/logo/brandlogo.png";
 import { Helmet } from "react-helmet";
+import CustomText from "../../../components/global/text/CustomText";
 
 function VendorRegistration() {
   useProtectAfterLogin(["vendor"], "/VendorDashboard");
@@ -60,7 +61,6 @@ function VendorRegistration() {
 
   return (
     <FormProvider {...methods}>
-    
       <Helmet>
         <title>
           Vendor Signup - Join Marriage Vendors & Grow Your Business
@@ -107,7 +107,7 @@ function VendorRegistration() {
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-b from-yellow-100  to-pink-100  flex flex-col md:grid md:grid-cols-5">
-        <div className="col-span-2  md:block "> 
+        <div className="col-span-2  md:block sticky top-0 md:h-screen  ">
           {/* sign up  */}
           <div
             className="relative md:h-screen flex items-center justify-center bg-cover bg-center"
@@ -124,7 +124,7 @@ function VendorRegistration() {
               >
                 <img src={brandlogo} alt="brandlogo" className="w-16 h-16" />
                 <div className="flex flex-col justify-start items-start">
-                  <span className="text-background text-4xl">
+                  <span className="text-background text-3xl">
                     Marriage Vendors
                   </span>
                   {/* <span className="text-background text-xs">Wedding Organiser</span> */}
@@ -140,36 +140,32 @@ function VendorRegistration() {
             </div>
           </div>
         </div>
-        <div className="col-span-3 w-full md:px-10 my-auto">
+        <div className="w-full col-span-3  h-sceren overflow-hidden overflow-y-scroll  md:m-auto">
           {/* Header Card */}
-          <div className="bg-white rounded-t-lg shadow-sm p-6 border-b border-[#d6d6d6]">
-            <div className="flex items-center justify-between mb-6">
-              <h1 className="text-3xl font-semibold text-[#1a1a1a]">
+          <div className="bg-white p-6 rounded-t-lg shadow-sm  ">
+            <div className="flex  items-center justify-between ">
+              <h1 className="text-2xl font-semibold text-[#1a1a1a]">
                 Vendor Registration
               </h1>
-              <p className="text-[#666666] font-medium">
-                Step {currentStep} of 6
-              </p>
             </div>
 
-            {/* Progress Bar with Checkpoints */}
-            <div className="relative w-full">
+            <div className="mt-8 relative w-full  ">
               {/* Checkpoints Container */}
-              <div className="flex justify-between w-full absolute top-[-10px] z-10">
+              <div className=" flex justify-between  w-full absolute top-[-10px] z-10">
                 {[1, 2, 3, 4, 5, 6].map((step) => (
                   <div
                     key={step}
-                    className="relative w-1/6 flex justify-center"
+                    className="relative text-center flex justify-center"
                   >
-                    <div
-                      className={`w-6 h-6 flex items-center justify-center rounded-full border-2 text-xs font-bold ${
+                    <span
+                      className={`w-6 h-6  flex text-center  items-center justify-center rounded-full  text-xs font-bold ${
                         currentStep >= step
-                          ? "border-white bg-primary text-white"
-                          : "border-gray-400 bg-white text-gray-600"
+                          ? " bg-primary text-white"
+                          : " bg-gray-200 text-gray-600"
                       }`}
                     >
-                      {step}
-                    </div>
+                      <span> {step}</span>
+                    </span>
                   </div>
                 ))}
               </div>
@@ -178,14 +174,14 @@ function VendorRegistration() {
               <div className="h-2 bg-[#e6e6e6] rounded-full overflow-hidden mt-4 relative">
                 <div
                   className="absolute h-full bg-primary rounded-full transition-all duration-300 ease-in-out"
-                  style={{ width: `${(currentStep / 6) * 100}%` }}
+                  style={{ width: `${(currentStep / (6 - 1)) * 100}%` }}
                 />
               </div>
             </div>
           </div>
 
           {/* Main Content Card */}
-          <div className="bg-white rounded-b-lg shadow-sm p-6 mb-6">
+          <div className="bg-white rounded-b-lg shadow-sm px-4 md:px-6 py-10">
             {/* Step Components */}
             {currentStep === 1 && <Step1 />}
             {currentStep === 2 && <Step2 />}
@@ -212,32 +208,47 @@ function VendorRegistration() {
               </div>
             )}
 
-            {/* Navigation Buttons */}
-            <div className="flex justify-between mt-8">
-              {currentStep > 1 && (
-                <button
-                  onClick={prevStep}
-                  className="px-6 py-2.5 bg-[#e6e6e6] hover:bg-[#d6d6d6] text-[#1a1a1a] rounded-md transition-colors duration-200"
-                >
-                  Back
-                </button>
-              )}
-              {currentStep < 6 && (
-                <button
-                  onClick={nextStep}
-                  className="px-6 py-2.5 bg-primary hover:border hover:border-dashed hover:border-primary hover:bg-white hover:text-primary  text-white rounded-md transition-colors duration-200 ml-auto"
-                >
-                  Next
-                </button>
-              )}
-              {currentStep === 6 && (
-                <button
-                  onClick={methods.handleSubmit(handleSubmit)}
-                  className="px-6 py-2.5 bg-[#d43fa6] hover:bg-[#c23795] text-white rounded-md transition-colors duration-200 ml-auto"
-                >
-                  Submit Registration
-                </button>
-              )}
+            <div className="flex sm:justify-end justify-center  mt-6">
+              {/* Navigation Buttons */}
+              <div className=" space-x-8 ">
+                {currentStep > 0 && (
+                  <button
+                    onClick={prevStep}
+                    className="px-8 py-1 bg-[#e6e6e6] hover:bg-[#d6d6d6] text-[#1a1a1a] rounded-md transition-colors duration-200"
+                  >
+                    Back
+                  </button>
+                )}
+                {currentStep < 6 && (
+                  <button
+                    onClick={nextStep}
+                    className="px-8 py-1 border bg-primary hover:text-primary  text-white rounded-md transition-colors duration-200 ml-auto"
+                  >
+                    Next
+                  </button>
+                )}
+                {currentStep === 6 && (
+                  <button
+                    onClick={methods.handleSubmit(handleSubmit)}
+                    className="px-8 py-1 border bg-primary hover:text-primary  text-white rounded-md transition-colors duration-200 ml-auto"
+                  >
+                    Save
+                  </button>
+                )}
+                
+              </div>
+             
+            </div>
+            <div className="text-center">
+            <CustomText variant="paragraph" className="text-sm mt-5">
+                  Don’t have an account?{" "}
+                  <Link
+                    to="/vendorlogin"
+                    className="font-bold text-primary capitalize hover:underline"
+                  >
+                    log in
+                  </Link>
+                </CustomText>
             </div>
           </div>
         </div>

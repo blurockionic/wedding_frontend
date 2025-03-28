@@ -4,7 +4,7 @@ import CustomText from "../text/CustomText";
 
 export const PasswordFieldForSignUp = ({ label, id, register, isShow, setIsShow, error }) => (
   <div className="my-4">
-    <label htmlFor={id} className="block text-muted-foreground text-sm font-bold mb-2">
+    <label htmlFor={id} className="block text-muted-foreground text-sm font-semibold mb-2">
       {label}
     </label>
     <div className="relative flex items-center">
@@ -24,12 +24,12 @@ export const PasswordFieldForSignUp = ({ label, id, register, isShow, setIsShow,
             message: "Password must be at least 6 characters long",
           },
           pattern: {
-            value: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{6,}$/,
-            message: "Password must include at least one uppercase letter, one number, and one special character",
-          },
+            value: /^[A-Za-z\d]{6,}$/,
+            message: "Password must be at least 6 characters long and contain only letters and numbers",
+          }
         })}
         placeholder={label}
-        className="w-full pl-10 pr-12 py-2 border border-border focus:ring-ring rounded"
+        className="w-full pl-10 pr-12  placeholder:text-xs py-2 border border-border focus:ring-ring rounded"
       />
 
       {/* Toggle Visibility Button */}

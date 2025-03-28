@@ -44,13 +44,13 @@ const Step3 = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg">
+    <div className="bg-white rounded-lg">
       <h2 className="text-2xl font-semibold mb-6 text-gray-800">
         Business Details
       </h2>
 
       <div className="mb-6">
-        <label className="block text-lg font-medium text-gray-700">
+        <label className="block  text-muted-foreground text-sm font-semibold ">
           State <span className="text-red-500">*</span>
         </label>
         <select
@@ -77,7 +77,7 @@ const Step3 = () => {
       </div>
 
       <div className="mb-6">
-        <label className="block text-lg font-medium text-gray-700">
+        <label className="block  text-muted-foreground text-sm font-semibold ">
           City <span className="text-red-500">*</span>
         </label>
         <select
@@ -100,7 +100,7 @@ const Step3 = () => {
       </div>
 
       <div className="mb-6">
-        <label className="block text-lg font-medium text-gray-700">
+        <label className="block  text-muted-foreground text-sm font-semibold ">
           License Number
         </label>
         <input
