@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import  { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { BiHeart as HeartOutline } from "react-icons/bi";
 import { BsHeartFill as HeartFilled } from "react-icons/bs";
@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useToggleCartMutation } from "../../../redux/serviceSlice";
 import { toggleFavorite } from "../../../redux/favoriteSlice";
 import { toast } from "react-toastify";
-import { PlusCircle, PlusCircleIcon } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import { useAddServiceMutation } from "../../../redux/weddingPlanSlice";
 import { GoLocation } from "react-icons/go";
 import { MdCurrencyRupee, MdRoomService } from "react-icons/md";
