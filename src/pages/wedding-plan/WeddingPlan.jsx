@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import ActionHeader from "./component/ActionHeader";
 import CreateYourWeddingPlan from "./component/CreateYourWeddingPlan";
-import HeadingCard from "./component/HeadingCard";
 import WeddingEventList from "./component/WeddingEventList";
 import WeddingPlanSideNavber from "./component/WeddingPlanSideNavber";
-import { Loader2, X } from "lucide-react";
+import {  X } from "lucide-react";
 // import CreateSubEvent from "./component/CreateSubEvent";
 import AddVevdors from "./component/AddVevdors";
 import { useGetWeddingPlanQuery } from "../../redux/weddingPlanSlice";
@@ -14,6 +13,7 @@ import moment from "moment";
 import { useSelector } from "react-redux";
 import CreateTaskForm from "./component/CreateTaskForm";
 import imagebg1 from "../../../public/userprofile/imagebg1.png";
+import { motionlogo } from "../../static/static";
 
 const WeddingPlan = () => {
   const { user } = useSelector((state) => state.auth);
@@ -162,10 +162,10 @@ const WeddingPlan = () => {
 
   if (isLoading)
     return (
-      <p className="h-screen flex justify-center items-center gap-3">
-        <Loader2 className="animate-spin" />
-        Loading
-      </p>
+      <div className="flex justify-center flex-col gap-2 items-center h-screen">
+              <img src={motionlogo} alt="loader" className="w-12 h-12"/>
+              <p>Loading...</p>
+      </div>
     );
   if (error)
     return (

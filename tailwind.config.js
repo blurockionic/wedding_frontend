@@ -49,10 +49,20 @@ module.exports = {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-50%)" },
         },
+        fadeIn: {
+          "0%": { opacity: 0 },
+          "100%": { opacity: 1 },
+        },
+        fadeOut: {
+          "100%": { opacity: 0, visibility: "hidden" },
+        },
       },
       animation: {
         "smooth-scroll": "smooth-scroll 20s linear infinite",
+        "fade-in": "fadeIn 1.5s ease-in-out",
+        "fade-out": "fadeOut 1s ease-out 1.5s forwards",
       },
+      
     },
   },
   plugins: [

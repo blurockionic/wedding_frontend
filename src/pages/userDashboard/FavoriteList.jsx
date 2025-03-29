@@ -4,6 +4,7 @@ import { useGetCartMutation } from "../../redux/serviceSlice";
 import { hydrateFavorites } from "../../redux/favoriteSlice";
 import { useDispatch, useSelector } from "react-redux";
 import imagebg1 from "../../../public/userprofile/imagebg1.png";
+import { motionlogo } from "../../static/static";
 export default function FavoriteList() {
   const [favoriteCart, setFavoriteCart] = useState([]);
   const dispatch = useDispatch();
@@ -37,8 +38,9 @@ export default function FavoriteList() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <p className="text-foreground font-bold text-8xl">{"Loading..."}</p>
+      <div className="flex justify-center flex-col gap-2 items-center h-screen">
+        <img src={motionlogo} alt="loader" className="w-12 h-12"/>
+        <p>Loading...</p>
       </div>
     );
   }
@@ -53,7 +55,9 @@ export default function FavoriteList() {
           />
         </div>
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white  text-center">
-          <h2 className="md:text-[4vw] text-[5vw]  font-bold ">From Wishes to Reality!</h2>
+          <h2 className="md:text-[4vw] text-[5vw]  font-bold ">
+            From Wishes to Reality!
+          </h2>
           <h5 className="md:text-[2vw] text-[2.5vw] font-light">
             Curate your favorites and plan with ease.
           </h5>
@@ -61,7 +65,7 @@ export default function FavoriteList() {
       </div>
       <div className="py-10 px-2 lg:px-20 mx-auto">
         {/* Favorite List Grid */}
-        {favoriteCart.length>0 ? (
+        {favoriteCart.length > 0 ? (
           <div className="flex flex-wrap  justify-center md:justify-start mx-auto items-center w-fit  gap-5">
             {favoriteCart.map((favorite) => {
               const service = favorite?.service;

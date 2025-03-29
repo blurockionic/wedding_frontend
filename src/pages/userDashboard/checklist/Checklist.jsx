@@ -29,6 +29,7 @@ import { useForm } from "react-hook-form";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import imagebg1 from "../../../../public/userprofile/imagebg1.png";
+import { motionlogo } from "../../../static/static";
 
 // Custom hook to detect screen size (no changes)
 const useMediaQuery = (query) => {
@@ -615,24 +616,26 @@ const Checklist = () => {
       <div className="relative font-montserrat ">
         <div className=" inset-0 ">
           <img
-               className="w-full h-[15vh]  md:h-[30vh] object-cover"
+            className="w-full h-[15vh]  md:h-[30vh] object-cover"
             src={imagebg1}
             alt="bg image"
           />
         </div>
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white  p-6 text-center">
-          <h2 className="md:text-[3vw] text-[4vw] font-bold mb-2">Your Perfect Day, Perfectly Planned
-         </h2>
+          <h2 className="md:text-[3vw] text-[4vw] font-bold mb-2">
+            Your Perfect Day, Perfectly Planned
+          </h2>
           <h5 className="md:text-[2vw] text-[2.5vw]  font-light">
-          The Ultimate Wedding Checklist!
+            The Ultimate Wedding Checklist!
           </h5>
         </div>
       </div>
       <div className="max-w-7xl px-2 lg:px-10 mx-auto py-10">
-       
-
         {isLoading ? (
-          <div className="text-center text-pink-600">Loading checklist...</div>
+          <div className="flex justify-center flex-col gap-2 items-center h-3/4">
+            <img src={motionlogo} alt="loader" className="w-12 h-12" />
+            <p>Loading...</p>
+          </div>
         ) : (
           <>
             <div className="sm:flex items-center justify-between w-full gap-4 mb-4 sm:mb-8">

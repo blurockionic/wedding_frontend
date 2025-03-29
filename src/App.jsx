@@ -1,4 +1,4 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useState } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -17,6 +17,8 @@ const VendorRegistration = lazy(() =>
 import VendorDashboard from "./pages/vendorDashboard/Dashboard.jsx";
 const Subscription = lazy(() => import("./pages/Subscription.jsx"));
 import { HelmetProvider } from "react-helmet-async";
+import { motionlogo } from "./static/static.js";
+import SplashScreen from "./pages/SplashScreen/SplashScreen.jsx";
 
 const Billing = lazy(() => import("./pages/vendorDashboard/Billing.jsx"));
 
@@ -132,9 +134,14 @@ const AdminTransactions = lazy(() => import("./pages/admin/Transactions.jsx"));
 const AdminGive = lazy(() => import("./pages/admin/GiveAdmin.jsx"));
 const AdminRevoke = lazy(() => import("./pages/admin/RevokeAdmin.jsx"));
 const AdminGiveSuper = lazy(() => import("./pages/admin/GiveSuperAdmin.jsx"));
+
+
 function wrapWithSuspense(Component) {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div className="flex justify-center flex-col gap-2 items-center h-screen">
+            <img src={motionlogo} alt="loader" className="w-12 h-12"/>
+            <p>Loading...</p>
+          </div>}>
       <Component />
     </Suspense>
   );
@@ -325,12 +332,20 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const [showSplash, setShowSplash] = useState(true);
+
   return (
     <>
       <HelmetProvider>
         <ErrorBoundary>
-          <ToastContainer position="bottom-right" />
+        {showSplash ? (
+        <SplashScreen onFinish={() => setShowSplash(false)} />
+      ) : (
+        <>
           <RouterProvider router={router} />
+          <ToastContainer />
+        </>
+      )}
         </ErrorBoundary>
       </HelmetProvider>
     </>
