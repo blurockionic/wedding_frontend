@@ -243,7 +243,7 @@ function VendorRegistration() {
                 Don’t have an account?{" "}
                 <Link
                   to="/vendorlogin"
-                  className="font-bold text-primary capitalize hover:underline"
+                  className="font-semibold text-primary capitalize hover:underline"
                 >
                   log in
                 </Link>

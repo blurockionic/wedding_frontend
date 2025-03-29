@@ -341,7 +341,7 @@ export default function VendorLogin() {
                   Don&apos;t have an account?{" "}
                   <Link
                     to="/vendorSignup"
-                    className=" text-primary hover:underline"
+                    className=" font-semibold text-primary capitalize hover:underline"
                   >
                     Sign Up
                   </Link>
