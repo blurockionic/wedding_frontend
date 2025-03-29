@@ -48,7 +48,9 @@ const Step6 = () => {
   title="Social Media"
   fields={[
     { label: "Facebook", value: formData.social_networks?.facebook },
-    { label: "Instagram", value: formData.social_networks?.instagram }
+    { label: "Instagram", value: formData.social_networks?.instagram },
+    { label: "Youtube", value: formData.social_networks?.youtube },
+    { label: "Website", value: formData.social_networks?.website }
   ]}
 />
 

@@ -45,7 +45,7 @@ function VendorRegistration() {
     if (isValid) setCurrentStep((prev) => prev + 1);
   };
 
-  const prevStep = () => setCurrentStep((prev) => prev - 1);
+  const prevStep = () => setCurrentStep((prev) => (prev > 1 ? prev - 1 : prev));
 
   const handleSubmit = async (data) => {
     try {
@@ -208,13 +208,14 @@ function VendorRegistration() {
               </div>
             )}
 
-            <div className="flex sm:justify-end justify-center  mt-6">
+            <div className=" sm:flex sm:justify-end justify-center  mt-6">
               {/* Navigation Buttons */}
-              <div className=" space-x-8 ">
+              <div className=" space-x-8 flex items-center justify-center">
                 {currentStep > 0 && (
                   <button
+                    disabled={currentStep === 1}
                     onClick={prevStep}
-                    className="px-8 py-1 bg-[#e6e6e6] hover:bg-[#d6d6d6] text-[#1a1a1a] rounded-md transition-colors duration-200"
+                    className="px-8 py-1 disabled:bg-slate-100 bg-[#e6e6e6] hover:bg-[#d6d6d6] text-[#1a1a1a] rounded-md transition-colors duration-200"
                   >
                     Back
                   </button>
@@ -222,7 +223,7 @@ function VendorRegistration() {
                 {currentStep < 6 && (
                   <button
                     onClick={nextStep}
-                    className="px-8 py-1 border bg-primary hover:text-primary  text-white rounded-md transition-colors duration-200 ml-auto"
+                    className="px-8 py-1 border bg-primary  text-white rounded-md transition-colors duration-200 ml-auto"
                   >
                     Next
                   </button>
@@ -230,25 +231,23 @@ function VendorRegistration() {
                 {currentStep === 6 && (
                   <button
                     onClick={methods.handleSubmit(handleSubmit)}
-                    className="px-8 py-1 border bg-primary hover:text-primary  text-white rounded-md transition-colors duration-200 ml-auto"
+                    className="px-8 py-1 border bg-primary text-white rounded-md transition-colors duration-200 ml-auto"
                   >
                     Save
                   </button>
                 )}
-                
               </div>
-             
             </div>
             <div className="text-center">
-            <CustomText variant="paragraph" className="text-sm mt-5">
-                  Don’t have an account?{" "}
-                  <Link
-                    to="/vendorlogin"
-                    className="font-bold text-primary capitalize hover:underline"
-                  >
-                    log in
-                  </Link>
-                </CustomText>
+              <CustomText variant="paragraph" className="text-sm mt-5">
+                Don’t have an account?{" "}
+                <Link
+                  to="/vendorlogin"
+                  className="font-bold text-primary capitalize hover:underline"
+                >
+                  log in
+                </Link>
+              </CustomText>
             </div>
           </div>
         </div>

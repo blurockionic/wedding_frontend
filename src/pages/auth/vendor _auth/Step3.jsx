@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { Country, State, City } from "country-state-city";
 
@@ -9,9 +9,9 @@ const Step3 = () => {
     watch,
     setValue,
   } = useFormContext();
-  const [states, setStates] = React.useState([]);
-  const [cities, setCities] = React.useState([]);
-  const [selectedStateCode, setSelectedStateCode] = React.useState("");
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [selectedStateCode, setSelectedStateCode] = useState("");
 
   useEffect(() => {
     const india = Country.getCountryByCode("IN");
