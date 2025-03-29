@@ -112,8 +112,8 @@ const View_1 = lazy(() => import("./pages/ViewTemplate/View_1.jsx"));
 const Payment = lazy(() => import("./pages/InvitationPayment/Payment.jsx"));
 const Preview = lazy(() => import("./pages/EditTemplate/Preview.jsx"));
 const Preview_1 = lazy(() => import("./pages/EditTemplate/Preview_1.jsx"));
-const Update_Editor = lazy(() =>
-  import("./pages/EditTemplate/Update_Editor.jsx")
+const canva = lazy(() =>
+  import("./pages/EditTemplate/canva.jsx")
 );
 const Card = lazy(() => import("./pages/InvitationCard/Card.jsx"));
 const Guest = lazy(() => import("./pages/AddGuests/Guest.jsx"));
@@ -217,7 +217,7 @@ const router = createBrowserRouter([
       { path: "/payment", element: wrapWithSuspense(Payment) },
       { path: "/preview", element: wrapWithSuspense(Preview) },
       { path: "/preview_1", element: wrapWithSuspense(Preview_1) },
-      { path: "/update_editor", element: wrapWithSuspense(Update_Editor) },
+      { path: "/update_editor", element: wrapWithSuspense(canva) },
       { path: "/view", element: wrapWithSuspense(View) },
       { path: "/view_1", element: wrapWithSuspense(View_1) },
       { path: "/login", element: wrapWithSuspense(Login) },

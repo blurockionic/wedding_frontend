@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
-const ElementsSection = ({ designs, addDesignElement, onWallpaperSelect }) => {
+const ElementsSection = ({ designs, addDesignElement }) => {
   const flowerRef = useRef(null);
   const borderRef = useRef(null);
   const simpleRef = useRef(null);
@@ -18,7 +18,7 @@ const ElementsSection = ({ designs, addDesignElement, onWallpaperSelect }) => {
   const decoration = designs.filter((design) => design.type === "decoration");
 
   return (
-    <div className="h-screen text-black overflow-y-auto bg-white w-full md:-mt-[50px]">
+    <div className="h-screen text-black overflow-y-auto bg-white w-full">
       <div className="p-4">
         <div className="mb-4">
           <input
@@ -116,7 +116,7 @@ const ElementsSection = ({ designs, addDesignElement, onWallpaperSelect }) => {
             </button>
             <div ref={wallpaperRef} className="flex space-x-2 overflow-hidden pb-2 scroll-smooth w-full px-10">
               {wallpapers.map((design) => (
-                <div key={design.id} className="relative rounded-lg overflow-hidden cursor-pointer transition-transform hover:scale-[1.02] bg-white/10 p-2 flex-shrink-0" onClick={() => onWallpaperSelect(design.src)}>
+                <div key={design.id} className="relative rounded-lg overflow-hidden cursor-pointer transition-transform hover:scale-[1.02] bg-white/10 p-2 flex-shrink-0" onClick={() => addDesignElement(design)}>
                   <img src={design.src} alt={design.name} className="w-16 h-16 object-cover" />
                   <span className="text-xs text-center block mt-1">{design.name}</span>
                 </div>
