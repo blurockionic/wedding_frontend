@@ -1,7 +1,7 @@
 import React from "react";
 
 const TemplatesSection = ({ templates, onTemplateClick, selectedTemplate }) => (
-  <div className="h-screen bg-white text-black overflow-y-auto md:-mt-[50px]">
+  <div className="h-screen bg-white text-black overflow-y-auto">
     <div className="p-4">
       <div className="mb-4">
         <input
