@@ -1,17 +1,16 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import baseQueryWithReauth from "./baseQueryWithReauth";
+
 
 export const weddingPlanForEventApi = createApi({
   reducerPath: "weddingPlanApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.VITE_API_URL}/api/v1/event`,
-    credentials: "include",
-  }),
+  baseQuery: baseQueryWithReauth,
   tagTypes: ["WeddingPlan", "EventTask"],
   endpoints: (builder) => ({
     // Get all events
     getWeddingPlan: builder.query({
       query: () => ({
-        url: "/getevents",
+        url: "/event/getevents",
         method: "GET",
       }),
       providesTags: ["WeddingPlan"],
@@ -20,7 +19,7 @@ export const weddingPlanForEventApi = createApi({
     // Create event for wedding plan
     createEvent: builder.mutation({
       query: (data) => ({
-        url: "/newevent",
+        url: "/event/newevent",
         method: "POST",
         body: {
           eventName: data.eventName,
@@ -37,7 +36,7 @@ export const weddingPlanForEventApi = createApi({
     // Delete event 
     deleteEvent: builder.mutation({
       query: (eventId) => ({
-        url: `/${eventId}`,
+        url: `/event/${eventId}`,
         method: "DELETE",
       }),
       invalidatesTags: ["WeddingPlan"],
@@ -45,7 +44,7 @@ export const weddingPlanForEventApi = createApi({
 
     updateEvent: builder.mutation({
       query: ({ eventId, data }) => ({
-        url: `/${eventId}`,
+        url: `/event/${eventId}`,
         method: "PUT",
         body: data,  // This will include all the required fields
       }),
@@ -55,7 +54,7 @@ export const weddingPlanForEventApi = createApi({
     // Create sub-event of an event
     createSubEvent: builder.mutation({
       query: ({ data, eventId }) => ({
-        url: `/${eventId}/subevent`,
+        url: `/event/${eventId}/subevent`,
         method: "POST",
         body: {
           subEventName: data.subEventName,
@@ -72,7 +71,7 @@ export const weddingPlanForEventApi = createApi({
     // Add service to event
     addService: builder.mutation({
       query: ({ serviceId, eventId }) => ({
-        url: `/${eventId}/vendors`,
+        url: `/event/${eventId}/vendors`,
         method: "POST",
         body: { serviceId },
       }),
@@ -83,7 +82,7 @@ export const weddingPlanForEventApi = createApi({
     
     createEventTask: builder.mutation({
       query: ({ data, eventId }) => ({
-        url: `/task/${eventId}`,
+        url: `/event/task/${eventId}`,
         method: "POST",
         body: data,  // Simply pass the data object directly
       }),
@@ -93,7 +92,7 @@ export const weddingPlanForEventApi = createApi({
     // Get all tasks for a specific event
     getEventTasks: builder.query({
       query: (eventId) => ({
-        url: `/tasks/${eventId}`,
+        url: `/event/tasks/${eventId}`,
         method: "GET",
       }),
       providesTags: ["EventTask"],
@@ -102,7 +101,7 @@ export const weddingPlanForEventApi = createApi({
     // Update event task
     updateEventTask: builder.mutation({
       query: ({ taskId, data }) => ({
-        url: `/task/${taskId}`,
+        url: `/event/task/${taskId}`,
         method: "PUT",
         body: data,
       }),
@@ -112,7 +111,7 @@ export const weddingPlanForEventApi = createApi({
     // Delete event task
     deleteEventTask: builder.mutation({
       query: ({ eventId, taskId }) => ({
-        url: `/task/${eventId}/${taskId}`,
+        url: `/event/task/${eventId}/${taskId}`,
         method: "DELETE",
       }),
       invalidatesTags: ["EventTask"],
@@ -121,7 +120,7 @@ export const weddingPlanForEventApi = createApi({
     // Update task status (complete/incomplete)
     updateTaskStatus: builder.mutation({
       query: ({ taskId, status }) => ({
-        url: `/task/status/${taskId}`,
+        url: `/event/task/status/${taskId}`,
         method: "PATCH",
         body: { status },
       }),
@@ -131,7 +130,7 @@ export const weddingPlanForEventApi = createApi({
     //delete event 
     deleteEventService: builder.mutation({
       query: ({serviceId, eventId}) => ({
-        url: `/vendor/${eventId}/${serviceId}`,
+        url: `/event/vendor/${eventId}/${serviceId}`,
         method: "DELETE",
       })
     })

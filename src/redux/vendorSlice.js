@@ -1,15 +1,13 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import baseQueryWithReauth from "./baseQueryWithReauth";
 
 export const vendorApi = createApi({
   reducerPath: "vendorApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.VITE_API_URL}/api/v1/vendors`,
-    credentials: "include",
-  }),
+  baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     vendorSignup: builder.mutation({
       query: (userData) => ({
-        url: `/register`,
+        url: `/vendors/register`,
         method: "POST",
         body: userData,
       }),
@@ -17,21 +15,21 @@ export const vendorApi = createApi({
 
     vendorLogin: builder.mutation({
       query: (userData) => ({
-        url: `/login`,
+        url: `/vendors/login`,
         method: "POST",
         body: userData,
       }),
     }),
     vendorLogout: builder.mutation({
       query: () => ({
-        url: `/logout`,
+        url: `/vendors/logout`,
         method: "POST",
       }),
     }),
 
     vendorForgotPassword: builder.mutation({
       query: (userData) => ({
-        url: `/request-password-reset`,
+        url: `/vendors/request-password-reset`,
         method: "POST",
         body: userData,
       }),
@@ -39,7 +37,7 @@ export const vendorApi = createApi({
 
     vendorChangePassword: builder.mutation({
       query: ({ token, confirmPassword }) => ({
-        url: `/reset-password?token=${token}`,
+        url: `/vendors/reset-password?token=${token}`,
         method: "POST",
         body: { confirmPassword },
       }),
@@ -47,21 +45,21 @@ export const vendorApi = createApi({
 
     vendorUpdate: builder.mutation({
       query: (data) => ({
-        url: `/update`,
+        url: `/vendors/update`,
         method: "PATCH",
         body: data,
       }),
     }),
     dashboardChangePassword: builder.mutation({
       query: ({ pass }) => ({
-        url: `/change-password`,
+        url: `/vendors/change-password`,
         method: "PATCH",
         body:{pass}
       })
     }),
     vendorDeleteAccount: builder.mutation({
       query: () => ({
-        url: `/delete`,
+        url: `/vendors/delete`,
         method: "DELETE"
       }),
     }),

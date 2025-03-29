@@ -1,26 +1,24 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import baseQueryWithReauth from "./baseQueryWithReauth";
 
 export const userDataTemplateSlice = createApi({
   reducerPath: "templateSlice",
 
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.VITE_API_URL}/api/v1/userDataTemplate`,
-    credentials: "include",
-  }),
+  baseQuery: baseQueryWithReauth,
 
   endpoints: (builder) => ({
     
     getTemplates: builder.query({
-      query: () => "/",
+      query: () => "/userDataTemplate/",
     }),
 
     getTemplateById: builder.query({
-      query: (templateId) => `/${templateId}`,
+      query: (templateId) => `/userDataTemplate/${templateId}`,
     }),
 
     addTemplate: builder.mutation({
       query: (templateData) => ({
-        url: "/",
+        url: "/userDataTemplate/",
         method: "POST",
         body: templateData,
       }),
@@ -28,7 +26,7 @@ export const userDataTemplateSlice = createApi({
 
     updateTemplate: builder.mutation({
       query: ({ templateId, templateData }) => ({
-        url: `/${templateId}`,
+        url: `/userDataTemplate/${templateId}`,
         method: "PATCH",
         body: templateData,
       }),
@@ -36,7 +34,7 @@ export const userDataTemplateSlice = createApi({
 
     deleteTemplate: builder.mutation({
       query: (templateId) => ({
-        url: `/${templateId}`,
+        url: `/userDataTemplate/${templateId}`,
         method: "DELETE",
       }),
     }),
