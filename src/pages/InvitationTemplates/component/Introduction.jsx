@@ -60,7 +60,7 @@ export const Introduction = () => {
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 items-center justify-center z-50 w-full md:w-52 mt-10">
+      <div className="flex flex-col sm:flex-row gap-4 items-center justify-center z-50 w-full md:w-64 mt-10">
         <Link to="/browse">
           <span className="px-8 py-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-full font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 hover:from-pink-600 hover:to-rose-600">
             Browse Templates
