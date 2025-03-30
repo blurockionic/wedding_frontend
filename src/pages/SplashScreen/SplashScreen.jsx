@@ -62,7 +62,7 @@ const SplashScreen = ({ onFinish }) => {
 
   return (
     <div className="fixed inset-0 flex flex-col items-center justify-center bg-background text-2xl font-bold overflow-hidden h-screen">
-      <img src={motionlogo} alt="loader" className="w-20 h-20" />
+      <img src={motionlogo} alt="loader" className="w-[8vw] h-[8vw]" />
 
       {/* Rainbow-colored animated text */}
       <h1 className="flex space-x-1">
@@ -70,7 +70,7 @@ const SplashScreen = ({ onFinish }) => {
           <motion.span
             key={index}
             style={{ color: rainbowColors[index % rainbowColors.length] }} // ✅ Apply color dynamically
-            className="animate-pulse text-lg md:text-2xl"
+            className="animate-pulse text-[2.5vw]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: index * 0.1 }}
@@ -79,9 +79,6 @@ const SplashScreen = ({ onFinish }) => {
           </motion.span>
         ))}
       </h1>
-
-
-
       {celebrationIcons.map((item, index) => (
         <FloatingIcon key={index} icon={item.icon} x={item.x} y={item.y} />
       ))}
