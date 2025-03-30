@@ -69,8 +69,8 @@ const SplashScreen = ({ onFinish }) => {
         {welcomeText.split("").map((char, index) => (
           <motion.span
             key={index}
-            style={{ color: rainbowColors[index % rainbowColors.length] }} // ✅ Apply color dynamically
-            className="animate-pulse text-[2.5vw]"
+            // style={{ color: rainbowColors[index % rainbowColors.length] }} // ✅ Apply color dynamically
+            className="animate-pulse text-[2.5vw] text-primary"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: index * 0.1 }}
