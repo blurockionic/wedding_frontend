@@ -12,8 +12,12 @@ const UploadsSection = ({ onImageUpload }) => {
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
+      console.log("File selected:", file.name);
       const imageUrl = URL.createObjectURL(file);
+      console.log("Generated image URL:", imageUrl);
       onImageUpload(imageUrl);
+    } else {
+      console.log("No file selected.");
     }
   };
 
@@ -21,8 +25,12 @@ const UploadsSection = ({ onImageUpload }) => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
     if (file) {
+      console.log("File dropped:", file.name);
       const imageUrl = URL.createObjectURL(file);
+      console.log("Generated image URL from drop:", imageUrl);
       onImageUpload(imageUrl);
+    } else {
+      console.log("No file dropped.");
     }
   };
 
@@ -31,7 +39,7 @@ const UploadsSection = ({ onImageUpload }) => {
   };
 
   return (
-    <div className="h-screen bg-gray-100 text-black overflow-y-auto w-full p-4 md:-mt-[50px]">
+    <div className="h-screen bg-gray-100 text-black overflow-y-auto w-full p-4">
       <div className="mb-4">
         <input type="text" placeholder="Search uploads..." className="w-full p-2 rounded-full border border-gray-300 focus:outline-none focus:border-purple-500" />
         <div className="flex items-center gap-2">

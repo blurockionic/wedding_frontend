@@ -7,6 +7,8 @@ import img4 from "../../public/heroSection/c4.jpeg"
 import img5 from "../../public/heroSection/c5.jpeg"
 import img6 from "../../public/heroSection/c6.jpeg"
 
+import motionlogo from "../../public/logo/motion_logo.gif"
+
 
 
 export const sectorTypes = [
@@ -224,4 +226,4 @@ export const categories = [
     },
   ];
 
-  export {img1,img2,img3,img4,img5,img6}
+  export {img1,img2,img3,img4,img5,img6,motionlogo}

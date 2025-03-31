@@ -4,11 +4,12 @@ import { TfiText } from "react-icons/tfi";
 import { TbIcons } from "react-icons/tb";
 import { FiDownload } from "react-icons/fi";
 import TemplatesSection from "./TemplatesSection";
-import ElementsSection from "./ElementsSection"; // Import the new component
+import { X } from "lucide-react";
+import ElementsSection from "./ElementsSection";
 import TextSection from "./TextSection";
 import UploadsSection from "./UploadsSection";
 
-const Sidebar = ({
+const MobileSidebar = ({
   templates,
   designs,
   handleImageUpload,
@@ -22,7 +23,7 @@ const Sidebar = ({
   textEffects,
   setTextEffects,
 }) => {
-  const [activeSection, setActiveSection] = useState(null);
+  const [openSection, setOpenSection] = useState(null);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
 
   const sidebarItems = [
@@ -34,16 +35,17 @@ const Sidebar = ({
   ];
 
   const handleSectionToggle = (sectionId) => {
-    setActiveSection(activeSection === sectionId ? null : sectionId);
+    setOpenSection(sectionId);
   };
 
   const handleTemplateClick = (template) => {
     setSelectedTemplate(template);
     addTemplateToCanvas(template.image);
+    setOpenSection(null);
   };
 
-  const renderSectionContent = () => {
-    switch (activeSection) {
+  const renderPopupContent = () => {
+    switch (openSection) {
       case "templates":
         return (
           <TemplatesSection
@@ -62,13 +64,11 @@ const Sidebar = ({
         );
       case "text":
         return (
-          <>
           <TextSection
-          addCustomTextElement={addCustomTextElement}
-          textEffects={textEffects}
-          setTextEffects={setTextEffects}
-        />
-        </>
+            addCustomTextElement={addCustomTextElement}
+            textEffects={textEffects}
+            setTextEffects={setTextEffects}
+          />
         );
       case "uploads":
         return (
@@ -76,28 +76,34 @@ const Sidebar = ({
         );
       case "projects":
         return (
-          <div className="space-y-3">
+          <div className="space-y-3 p-4">
             <button
-              onClick={saveTemplate}
+              onClick={() => {
+                saveTemplate();
+                setOpenSection(null);
+              }}
               className="p-2 bg-purple-500 text-white rounded-lg w-full hover:bg-purple-600"
             >
               Save Template
             </button>
             <button
-              onClick={loadTemplate}
+              onClick={() => {
+                loadTemplate();
+                setOpenSection(null);
+              }}
               className="p-2 bg-orange-500 text-white rounded-lg w-full hover:bg-orange-600"
             >
               Load Template
             </button>
-            {/* Download Button (visible except in TemplatesSection and ElementsSection) */}
-        {activeSection !== "templates" && activeSection !== "elements" && (
-          <button
-            onClick={downloadImage}
-            className="p-2 bg-red-500 text-white rounded-lg flex items-center justify-center gap-2 mt-4 mx-6 hover:bg-red-600"
-          >
-            <FiDownload /> Download
-          </button>
-        )}
+            <button
+              onClick={() => {
+                downloadImage();
+                setOpenSection(null);
+              }}
+              className="p-2 bg-red-500 text-white rounded-lg flex items-center justify-center gap-2 hover:bg-red-600"
+            >
+              <FiDownload /> Download
+            </button>
           </div>
         );
       default:
@@ -106,14 +112,14 @@ const Sidebar = ({
   };
 
   return (
-    <div className="flex h-screen">
-      {/* Icon Sidebar */}
-      <div className="w-16 flex md:flex-col flex-row items-center md:py-6 py-2 space-x-4 md:space-x-0 space-y-6 border-r border-gray-200 overflow-x-auto md:overflow-x-visible">
+    <div className="flex flex-col w-full bg-white border-b border-gray-200">
+      {/* Icon Bar - Original Horizontal Layout */}
+      <div className="flex flex-row items-center py-2 space-x-4 overflow-x-auto">
         {sidebarItems.map((item) => (
           <button
             key={item.id}
             onClick={() => handleSectionToggle(item.id)}
-            className={`p-2 rounded-lg ${activeSection === item.id ? "bg-purple-100" : "hover:bg-gray-200"}`}
+            className={`p-2 rounded-lg ${openSection === item.id ? "bg-purple-100" : "hover:bg-gray-200"}`}
             title={item.label}
           >
             <div className="flex items-center justify-center">{item.icon}</div>
@@ -122,16 +128,30 @@ const Sidebar = ({
         ))}
       </div>
 
-      {/* Content Area */}
-      <div
-        className={`md:w-[320px] w-full bg-white flex flex-col gap-4 transition-all duration-300 ${
-          activeSection ? "block" : "hidden"
-        } md:${activeSection ? "opacity-100" : "opacity-0 w-0 overflow-hidden"}`}
-      >
-        {renderSectionContent()}
-      </div>
+      {/* Popup Modal for Mobile */}
+      {openSection && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white w-11/12 max-w-lg h-3/4 rounded-lg shadow-lg flex flex-col overflow-hidden">
+            {/* Header with Close Button */}
+            <div className="flex justify-between items-center p-4 border-b bg-gray-100">
+              <h2 className="text-lg font-semibold">{openSection.charAt(0).toUpperCase() + openSection.slice(1)}</h2>
+              <button
+                onClick={() => setOpenSection(null)}
+                className="absolute top-3 right-3 p-1 rounded-full bg-rose-500 hover:bg-rose-600 transition-colors z-10"
+              >
+                <X className="w-5 h-5 text-white" />
+              </button>
+            </div>
+
+            {/* Popup Content - Matches Large Screen Design */}
+            <div className="flex-grow overflow-y-auto">
+              {renderPopupContent()}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default Sidebar;
+export default MobileSidebar;
