@@ -13,6 +13,8 @@ import { GiBigDiamondRing } from "react-icons/gi";
 import { FaRupeeSign } from "react-icons/fa";
 
 function Card({ pricing }) {
+  
+  
   return (
     <Link to="/update_editor">
       <motion.div

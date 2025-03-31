@@ -9,18 +9,13 @@ import favoritesSlice from "./favoriteSlice";
 import { uploadSlice } from "./uploadSlice";
 import { vendorApi } from "./vendorSlice";
 import { paymentApi } from "./payment";
-
 import { blogApiSlice } from "./blogSlice";
-
-
 import { checklistApiSlice } from "./checklistApiSlice"; 
 import { adminApiSlice } from "./adminApiSlice";
-
-
 import { apiGuestSlice } from "./apiSlice.guest";
 import { userDataTemplateSlice } from "./TemplateSlice";
-
 import {weddingPlanForEventApi} from "./weddingPlanSlice"
+import { invitationTemplateForAdminSlice } from "./invitationTemplateForAdminSlice";
 
 
 // Combine Reducers
@@ -37,10 +32,9 @@ const rootReducer = combineReducers({
   [adminApiSlice.reducerPath]: adminApiSlice.reducer,
   [apiGuestSlice.reducerPath]:apiGuestSlice.reducer,
   [userDataTemplateSlice.reducerPath]:userDataTemplateSlice.reducer,
-
   [weddingPlanForEventApi.reducerPath  ]:weddingPlanForEventApi.reducer,
-  [blogApiSlice.reducerPath  ]:blogApiSlice.reducer
-
+  [blogApiSlice.reducerPath ]:blogApiSlice.reducer,
+  [invitationTemplateForAdminSlice.reducerPath]: invitationTemplateForAdminSlice.reducer,
 });
 
 // Configure Persist
@@ -69,8 +63,8 @@ export const store = configureStore({
       adminApiSlice.middleware,
       userDataTemplateSlice.middleware,
       weddingPlanForEventApi.middleware,
-      blogApiSlice.middleware
-
+      blogApiSlice.middleware,
+      invitationTemplateForAdminSlice.middleware
     ),
 });
 
