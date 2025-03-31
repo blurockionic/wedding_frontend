@@ -1,4 +1,4 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import VendorServiceList from "./component/VendorServiceList";
 import ServiceModel from "./component/ServiceModel";
 import { useGetServicesQuery } from "../../redux/serviceSlice";
@@ -7,11 +7,17 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { userlogout } from "../../redux/authSlice";
 
+const filters2 = [
+  { key: "all", label: "All Services" },
+  { key: "active", label: "Active Services" },
+  { key: "archived", label: "Archived Services" },
+];
+
 const VendorServicesPage = () => {
   const [showFormPage, setShowFormPage] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedFilter, setSelectedFilter] = useState("all"); // Track selected filter
+  const [selectedFilter, setSelectedFilter] = useState("all");
   const [filteredServices, setFilteredServices] = useState([]);
 
   const pageSize = 10;
@@ -24,15 +30,12 @@ const VendorServicesPage = () => {
     limit: pageSize,
     vendorId,
   };
-
-  // Fetch services
   const { data, isLoading, error, refetch } = useGetServicesQuery(filters);
 
   useEffect(() => {
-    refetch(); // Fetch fresh data when filter changes
+    refetch();
   }, [selectedFilter, refetch]);
 
-  // Filter services based on selected category
   useEffect(() => {
     if (data?.ServiceResult) {
       let filteredData = data.ServiceResult;
@@ -49,21 +52,8 @@ const VendorServicesPage = () => {
     }
   }, [data, selectedFilter]);
 
-  // // Handle search input
-  // const handleSearch = (e) => {
-  //   setSearchTerm(e.target.value);
-  //   setCurrentPage(1);
-  // };
-
-  // Handle page change
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
-
-  // Handle filter selection
-  const handleFilterChange = (filter) => {
-    setSelectedFilter(filter);
-  };
+  const handlePageChange = (page) => setCurrentPage(page);
+  const handleFilterChange = (filter) => setSelectedFilter(filter);
 
   if (error && typeof error === "string" && error.includes("expire")) {
     userlogout();
@@ -71,126 +61,89 @@ const VendorServicesPage = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-6 m-2 rounded-md ">
-      {/* Top Bar Section */}
-      <div
-        className={`flex justify-end items-center my-6 ${
-          showFormPage ? "hidden" : ""
-        }`}
-      >
-        {/* Search Bar
-        {!showFormPage && (
-          <div className="lg:flex text-lg">
-            <div className="flex items-center space-x-4">
-              <div className="transition-all duration-300 ease-in-out  w-20">
-                <SearchBar
-                  icon={<FiSearch size={18} />}
-                  onChange={handleSearch}
-                />
-              </div>
-              <button
-                className="p-2 hidden rounded-full text-white hover:bg-[#2563EB] transition"
-                aria-label="Toggle Search"
-              >
-                <GoSearch size={18} />
-              </button>
-            </div>
-          </div>
-        )} */}
-
-        {/* Add Service Button */}
-        {!showFormPage && (
-          <button
-            onClick={() => setShowFormPage(true)}
-            title="Click to add a new service"
-            className="flex items-center px-6 py-2 bg-primary text-white rounded-lg hover:bg-pink-700 transition duration-300"
-          >
-            <PiPlus size={20} className="md:mr-2" />
-            <span className="hidden md:block">Add Service</span>
-          </button>
-        )}
-      </div>
-
-      {/* Main Content */}
+    <div className="max-w-7xl mx-auto min-h-screen flex flex-col">
       {!showFormPage ? (
-        <div className="relative flex flex-col justify-between h-[79vh] md:h-[70vh]">
-          {/* Filter Buttons */}
-          <div className="mb-4 border-b border-gray-300">
-            <div className="flex space-x-4">
+        <div className="flex-grow flex flex-col">
+          <div className="flex justify-between items-center border-gray-300">
+            <div className="md:hidden text-4xl text-center font-semibold text-primary">
+              Services
+            </div>
+            <div className="hidden md:flex px-5 space-x-4">
+              {filters2.map(({ key, label }) => (
+                <button
+                  key={key}
+                  onClick={() => handleFilterChange(key)}
+                  className={`px-4 transition duration-200 ${
+                    selectedFilter === key
+                      ? "text-primary border-b-2 border-b-primary font-semibold"
+                      : "text-foreground hover:text-primary"
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+            <div className="flex justify-end items-center my-6">
               <button
-                onClick={() => handleFilterChange("all")}
-                className={`px-4 py-2 transition duration-200 ${
-                  selectedFilter === "all"
-                    ? "text-primary font-semibold"
-                    : "text-foreground hover:text-primary"
-                }`}
+                onClick={() => setShowFormPage(true)}
+                title="Click to add a new service"
+                className="flex items-center px-6 py-2 bg-primary text-white rounded-lg hover:bg-pink-700 transition duration-300"
               >
-                All Services
-              </button>
-              <button
-                onClick={() => handleFilterChange("active")}
-                className={`px-4 py-2 transition duration-200 ${
-                  selectedFilter === "active"
-                    ? "text-primary font-semibold"
-                    : "text-foreground hover:text-primary"
-                }`}
-              >
-                Active Services
-              </button>
-              <button
-                onClick={() => handleFilterChange("archived")}
-                className={`px-4 py-2 transition duration-200 ${
-                  selectedFilter === "archived"
-                    ? "text-primary font-semibold"
-                    : "text-foreground hover:text-primary"
-                }`}
-              >
-                Archived Services
+                <PiPlus size={20} className="md:mr-2" />
+                <span className="hidden md:block">Add Service</span>
               </button>
             </div>
           </div>
-
-          {/* Services List */}
-          <div className="flex-1 overflow-y-scroll pr-2">
+          <div className="flex md:hidden my-5 justify-between gap-5 sm:justify-start">
+            {filters2.map(({ key, label }) => (
+              <button
+                key={key}
+                onClick={() => handleFilterChange(key)}
+                className={`transition duration-200 ${
+                  selectedFilter === key
+                    ? "text-primary border-b-2 border-b-primary font-semibold"
+                    : "text-foreground hover:text-primary"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          <div className="flex-grow overflow-y-auto">
             {isLoading ? (
               <div>Loading...</div>
             ) : error ? (
-              <div>No service created </div>
+              <div>No service created</div>
             ) : (
               <VendorServiceList services={filteredServices} />
             )}
           </div>
-
-          {/* Pagination */}
-          <div className="flex absolute right-8 bottom-0 justify-center space-x-2">
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="px-3 py-1 bg-primary text-background rounded-md hover:bg-pink-700 disabled:bg-gray-300 transition duration-200"
-            >
-              Previous
-            </button>
-
-            <span className="px-2 py-1 text-gray-600 font-medium">
-              {currentPage}
-            </span>
-
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={filteredServices.length < pageSize}
-              className="px-3 py-1 bg-primary text-background rounded-md hover:bg-pink-700 disabled:bg-gray-300 transition duration-200"
-            >
-              Next
-            </button>
-          </div>
         </div>
       ) : (
-        <div>
-          <ServiceModel onClose={() => setShowFormPage(false)} />
-        </div>
+        <ServiceModel onClose={() => setShowFormPage(false)} />
       )}
-
       <Outlet />
+      
+      {/* Pagination Sticks to the Bottom */}
+      <div className="sticky bottom-0 left-0 right-0 flex justify-end py-4">
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="px-4 py-2 rounded-full bg-primary text-white hover:bg-pink-700 disabled:bg-gray-300 transition duration-200"
+        >
+          &lt;
+        </button>
+        <span className="px-4 py-2 mx-2 bg-primary rounded-full text-white font-medium">
+          {currentPage}
+        </span>
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={filteredServices.length < pageSize}
+          className="px-4 py-2 bg-primary text-white rounded-full hover:bg-pink-700 disabled:bg-gray-300 transition duration-200"
+        >
+          &gt;
+        </button>
+      </div>
     </div>
   );
 };

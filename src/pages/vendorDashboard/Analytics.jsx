@@ -1,60 +1,80 @@
-import { FaBook, FaChartBar, FaDashcube, FaFileContract, FaServicestack } from "react-icons/fa";
-import { useGetAnalyticsQuery, useGetRecentLeadsQuery } from "../../redux/serviceSlice";
+import { FaChartBar, FaFileContract, FaUser } from "react-icons/fa";
+import {
+  useGetAnalyticsQuery,
+  useGetRecentLeadsQuery,
+} from "../../redux/serviceSlice";
 import CustomCard from "../../components/vendor-analytics/Card/CustomCard";
 import RecentActivityTable from "../../components/vendor-analytics/table/RecentActivityTable";
 import ServicePieChart from "../../components/vendor-analytics/piechart/ServicePieChart";
-import { MdSpaceDashboard, MdVisibility } from "react-icons/md";
+
 import MostViewedService from "../../components/vendor-analytics/table/MostViewedService";
 
 const Analytics = () => {
   const { data } = useGetAnalyticsQuery();
-  const {data: recentLead}= useGetRecentLeadsQuery()
+  const { data: recentLead } = useGetRecentLeadsQuery();
 
-  console.log(data?.services)
+  const cardDetails = [
+    {
+      title: "Views",
+      count: data?.totalViews,
+      icon: <FaChartBar />,
+    },
+    {
+      title: "Leads",
+      count: data?.totalLeads,
+      icon: <FaFileContract />,
+    },
+    {
+      title: "Profile Visit",
+      count: data?.totalLeads,
+      icon: <FaUser />,
+    },
+  ];
+
+  const colorCodesForChart = ["#FA00FF" ," #DCFAF8"," #FC7900", "#0000004D" ];
+
+  console.log(data);
   return (
     <>
-    <div className="p-5 rounded-md"> 
-      {/* //analytical cards  */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-10 w-full px-5 md:px-0 mt-4">
-        <CustomCard
-          count={data?.totalViews}
-          title="Views"
-          icon={<FaChartBar  />}
-          className="bg-gray-50"
-        />
-        <CustomCard
-          count={data?.totalLeads}
-          title="Lead"
-          icon={<FaFileContract />}
-         className="bg-gray-50"
-        />
-        <CustomCard
-          count={data?.totalLeads}
-          title="Profile Visit"
-          icon={<MdVisibility />}
-          className="bg-gray-50"
-        />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-10  w-full  mt-4">
+        {cardDetails.map((card, index) => (
+          <CustomCard
+            key={index}
+            title={card.title}
+            count={card.count}
+            icon={card.icon}
+          />
+        ))}
       </div>
 
-      {/* top three services and recent activity table */}
-      <div className="bg-[#F3CEE8] block md:flex justify-between items-center p-5 w-full gap-2 md:space-x-4 mt-5 rounded-lg">
-        <div className="p-3  h-[490px] w-full md:w-[60%] bg-white rounded-md mt-4 md:mt-0">
-          <h1 className="text-2xl font-thin text-start">Most Viewed Service</h1>
-          <MostViewedService mostviewed ={data?.topThreeServices}/>
+      <div className="bg-[#F3CEE8] rounded-[32px] flex flex-col md:flex-row-reverse justify-between items-center p-5 w-full gap-6 mt-5">
+        {/* Pie Chart Section */}
+        <div className="rounded-[32px] h-[490px]  bg-white  w-full md:w-[40%] lg:w-[35%]">
+          <ServicePieChart
+            colorCodesForChart={colorCodesForChart}
+            data={data?.topThreeServices}
+          />
         </div>
-        <div className="h-[490px] w-full md:w-[40%] bg-white rounded-md p-3">
-        {/* <h1 className="text-2xl font-thin text-start">Most Viewed Service</h1> */}
-          <ServicePieChart data={data?.topThreeServices}/>
+
+        {/* Most Viewed Service Section */}
+        <div className="p-5 min-h-[490px] overflow-x-scroll flex-1  bg-white rounded-[32px] w-full md:w-[60%] lg:w-[65%] mt-4 md:mt-0">
+          <h1 className="text-2xl mb-5  font-semibold text-start">
+            Most Viewed Service
+          </h1>
+          <MostViewedService
+            colorCodesForChart={colorCodesForChart}
+            mostviewed={data?.topThreeServices}
+          />
         </div>
       </div>
 
       {/* recent lead  */}
-      <div className="p-4  bg-[#FEB3B1B2] w-full md:w-full shadow-lg rounded-md  mt-4 md:mt-5">
-        <div className="bg-white h-[490px] p-4 rounded-lg">
-        <h1 className="text-2xl font-thin text-start">Recent Activities</h1>
-        <RecentActivityTable recentLead ={recentLead?.data}/>
-        </div>
-         
+      <div className="p-5  bg-[#FEB3B1B2] w-full md:w-full shadow-lg  rounded-[32px]  mt-4 md:mt-5">
+        <div className="bg-white h-[490px]  rounded-[32px]  p-4 ">
+          <h1 className="text-2xl mb-5  font-semibold text-start">
+            Recent Activities
+          </h1>
+          <RecentActivityTable recentLead={recentLead?.data} />
         </div>
       </div>
     </>
