@@ -39,7 +39,8 @@ const Sidebar = ({
 
   const handleTemplateClick = (template) => {
     setSelectedTemplate(template);
-    addTemplateToCanvas(template.image);
+    addTemplateToCanvas(template.jsonData);
+    console.log(template)
   };
 
   const renderSectionContent = () => {

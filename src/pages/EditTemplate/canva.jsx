@@ -12,6 +12,7 @@ import { useCreateTemplateMutation } from "../../redux/invitationTemplateForAdmi
 import { useSelector } from "react-redux";
 import { useUplMutation } from "../../redux/uploadSlice";
 import { toast } from "react-toastify";
+import { useLocation } from "react-router-dom";
 
 const templates = [
   {
@@ -284,6 +285,11 @@ const Canva = () => {
   const { user } = useSelector((state) => state.auth);
   const [upl] = useUplMutation();
 
+  const location = useLocation();
+  const template = location.state?.template;
+
+  
+
   useEffect(() => {
     const fabricCanvas = new fabric.Canvas(canvasRef.current, {
       width: 400,
@@ -359,7 +365,56 @@ const Canva = () => {
       fabricCanvas.dispose();
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [template]);
+
+  useEffect(()=>{
+    //load template on canvas
+    const jsonData =  template.jsonData
+    if (!canvas) {
+      console.error("Canvas is not initialized");
+      return;
+    }
+  
+    if (!jsonData || !jsonData.objects || !Array.isArray(jsonData.objects)) {
+      console.error("Invalid JSON data:", jsonData);
+      return;
+    }
+  
+    console.log("Loading template:", jsonData);
+  
+    // Load the template
+    canvas.loadFromJSON(jsonData, () => {
+      console.log("Template loaded successfully");
+  
+      // Ensure images are properly loaded
+      canvas.getObjects().forEach((obj) => {
+        if (obj.type === "image" && obj.setSrc) {
+          fabric.Image.fromURL(obj.src, (img) => {
+            img.set({
+              left: obj.left || 0,
+              top: obj.top || 0,
+              scaleX: obj.scaleX || 1,
+              scaleY: obj.scaleY || 1,
+            });
+  
+            canvas.add(img);
+            canvas.renderAll();
+          });
+        }
+      });
+  
+      // Render the canvas
+      canvas.renderAll();
+    }, (error) => {
+      if (error) {
+        console.error("Error loading template:", error);
+      }
+    });
+  },[canvas])
+
+ 
+
+
 
   const addCustomTextElement = (text, size, style) => {
     if (!canvas) return;
@@ -406,21 +461,50 @@ const Canva = () => {
     };
   };
 
-  const addTemplateToCanvas = (image) => {
-    if (!canvas) return;
-    const imgElement = new Image();
-    imgElement.src = image;
-    const templateImg = new fabric.Image(imgElement, {
-      left: 50,
-      top: 50,
-      scaleX: 0.5,
-      scaleY: 0.5,
-      selectable: true,
-      hasControls: true,
+  const addTemplateToCanvas = (jsonData) => {
+    if (!canvas) {
+      console.error("Canvas is not initialized");
+      return;
+    }
+  
+    if (!jsonData || !jsonData.objects || !Array.isArray(jsonData.objects)) {
+      console.error("Invalid JSON data:", jsonData);
+      return;
+    }
+  
+    console.log("Loading template:", jsonData);
+  
+    // Load the template
+    canvas.loadFromJSON(jsonData, () => {
+      console.log("Template loaded successfully");
+  
+      // Ensure images are properly loaded
+      canvas.getObjects().forEach((obj) => {
+        if (obj.type === "image" && obj.setSrc) {
+          fabric.Image.fromURL(obj.src, (img) => {
+            img.set({
+              left: obj.left || 0,
+              top: obj.top || 0,
+              scaleX: obj.scaleX || 1,
+              scaleY: obj.scaleY || 1,
+            });
+  
+            canvas.add(img);
+            canvas.renderAll();
+          });
+        }
+      });
+  
+      // Render the canvas
+      canvas.renderAll();
+    }, (error) => {
+      if (error) {
+        console.error("Error loading template:", error);
+      }
     });
-    canvas.add(templateImg);
-    canvas.renderAll();
   };
+  
+  
 
   const applyAnimation = (object, animation) => {
     if (!object || object.type !== "i-text") return;
