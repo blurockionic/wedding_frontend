@@ -280,17 +280,15 @@ const Canva = () => {
     lineHeight: 1,
   });
 
-  const [createTemplate] = useCreateTemplateMutation();
-  const { user } = useSelector((state) => state.auth);
-  const [upl] = useUplMutation();
-
   useEffect(() => {
     const fabricCanvas = new fabric.Canvas(canvasRef.current, {
       width: 400,
       height: 600,
       backgroundColor: "#fff",
+      preserveObjectStacking: true, // Ensure stacking order is preserved even when selecting
     });
     setCanvas(fabricCanvas);
+    console.log("Canvas initialized:", fabricCanvas, "Fabric.js version:", fabric.version);
 
     fabricCanvas.on("selection:created", (event) => {
       const activeObject = event.target;
@@ -299,17 +297,14 @@ const Canva = () => {
         setSelectedColor(activeObject.fill || "#F43F5E");
         setSelectedFont(activeObject.fontFamily || "Arial");
         setOpacity(activeObject.opacity || 1);
-        setTextShadow(
-          activeObject.shadow ? activeObject.shadow.toString() : "none"
-        );
-        setGlowEffect(
-          activeObject.shadow && activeObject.shadow.includes("8px")
-        );
+        setTextShadow(activeObject.shadow ? activeObject.shadow.toString() : "none");
+        setGlowEffect(activeObject.shadow && activeObject.shadow.includes("8px"));
         if (activeObject.type === "i-text") {
           setIsStyleOptionsOpen(true);
         } else {
           setIsStyleOptionsOpen(false);
         }
+        updateCanvasOrder(); // Re-sort to ensure locked objects stay on top
       }
     });
 
@@ -320,17 +315,14 @@ const Canva = () => {
         setSelectedColor(activeObject.fill || "#F43F5E");
         setSelectedFont(activeObject.fontFamily || "Arial");
         setOpacity(activeObject.opacity || 1);
-        setTextShadow(
-          activeObject.shadow ? activeObject.shadow.toString() : "none"
-        );
-        setGlowEffect(
-          activeObject.shadow && activeObject.shadow.includes("8px")
-        );
+        setTextShadow(activeObject.shadow ? activeObject.shadow.toString() : "none");
+        setGlowEffect(activeObject.shadow && activeObject.shadow.includes("8px"));
         if (activeObject.type === "i-text") {
           setIsStyleOptionsOpen(true);
         } else {
           setIsStyleOptionsOpen(false);
         }
+        updateCanvasOrder(); // Re-sort to ensure locked objects stay on top
       }
     });
 
@@ -388,6 +380,151 @@ const Canva = () => {
     setIsStyleOptionsOpen(true);
   };
 
+  const updateCanvasOrder = () => {
+    if (!canvas) return;
+    const objects = canvas.getObjects();
+    objects.forEach((obj, index) => {
+      obj.zIndex = index;
+    });
+    // Sort by zIndex, ensuring locked objects stay on top
+    canvas._objects.sort((a, b) => {
+      if (a.lockMovementX && !b.lockMovementX) return 1; // Locked a stays above unlocked b
+      if (!a.lockMovementX && b.lockMovementX) return -1; // Locked b stays above unlocked a
+      return a.zIndex - b.zIndex; // Normal sorting for unlocked objects
+    });
+    canvas.renderAll();
+  };
+
+  const bringToFront = () => {
+    if (!canvas) return;
+    const activeObject = canvas.getActiveObject();
+    if (!activeObject) {
+      console.warn("No object selected to bring to front");
+      return;
+    }
+    const objects = canvas.getObjects();
+    const lockedObjects = objects.filter(obj => obj.lockMovementX);
+    const index = objects.indexOf(activeObject);
+    if (index === objects.length - 1 || (lockedObjects.length > 0 && index === objects.length - lockedObjects.length - 1)) {
+      console.log("Object is already at the front or below locked objects");
+      return;
+    }
+    canvas.remove(activeObject);
+    if (lockedObjects.length > 0) {
+      canvas._objects.splice(objects.length - lockedObjects.length, 0, activeObject);
+    } else {
+      canvas.add(activeObject);
+    }
+    updateCanvasOrder();
+    canvas.setActiveObject(activeObject);
+    console.log("Object brought to front:", activeObject, "New order:", canvas.getObjects());
+  };
+
+  const sendToBack = () => {
+    if (!canvas) return;
+    const activeObject = canvas.getActiveObject();
+    if (!activeObject) {
+      console.warn("No object selected to send to back");
+      return;
+    }
+    const objects = canvas.getObjects();
+    const index = objects.indexOf(activeObject);
+    if (index === 0) {
+      console.log("Object is already at the back");
+      return;
+    }
+    canvas.remove(activeObject);
+    canvas._objects.unshift(activeObject);
+    updateCanvasOrder();
+    canvas.setActiveObject(activeObject);
+    console.log("Object sent to back:", activeObject, "New order:", canvas.getObjects());
+  };
+
+  const bringForward = () => {
+    if (!canvas) return;
+    const activeObject = canvas.getActiveObject();
+    if (!activeObject) {
+      console.warn("No object selected to bring forward");
+      return;
+    }
+    const objects = canvas.getObjects();
+    const lockedObjects = objects.filter(obj => obj.lockMovementX);
+    const index = objects.indexOf(activeObject);
+    if (index === objects.length - 1 || (lockedObjects.length > 0 && index === objects.length - lockedObjects.length - 1)) {
+      console.log("Object is already at the front or below locked objects");
+      return;
+    }
+    objects.splice(index, 1);
+    objects.splice(index + 1, 0, activeObject);
+    canvas._objects = objects;
+    updateCanvasOrder();
+    canvas.setActiveObject(activeObject);
+    console.log("Object brought forward:", activeObject, "New order:", canvas.getObjects());
+  };
+
+  const sendBackward = () => {
+    if (!canvas) return;
+    const activeObject = canvas.getActiveObject();
+    if (!activeObject) {
+      console.warn("No object selected to send backward");
+      return;
+    }
+    const objects = canvas.getObjects();
+    const index = objects.indexOf(activeObject);
+    if (index === 0) {
+      console.log("Object is already at the back");
+      return;
+    }
+    objects.splice(index, 1);
+    objects.splice(index - 1, 0, activeObject);
+    canvas._objects = objects;
+    updateCanvasOrder();
+    canvas.setActiveObject(activeObject);
+    console.log("Object sent backward:", activeObject, "New order:", canvas.getObjects());
+  };
+
+  const lockObject = () => {
+    if (!canvas) return;
+    const activeObject = canvas.getActiveObject();
+    if (!activeObject) {
+      console.warn("No object selected to lock");
+      return;
+    }
+    activeObject.set({
+      lockMovementX: true,
+      lockMovementY: true,
+      lockRotation: true,
+      lockScalingX: true,
+      lockScalingY: true,
+      hasControls: false,
+      selectable: true,
+    });
+    bringToFront(); // Bring locked object to front but below other locked objects
+    updateCanvasOrder();
+    canvas.renderAll();
+    console.log("Object locked and brought to front:", activeObject);
+  };
+
+  const unlockObject = () => {
+    if (!canvas) return;
+    const activeObject = canvas.getActiveObject();
+    if (!activeObject) {
+      console.warn("No object selected to unlock");
+      return;
+    }
+    activeObject.set({
+      lockMovementX: false,
+      lockMovementY: false,
+      lockRotation: false,
+      lockScalingX: false,
+      lockScalingY: false,
+      hasControls: true,
+      selectable: true,
+    });
+    canvas.renderAll();
+    console.log("Object unlocked:", activeObject);
+  };
+
   const handleImageUpload = (imageUrl) => {
     if (!canvas) return;
     const imgElement = new Image();
@@ -425,7 +562,6 @@ const Canva = () => {
   const applyAnimation = (object, animation) => {
     if (!object || object.type !== "i-text") return;
 
-    // Stop any existing animations
     if (object.__animation) {
       fabric.util.cancelAnimFrame(object.__animation);
       delete object.__animation;
@@ -433,7 +569,7 @@ const Canva = () => {
 
     const { name, variant } = animation;
     const { transition } = variant;
-    const duration = transition.duration * 1000; // Convert to ms
+    const duration = transition.duration * 1000;
     const repeat = transition.repeat === Infinity;
 
     const animateFrame = (timestamp) => {
@@ -443,41 +579,30 @@ const Canva = () => {
 
       switch (name) {
         case "Bounce":
-          const bounceY =
-            variant.y[Math.floor(progress * (variant.y.length - 1))];
+          const bounceY = variant.y[Math.floor(progress * (variant.y.length - 1))];
           object.set("top", object.originalTop + bounceY);
           break;
         case "Fade In":
-          const fadeOpacity =
-            variant.opacity[0] +
-            (variant.opacity[1] - variant.opacity[0]) * progress;
+          const fadeOpacity = variant.opacity[0] + (variant.opacity[1] - variant.opacity[0]) * progress;
           object.set("opacity", fadeOpacity);
           break;
         case "Scale Pop":
-          const scaleValue =
-            variant.scale[Math.floor(progress * (variant.scale.length - 1))];
+          const scaleValue = variant.scale[Math.floor(progress * (variant.scale.length - 1))];
           object.set("scaleX", scaleValue);
           object.set("scaleY", scaleValue);
           break;
         case "Slide In":
-          const slideX =
-            variant.x[0] + (variant.x[1] - variant.x[0]) * progress;
-          const slideOpacity =
-            variant.opacity[0] +
-            (variant.opacity[1] - variant.opacity[0]) * progress;
+          const slideX = variant.x[0] + (variant.x[1] - variant.x[0]) * progress;
+          const slideOpacity = variant.opacity[0] + (variant.opacity[1] - variant.opacity[0]) * progress;
           object.set("left", object.originalLeft + slideX);
           object.set("opacity", slideOpacity);
           break;
         case "Blinking":
-          const blinkOpacity =
-            variant.opacity[
-              Math.floor((elapsed / duration) % variant.opacity.length)
-            ];
+          const blinkOpacity = variant.opacity[Math.floor((elapsed / duration) % variant.opacity.length)];
           object.set("opacity", blinkOpacity);
           break;
         case "Wave":
-          const waveY =
-            variant.y[Math.floor((elapsed / duration) % variant.y.length)];
+          const waveY = variant.y[Math.floor((elapsed / duration) % variant.y.length)];
           object.set("top", object.originalTop + waveY);
           break;
         default:
@@ -494,11 +619,9 @@ const Canva = () => {
       }
     };
 
-    // Store original positions
     object.originalTop = object.top;
     object.originalLeft = object.left;
 
-    // Start animation
     object.__animation = fabric.util.requestAnimFrame(animateFrame);
   };
 
@@ -514,10 +637,7 @@ const Canva = () => {
       activeObject.set("fontFamily", styles.fontFamily);
     }
     if (styles.textShadow) {
-      activeObject.set(
-        "shadow",
-        styles.textShadow === "none" ? null : styles.textShadow
-      );
+      activeObject.set("shadow", styles.textShadow === "none" ? null : styles.textShadow);
     }
     if (styles.opacity !== undefined) {
       activeObject.set("opacity", styles.opacity);
@@ -529,10 +649,7 @@ const Canva = () => {
       if (styles.glow) {
         activeObject.set("shadow", `0 0 8px ${selectedColor}`);
       } else {
-        activeObject.set(
-          "shadow",
-          styles.textShadow === "none" ? null : styles.textShadow
-        );
+        activeObject.set("shadow", styles.textShadow === "none" ? null : styles.textShadow);
       }
     }
     canvas.renderAll();
@@ -547,91 +664,12 @@ const Canva = () => {
     link.click();
   };
 
-  //save the template on cloud
-  const saveTemplate = async () => {
-    if (!canvas || !user?.id) {
-      console.error("Canvas or user ID is missing!");
-      return;
-    }
-  
-    console.log("Saving template...");
-  
-    try {
-      // Convert Fabric.js canvas to JSON
-      const jsonData = canvas.toJSON();
-  
-      // Ensure all images have crossOrigin set to avoid CORS issues
-      canvas.getObjects().forEach((obj) => {
-        if (obj.type === "image" && !obj.crossOrigin) {
-          obj.crossOrigin = "anonymous";
-        }
-      });
-  
-      // Convert canvas to Base64 image
-      const dataURL = canvas.toDataURL("image/png");
-  
-      // Convert Base64 to Blob
-      const response = await fetch(dataURL);
-      const blob = await response.blob();
-  
-      console.log("Blob Data:", blob); // Debugging
-  
-      if (blob.size === 0) {
-        console.error("Blob is empty!");
-        return;
-      }
-  
-      // Create FormData for file upload
-      const formData = new FormData();
-      formData.append("file", blob, "thumbnail.png");
-  
-      console.log("Uploading file...");
-  
-      // Upload the image to Cloudinary or backend storage
-      const uploadResponse = await upl(formData);
-      
-      // Ensure the response is valid
-      if (!uploadResponse) {
-        throw new Error("Thumbnail upload failed!");
-      }
-  
-      // Ensure response structure is correct
-    const data =  uploadResponse.data 
-
-    console.log("Upload response:", data.file?.path);
-
-    if (!data?.file?.path) {
-      throw new Error("Thumbnail upload did not return a valid URL!");
-    }
-
-    console.log("Thumbnail uploaded successfully:", data.file?.path);
-  
-      // Construct the template object
-      const newTemplate = {
-        name: "True Love",
-        jsonData,
-        price: 0,
-        categoryByMood: "LOVE",
-        additionalTags: ["elegant", "romantic", "love"],
-        userId: user?.id,
-        thumbnailUrl: data.file?.path, // Use uploaded image URL
-      };
-  
-      console.log("Saving template to DB...", newTemplate);
-  
-      // Save the template in the database
-      const saveResponse = await createTemplate(newTemplate);
-  
-      const {success, message} = saveResponse.data 
-      if (success) {
-        toast.success(message)
-      }
-  
-    } catch (error) {
-      console.error("Error saving template:", error);
-    }
+  const saveTemplate = () => {
+    if (!canvas) return;
+    const json = canvas.toJSON();
+    localStorage.setItem("savedTemplate", JSON.stringify(json));
+    alert("Template saved successfully!");
   };
-  
 
   const loadTemplate = () => {
     if (!canvas) return;
@@ -664,16 +702,13 @@ const Canva = () => {
 
   const onWallpaperSelect = (src) => {
     if (!canvas) return;
-    fabric.Image.fromURL(
-      src,
-      (img) => {
-        img.scaleToWidth(canvas.width);
-        img.scaleToHeight(canvas.height);
-        canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
-      },
-      { crossOrigin: "anonymous" }
-    );
+    fabric.Image.fromURL(src, (img) => {
+      img.scaleToWidth(canvas.width);
+      img.scaleToHeight(canvas.height);
+      canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+    }, { crossOrigin: "anonymous" });
   };
+
   const deleteSelectedObject = () => {
     if (!canvas) return;
     const activeObject = canvas.getActiveObject();
@@ -685,14 +720,13 @@ const Canva = () => {
 
   return (
     <div className="flex flex-col h-screen overflow-hidden">
-      {/* Mobile Sidebar (Visible only on mobile) */}
       <div className="block md:hidden w-full flex-shrink-0">
         <MobileSidebar
           templates={templates}
           designs={designs}
           handleImageUpload={handleImageUpload}
           addTemplateToCanvas={addTemplateToCanvas}
-          downloadImag
+          downloadImage={downloadImage}
           saveTemplate={saveTemplate}
           loadTemplate={loadTemplate}
           addDesignElement={addDesignElement}
@@ -700,32 +734,41 @@ const Canva = () => {
           addCustomTextElement={addCustomTextElement}
           textEffects={textEffects}
           setTextEffects={setTextEffects}
+          bringToFront={bringToFront}
+          sendToBack={sendToBack}
+          bringForward={bringForward}
+          sendBackward={sendBackward}
+          lockObject={lockObject}
+          unlockObject={unlockObject}
         />
       </div>
-      {/* Main Content Area */}
       <div className="flex flex-col md:flex-row flex-grow overflow-hidden">
-        {/* Original Sidebar (Visible only on large screens) */}
         <div className="hidden md:flex md:h-full md:flex-shrink-0">
-          <Sidebar
-            templates={templates}
-            designs={designs}
-            handleImageUpload={handleImageUpload}
-            addTemplateToCanvas={addTemplateToCanvas}
-            downloadImage={downloadImage}
-            saveTemplate={saveTemplate}
-            loadTemplate={loadTemplate}
-            addDesignElement={addDesignElement}
-            onWallpaperSelect={onWallpaperSelect}
-            addCustomTextElement={addCustomTextElement}
-            textEffects={textEffects}
-            setTextEffects={setTextEffects}
-          />
+        <Sidebar
+          templates={templates}
+          designs={designs}
+          handleImageUpload={handleImageUpload}
+          addTemplateToCanvas={addTemplateToCanvas}
+          downloadImage={downloadImage}
+          saveTemplate={saveTemplate}
+          loadTemplate={loadTemplate}
+          addDesignElement={addDesignElement}
+          onWallpaperSelect={onWallpaperSelect}
+          addCustomTextElement={addCustomTextElement}
+          textEffects={textEffects}
+          setTextEffects={setTextEffects}
+          bringToFront={bringToFront} // Added layering functions
+          sendToBack= {sendToBack}
+          bringForward={bringForward}
+          sendBackward={sendBackward}
+          lockObject={lockObject}
+          unlockObject={unlockObject}
+        />
         </div>
         <div className="flex flex-grow bg-slate-300">
           <CanvasArea canvasRef={canvasRef} />
         </div>
-        {/* Canvas and StyleOptions */}
-        <div className="flex flex-col md:flex-row  overflow-hidden bg-black">
+        <div className="flex flex-col md:flex-row overflow-hidden bg-black">
           <StyleOptions
             isStyleOptionsOpen={isStyleOptionsOpen}
             setIsStyleOptionsOpen={setIsStyleOptionsOpen}
