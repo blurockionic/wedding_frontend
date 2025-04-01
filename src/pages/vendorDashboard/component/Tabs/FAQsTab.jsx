@@ -55,7 +55,7 @@ export default function FAQsTab({ serviceId ,handleCloseFAQ }) {
 
   return (
     <div className="h-full">
-      <div className=" relative bg-transparent p-8 max-w-4xl mx-auto rounded-lg  bg-opacity-70 backdrop-blur-lg border border-ring">
+      <div className=" max-h-[90vh]  overflow-y-scroll relative bg-transparent p-5 max-w-4xl mx-auto rounded-lg  bg-opacity-70 backdrop-blur-lg border border-ring">
         <h2 className="text-4xl font-bold  text-foreground mb-8">
           FAQs <span className="text-sm">({fields.length})</span>
         </h2>
@@ -91,7 +91,7 @@ export default function FAQsTab({ serviceId ,handleCloseFAQ }) {
             {fields.length > 0 && (
               <div
                 key={fields[selectedIndex]?.id}
-                className="relative bg-gray-900 bg-opacity-50 p-6 rounded-lg shadow-md flex items-center gap-4 border border-gray-700 hover:border-gray-600 transition"
+                className="relative bg-gray-900 bg-opacity-50 p-4 rounded-lg shadow-md flex items-center gap-4 border border-gray-700 hover:border-gray-600 transition"
               >
                 {/* Close Button moved to Index Stack */}
                 <div className="absolute top-0 right-0 mt-2 mr-2">
@@ -119,7 +119,7 @@ export default function FAQsTab({ serviceId ,handleCloseFAQ }) {
                         <input
                           autoFocus
                           {...field}
-                          className="mt-2 w-full px-4 py-3 p-2 bg-gray-800 text-gray-300 border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-ring"
+                          className="mt-2 w-full px-4 py-3 p-2 bg-gray-800 text-gray-300 border border-gray-600 rounded-lg focus:outline-none focus:border-primary"
                           placeholder="Enter question"
                         />
                       )}
@@ -144,7 +144,7 @@ export default function FAQsTab({ serviceId ,handleCloseFAQ }) {
                       render={({ field }) => (
                         <textarea
                           {...field}
-                          className="mt-2 w-full px-4 py-3 p-2 bg-gray-800 text-gray-300 border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-ring"
+                          className=" w-full px-4 py-3 p-2 bg-gray-800 text-gray-300 border  rounded-lg focus:outline-none focus:border-primary"
                           placeholder="Enter answer"
                         />
                       )}
@@ -165,17 +165,17 @@ export default function FAQsTab({ serviceId ,handleCloseFAQ }) {
             <CustomButton
               type="button"
               leftIcon={<FaPlus/>}
-              text="Another FAQ"
+              text="ADD"
               onClick={() => append({ question: "", answer: "" })}
-              className="px-6 py-3 bg-primary text-white font-medium rounded-lg shadow-md hover:bg-pink-500 transition transform hover:scale-105"
+              className="px-8 py-2 bg-primary text-white font-medium rounded-lg shadow-md hover:bg-pink-500 transition transform hover:scale-105"
             />
               
             
             <button
               type="submit"
-              className="px-8 py-3 border border-ring text-green-500 font-medium rounded-lg shadow-md hover:bg-green-100 transition transform hover:scale-105"
+              className="px-8 py-2 border border-ring text-green-500 font-medium rounded-lg shadow-md hover:bg-green-100 transition transform hover:scale-105"
             >
-              Submit FAQs
+              SAVE 
             </button>
           </div>
         </form>

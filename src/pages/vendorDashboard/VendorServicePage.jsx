@@ -8,9 +8,9 @@ import { useSelector } from "react-redux";
 import { userlogout } from "../../redux/authSlice";
 
 const filters2 = [
-  { key: "all", label: "All Services" },
-  { key: "active", label: "Active Services" },
-  { key: "archived", label: "Archived Services" },
+  { key: "all", label: "All " },
+  { key: "active", label: "Active " },
+  { key: "archived", label: "Archived " },
 ];
 
 const VendorServicesPage = () => {
@@ -65,7 +65,7 @@ const VendorServicesPage = () => {
       {!showFormPage ? (
         <div className="flex-grow flex flex-col">
           <div className="flex justify-between items-center border-gray-300">
-            <div className="md:hidden text-4xl text-center font-semibold text-primary">
+            <div className="md:hidden text-2xl text-center font-semibold text-primary">
               Services
             </div>
             <div className="hidden md:flex px-5 space-x-4">
@@ -123,27 +123,28 @@ const VendorServicesPage = () => {
         <ServiceModel onClose={() => setShowFormPage(false)} />
       )}
       <Outlet />
-      
-      {/* Pagination Sticks to the Bottom */}
-      <div className="sticky bottom-0 left-0 right-0 flex justify-end py-4">
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="px-4 py-2 rounded-full bg-primary text-white hover:bg-pink-700 disabled:bg-gray-300 transition duration-200"
-        >
-          &lt;
-        </button>
-        <span className="px-4 py-2 mx-2 bg-primary rounded-full text-white font-medium">
-          {currentPage}
-        </span>
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={filteredServices.length < pageSize}
-          className="px-4 py-2 bg-primary text-white rounded-full hover:bg-pink-700 disabled:bg-gray-300 transition duration-200"
-        >
-          &gt;
-        </button>
-      </div>
+
+      {!showFormPage && (
+        <div className="sticky bottom-0 left-0 right-0 flex justify-end py-4">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="px-4 py-2 rounded-full bg-primary text-white hover:bg-pink-700 disabled:bg-gray-300 transition duration-200"
+          >
+            &lt;
+          </button>
+          <span className="px-4 py-2 mx-2 bg-primary rounded-full text-white font-medium">
+            {currentPage}
+          </span>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={filteredServices.length < pageSize}
+            className="px-4 py-2 bg-primary text-white rounded-full hover:bg-pink-700 disabled:bg-gray-300 transition duration-200"
+          >
+            &gt;
+          </button>
+        </div>
+      )}
     </div>
   );
 };

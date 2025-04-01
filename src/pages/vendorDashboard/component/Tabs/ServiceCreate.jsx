@@ -219,19 +219,22 @@ const ServiceCreate = ({ onClose, serviceData }) => {
 
   return (
     <>
-      <div className="bg-transparent relative p-8  mx-auto rounded-lg shadow-lg  border border-ring">
-        <button
+      <div className="bg-transparent w-full  md:p-4  mx-auto rounded-lg   ">
+       <div className="flex justify-between flex-row-reverse">
+
+       <button
           onClick={onClose}
-          className=" absolute right-10 bg-primary text-background rounded-full p-2 hover:bg-gray-600 transition"
+          className=" bg-primary text-background rounded-full p-2 hover:bg-gray-600 transition"
         >
           <MdClose className="w-5 h-5" />
         </button>
 
-        <h2 className="text-4xl font-bold text-center text-foreground mb-8">
+        <h2 className="text-xl text-primary font-semibold text-start underline underline-offset-4 ">
           {serviceData ? "Update Service" : "Create Service"}
         </h2>
+       </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
           <InputField
             id="service_name"
             type="text"
@@ -241,17 +244,17 @@ const ServiceCreate = ({ onClose, serviceData }) => {
             error={errors.service_name}
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 justify-center items-center gap-6">
             {/* Service Category Field */}
             {!serviceData && (
               <div>
-                <label className="block text-foreground mb-1">
+                <label className="block  text-muted-foreground text-sm font-semibold mb-2">
                   Service Category
                 </label>
                 <select
                   value={selectedCategory}
                   onChange={(e) => handleCategoryChange(e.target.value)}
-                  className="w-full px-4 py-3 bg-secondary text-foreground border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-ring"
+                  className="w-full   placeholder:text-sm px-4 bg-white   text-foreground border-border focus:ring-ring focus:outline-none rounded "
                 >
                   <option value="">Select a Category</option>
                   {sectorTypes.map((sector, index) => (
@@ -265,11 +268,11 @@ const ServiceCreate = ({ onClose, serviceData }) => {
 
             {!serviceData && serviceOptions.length > 0 && (
               <div>
-                <label className="block text-foreground mb-1">
+                <label className="block  text-muted-foreground text-sm font-semibold mb-2">
                   Service Type
                 </label>
                 <select
-                  className=" w-full px-4 py-3 bg-secondary text-foreground border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-ring"
+                  className=" w-full   placeholder:text-sm px-4 bg-white   text-foreground border-border focus:ring-ring focus:outline-none rounded"
                   value={selectedService}
                   onChange={handleServiceSelect}
                 >
@@ -285,11 +288,11 @@ const ServiceCreate = ({ onClose, serviceData }) => {
 
             {selectedService && (
               <div>
-                <label className="block text-lg font-medium text-foreground">
+                <label className="block  text-muted-foreground text-sm font-semibold mb-2">
                   unit type
                 </label>
                 <select
-                  className="mt-2 w-full px-4 py-3 bg-secondary text-foreground border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-ring"
+                  className="w-full   placeholder:text-sm px-4 bg-white   text-foreground border-border focus:ring-ring focus:outline-none rounded"
                   value={selectedUnit}
                   onChange={handleUnitSelect}
                 >
@@ -315,11 +318,11 @@ const ServiceCreate = ({ onClose, serviceData }) => {
 
           <div className="flex justify-center flex-col md:flex-row items-center gap-5">
             <div className="mb-6 w-full">
-              <label className="block text-lg font-medium text-gray-700">
+              <label className="block  text-muted-foreground text-sm font-semibold mb-2">
                 State <span className="text-red-500">*</span>
               </label>
               <select
-                className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-dustyRose-light"
+                className="w-full   placeholder:text-sm px-4 bg-white   text-foreground border-border focus:ring-ring focus:outline-none rounded"
                 onChange={(e) => {
                   setSelectedStateCode(e.target.value);
                   const selectedState = states.find(
@@ -344,11 +347,11 @@ const ServiceCreate = ({ onClose, serviceData }) => {
             </div>
 
             <div className="w-full mb-6">
-              <label className="block text-lg font-medium text-gray-700">
+              <label className="block  text-muted-foreground text-sm font-semibold mb-2">
                 City <span className="text-red-500">*</span>
               </label>
               <select
-                className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-dustyRose-light"
+                className="w-full   placeholder:text-sm px-4 bg-white   text-foreground border-border focus:ring-ring focus:outline-none rounded"
                 onChange={handleCityChange}
                 value={
                   cities.find((c) => c.name.toLowerCase() === watch("city"))
@@ -373,14 +376,14 @@ const ServiceCreate = ({ onClose, serviceData }) => {
           {/* Service Type Field */}
 
           <div className="relative ">
-            <label className="block font-montserrat text-muted-foreground text-sm font-bold mb-2">
+            <label className="block  text-muted-foreground text-sm font-semibold mb-2">
               Description <span className="text-red-500">*</span>
             </label>
             <textarea
-              rows={12}
+              rows={8}
               {...register("description")}
               placeholder="Enter a brief description"
-              className="py-2  h-15 w-full border border-border focus:ring-ring focus:outline-none rounded"
+              className="py-2  h-15 w-full   placeholder:text-sm px-4 bg-white   text-foreground border-border focus:ring-ring focus:outline-none rounded"
             />
             {errors.description && (
               <CustomText
@@ -396,7 +399,7 @@ const ServiceCreate = ({ onClose, serviceData }) => {
               className="mt-2 py-2 absolute right-4 bottom-4 px-4 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-all ease-in-out"
               disabled={isGenerating}
             >
-              {isGenerating ? "Generating..." : "Gen AI"}
+              {isGenerating ? "Generating..." : "Generate with AI"}
             </button>
           </div>
 
