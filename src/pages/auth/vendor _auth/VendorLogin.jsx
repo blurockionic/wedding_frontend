@@ -237,14 +237,14 @@ export default function VendorLogin() {
                 <ul className="px-2 md:px-0 space-y-4 sm:text-lg md:text-sm">
                   {[
                     {
-                      text: "Promote Your Services on Our Platform",
+                      text: "Showcase Your Expertise to a Wider Audience"
                     },
                     {
-                      text: "Connect with Local Couples Ready to Book",
+                      text: "Engage with Clients Actively Seeking Services"
                     },
                     {
-                      text: "Join a Network of Over 76,000 Trusted Professionals",
-                    },
+                      text: "Be Part of a Community of Trusted Professionals"
+                    }                    
                   ].map((benefit, index) => (
                     <li key={index} className="flex gap-3 capitalize items-center  justify-start">
                       <svg
@@ -261,8 +261,8 @@ export default function VendorLogin() {
                           .split(" ")
                           .map((word, i) =>
                             word.startsWith("+") ||
-                            word.toLowerCase() === "services" ||
-                            word.toLowerCase() === "book" ||
+                            word.toLowerCase() === "expertise" ||
+                            word.toLowerCase() === "clients" ||
                             word.toLowerCase() === "trusted" ? (
                               <strong key={i}>{word} </strong>
                             ) : (
