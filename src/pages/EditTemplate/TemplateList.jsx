@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { useGetAllTemplatesQuery } from "../../redux/invitationTemplateForAdminSlice";
+import { useNavigate } from "react-router-dom";
 
-const TemplateList = () => {
+const TemplateList = ({data}) => {
+  const navigate = useNavigate()
   const [filters, setFilters] = useState({
     name: "",
     minPrice: "",
@@ -13,18 +14,21 @@ const TemplateList = () => {
     limit: 10,
   });
 
-  const { data, error, isLoading } = useGetAllTemplatesQuery(filters);
-  console.log(data);
+  // const { data, error, isLoading } = useGetAllTemplatesQuery(filters);
 
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error fetching templates</p>;
+  // if (isLoading) return <p>Loading...</p>;
+  // if (error) return <p>Error fetching templates</p>;
+
+  const handleOnNavigate = (template) => {
+    navigate("/update_editor", { state: { template } });
+  };
 
   return (
-    <div className="p-4 md:px-16">
+    <div className="p-4 ">
       <h2 className="text-xl font-bold mb-4">Templates</h2>
 
       {/* Filters */}
-      <div className="flex gap-4 mb-4">
+      {/* <div className="flex gap-4 mb-4">
         <input
           type="text"
           placeholder="Search by name"
@@ -64,12 +68,12 @@ const TemplateList = () => {
         >
           Search
         </button>
-      </div>
+      </div> */}
 
       {/* Templates */}
       <div className="grid grid-cols-3 gap-4">
         {data?.data?.map((template) => (
-          <div key={template.id} className="border p-4 shadow-md">
+          <div key={template.id} className="border p-4 shadow-md" onClick={()=>handleOnNavigate(template)}>
             <img
               src={template.thumbnailUrl}
               alt={template.name}
