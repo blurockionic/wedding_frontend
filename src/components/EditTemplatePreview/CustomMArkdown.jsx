@@ -24,7 +24,7 @@ export default function CustomMarkdown({ content }) {
           <ol className="font-montserrat list-decimal ml-6 text-gray-700 mt-2 mb-3 space-y-1 leading-snug" {...props} />
         ),
         li: ({ node, ...props }) => (
-          <li className="font-montserrat  relative text-lg leading-snug flex items-start float-left gap-2">
+          <li className="font-montserrat  relative text-lg leading-snug flex items-start  gap-2">
             <span className="bg-green-500  mt-1.5  text-white font-semibold text-sm px-1 rounded-md">
               ✔
             </span>
