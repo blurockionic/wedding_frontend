@@ -58,8 +58,8 @@ const Mediatab = ({ serviceId, handleCloseMedia }) => {
   };
 
   return (
-    <div className="h-fit w-full ">
-      <div className="relative h-full p-6 bg-opacity-20 rounded-xl shadow-lg border border-ring max-w-4xl mx-auto">
+    <div className="w-full ">
+      <div className="max-h-[90vh]  overflow-y-scroll  relative p-4 bg-opacity-20 rounded-xl shadow-lg border border-ring max-w-4xl mx-auto">
         <h2 className="text-3xl font-extrabold text-foreground mb-8">
           Media Upload
         </h2>
@@ -76,15 +76,9 @@ const Mediatab = ({ serviceId, handleCloseMedia }) => {
             {files.map((fileObj, index) => (
               <div
                 key={index}
-                className="relative bg-gray-900 bg-opacity-50 p-5 rounded-lg shadow-md flex items-center gap-4 border border-gray-700 hover:border-gray-600 transition"
+                className="relative bg-gray-900 bg-opacity-50 p-3 rounded-lg shadow-md flex items-center gap-4 border border-gray-700 hover:border-gray-600 transition"
               >
-                <button
-                  type="button"
-                  onClick={() => removeRow(index)}
-                  className="absolute top-50 right-3 bg-gradient-to-tr from-slate-500 to-slate-700 text-white rounded-full w-9 h-9 flex items-center justify-center shadow-md hover:shadow-lg transition transform hover:scale-105"
-                >
-                  <MdClose className="w-5 h-5" />
-                </button>
+                
 
                 <div className="flex items-center gap-4 w-full">
                   <Controller
@@ -99,16 +93,16 @@ const Mediatab = ({ serviceId, handleCloseMedia }) => {
                         onChange={(e) =>
                           handleFileChange(e.target.files[0], index)
                         }
-                        className="p-2 bg-gray-800 text-gray-300 border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-ring"
+                        className="p-2 w-full bg-gray-800 text-gray-300 border border-gray-600 rounded-lg focus:outline-none focus:ring focus:ring-ring"
                       />
                     )}
                   />
                   {fileObj.preview && (
-                    <div className="w-24 h-24 overflow-hidden rounded-md border border-gray-700">
+                    <div className="w-24 h-24  rounded-md border border-gray-700">
                       {fileObj.file?.type.startsWith("image/") ? (
                         <img
                           src={fileObj.preview}
-                          alt="preview"
+                          alt="preview" 
                           className="w-full h-full object-cover"
                         />
                       ) : fileObj.file?.type.startsWith("video/") ? (
@@ -121,6 +115,13 @@ const Mediatab = ({ serviceId, handleCloseMedia }) => {
                     </div>
                   )}
                 </div>
+                <button
+                  type="button"
+                  onClick={() => removeRow(index)}
+                  className="absolute top-50 right-5 bg-gradient-to-tr from-slate-500 to-slate-700 text-white rounded-full w-9 h-9 flex items-center justify-center shadow-md hover:shadow-lg transition transform hover:scale-105"
+                >
+                  <MdClose className="w-5 h-5" />
+                </button>
               </div>
             ))}
           </div>

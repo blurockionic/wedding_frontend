@@ -1,7 +1,26 @@
-import React from "react";
+import  { useState } from "react";
+import { useGetAllTemplatesQuery } from "../../redux/invitationTemplateForAdminSlice";
 
-const TemplatesSection = ({ templates, onTemplateClick, selectedTemplate }) => (
-  <div className="h-screen bg-white text-black overflow-y-auto">
+const TemplatesSection = ({ templates, onTemplateClick, selectedTemplate }) => {
+  const [filters, setFilters] = useState({
+      name: "",
+      minPrice: "",
+      maxPrice: "",
+      categoryByMood: "",
+      categoryByAmount: "",
+      categoryByRequirement: "",
+      page: 1,
+      limit: 10,
+    });
+  
+  const { data, error, isLoading } = useGetAllTemplatesQuery(filters); 
+  
+
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error fetching templates</p>;
+
+  return (
+    <div className="h-screen bg-white text-black overflow-y-auto">
     <div className="p-4">
       <div className="mb-4">
         <input
@@ -31,7 +50,7 @@ const TemplatesSection = ({ templates, onTemplateClick, selectedTemplate }) => (
           <a href="#" className="text-purple-600 text-xs">See all</a>
         </div>
         <div className="grid grid-cols-2 gap-2">
-          {templates.map((template) => (
+          {data?.data?.map((template) => (
             <div
               key={template.id}
               className={`group relative rounded-lg overflow-hidden cursor-pointer transition-transform hover:scale-[1.02] ${
@@ -39,16 +58,17 @@ const TemplatesSection = ({ templates, onTemplateClick, selectedTemplate }) => (
               }`}
               onClick={() => onTemplateClick(template)}
             >
-              <img src={template.image} alt={template.name} className="w-full h-52 object-cover" />
+              <img src={template.thumbnailUrl} alt={template.name} className="w-full h-52 object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent p-2 flex flex-col justify-end">
                 <span className="text-xs font-medium text-white">{template.name}</span>
               </div>
             </div>
-          ))}
+          )) || <p>No templates available</p>}
         </div>
       </div>
     </div>
   </div>
 );
+};
 
 export default TemplatesSection;

@@ -1,27 +1,40 @@
-import { PieChart, Pie, Tooltip, ResponsiveContainer } from "recharts";
-const ServicePieChart = ({data}) => {
+import { useState } from "react";
+import { ResponsiveContainer, PieChart, Pie, Tooltip, Cell } from "recharts";
 
-  console.log(data)
+const ServicePieChart = ({ data,colorCodesForChart }) => {
 
-  if(!data) return null
-  const data02 = data?.map((item) => {
-    return {name: item?.name, value: item.totalViews}
-  })  
 
-  
+  if (!data || data.length === 0) return <p>No data available</p>;
+
+  const data02 = data.map((item) => ({
+    name: item?.name,
+    value: item?.totalViews || 0, // Fallback to 0 if totalViews is undefined
+  }));
+
+
   return (
-    <ResponsiveContainer width="100%" height="100%">
-      <PieChart width={200} height={200}>
+    <ResponsiveContainer  width="100%" height="100%">
+      <PieChart>
         <Pie
           dataKey="value"
-          isAnimationActive={false}
-          data={data02 }
+          
+          isAnimationActive={true}
+          data={data02}
           cx="50%"
           cy="50%"
-          outerRadius={140}
-          fill="#db2777"
-          label
-        />
+          onMouseEnter={(_, index) => setActiveIndex(index)}
+          onMouseLeave={() => setActiveIndex(null)}
+          paddingAngle={4}
+        >
+          {data02.map((entry, index) => (
+            <Cell
+              key={`cell-${index}`}
+              fill={colorCodesForChart[index % colorCodesForChart.length]}
+              stroke="white"
+             
+            />
+          ))}
+        </Pie>
         <Tooltip />
       </PieChart>
     </ResponsiveContainer>

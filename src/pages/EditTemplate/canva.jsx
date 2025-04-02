@@ -8,60 +8,253 @@ import { MdDelete } from "react-icons/md";
 import image_7 from "../../../public/image_7.jpg";
 import image_5 from "../../../public/image_5.jpg";
 import image_2 from "../../../public/image_2.jpg";
+import { useCreateTemplateMutation } from "../../redux/invitationTemplateForAdminSlice";
+import { useSelector } from "react-redux";
+import { useUplMutation } from "../../redux/uploadSlice";
+import { toast } from "react-toastify";
+import { useLocation } from "react-router-dom";
 
 const templates = [
-  { id: 1, image: image_7, name: "Classic Elegance", invitationData: { eventHeading: "WE INVITE YOU", eventSubheading: "TO CELEBRATE OUR WEDDING", groomName: "Aarav", brideName: "Aarohi", eventDate: "Saturday, May 24th", weddingTime: "2:00 PM", weddingLocation: "Grace Church, Greentown", description: "A reception will follow immediately after the ceremony." } },
+  {
+    id: 1,
+    image: image_7,
+    name: "Classic Elegance",
+    invitationData: {
+      eventHeading: "WE INVITE YOU",
+      eventSubheading: "TO CELEBRATE OUR WEDDING",
+      groomName: "Aarav",
+      brideName: "Aarohi",
+      eventDate: "Saturday, May 24th",
+      weddingTime: "2:00 PM",
+      weddingLocation: "Grace Church, Greentown",
+      description: "A reception will follow immediately after the ceremony.",
+    },
+  },
   { id: 2, image: image_5, name: "Modern Romance" },
   { id: 3, image: image_2, name: "Rustic Charm" },
   { id: 4, image: image_2, name: "Garden Party" },
 ];
 const designs = [
-  { id: 1, type: "simple", src: "https://media-public.canva.com/klens/MAGLrqklens/1/wm_s.png", name: "Simple" },
-  { id: 2, type: "simple", src: "https://media-public.canva.com/oAk6E/MAGdkaoAk6E/1/wm_s.png", name: "Simple" },
-  { id: 3, type: "simple", src: "https://media-public.canva.com/A1cqE/MAFUCvA1cqE/1/wm_s.png", name: "Simple" },
-  { id: 4, type: "simple", src: "https://cdn-icons-png.freepik.com/128/833/833472.png", name: "Heart" },
-  { id: 5, type: "flower", src: "https://media-public.canva.com/9Flno/MAE3p19Flno/1/s.png", name: "Flower" },
-  { id: 6, type: "simple", src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPunu0maTxQ0HJubMobBDJWFZ8enKyuue7_C_-p9Nl6hmpZ2Xzdww2EGzHFYYRzSs8Ug8&usqp=CAU", name: "Butterfly" },
-  { id: 7, type: "simple", src: "https://media-public.canva.com/f9DYg/MAFAAcf9DYg/1/wm_s.png", name: "Butterfly" },
-  { id: 8, type: "flower", src: "https://media-public.canva.com/FM-T4/MAFTTIFM-T4/1/s.png", name: "Daisy" },
-  { id: 6, type: "flower", src: "https://media-public.canva.com/_CllM/MAEGoA_CllM/1/s.png", name: "Floral Border" },
-  { id: 9, type: "decoration", src: "https://media-public.canva.com/r94T4/MAFSXar94T4/1/t.png", name: "Floral Border" },
-  { id: 10, type: "decoration", src: "https://media-public.canva.com/a9H5E/MAFSXUa9H5E/1/t.png", name: "Floral Border" },
-  { id: 11, type: "decoration", src: "https://media-public.canva.com/Thm7M/MAEpaoThm7M/1/tl.png", name: "Floral Border" },
-  { id: 12, type: "decoration", src: "https://media-public.canva.com/Bc9E4/MAFy8mBc9E4/1/tl.png", name: "Floral Border" },
-  { id: 13, type: "decoration", src: "https://media-public.canva.com/yp8ok/MAFy8nyp8ok/1/tl.png", name: "Floral Border" },
-  { id: 14, type: "decoration", src: "https://media-public.canva.com/8yOyw/MAFxKe8yOyw/1/t.png", name: " Border" },
-  { id: 15, type: "decoration", src: "https://media-public.canva.com/P_fWc/MAGbc2P_fWc/1/t.png", name: " Border" },
-  { id: 16, type: "border", src: "https://media-public.canva.com/eEzrc/MAELm9eEzrc/1/s.png", name: "Simple Border" },
-  { id: 17, type: "border", src: "https://media-public.canva.com/xAZGw/MAEzsgxAZGw/1/s.png", name: "Elegant Border" },
-  { id: 18, type: "border", src: "https://media-public.canva.com/MADdwktn_NQ/1/screen.png", name: "Curved Border" },
-  { id: 19, type: "flower", src: "https://media-public.canva.com/b5rno/MAF2Mbb5rno/1/tl.png", name: "Orchid" },
-  { id: 20, type: "flower", src: "https://media-public.canva.com/ZLivU/MADbgtZLivU/2/t.png", name: "Orchid" },
-  { id: 21, type: "flower", src: "https://media-public.canva.com/vXATQ/MAFoZRvXATQ/1/wm_s.png", name: "Yellow Rose" },
-  { id: 22, type: "flower", src: "https://media-public.canva.com/BrHgo/MAFoZSBrHgo/1/wm_s.png", name: "White Rose" },
-  { id: 23, type: "flower", src: "https://media-public.canva.com/MAAvXYuX-EI/2/screen.png", name: "Calendula" },
-  { id: 24, type: "wallpaper", src: "https://cdn.pixabay.com/photo/2022/11/10/00/57/lake-7581726_1280.jpg", name: "Floral Elegance" },
-  { id: 25, type: "wallpaper", src: "https://media-public.canva.com/Y7uKQ/MAEg9SY7uKQ/1/s.jpg", name: "Pastel Waves" },
-  { id: 26, type: "wallpaper", src: "https://cdn.pixabay.com/photo/2022/10/05/00/52/fantasy-7499397_1280.jpg", name: "Golden Leaves" },
-  { id: 27, type: "wallpaper", src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoEcBW_r4jp9FgBXkwf_ktk5j29wv6KBsp6g&s", name: "Soft Sky" },
-  { id: 29, type: "wallpaper", src: "https://cdn.pixabay.com/photo/2022/08/09/16/19/sea-7375377_960_720.jpg", name: "Abstract Art" },
-  { id: 30, type: "flower", src: "https://media-public.canva.com/aWWeU/MAErZ0aWWeU/1/t.png", name: "Daisy" },
+  {
+    id: 1,
+    type: "simple",
+    src: "https://media-public.canva.com/klens/MAGLrqklens/1/wm_s.png",
+    name: "Simple",
+  },
+  {
+    id: 2,
+    type: "simple",
+    src: "https://media-public.canva.com/oAk6E/MAGdkaoAk6E/1/wm_s.png",
+    name: "Simple",
+  },
+  {
+    id: 3,
+    type: "simple",
+    src: "https://media-public.canva.com/A1cqE/MAFUCvA1cqE/1/wm_s.png",
+    name: "Simple",
+  },
+  {
+    id: 4,
+    type: "simple",
+    src: "https://cdn-icons-png.freepik.com/128/833/833472.png",
+    name: "Heart",
+  },
+  {
+    id: 5,
+    type: "flower",
+    src: "https://media-public.canva.com/9Flno/MAE3p19Flno/1/s.png",
+    name: "Flower",
+  },
+  {
+    id: 6,
+    type: "simple",
+    src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPunu0maTxQ0HJubMobBDJWFZ8enKyuue7_C_-p9Nl6hmpZ2Xzdww2EGzHFYYRzSs8Ug8&usqp=CAU",
+    name: "Butterfly",
+  },
+  {
+    id: 7,
+    type: "simple",
+    src: "https://media-public.canva.com/f9DYg/MAFAAcf9DYg/1/wm_s.png",
+    name: "Butterfly",
+  },
+  {
+    id: 8,
+    type: "flower",
+    src: "https://media-public.canva.com/FM-T4/MAFTTIFM-T4/1/s.png",
+    name: "Daisy",
+  },
+  {
+    id: 6,
+    type: "flower",
+    src: "https://media-public.canva.com/_CllM/MAEGoA_CllM/1/s.png",
+    name: "Floral Border",
+  },
+  {
+    id: 9,
+    type: "decoration",
+    src: "https://media-public.canva.com/r94T4/MAFSXar94T4/1/t.png",
+    name: "Floral Border",
+  },
+  {
+    id: 10,
+    type: "decoration",
+    src: "https://media-public.canva.com/a9H5E/MAFSXUa9H5E/1/t.png",
+    name: "Floral Border",
+  },
+  {
+    id: 11,
+    type: "decoration",
+    src: "https://media-public.canva.com/Thm7M/MAEpaoThm7M/1/tl.png",
+    name: "Floral Border",
+  },
+  {
+    id: 12,
+    type: "decoration",
+    src: "https://media-public.canva.com/Bc9E4/MAFy8mBc9E4/1/tl.png",
+    name: "Floral Border",
+  },
+  {
+    id: 13,
+    type: "decoration",
+    src: "https://media-public.canva.com/yp8ok/MAFy8nyp8ok/1/tl.png",
+    name: "Floral Border",
+  },
+  {
+    id: 14,
+    type: "decoration",
+    src: "https://media-public.canva.com/8yOyw/MAFxKe8yOyw/1/t.png",
+    name: " Border",
+  },
+  {
+    id: 15,
+    type: "decoration",
+    src: "https://media-public.canva.com/P_fWc/MAGbc2P_fWc/1/t.png",
+    name: " Border",
+  },
+  {
+    id: 16,
+    type: "border",
+    src: "https://media-public.canva.com/eEzrc/MAELm9eEzrc/1/s.png",
+    name: "Simple Border",
+  },
+  {
+    id: 17,
+    type: "border",
+    src: "https://media-public.canva.com/xAZGw/MAEzsgxAZGw/1/s.png",
+    name: "Elegant Border",
+  },
+  {
+    id: 18,
+    type: "border",
+    src: "https://media-public.canva.com/MADdwktn_NQ/1/screen.png",
+    name: "Curved Border",
+  },
+  {
+    id: 19,
+    type: "flower",
+    src: "https://media-public.canva.com/b5rno/MAF2Mbb5rno/1/tl.png",
+    name: "Orchid",
+  },
+  {
+    id: 20,
+    type: "flower",
+    src: "https://media-public.canva.com/ZLivU/MADbgtZLivU/2/t.png",
+    name: "Orchid",
+  },
+  {
+    id: 21,
+    type: "flower",
+    src: "https://media-public.canva.com/vXATQ/MAFoZRvXATQ/1/wm_s.png",
+    name: "Yellow Rose",
+  },
+  {
+    id: 22,
+    type: "flower",
+    src: "https://media-public.canva.com/BrHgo/MAFoZSBrHgo/1/wm_s.png",
+    name: "White Rose",
+  },
+  {
+    id: 23,
+    type: "flower",
+    src: "https://media-public.canva.com/MAAvXYuX-EI/2/screen.png",
+    name: "Calendula",
+  },
+  {
+    id: 24,
+    type: "wallpaper",
+    src: "https://cdn.pixabay.com/photo/2022/11/10/00/57/lake-7581726_1280.jpg",
+    name: "Floral Elegance",
+  },
+  {
+    id: 25,
+    type: "wallpaper",
+    src: "https://media-public.canva.com/Y7uKQ/MAEg9SY7uKQ/1/s.jpg",
+    name: "Pastel Waves",
+  },
+  {
+    id: 26,
+    type: "wallpaper",
+    src: "https://cdn.pixabay.com/photo/2022/10/05/00/52/fantasy-7499397_1280.jpg",
+    name: "Golden Leaves",
+  },
+  {
+    id: 27,
+    type: "wallpaper",
+    src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoEcBW_r4jp9FgBXkwf_ktk5j29wv6KBsp6g&s",
+    name: "Soft Sky",
+  },
+  {
+    id: 29,
+    type: "wallpaper",
+    src: "https://cdn.pixabay.com/photo/2022/08/09/16/19/sea-7375377_960_720.jpg",
+    name: "Abstract Art",
+  },
+  {
+    id: 30,
+    type: "flower",
+    src: "https://media-public.canva.com/aWWeU/MAErZ0aWWeU/1/t.png",
+    name: "Daisy",
+  },
 ];
 
 const fontStyles = {
-  "Arial": "Arial, sans-serif",
+  Arial: "Arial, sans-serif",
   "Times New Roman": "Times New Roman, serif",
   "Courier New": "Courier New, monospace",
-  "Georgia": "Georgia, serif",
+  Georgia: "Georgia, serif",
 };
 
 const animations = [
-  { name: "Bounce", variant: { y: [-10, 10, -5, 5, 0], transition: { duration: 0.6 } } },
-  { name: "Fade In", variant: { opacity: [0, 1], transition: { duration: 0.6 } } },
-  { name: "Scale Pop", variant: { scale: [0.8, 1.2, 1], transition: { duration: 0.6 } } },
-  { name: "Slide In", variant: { x: [-50, 0], opacity: [0, 1], transition: { duration: 0.6 } } },
-  { name: "Blinking", variant: { opacity: [1, 0, 1], transition: { duration: 1, repeat: Infinity } } },
-  { name: "Wave", variant: { y: [0, -10, 0, 10, 0], transition: { duration: 1.5, repeat: Infinity } } },
+  {
+    name: "Bounce",
+    variant: { y: [-10, 10, -5, 5, 0], transition: { duration: 0.6 } },
+  },
+  {
+    name: "Fade In",
+    variant: { opacity: [0, 1], transition: { duration: 0.6 } },
+  },
+  {
+    name: "Scale Pop",
+    variant: { scale: [0.8, 1.2, 1], transition: { duration: 0.6 } },
+  },
+  {
+    name: "Slide In",
+    variant: { x: [-50, 0], opacity: [0, 1], transition: { duration: 0.6 } },
+  },
+  {
+    name: "Blinking",
+    variant: {
+      opacity: [1, 0, 1],
+      transition: { duration: 1, repeat: Infinity },
+    },
+  },
+  {
+    name: "Wave",
+    variant: {
+      y: [0, -10, 0, 10, 0],
+      transition: { duration: 1.5, repeat: Infinity },
+    },
+  },
 ];
 
 const Canva = () => {
@@ -88,13 +281,24 @@ const Canva = () => {
     lineHeight: 1,
   });
 
+
+  const [createTemplate] = useCreateTemplateMutation();
+  const { user } = useSelector((state) => state.auth);
+  const [upl] = useUplMutation();
+
+  const location = useLocation();
+  const template = location.state?.template;
+
+
   useEffect(() => {
     const fabricCanvas = new fabric.Canvas(canvasRef.current, {
       width: 400,
       height: 600,
       backgroundColor: "#fff",
+      preserveObjectStacking: true, // Ensure stacking order is preserved even when selecting
     });
     setCanvas(fabricCanvas);
+    console.log("Canvas initialized:", fabricCanvas, "Fabric.js version:", fabric.version);
 
     fabricCanvas.on("selection:created", (event) => {
       const activeObject = event.target;
@@ -110,6 +314,7 @@ const Canva = () => {
         } else {
           setIsStyleOptionsOpen(false);
         }
+        updateCanvasOrder(); // Re-sort to ensure locked objects stay on top
       }
     });
 
@@ -127,6 +332,7 @@ const Canva = () => {
         } else {
           setIsStyleOptionsOpen(false);
         }
+        updateCanvasOrder(); // Re-sort to ensure locked objects stay on top
       }
     });
 
@@ -155,7 +361,56 @@ const Canva = () => {
       fabricCanvas.dispose();
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [template]);
+
+  useEffect(()=>{
+    //load template on canvas
+    const jsonData =  template.jsonData
+    if (!canvas) {
+      console.error("Canvas is not initialized");
+      return;
+    }
+  
+    if (!jsonData || !jsonData.objects || !Array.isArray(jsonData.objects)) {
+      console.error("Invalid JSON data:", jsonData);
+      return;
+    }
+  
+    console.log("Loading template:", jsonData);
+  
+    // Load the template
+    canvas.loadFromJSON(jsonData, () => {
+      console.log("Template loaded successfully");
+  
+      // Ensure images are properly loaded
+      canvas.getObjects().forEach((obj) => {
+        if (obj.type === "image" && obj.setSrc) {
+          fabric.Image.fromURL(obj.src, (img) => {
+            img.set({
+              left: obj.left || 0,
+              top: obj.top || 0,
+              scaleX: obj.scaleX || 1,
+              scaleY: obj.scaleY || 1,
+            });
+  
+            canvas.add(img);
+            canvas.renderAll();
+          });
+        }
+      });
+  
+      // Render the canvas
+      canvas.renderAll();
+    }, (error) => {
+      if (error) {
+        console.error("Error loading template:", error);
+      }
+    });
+  },[canvas])
+
+ 
+
+
 
   const addCustomTextElement = (text, size, style) => {
     if (!canvas) return;
@@ -184,6 +439,151 @@ const Canva = () => {
     setIsStyleOptionsOpen(true);
   };
 
+  const updateCanvasOrder = () => {
+    if (!canvas) return;
+    const objects = canvas.getObjects();
+    objects.forEach((obj, index) => {
+      obj.zIndex = index;
+    });
+    // Sort by zIndex, ensuring locked objects stay on top
+    canvas._objects.sort((a, b) => {
+      if (a.lockMovementX && !b.lockMovementX) return 1; // Locked a stays above unlocked b
+      if (!a.lockMovementX && b.lockMovementX) return -1; // Locked b stays above unlocked a
+      return a.zIndex - b.zIndex; // Normal sorting for unlocked objects
+    });
+    canvas.renderAll();
+  };
+
+  const bringToFront = () => {
+    if (!canvas) return;
+    const activeObject = canvas.getActiveObject();
+    if (!activeObject) {
+      console.warn("No object selected to bring to front");
+      return;
+    }
+    const objects = canvas.getObjects();
+    const lockedObjects = objects.filter(obj => obj.lockMovementX);
+    const index = objects.indexOf(activeObject);
+    if (index === objects.length - 1 || (lockedObjects.length > 0 && index === objects.length - lockedObjects.length - 1)) {
+      console.log("Object is already at the front or below locked objects");
+      return;
+    }
+    canvas.remove(activeObject);
+    if (lockedObjects.length > 0) {
+      canvas._objects.splice(objects.length - lockedObjects.length, 0, activeObject);
+    } else {
+      canvas.add(activeObject);
+    }
+    updateCanvasOrder();
+    canvas.setActiveObject(activeObject);
+    console.log("Object brought to front:", activeObject, "New order:", canvas.getObjects());
+  };
+
+  const sendToBack = () => {
+    if (!canvas) return;
+    const activeObject = canvas.getActiveObject();
+    if (!activeObject) {
+      console.warn("No object selected to send to back");
+      return;
+    }
+    const objects = canvas.getObjects();
+    const index = objects.indexOf(activeObject);
+    if (index === 0) {
+      console.log("Object is already at the back");
+      return;
+    }
+    canvas.remove(activeObject);
+    canvas._objects.unshift(activeObject);
+    updateCanvasOrder();
+    canvas.setActiveObject(activeObject);
+    console.log("Object sent to back:", activeObject, "New order:", canvas.getObjects());
+  };
+
+  const bringForward = () => {
+    if (!canvas) return;
+    const activeObject = canvas.getActiveObject();
+    if (!activeObject) {
+      console.warn("No object selected to bring forward");
+      return;
+    }
+    const objects = canvas.getObjects();
+    const lockedObjects = objects.filter(obj => obj.lockMovementX);
+    const index = objects.indexOf(activeObject);
+    if (index === objects.length - 1 || (lockedObjects.length > 0 && index === objects.length - lockedObjects.length - 1)) {
+      console.log("Object is already at the front or below locked objects");
+      return;
+    }
+    objects.splice(index, 1);
+    objects.splice(index + 1, 0, activeObject);
+    canvas._objects = objects;
+    updateCanvasOrder();
+    canvas.setActiveObject(activeObject);
+    console.log("Object brought forward:", activeObject, "New order:", canvas.getObjects());
+  };
+
+  const sendBackward = () => {
+    if (!canvas) return;
+    const activeObject = canvas.getActiveObject();
+    if (!activeObject) {
+      console.warn("No object selected to send backward");
+      return;
+    }
+    const objects = canvas.getObjects();
+    const index = objects.indexOf(activeObject);
+    if (index === 0) {
+      console.log("Object is already at the back");
+      return;
+    }
+    objects.splice(index, 1);
+    objects.splice(index - 1, 0, activeObject);
+    canvas._objects = objects;
+    updateCanvasOrder();
+    canvas.setActiveObject(activeObject);
+    console.log("Object sent backward:", activeObject, "New order:", canvas.getObjects());
+  };
+
+  const lockObject = () => {
+    if (!canvas) return;
+    const activeObject = canvas.getActiveObject();
+    if (!activeObject) {
+      console.warn("No object selected to lock");
+      return;
+    }
+    activeObject.set({
+      lockMovementX: true,
+      lockMovementY: true,
+      lockRotation: true,
+      lockScalingX: true,
+      lockScalingY: true,
+      hasControls: false,
+      selectable: true,
+    });
+    bringToFront(); // Bring locked object to front but below other locked objects
+    updateCanvasOrder();
+    canvas.renderAll();
+    console.log("Object locked and brought to front:", activeObject);
+  };
+
+  const unlockObject = () => {
+    if (!canvas) return;
+    const activeObject = canvas.getActiveObject();
+    if (!activeObject) {
+      console.warn("No object selected to unlock");
+      return;
+    }
+    activeObject.set({
+      lockMovementX: false,
+      lockMovementY: false,
+      lockRotation: false,
+      lockScalingX: false,
+      lockScalingY: false,
+      hasControls: true,
+      selectable: true,
+    });
+    canvas.renderAll();
+    console.log("Object unlocked:", activeObject);
+  };
+
   const handleImageUpload = (imageUrl) => {
     if (!canvas) return;
     const imgElement = new Image();
@@ -202,26 +602,54 @@ const Canva = () => {
     };
   };
 
-  const addTemplateToCanvas = (image) => {
-    if (!canvas) return;
-    const imgElement = new Image();
-    imgElement.src = image;
-    const templateImg = new fabric.Image(imgElement, {
-      left: 50,
-      top: 50,
-      scaleX: 0.5,
-      scaleY: 0.5,
-      selectable: true,
-      hasControls: true,
+  const addTemplateToCanvas = (jsonData) => {
+    if (!canvas) {
+      console.error("Canvas is not initialized");
+      return;
+    }
+  
+    if (!jsonData || !jsonData.objects || !Array.isArray(jsonData.objects)) {
+      console.error("Invalid JSON data:", jsonData);
+      return;
+    }
+  
+    console.log("Loading template:", jsonData);
+  
+    // Load the template
+    canvas.loadFromJSON(jsonData, () => {
+      console.log("Template loaded successfully");
+  
+      // Ensure images are properly loaded
+      canvas.getObjects().forEach((obj) => {
+        if (obj.type === "image" && obj.setSrc) {
+          fabric.Image.fromURL(obj.src, (img) => {
+            img.set({
+              left: obj.left || 0,
+              top: obj.top || 0,
+              scaleX: obj.scaleX || 1,
+              scaleY: obj.scaleY || 1,
+            });
+  
+            canvas.add(img);
+            canvas.renderAll();
+          });
+        }
+      });
+  
+      // Render the canvas
+      canvas.renderAll();
+    }, (error) => {
+      if (error) {
+        console.error("Error loading template:", error);
+      }
     });
-    canvas.add(templateImg);
-    canvas.renderAll();
   };
+  
+  
 
   const applyAnimation = (object, animation) => {
     if (!object || object.type !== "i-text") return;
 
-    // Stop any existing animations
     if (object.__animation) {
       fabric.util.cancelAnimFrame(object.__animation);
       delete object.__animation;
@@ -229,7 +657,7 @@ const Canva = () => {
 
     const { name, variant } = animation;
     const { transition } = variant;
-    const duration = transition.duration * 1000; // Convert to ms
+    const duration = transition.duration * 1000;
     const repeat = transition.repeat === Infinity;
 
     const animateFrame = (timestamp) => {
@@ -279,11 +707,9 @@ const Canva = () => {
       }
     };
 
-    // Store original positions
     object.originalTop = object.top;
     object.originalLeft = object.left;
 
-    // Start animation
     object.__animation = fabric.util.requestAnimFrame(animateFrame);
   };
 
@@ -325,8 +751,6 @@ const Canva = () => {
     link.download = "wedding-template.png";
     link.click();
   };
-
-
 
   const saveTemplate = () => {
     if (!canvas) return;
@@ -372,6 +796,7 @@ const Canva = () => {
       canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
     }, { crossOrigin: "anonymous" });
   };
+
   const deleteSelectedObject = () => {
     if (!canvas) return;
     const activeObject = canvas.getActiveObject();
@@ -383,14 +808,13 @@ const Canva = () => {
 
   return (
     <div className="flex flex-col h-screen overflow-hidden">
-      {/* Mobile Sidebar (Visible only on mobile) */}
       <div className="block md:hidden w-full flex-shrink-0">
         <MobileSidebar
           templates={templates}
           designs={designs}
           handleImageUpload={handleImageUpload}
           addTemplateToCanvas={addTemplateToCanvas}
-          downloadImag
+          downloadImage={downloadImage}
           saveTemplate={saveTemplate}
           loadTemplate={loadTemplate}
           addDesignElement={addDesignElement}
@@ -398,33 +822,41 @@ const Canva = () => {
           addCustomTextElement={addCustomTextElement}
           textEffects={textEffects}
           setTextEffects={setTextEffects}
+          bringToFront={bringToFront}
+          sendToBack={sendToBack}
+          bringForward={bringForward}
+          sendBackward={sendBackward}
+          lockObject={lockObject}
+          unlockObject={unlockObject}
         />
       </div>
-      {/* Main Content Area */}
       <div className="flex flex-col md:flex-row flex-grow overflow-hidden">
-        {/* Original Sidebar (Visible only on large screens) */}
         <div className="hidden md:flex md:h-full md:flex-shrink-0">
-          <Sidebar
-            templates={templates}
-            designs={designs}
-            handleImageUpload={handleImageUpload}
-            addTemplateToCanvas={addTemplateToCanvas}
-            downloadImage={downloadImage}
-            saveTemplate={saveTemplate}
-            loadTemplate={loadTemplate}
-            addDesignElement={addDesignElement}
-            onWallpaperSelect={onWallpaperSelect}
-            addCustomTextElement={addCustomTextElement}
-            textEffects={textEffects}
-            setTextEffects={setTextEffects}
-          />
+        <Sidebar
+          templates={templates}
+          designs={designs}
+          handleImageUpload={handleImageUpload}
+          addTemplateToCanvas={addTemplateToCanvas}
+          downloadImage={downloadImage}
+          saveTemplate={saveTemplate}
+          loadTemplate={loadTemplate}
+          addDesignElement={addDesignElement}
+          onWallpaperSelect={onWallpaperSelect}
+          addCustomTextElement={addCustomTextElement}
+          textEffects={textEffects}
+          setTextEffects={setTextEffects}
+          bringToFront={bringToFront} // Added layering functions
+          sendToBack= {sendToBack}
+          bringForward={bringForward}
+          sendBackward={sendBackward}
+          lockObject={lockObject}
+          unlockObject={unlockObject}
+        />
         </div>
         <div className="flex flex-grow bg-slate-300">
-            <CanvasArea canvasRef={canvasRef} />
-          </div>
-        {/* Canvas and StyleOptions */}
-        <div className="flex flex-col md:flex-row  overflow-hidden bg-black">
-          
+          <CanvasArea canvasRef={canvasRef} />
+        </div>
+        <div className="flex flex-col md:flex-row overflow-hidden bg-black">
           <StyleOptions
             isStyleOptionsOpen={isStyleOptionsOpen}
             setIsStyleOptionsOpen={setIsStyleOptionsOpen}
@@ -452,7 +884,7 @@ const Canva = () => {
           <MdDelete />
         </button>
       </div>
-      </div>
+    </div>
   );
 };
 

@@ -11,7 +11,7 @@ import Slider from "../../../components/Slider";
 import Mediatab from "./Tabs/Mediatab";
 import FAQsTab from "./Tabs/FAQsTab";
 import ServiceCreate from "./Tabs/ServiceCreate";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { CiEdit } from "react-icons/ci";
 import { MdDeleteOutline } from "react-icons/md";
@@ -150,9 +150,11 @@ const DashBoardDetailPage = () => {
   };
 
   return (
-    <div className="max-w-screen-xl mx-auto px-6">
+    <div className={`max-w-screen-xl mx-auto ${
+      activeTab ? "overflow-y-hidden h-screen" : ""
+    }`}>
       {/* Buttons Section */}
-      <div className="mt-1 flex gap-4 justify-end items-center   p-2 w-full">
+      <div className="mt-1 flex gap-2 justify-end items-center  flex-wrap  w-full">
         <ToggleSwitch
           className="text-cyan-400 border border-cyan-400 rounded-md  px-4 py-2"
           checked={switch1}
@@ -194,7 +196,9 @@ const DashBoardDetailPage = () => {
         {/* make atoogle swith to toggle active and archived */}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-7 mt-5 md:px-4">
+      <div
+        className={`grid grid-cols-1 lg:grid-cols-2 gap-8 mb-7 mt-5 md:px-4 `}
+      >
         <div>
           <span className="text-sm">Service Title</span>
           <h1 className="text-4xl font-bold text-foreground capitalize dark:text-white mb-4">
@@ -345,38 +349,34 @@ const DashBoardDetailPage = () => {
           )}
         </div>
       </div>
-      <div className="mt-8 md:px-4 w-full">
-        {activeTab === "media" && (
+      <div className="mt-8 md:px-4  w-full">
+        {["media", "faq", "edit"].includes(activeTab) && (
           <>
             {/* Background Overlay */}
-            <div className="fixed inset-0 z-10 bg-transparent bg-opacity-50 backdrop-blur-md"></div>
+            <div className="fixed inset-0 z-10   bg-transparent bg-opacity-50 backdrop-blur-md"></div>
 
             {/* Modal Content */}
-            <div className="fixed z-20 top-1/2 left-1/2 md:left-[60%] transform -translate-x-1/2 -translate-y-1/2 bg-transparent backdrop-blur-md rounded-lg shadow-lg max-w-lg w-full">
-              <Mediatab handleCloseMedia={handleClose} serviceId={serviceId} />
-            </div>
-          </>
-        )}
+            <div
+              className={`fixed z-20 top-1/2 md:left-[55%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-transparent backdrop-blur-md rounded-lg shadow-custom max-w-xl w-full ${
+                activeTab === "edit" ? "h-[90vh] p-4 overflow-y-scroll" : ""
+              }`}
+            >
+              {activeTab === "media" && (
+                <Mediatab
+                  handleCloseMedia={handleClose}
+                  serviceId={serviceId}
+                />
+              )}
+              {activeTab === "faq" && (
+                <FAQsTab handleCloseFAQ={handleClose} serviceId={serviceId} />
+              )}
 
-        {activeTab === "faq" && (
-          <>
-            {/* Background Overlay */}
-            <div className="fixed inset-0 z-10 bg-transparent bg-opacity-50 backdrop-blur-md"></div>
-
-            {/* Modal Content */}
-            <div className="fixed z-20 top-1/2 left-1/2 md:left-[60%] transform -translate-x-1/2 -translate-y-1/2 bg-transparent backdrop-blur-md rounded-lg shadow-lg  max-w-lg w-full">
-              <FAQsTab handleCloseFAQ={handleClose} serviceId={serviceId} />
-            </div>
-          </>
-        )}
-        {activeTab === "edit" && (
-          <>
-            {/* Background Overlay */}
-            <div className="fixed inset-0 z-10 bg-transparent bg-opacity-50  backdrop-blur-md"></div>
-
-            {/* Modal Content */}
-            <div className="fixed z-20 top-1/2 left-1/2 md:left-[60%] transform -translate-x-1/2 -translate-y-1/2 bg-transparent backdrop-blur-md rounded-lg shadow-lg  max-w-lg w-full h-[600px] overflow-y-scroll">
-              <ServiceCreate onClose={handleClose} serviceData={data.service} />
+              {activeTab === "edit" && (
+                <ServiceCreate
+                  onClose={handleClose}
+                  serviceData={data.service}
+                />
+              )}
             </div>
           </>
         )}

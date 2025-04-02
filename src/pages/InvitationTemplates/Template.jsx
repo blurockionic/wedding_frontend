@@ -9,6 +9,7 @@ function Template() {
       <Introduction />
 
       <Quote />
+      
 
       {/* feature section  */}
       <FeatureSection/>
