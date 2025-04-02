@@ -168,12 +168,12 @@ const Sidebar = ({
   return (
     <div className="flex h-screen">
       {/* Icon Sidebar */}
-      <div className="w-16 flex md:flex-col flex-row items-center md:py-6 py-2 space-x-4 md:space-x-0 space-y-6 border-r border-gray-200 overflow-x-auto md:overflow-x-visible">
+      <div className="p-2 flex md:flex-col flex-row items-center md:py-6 py-2 space-x-4 md:space-x-0 space-y-6 border-r border-gray-200 overflow-x-auto md:overflow-x-visible ">
         {sidebarItems.map((item) => (
           <button
             key={item.id}
             onClick={() => handleSectionToggle(item.id)}
-            className={`p-2 rounded-lg ${activeSection === item.id ? "bg-purple-100" : "hover:bg-gray-200"}`}
+            className={`w-full p-2 bg-white rounded-lg ${activeSection === item.id ? "bg-purple-100" : "hover:bg-gray-200"}`}
             title={item.label}
           >
             <div className="flex items-center justify-center">{item.icon}</div>

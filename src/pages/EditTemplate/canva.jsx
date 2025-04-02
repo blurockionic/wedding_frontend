@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import { useUplMutation } from "../../redux/uploadSlice";
 import { toast } from "react-toastify";
 import { useLocation } from "react-router-dom";
+import html2canvas from "html2canvas";
 
 const templates = [
   {
@@ -361,24 +362,17 @@ const Canva = () => {
       fabricCanvas.dispose();
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [template]);
-
-  useEffect(()=>{
-    //load template on canvas
-    const jsonData =  template.jsonData
-    if (!canvas) {
-      console.error("Canvas is not initialized");
+  }, []);
+//load the template on canvas
+  useEffect(() => {
+    if (!canvas || !template?.jsonData) {
+      console.error("Canvas or template is not initialized");
       return;
     }
   
-    if (!jsonData || !jsonData.objects || !Array.isArray(jsonData.objects)) {
-      console.error("Invalid JSON data:", jsonData);
-      return;
-    }
-  
+    const jsonData = template.jsonData;
     console.log("Loading template:", jsonData);
   
-    // Load the template
     canvas.loadFromJSON(jsonData, () => {
       console.log("Template loaded successfully");
   
@@ -399,14 +393,13 @@ const Canva = () => {
         }
       });
   
-      // Render the canvas
       canvas.renderAll();
     }, (error) => {
       if (error) {
         console.error("Error loading template:", error);
       }
     });
-  },[canvas])
+  }, [canvas, template]);
 
  
 
@@ -602,6 +595,7 @@ const Canva = () => {
     };
   };
 
+  //add template to the canvas
   const addTemplateToCanvas = (jsonData) => {
     if (!canvas) {
       console.error("Canvas is not initialized");
@@ -752,12 +746,68 @@ const Canva = () => {
     link.click();
   };
 
-  const saveTemplate = () => {
+  //save template on cloud
+  const saveTemplate = async () => {
     if (!canvas) return;
-    const json = canvas.toJSON();
-    localStorage.setItem("savedTemplate", JSON.stringify(json));
-    alert("Template saved successfully!");
+
+    // Capture canvas as image
+    const canvasElement = document.querySelector("canvas"); // Ensure this targets the correct canvas
+    const screenshot = await html2canvas(canvasElement);
+    
+    // Convert canvas to blob
+    const blob = await new Promise((resolve) =>
+      screenshot.toBlob(resolve, "image/png")
+    );
+    console.log(blob)
+
+    // Upload to Cloudinary
+    const formData = new FormData();
+    formData.append("file", blob);
+    console.log(formData) 
+
+     // Upload to Cloudinary using RTK Query mutation
+     const cloudinaryData = await upl(formData).unwrap();
+
+      const url = cloudinaryData.file?.path
+
+    // formData.append("upload_preset", "your_upload_preset"); // Replace with Cloudinary upload preset
+
+    
+    const jsonData = canvas.toJSON();
+    const templateData = {
+      name: "Sample Template", 
+      description: "A sample invitation template", 
+      userId: user?.id, 
+      jsonData: jsonData,
+      price: 500, 
+      categoryByAmount: "PAID",
+      categoryByMood: "WEDDING",
+      categoryByRequirement: "LATEST",
+      additionalTags: ["wedding", "invitation"], 
+      designedBy: "Designer Name", 
+      thumbnailUrl: url || "https://example.com/thumbnail.jpg" , 
+      rating: 0.0,
+      status: "DRAFT",
+      paymentDetails: [], // Populate if needed
+      orderDetails: [], // Populate if needed
+    };
+  
+    try {
+      createTemplate(templateData)
+      .unwrap()
+      .then(() => {
+        toast.success("Template saved successfully!");
+      })
+      .catch((error) => {
+        console.error("Error saving template:", error);
+        alert("Failed to save template. Please try again.");
+      });
+    } catch (error) {
+      console.error("Error saving template:", error);
+      alert("Failed to save template. Please try again.");
+    }
   };
+  
 
   const loadTemplate = () => {
     if (!canvas) return;
