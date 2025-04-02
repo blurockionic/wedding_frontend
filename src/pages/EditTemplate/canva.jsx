@@ -14,6 +14,7 @@ import { useUplMutation } from "../../redux/uploadSlice";
 import { toast } from "react-toastify";
 import { useLocation } from "react-router-dom";
 import html2canvas from "html2canvas";
+import TemplateOtherDetails from "./component/TemplateOtherDetails";
 
 const templates = [
   {
@@ -286,6 +287,8 @@ const Canva = () => {
   const [createTemplate] = useCreateTemplateMutation();
   const { user } = useSelector((state) => state.auth);
   const [upl] = useUplMutation();
+  const [showModal, setShowModal] = useState(false);
+  const [templateData, setTemplateData] = useState(null);
 
   const location = useLocation();
   const template = location.state?.template;
@@ -363,6 +366,7 @@ const Canva = () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
+  
 //load the template on canvas
   useEffect(() => {
     if (!canvas || !template?.jsonData) {
@@ -400,9 +404,6 @@ const Canva = () => {
       }
     });
   }, [canvas, template]);
-
- 
-
 
 
   const addCustomTextElement = (text, size, style) => {
@@ -750,6 +751,7 @@ const Canva = () => {
   const saveTemplate = async () => {
     if (!canvas) return;
 
+    
     // Capture canvas as image
     const canvasElement = document.querySelector("canvas"); // Ensure this targets the correct canvas
     const screenshot = await html2canvas(canvasElement);
@@ -774,40 +776,48 @@ const Canva = () => {
 
     
     const jsonData = canvas.toJSON();
-    const templateData = {
-      name: "Sample Template", 
-      description: "A sample invitation template", 
-      userId: user?.id, 
+    setTemplateData({
+      name: "",
+      description: "",
+      userId: user?.id,
       jsonData: jsonData,
-      price: 500, 
-      categoryByAmount: "PAID",
+      price: 0.0,
+      categoryByAmount: "FREE",
       categoryByMood: "WEDDING",
       categoryByRequirement: "LATEST",
-      additionalTags: ["wedding", "invitation"], 
-      designedBy: "Designer Name", 
-      thumbnailUrl: url || "https://example.com/thumbnail.jpg" , 
+      additionalTags: [],
+      designedBy: user?.user_name,
+      thumbnailUrl: url,
       rating: 0.0,
       status: "DRAFT",
-      paymentDetails: [], // Populate if needed
-      orderDetails: [], // Populate if needed
-    };
+      paymentDetails: [],
+      orderDetails: [],
+    });
+
+    setShowModal(true);
+    // const templateData = {
+    //   name: "Sample Template", 
+    //   description: "A sample invitation template", 
+    //   userId: user?.id, 
+    //   jsonData: jsonData,
+    //   price: 500, 
+    //   categoryByAmount: "PAID",
+    //   categoryByMood: "WEDDING",
+    //   categoryByRequirement: "LATEST",
+    //   additionalTags: ["wedding", "invitation"], 
+    //   designedBy: "Designer Name", 
+    //   thumbnailUrl: url || "https://example.com/thumbnail.jpg" , 
+    //   rating: 0.0,
+    //   status: "DRAFT",
+    //   paymentDetails: [], // Populate if needed
+    //   orderDetails: [], // Populate if needed
+    // };
   
-    try {
-      createTemplate(templateData)
-      .unwrap()
-      .then(() => {
-        toast.success("Template saved successfully!");
-      })
-      .catch((error) => {
-        console.error("Error saving template:", error);
-        alert("Failed to save template. Please try again.");
-      });
-    } catch (error) {
-      console.error("Error saving template:", error);
-      alert("Failed to save template. Please try again.");
-    }
+  
   };
-  
+
+ 
+  console.log(user)
 
   const loadTemplate = () => {
     if (!canvas) return;
@@ -855,6 +865,25 @@ const Canva = () => {
       canvas.renderAll();
     }
   };
+
+  //finaly save to cloud
+  const saveTemplateToCloud = (finalTemplateData)=>{
+    console.log(finalTemplateData)
+    try {
+        createTemplate(finalTemplateData)
+        .unwrap()
+        .then(() => {
+          toast.success("Template saved successfully!");
+        })
+        .catch((error) => {
+          console.error("Error saving template:", error);
+          toast.error("Failed to save template. Please try again.");
+        });
+      } catch (error) {
+        console.error("Error saving template:", error);
+        toast.error("Failed to save template. Please try again.");
+      }
+  }
 
   return (
     <div className="flex flex-col h-screen overflow-hidden">
@@ -934,6 +963,9 @@ const Canva = () => {
           <MdDelete />
         </button>
       </div>
+      {showModal && (
+        <TemplateOtherDetails onClose={() => setShowModal(false)} onSave={saveTemplateToCloud} templateData={templateData} />
+      )}
     </div>
   );
 };
