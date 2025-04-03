@@ -38,7 +38,8 @@ const Sidebar = ({
     { id: "text", label: "Text", icon: <TfiText className="w-6 h-6 text-rose-500" /> },
     { id: "uploads", label: "Uploads", icon: <BsCloudArrowUp className="w-6 h-6 text-rose-500" /> },
     { id: "projects", label: "Projects", icon: <BsFolder className="w-6 h-6 text-rose-500" /> },
-    { id: "positions", label: "Positions", icon: <FaLayerGroup className="w-6 h-6 text-rose-500" /> }, // New Positions section
+    { id: "positions", label: "Positions", icon: <FaLayerGroup className="w-6 h-6 text-rose-500" /> },
+    
   ];
 
   const handleSectionToggle = (sectionId) => {

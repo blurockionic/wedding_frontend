@@ -16,6 +16,8 @@ import { apiGuestSlice } from "./apiSlice.guest";
 import { userDataTemplateSlice } from "./TemplateSlice";
 import {weddingPlanForEventApi} from "./weddingPlanSlice"
 import { invitationTemplateForAdminSlice } from "./invitationTemplateForAdminSlice";
+import { cloudinaryApi } from "./cloudinaryApiSlice";
+
 
 
 // Combine Reducers
@@ -35,6 +37,7 @@ const rootReducer = combineReducers({
   [weddingPlanForEventApi.reducerPath  ]:weddingPlanForEventApi.reducer,
   [blogApiSlice.reducerPath ]:blogApiSlice.reducer,
   [invitationTemplateForAdminSlice.reducerPath]: invitationTemplateForAdminSlice.reducer,
+  [cloudinaryApi.reducerPath]:cloudinaryApi.reducer
 });
 
 // Configure Persist
@@ -64,7 +67,9 @@ export const store = configureStore({
       userDataTemplateSlice.middleware,
       weddingPlanForEventApi.middleware,
       blogApiSlice.middleware,
-      invitationTemplateForAdminSlice.middleware
+      invitationTemplateForAdminSlice.middleware,
+      cloudinaryApi.middleware
+
     ),
 });
 
