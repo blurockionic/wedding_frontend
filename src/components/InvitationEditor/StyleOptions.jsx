@@ -73,6 +73,8 @@ const StyleOptions = ({
                       : e.target.value === "Strikethrough"
                       ? "line-through"
                       : "none",
+                  underline: e.target.value === "Underline",
+                  linethrough: e.target.value === "Strikethrough",
                 });
               }}
             >
