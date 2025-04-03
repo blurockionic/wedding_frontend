@@ -7,13 +7,9 @@ function Template() {
     <>
       {/* Introduction card  */}
       <Introduction />
-
       <Quote />
-      
-
       {/* feature section  */}
       <FeatureSection/>
-
       <Footer></Footer>
     </>
   );

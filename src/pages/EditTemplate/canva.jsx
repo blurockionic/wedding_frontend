@@ -264,12 +264,16 @@ const Canva = () => {
   const [canvas, setCanvas] = useState(null);
   const [selectedText, setSelectedText] = useState(null);
   const [isStyleOptionsOpen, setIsStyleOptionsOpen] = useState(false);
-  const [selectedColor, setSelectedColor] = useState("#F43F5E");
+  const [selectedColor, setSelectedColor] = useState("#000000");
   const [selectedFont, setSelectedFont] = useState("Arial");
   const [selectedAnimation, setSelectedAnimation] = useState(animations[0]);
   const [textShadow, setTextShadow] = useState("none");
   const [opacity, setOpacity] = useState(1);
   const [glowEffect, setGlowEffect] = useState(false);
+  const [textStyle, setTextStyle] = useState("normal")
+  const [textBackgroundColor,setTextBackgroundColor] =  useState("#ffffff")
+  const [backgroundColor, setBackgroundColor]= useState("#ffffff")
+  const [selectedFontSize, setSelectedFontSize] = useState(0)
 
   const [textEffects, setTextEffects] = useState({
     glow: false,
@@ -298,52 +302,54 @@ const Canva = () => {
     const fabricCanvas = new fabric.Canvas(canvasRef.current, {
       width: 400,
       height: 600,
-      backgroundColor: "#fff",
+      // backgroundColor: "#fff",
       preserveObjectStacking: true, // Ensure stacking order is preserved even when selecting
     });
     setCanvas(fabricCanvas);
     console.log("Canvas initialized:", fabricCanvas, "Fabric.js version:", fabric.version);
 
-    fabricCanvas.on("selection:created", (event) => {
-      const activeObject = event.target;
+    const updateTextProperties = (activeObject) => {
+      console.log(activeObject)
       if (activeObject) {
         setSelectedText(activeObject.type === "i-text" ? activeObject : null);
-        setSelectedColor(activeObject.fill || "#F43F5E");
+        setSelectedColor(activeObject.fill || "#000000");
         setSelectedFont(activeObject.fontFamily || "Arial");
         setOpacity(activeObject.opacity || 1);
+        setTextStyle(
+          `${activeObject.fontWeight === "bold" ? "Bold " : ""}${
+            activeObject.fontStyle === "italic" ? "Italic " : ""
+          }${activeObject.textDecoration === "underline" ? "Underline " : ""}${
+            activeObject.textDecoration === "line-through" ? "Strikethrough" : ""
+          }`.trim()
+        );
+        setSelectedFontSize(activeObject.fontSize)
+        setTextBackgroundColor(activeObject.textBackgroundColor)
         setTextShadow(activeObject.shadow ? activeObject.shadow.toString() : "none");
         setGlowEffect(activeObject.shadow && activeObject.shadow.includes("8px"));
-        if (activeObject.type === "i-text") {
-          setIsStyleOptionsOpen(true);
-        } else {
-          setIsStyleOptionsOpen(false);
-        }
-        updateCanvasOrder(); // Re-sort to ensure locked objects stay on top
+        setBackgroundColor(activeObject.backgroundColor)
+        setIsStyleOptionsOpen(activeObject.type === "i-text");
+        updateCanvasOrder(); 
       }
+    };
+
+
+    fabricCanvas.on("selection:created", (event) => {
+      updateTextProperties(event.target);
     });
 
     fabricCanvas.on("selection:updated", (event) => {
-      const activeObject = event.target;
-      if (activeObject) {
-        setSelectedText(activeObject.type === "i-text" ? activeObject : null);
-        setSelectedColor(activeObject.fill || "#F43F5E");
-        setSelectedFont(activeObject.fontFamily || "Arial");
-        setOpacity(activeObject.opacity || 1);
-        setTextShadow(activeObject.shadow ? activeObject.shadow.toString() : "none");
-        setGlowEffect(activeObject.shadow && activeObject.shadow.includes("8px"));
-        if (activeObject.type === "i-text") {
-          setIsStyleOptionsOpen(true);
-        } else {
-          setIsStyleOptionsOpen(false);
-        }
-        updateCanvasOrder(); // Re-sort to ensure locked objects stay on top
-      }
+      updateTextProperties(event.target);
+      console.log(event.target)
     });
 
+    fabricCanvas.on("object:modified", (event) => {
+      updateTextProperties(event.target);
+    });
     fabricCanvas.on("selection:cleared", () => {
       setSelectedText(null);
-      setSelectedColor("#F43F5E");
+      setSelectedColor("#000000");
       setSelectedFont("Arial");
+      setTextStyle("normal")
       setOpacity(1);
       setTextShadow("none");
       setGlowEffect(false);
@@ -732,26 +738,38 @@ useEffect(() => {
     object.__animation = fabric.util.requestAnimFrame(animateFrame);
   };
 
+  //update style
   const updateSelectedElementStyle = (styles) => {
     if (!canvas) return;
     const activeObject = canvas.getActiveObject();
     if (!activeObject || activeObject.type !== "i-text") return;
-
+  
+    // Update color
     if (styles.color) {
       activeObject.set("fill", styles.color);
     }
+  
+    // Update font family
     if (styles.fontFamily) {
       activeObject.set("fontFamily", styles.fontFamily);
     }
-    if (styles.textShadow) {
+  
+    // Update text shadow
+    if (styles.textShadow !== undefined) {
       activeObject.set("shadow", styles.textShadow === "none" ? null : styles.textShadow);
     }
+  
+    // Update opacity
     if (styles.opacity !== undefined) {
       activeObject.set("opacity", styles.opacity);
     }
+  
+    // Apply animation
     if (styles.animation) {
       applyAnimation(activeObject, styles.animation);
     }
+  
+    // Apply glow effect
     if (styles.glow !== undefined) {
       if (styles.glow) {
         activeObject.set("shadow", `0 0 8px ${selectedColor}`);
@@ -759,8 +777,34 @@ useEffect(() => {
         activeObject.set("shadow", styles.textShadow === "none" ? null : styles.textShadow);
       }
     }
+  
+    // Apply bold, italic, underline, and strikethrough styles
+    if(styles.fontStyle){
+      activeObject.set("fontStyle", styles.fontStyle);
+    }
+    if(styles.fontWeight){
+      activeObject.set("fontWeight", styles.fontWeight);
+    }
+    if(styles.textDecoration){
+      activeObject.set("textDecoration", styles.textDecoration); 
+    }
+
+    if(styles.textBackgroundColor){
+      activeObject.set("textBackgroundColor", styles.textBackgroundColor)
+    }
+
+    if(styles.backgroundColor){
+      activeObject.set("backgroundColor", styles.backgroundColor)
+    }
+
+    if(styles.fontSize){
+      activeObject.set("fontSize", styles.fontSize)
+    }
+  
+    // Render updates
     canvas.renderAll();
   };
+  
 
   const downloadImage = () => {
     if (!canvas) return;
@@ -841,7 +885,7 @@ useEffect(() => {
   };
 
  
-  console.log(user)
+ 
 
   const loadTemplate = () => {
     if (!canvas) return;
@@ -978,6 +1022,12 @@ useEffect(() => {
             fontStyles={fontStyles}
             animations={animations}
             updateSelectedElementStyle={updateSelectedElementStyle}
+            selectedTextStyle={textStyle}
+            setSelectedTextStyle={setTextStyle}
+            setSelectedTextBackgroundColor={setTextBackgroundColor}
+            setBackgroundColor={setBackgroundColor}
+            selectedFontSize={selectedFontSize}
+            setSelectedFontSize={setSelectedFontSize}
           />
         </div>
         <button
