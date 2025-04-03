@@ -368,42 +368,55 @@ const Canva = () => {
   }, []);
   
 //load the template on canvas
-  useEffect(() => {
-    if (!canvas || !template?.jsonData) {
-      console.error("Canvas or template is not initialized");
-      return;
-    }
-  
-    const jsonData = template.jsonData;
-    console.log("Loading template:", jsonData);
-  
-    canvas.loadFromJSON(jsonData, () => {
+useEffect(() => {
+  if (!canvas || !template?.jsonData) {
+    console.log("Canvas or template not ready yet:", { canvas, template });
+    return;
+  }
+
+  console.log("Loading template from Review:", template.jsonData);
+
+  canvas.clear();
+
+  // Load the JSON data onto the canvas
+  canvas.loadFromJSON(
+    template.jsonData,
+    () => {
       console.log("Template loaded successfully");
-  
-      // Ensure images are properly loaded
-      canvas.getObjects().forEach((obj) => {
-        if (obj.type === "image" && obj.setSrc) {
-          fabric.Image.fromURL(obj.src, (img) => {
-            img.set({
-              left: obj.left || 0,
-              top: obj.top || 0,
-              scaleX: obj.scaleX || 1,
-              scaleY: obj.scaleY || 1,
-            });
-  
-            canvas.add(img);
-            canvas.renderAll();
-          });
+
+      const objects = canvas.getObjects();
+      objects.forEach((obj) => {
+        if (obj.type === "image" && obj.src) {
+          fabric.Image.fromURL(
+            obj.src,
+            (img) => {
+              img.set({
+                left: obj.left || 0,
+                top: obj.top || 0,
+                scaleX: obj.scaleX || 1,
+                scaleY: obj.scaleY || 1,
+              });
+              canvas.add(img);
+              canvas.renderAll(); 
+            },
+            { crossOrigin: "anonymous" }
+          );
         }
       });
-  
+
+      
       canvas.renderAll();
-    }, (error) => {
-      if (error) {
-        console.error("Error loading template:", error);
-      }
-    });
-  }, [canvas, template]);
+      canvas.requestRenderAll();
+    },
+    (error) => {
+      console.error("Error loading template:", error);
+    }
+  );
+
+  setTimeout(() => {
+    canvas.requestRenderAll();
+  }, 0); 
+}, [canvas, template]);
 
 
   const addCustomTextElement = (text, size, style) => {
@@ -608,36 +621,47 @@ const Canva = () => {
       return;
     }
   
-    console.log("Loading template:", jsonData);
+    console.log("Adding template from Sidebar:", jsonData);
+  
+    canvas.clear();
   
     // Load the template
-    canvas.loadFromJSON(jsonData, () => {
-      console.log("Template loaded successfully");
+    canvas.loadFromJSON(
+      jsonData,
+      () => {
+        console.log("Template loaded successfully");
   
-      // Ensure images are properly loaded
-      canvas.getObjects().forEach((obj) => {
-        if (obj.type === "image" && obj.setSrc) {
-          fabric.Image.fromURL(obj.src, (img) => {
-            img.set({
-              left: obj.left || 0,
-              top: obj.top || 0,
-              scaleX: obj.scaleX || 1,
-              scaleY: obj.scaleY || 1,
-            });
+        canvas.getObjects().forEach((obj) => {
+          if (obj.type === "image" && obj.src) {
+            fabric.Image.fromURL(
+              obj.src,
+              (img) => {
+                img.set({
+                  left: obj.left || 0,
+                  top: obj.top || 0,
+                  scaleX: obj.scaleX || 1,
+                  scaleY: obj.scaleY || 1,
+                });
+                canvas.add(img);
+                canvas.renderAll(); 
+              },
+              { crossOrigin: "anonymous" }
+            );
+          }
+        });
   
-            canvas.add(img);
-            canvas.renderAll();
-          });
-        }
-      });
-  
-      // Render the canvas
-      canvas.renderAll();
-    }, (error) => {
-      if (error) {
+        canvas.renderAll();
+        canvas.requestRenderAll();
+      },
+      (error) => {
         console.error("Error loading template:", error);
       }
-    });
+    );
+  
+    // Force immediate render
+    setTimeout(() => {
+      canvas.requestRenderAll();
+    }, 0); // Ensure render happens after the current event loop
   };
   
   
