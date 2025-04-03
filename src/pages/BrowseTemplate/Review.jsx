@@ -77,6 +77,7 @@ function Review() {
     limit: 10,
   });
 
+  //get data from db
   const { data, error, isLoading } = useGetAllTemplatesQuery(filters);
 
   useEffect(() => {

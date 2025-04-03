@@ -8,10 +8,26 @@ import flower_top_r from "../../../../public/template/flower_top_r.png";
 import flower_bottom_r from "../../../../public/template/flower_bottom_r.png";
 import flower_top_l from "../../../../public/template/flower_top_l.png";
 import flower_b_l from "../../../../public/template/flower_b_l.png";
+import { useGetAllTemplatesQuery } from "../../../redux/invitationTemplateForAdminSlice";
 
 export const Introduction = () => {
+  const [filters, setFilters] = useState({
+      name: "",
+      minPrice: "",
+      maxPrice: "",
+      categoryByMood: "",
+      categoryByAmount: "",
+      categoryByRequirement: "",
+      page: 1,
+      limit: 10,
+    });
+  
+    //get data from db
+    const { data, error, isLoading } = useGetAllTemplatesQuery(filters);
+  
+    
   return (
-    <section className="relative grid min-h-screen w-full place-content-start overflow-hidden  px-4 md:px-16 py-10 ">
+    <section className="relative grid  w-full place-content-start overflow-hidden  px-4 md:px-16 py-10 ">
       {/* <h2 className="relative z-0 text-[10vw] font-black text-neutral-800 md:text-[10vw]">
         Invitation<span className="text-primary">.</span>
       </h2>
@@ -39,7 +55,7 @@ export const Introduction = () => {
         <div className="flex items-center justify-center lg:justify-start gap-4 md:gap-8 pt-6 px-4 md:px-0">
           <div className="text-center">
             <div className="text-xl md:text-3xl font-bold text-gray-900">
-              1000+
+              {data?.totalTemplates}+
             </div>
             <div className="text-gray-600">Templates</div>
           </div>
@@ -60,14 +76,21 @@ export const Introduction = () => {
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 items-center justify-center z-50 w-full md:w-64 mt-10">
+      <div className="flex flex-col sm:flex-row gap-4 items-center justify-center lg:justify-start z-50 w-full md:w-full mt-10">
         <Link to="/browse">
           <span className="px-8 py-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-full font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 hover:from-pink-600 hover:to-rose-600">
             Browse Templates
           </span>
+          
         </Link>
+        <Link to="/update_editor" className="mt-8 md:mt-0">
+          <span className="border px-8 py-4 bg-gradient-to-r from-gray-50 to-salte-50 text-gray-500 rounded-full font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 hover:text-primary">
+            Create Custom Design
+          </span>
+        </Link>
+        
       </div>
-      <span className="hidden md:block mt-10 text-xs w-auto text-gray-500 italic px-2 py-1  rounded-md">
+      <span className="hidden lg:block mt-10 text-xs w-auto text-gray-500 italic px-2 py-1  rounded-md">
         Hint: Drag elements to design invitation card
       </span>
 
@@ -88,7 +111,7 @@ const Cards = () => {
         rotate="0deg"
         top="7%"
         left="68%"
-        className="w-36 md:w-96 bg-neutral-300 hidden md:block"
+        className="w-36 md:w-96 bg-neutral-300 hidden lg:block"
       />
       <Card
         containerRef={containerRef}
@@ -98,7 +121,7 @@ const Cards = () => {
         rotate="0deg"
         top="35%"
         left="89%"
-        className="w-10 md:w-20 hidden md:block"
+        className="w-10 md:w-20 hidden lg:block"
       />
       <Card
         containerRef={containerRef}
@@ -108,7 +131,7 @@ const Cards = () => {
         rotate="180deg"
         top="29%"
         left="68%"
-        className="w-10 md:w-20 hidden md:block "
+        className="w-10 md:w-20 hidden lg:block "
       />
       <Card
         containerRef={containerRef}
@@ -117,8 +140,8 @@ const Cards = () => {
         alt="Example image"
         rotate="0deg"
         top="0%"
-        left="96%"
-        className="w-48 md:w-16 hidden md:block"
+        left="90%"
+        className="w-48 md:w-16 hidden lg:block"
       />
       <Card
         containerRef={containerRef}
@@ -126,9 +149,9 @@ const Cards = () => {
         src={flower_bottom_r}
         alt="Example image"
         rotate="0deg"
-        top="78%"
-        left="90%"
-        className="w-40 md:w-40 hidden md:block"
+        top="79%"
+        left="85%"
+        className="w-40 md:w-40 hidden lg:block"
       />
       <Card
         containerRef={containerRef}
@@ -136,9 +159,9 @@ const Cards = () => {
         src={flower_top_l}
         alt="Example image"
         rotate="0deg"
-        top="0%"
-        left="0%"
-        className="w-40 md:w-40 hidden md:block"
+        top="3%"
+        left="66%"
+        className="w-40 md:w-40 hidden lg:block"
       />
       <Card
         containerRef={containerRef}
@@ -146,9 +169,9 @@ const Cards = () => {
         src={flower_b_l}
         alt="Example image"
         rotate="0deg"
-        top="70%"
-        left="0%"
-        className="w-40 md:w-16 hidden md:block"
+        top="68%"
+        left="65%"
+        className="w-40 md:w-16 hidden lg:block"
       />
     </div>
   );
