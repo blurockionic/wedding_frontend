@@ -35,7 +35,7 @@ export const cloudinaryApi = createApi({
             formData.append("api_key", import.meta.env.VITE_CLOUDINARY_API_KEY);
             formData.append("signature", signature);
             formData.append("folder", folder);
-            if (tags) formData.append("tags", tags);
+           
 
             const cloudinaryResponse = await fetch(
               `https://api.cloudinary.com/v1_1/${

@@ -8,6 +8,7 @@ import TemplatesSection from "./TemplatesSection";
 import ElementsSection from "./ElementsSection"; // Import the new component
 import TextSection from "./TextSection";
 import UploadsSection from "./UploadsSection";
+import AdminPanel from "./adminPanel ";
 
 const Sidebar = ({
   templates,
@@ -39,6 +40,7 @@ const Sidebar = ({
     { id: "uploads", label: "Uploads", icon: <BsCloudArrowUp className="w-6 h-6 text-rose-500" /> },
     { id: "projects", label: "Projects", icon: <BsFolder className="w-6 h-6 text-rose-500" /> },
     { id: "positions", label: "Positions", icon: <FaLayerGroup className="w-6 h-6 text-rose-500" /> },
+    { id: "admin", label: "admin", icon: <FaLayerGroup className="w-6 h-6 text-rose-500" /> },
     
   ];
 
@@ -80,6 +82,8 @@ const Sidebar = ({
         );
       case "uploads":
         return <UploadsSection onImageUpload={handleImageUpload} />;
+      case "admin":
+        return <AdminPanel />;
       case "projects":
         return (
           <div className="space-y-3 p-4">
