@@ -784,9 +784,8 @@ useEffect(() => {
   const saveTemplate = async () => {
     if (!canvas) return;
 
-    
     // Capture canvas as image
-    const canvasElement = document.querySelector("canvas"); // Ensure this targets the correct canvas
+    const canvasElement = document.querySelector("canvas"); 
     const screenshot = await html2canvas(canvasElement);
     
     // Convert canvas to blob
