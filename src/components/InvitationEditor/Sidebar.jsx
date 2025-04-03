@@ -8,7 +8,8 @@ import TemplatesSection from "./TemplatesSection";
 import ElementsSection from "./ElementsSection"; // Import the new component
 import TextSection from "./TextSection";
 import UploadsSection from "./UploadsSection";
-import AdminPanel from "./adminPanel ";
+import AdminPanel from "./AdminPanel";
+
 
 const Sidebar = ({
   templates,
