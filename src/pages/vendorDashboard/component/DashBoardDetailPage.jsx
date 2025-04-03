@@ -150,22 +150,26 @@ const DashBoardDetailPage = () => {
   };
 
   return (
-    <div className={`max-w-screen-xl mx-auto ${
-      activeTab ? "overflow-y-hidden h-screen" : ""
-    }`}>
+    <div
+      className={`max-w-screen-xl mx-auto ${
+        activeTab ? "overflow-y-hidden h-screen" : ""
+      }`}
+    >
       {/* Buttons Section */}
       <div className="mt-1 flex gap-2 justify-end items-center  flex-wrap  w-full">
+       
         <ToggleSwitch
-          className="text-cyan-400 border border-cyan-400 rounded-md  px-4 py-2"
+          className=" border border-cyan-400 rounded-md px-2 py-1  text-sm  text-cyan-400 md:px-4 md:py-2"
           checked={switch1}
           label={switch1 ? "Active" : "Archived"}
           onChange={handleSwitch}
         />
+       
 
         <CustomButton
           leftIcon={<FaPlus />}
           text="Media"
-          className={`border border-green-500 hover:bg-green-100 text-green-500 px-2 py-2${
+          className={`border border-green-500  text-sm hover:bg-green-100 text-green-500 px-2 py-1  md:px-4 md:py-2${
             activeTab === "media" ? "ring-2 ring-green-300" : ""
           }`}
           onClick={() => setActiveTab(activeTab === "media" ? null : "media")}
@@ -173,48 +177,46 @@ const DashBoardDetailPage = () => {
         <CustomButton
           text="Add FAQ"
           leftIcon={<FaPlus />}
-          className={`border border-blue-500 hover:bg-blue-100 text-blue-500 px-2 py-2${
+          className={`border border-blue-500  text-sm hover:bg-blue-100 text-blue-500 px-2 py-1  md:px-4 md:py-2${
             activeTab === "faq" ? "ring-2 ring-blue-300" : ""
           }`}
           onClick={() => setActiveTab(activeTab === "faq" ? null : "faq")}
         />
         <CustomButton
-          text="Service"
+          text="Edit"
           leftIcon={<FaEdit />}
-          className={`border border-yellow-500 hover:bg-yellow-100 text-yellow-500 px-2 py-2${
+          className={`border border-yellow-500  text-sm hover:bg-yellow-100 text-yellow-500 px-2 py-1  md:px-4 md:py-2${
             activeTab === "edit" ? "ring-2 ring-yellow-300" : ""
           }`}
           onClick={() => setActiveTab(activeTab === "edit" ? null : "edit")}
         />
         <CustomButton
-          text="Service"
+          text="Delete"
           leftIcon={<MdDeleteOutline size={20} />}
           onClick={handleDelete}
-          className="border border-red-500 hover:bg-red-100 text-red-500 px-2 py-2"
+          className="border border-red-500  text-sm hover:bg-red-100 text-red-500 px-2 py-1  md:px-4 md:py-2"
         />
 
         {/* make atoogle swith to toggle active and archived */}
       </div>
 
-      <div
-        className={`grid grid-cols-1 lg:grid-cols-2 gap-8 mb-7 mt-5 md:px-4 `}
-      >
+      <div className={`grid grid-cols-1 gap-8 mb-7 mt-5 md:px-4 `}>
         <div>
           <span className="text-sm">Service Title</span>
           <h1 className="text-4xl font-bold text-foreground capitalize dark:text-white mb-4">
             {service?.service_name || "Service Name"}
           </h1>
-          <div className="flex justify-items-stretch items-center md:gap-40">
-            <p className="text-gray-600 capitalize dark:text-white  flex flex-col gap-1">
-              <span className="font-thin">Service category:</span>{" "}
-              <span className="border border-primary px-3 py-2 text-primary rounded-md">
+          <div className=" gap-4 flex justify-items-stretch items-center md:gap-30">
+            <p className=" capitalize dark:text-white  text-sm flex flex-col gap-1">
+              <span className="">Service category:</span>
+              <span className="border text-xs md:text-sm border-primary px-3 py-2 text-primary rounded-md">
                 {service?.service_type}
               </span>
             </p>
-            <p className="text-gray-600 capitalize dark:text-white flex flex-col">
-              <span className="font-thin">Price:</span>
+            <p className=" capitalize text-sm  dark:text-white flex flex-col">
+              <span className="">Price:</span>
 
-              <span className="border border-green-300 px-3 py-2 text-primary rounded-md">
+              <span className="border text-xs md:text-sm border-gray-300 px-3 py-2 text-primary rounded-md">
                 ₹{service?.min_price}/{service?.service_unit}
               </span>
             </p>
@@ -224,7 +226,7 @@ const DashBoardDetailPage = () => {
 
       {/* Media Section */}
       <div className="md:px-4">
-        <h2 className="text-lg font-thin text-foreground capitalize dark:text-white mb-4">
+        <h2 className="text-lg  text-foreground capitalize dark:text-white mb-4">
           Media
         </h2>
         {service?.media?.[0] ? (
@@ -250,7 +252,7 @@ const DashBoardDetailPage = () => {
       </div>
 
       <div className="w-full mt-5 md:px-4">
-        <h2 className="text-lg font-thin text-foreground capitalize dark:text-white mb-4">
+        <h2 className="text-lg text-foreground capitalize text-[#1E1E1E] dark:text-white mb-4">
           Description
         </h2>
         <CustomMArkdown content={service?.description} />
@@ -258,7 +260,7 @@ const DashBoardDetailPage = () => {
 
       {/* FAQ Section */}
       <div className="mt-8 md:px-4">
-        <h2 className="text-lg font-thin text-gray-800 dark:text-white mb-4">
+        <h2 className="text-lg  text-gray-800 dark:text-white mb-4">
           FAQs
         </h2>
 

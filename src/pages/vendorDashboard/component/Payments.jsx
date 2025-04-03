@@ -17,7 +17,7 @@ export default function Payments() {
     <div className="mx-auto  py-6">
      
       <div className="overflow-x-auto  p-4 bg-[#FFF6FE]">
-        <table className="w-full text-sm text-center border capitalize border-gray-300">
+        <table className="w-full text-sm text-center border capitalize border-collapse">
           <thead>
             <tr className="bg-white">
               <th className="py-2 px-4 border bg-white">#</th>

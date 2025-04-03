@@ -175,12 +175,12 @@ export default function Footer() {
             </li>
             <li>
             <a href="/privacypolicy.html" className="hover:text-gray-400">
-              Privacy 
+            Privacy Policy
             </a>
           </li>
           <li>
             <a href="/terms.html" className="hover:text-gray-600">
-              Terms
+            Terms and Conditions
             </a>
           </li>
           </ul>
