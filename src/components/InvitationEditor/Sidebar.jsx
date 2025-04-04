@@ -8,6 +8,8 @@ import TemplatesSection from "./TemplatesSection";
 import ElementsSection from "./ElementsSection"; // Import the new component
 import TextSection from "./TextSection";
 import UploadsSection from "./UploadsSection";
+import AdminPanel from "./AdminPanel";
+
 
 const Sidebar = ({
   templates,
@@ -38,7 +40,9 @@ const Sidebar = ({
     { id: "text", label: "Text", icon: <TfiText className="w-6 h-6 text-rose-500" /> },
     { id: "uploads", label: "Uploads", icon: <BsCloudArrowUp className="w-6 h-6 text-rose-500" /> },
     { id: "projects", label: "Projects", icon: <BsFolder className="w-6 h-6 text-rose-500" /> },
-    { id: "positions", label: "Positions", icon: <FaLayerGroup className="w-6 h-6 text-rose-500" /> }, // New Positions section
+    { id: "positions", label: "Positions", icon: <FaLayerGroup className="w-6 h-6 text-rose-500" /> },
+    { id: "admin", label: "admin", icon: <FaLayerGroup className="w-6 h-6 text-rose-500" /> },
+    
   ];
 
   const handleSectionToggle = (sectionId) => {
@@ -48,7 +52,7 @@ const Sidebar = ({
   const handleTemplateClick = (template) => {
     setSelectedTemplate(template);
     addTemplateToCanvas(template.jsonData);
-    console.log(template)
+    // console.log(template)
   };
 
   const renderSectionContent = () => {
@@ -79,6 +83,8 @@ const Sidebar = ({
         );
       case "uploads":
         return <UploadsSection onImageUpload={handleImageUpload} />;
+      case "admin":
+        return <AdminPanel />;
       case "projects":
         return (
           <div className="space-y-3 p-4">

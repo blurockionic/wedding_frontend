@@ -44,6 +44,7 @@ export default function UserSideBar({ customClass }) {
       if (success) {
         toast.success(message);
         dispatch(userlogout());
+        localStorage.removeItem("hasVisited")
         navigate("/", { replace: true });
         return;
       }
