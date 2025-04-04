@@ -11,8 +11,8 @@ const DocumentTemplate = ({ events, user }) => {
     const opt = {
       margin: 10,
       filename: "Indian_Wedding_Plan.pdf",
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true },
+      image: { type: "png", quality: 1 },
+      html2canvas: { scale: 3, useCORS: true },
       jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
     };
 
@@ -33,232 +33,226 @@ const DocumentTemplate = ({ events, user }) => {
       
       <div id="pdf-content" className="mt-6 border border-gray-200 rounded-lg bg-white shadow">
         {/* Cover Page - Fixed to cover full page */}
-        <div className="relative w-full h-[1020px] p-8 flex flex-col items-center justify-center bg-gradient-to-br from-yellow-50 to-pink-50 overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full opacity-10">
-            <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
-              <pattern id="paisley" patternUnits="userSpaceOnUse" width="70" height="70">
-                <path fill="#D53F8C" d="M35,0 C45,0 50,25 35,35 C20,45 0,35 0,20 C0,5 15,0 30,10 C40,15 25,30 15,30 C5,30 0,20 5,15 C10,10 20,15 15,20 C10,25 5,20 10,15 C15,10 25,15 20,20 C15,25 10,20 15,15 Z" />
-              </pattern>
-              <rect width="100%" height="100%" fill="url(#paisley)" />
-            </svg>
-          </div>
+        <div className="relative w-full h-[1020px] bg-yellow-50 overflow-hidden">
+          {/* Corner Elements */}
+          <img 
+              src="/eventPlannerpdf/Grouppdfcornerelementtl.png" 
+              alt="Top Left Corner" 
+              className="absolute top-0 left-0 w-32 h-32"
+            />
+            <img 
+              src="/eventPlannerpdf/Grouppdfcornerelementtr(1).png" 
+              alt="Top Right Corner" 
+              className="absolute top-0 right-0 w-32 h-32"
+            />
+            <img 
+              src="/eventPlannerpdf/Grouppdfcornerelementbl.png" 
+              alt="Bottom Left Corner" 
+              className="absolute bottom-0 left-0 w-32 h-32"
+            />
+            <img 
+              src="/eventPlannerpdf/Grouppdfcornerelementbr.png" 
+              alt="Bottom Right Corner" 
+              className="absolute bottom-0 right-0 w-32 h-32"
+            />
           
-          {/* Improved Cover Page Spacing */}
-          <div className="border-8 border-yellow-400 bg-white p-12 shadow-xl z-10 flex flex-col items-center max-w-xl w-full">
-            <div className="text-center">
-              <div className="font-serif text-5xl font-bold text-pink-600 mb-6">Wedding Plan</div>
-              <div className="text-2xl text-yellow-700 font-medium mb-8">{user?.name || "Dear Couple"}</div>
-            </div>
-            
-            <div className="w-40 h-40 my-8">
+          {/* Logo and title */}
+          <div className="flex flex-col items-center pt-12 px-16">
+            {/* Logo Icon */}
+            {/* <div className="w-24 h-24 mb-4">
               <svg viewBox="0 0 100 100" className="w-full h-full">
-                <g fill="none" stroke="#D53F8C" strokeWidth="1">
-                  <path d="M50,10 C70,10 90,30 90,50 C90,70 70,90 50,90 C30,90 10,70 10,50 C10,30 30,10 50,10 Z" />
-                  <path d="M50,20 C65,20 80,35 80,50 C80,65 65,80 50,80 C35,80 20,65 20,50 C20,35 35,20 50,20 Z" />
-                  <path d="M30,50 C30,40 40,30 50,30 C60,30 70,40 70,50 C70,60 60,70 50,70 C40,70 30,60 30,50 Z" />
-                </g>
+                <rect x="10" y="10" width="80" height="80" rx="8" fill="#F59E0B" />
+                <path d="M50,15 L80,45 L65,80 L35,80 L20,45 Z" fill="#EC4899" />
+                <text x="50" y="60" fontSize="40" fontWeight="bold" fill="white" textAnchor="middle">M</text>
               </svg>
-            </div>
+            </div> */}
+            <img src="/logo/brandlogo.png" alt="logo" className="w-24 h-24"/>
             
-            <div className="text-center text-gray-600 mt-6">
-              <p className="mb-4 text-xl">{moment().format("MMMM DD, YYYY")}</p>
-              <p className="text-lg italic">A beautiful journey of love and celebration</p>
+            {/* Marriage Vendors heading */}
+            <h1 className="text-pink-600 text-3xl font-bold mb-8">Marriage Vendors</h1>
+            
+            {/* White box with content */}
+            <div className="bg-white rounded-3xl w-full max-w-xl py-12 px-8 mx-auto">
+              <div className="flex flex-col items-center text-center">
+                <h2 className="text-pink-600 text-5xl font-bold mb-12">Wedding Plan</h2>
+                
+                <h3 className="text-pink-600 text-4xl mb-12">{user?.user_name || "Dear Couple"}</h3>
+                
+                {/* Indian couple image */}
+                <div className="w-56 h-56 mb-12">
+                  <img 
+                    src="/eventPlannerpdf/OBJECTScouplepdf.png" 
+                    alt="Indian couple illustration" 
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                
+                {/* Date */}
+                <div className="text-yellow-500 text-3xl font-medium">
+                  Apr 02, 2025
+                </div>
+              </div>
             </div>
           </div>
           
-          {/* Decorative elements for the cover */}
-          <div className="absolute top-20 left-20 w-16 h-16 text-pink-500 opacity-30">
-            <svg viewBox="0 0 100 100">
-              <path fill="currentColor" d="M0,0 C50,25 75,0 100,50 C75,100 50,75 0,100 Z" />
-            </svg>
-          </div>
-          <div className="absolute bottom-20 right-20 w-16 h-16 text-pink-500 opacity-30">
-            <svg viewBox="0 0 100 100">
-              <path fill="currentColor" d="M0,0 C50,25 75,0 100,50 C75,100 50,75 0,100 Z" />
-            </svg>
-          </div>
-          
-          <div className="absolute bottom-10 w-full flex justify-center">
-            <div className="h-4 w-2/3 border-b-4 border-yellow-400 border-dotted"></div>
-          </div>
+          {/* Lotus decorations at bottom */}
+          <img 
+            src="/eventPlannerpdf/Grouplotuspdf.png" 
+            alt="Lotus Left" 
+            className="absolute bottom-8 left-8 w-32 h-32 opacity-70"
+          />
+          <img 
+            src="/eventPlannerpdf/Grouplotuspdf.png" 
+            alt="Lotus Right" 
+            className="absolute bottom-8 right-8 w-32 h-32 opacity-70"
+          />
         </div>
 
         {/* Event Pages */}
         {events.map((event, index) => (
           <div 
             key={event.id} 
-            className="w-full h-[1050px] p-10 relative bg-gradient-to-br from-yellow-50 to-pink-50 border-t border-gray-200"
+            className="relative w-full h-[1050px] bg-yellow-50"
           >
-            {/* Decorative Border */}
-            <div className="absolute inset-0 border-[8px] border-yellow-100 m-4 pointer-events-none"></div>
-            <div className="absolute inset-0 border-[1px] border-pink-300 m-6 pointer-events-none"></div>
+            {/* Corner Elements */}
+            <img 
+              src="/eventPlannerpdf/Grouppdfcornerelementtl.png" 
+              alt="Top Left Corner" 
+              className="absolute top-0 left-0 w-32 h-32"
+            />
+            <img 
+              src="/eventPlannerpdf/Grouppdfcornerelementtr(1).png" 
+              alt="Top Right Corner" 
+              className="absolute top-0 right-0 w-32 h-32"
+            />
+            <img 
+              src="/eventPlannerpdf/Grouppdfcornerelementbl.png" 
+              alt="Bottom Left Corner" 
+              className="absolute bottom-0 left-0 w-32 h-32"
+            />
+            <img 
+              src="/eventPlannerpdf/Grouppdfcornerelementbr.png" 
+              alt="Bottom Right Corner" 
+              className="absolute bottom-0 right-0 w-32 h-32"
+            />
             
-            {/* Corner Decorations */}
-            <div className="absolute top-2 left-2 w-16 h-16 text-pink-500 opacity-50">
-              <svg viewBox="0 0 100 100">
-                <path fill="currentColor" d="M0,0 C50,25 75,0 100,50 C75,100 50,75 0,100 Z" />
-              </svg>
-            </div>
-            <div className="absolute top-2 right-2 w-16 h-16 text-pink-500 opacity-50 transform scale-x-[-1]">
-              <svg viewBox="0 0 100 100">
-                <path fill="currentColor" d="M0,0 C50,25 75,0 100,50 C75,100 50,75 0,100 Z" />
-              </svg>
-            </div>
-            <div className="absolute bottom-2 left-2 w-16 h-16 text-pink-500 opacity-50 transform scale-y-[-1]">
-              <svg viewBox="0 0 100 100">
-                <path fill="currentColor" d="M0,0 C50,25 75,0 100,50 C75,100 50,75 0,100 Z" />
-              </svg>
-            </div>
-            <div className="absolute bottom-2 right-2 w-16 h-16 text-pink-500 opacity-50 transform scale-x-[-1] scale-y-[-1]">
-              <svg viewBox="0 0 100 100">
-                <path fill="currentColor" d="M0,0 C50,25 75,0 100,50 C75,100 50,75 0,100 Z" />
-              </svg>
-            </div>
-            
-            {/* Title - Improved spacing */}
-            <div className="mb-8 relative pt-8">
-              <h1 className="text-4xl font-bold font-serif text-center text-pink-600 mb-4">
+            {/* Content */}
+            <div className="px-16 py-16">
+              {/* Event Title */}
+              <h2 className="text-pink-600 text-4xl font-bold mb-8">
                 {event.eventName}
-              </h1>
-              <div className="flex justify-center">
-                <div className="h-1 w-36 bg-yellow-400 rounded"></div>
-              </div>
-            </div>
-            
-            {/* Event Details - Improved spacing */}
-            <div className="bg-white bg-opacity-80 p-6 rounded-lg shadow-lg border border-pink-200 mb-8">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="mb-4">
-                  <p className="text-yellow-800 font-medium text-lg mb-1">Date:</p>
-                  <p className="text-gray-700 text-lg">{moment(event.eventDate).format('DD MMMM, YYYY')}</p>
-                </div>
-                <div className="mb-4">
-                  <p className="text-yellow-800 font-medium text-lg mb-1">Budget:</p>
-                  <p className="text-gray-700 text-lg">₹ {parseFloat(event.eventBudget).toLocaleString('en-IN', { 
-                    minimumFractionDigits: 2, 
-                    maximumFractionDigits: 2 
-                  })}</p>
-                </div>
-                <div className="mb-4">
-                  <p className="text-yellow-800 font-medium text-lg mb-1">Start Time:</p>
-                  <p className="text-gray-700 text-lg">{event.eventStartTime ? moment(event.eventStartTime).format("hh:mm A") : "Not specified"}</p>
-                </div>
-                <div className="mb-4">
-                  <p className="text-yellow-800 font-medium text-lg mb-1">End Time:</p>
-                  <p className="text-gray-700 text-lg">{event.eventEndTime ? moment(event.eventEndTime).format("hh:mm A") : "Not specified"}</p>
+              </h2>
+              
+              {/* Event Details Box */}
+              <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-8">
+                <div className="grid grid-cols-4 gap-4">
+                  <div>
+                    <p className="text-yellow-800 font-bold">Date</p>
+                    <p className="text-gray-700">{moment(event.eventDate).format('DD MMM, YYYY')}</p>
+                  </div>
+                  <div>
+                    <p className="text-yellow-800 font-bold">Budget:</p>
+                    <p className="text-gray-700">₹ {parseFloat(event.eventBudget).toLocaleString('en-IN')}</p>
+                  </div>
+                  <div>
+                    <p className="text-yellow-800 font-bold">Start Time</p>
+                    <p className="text-gray-700">{event.eventStartTime ? moment(event.eventStartTime).format("hh:mm A") : "N/A"}</p>
+                  </div>
+                  <div>
+                    <p className="text-yellow-800 font-bold">End Time</p>
+                    <p className="text-gray-700">{event.eventEndTime ? moment(event.eventEndTime).format("hh:mm A") : "N/A"}</p>
+                  </div>
                 </div>
               </div>
               
-              {event.eventDescription && (
-                <div className="mt-4">
-                  <p className="text-yellow-800 font-medium text-lg mb-1">Description:</p>
-                  <p className="text-gray-700 text-lg">{event.eventDescription}</p>
+              {/* Tasks Section */}
+              {event.eventTask && event.eventTask.length > 0 && (
+                <div className="mb-8">
+                  <h3 className="text-pink-600 text-2xl font-bold mb-4">Tasks</h3>
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-xl overflow-hidden">
+                    <table className="w-full">
+                      <thead className="bg-yellow-100">
+                        <tr>
+                          <th className="py-2 px-4 text-left text-yellow-800 font-bold border-b border-yellow-200">Task Name</th>
+                          <th className="py-2 px-4 text-left text-yellow-800 font-bold border-b border-yellow-200">Due Date</th>
+                          <th className="py-2 px-4 text-left text-yellow-800 font-bold border-b border-yellow-200">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {event.eventTask.map((task, taskIndex) => (
+                          <tr key={task.id} className={taskIndex % 2 === 0 ? "bg-yellow-50" : "bg-white"}>
+                            <td className="py-2 px-4 border-b border-yellow-100">
+                              <div className="flex items-center">
+                                {/* Printable checkbox */}
+                                <div className="mr-2 w-5 h-5 border border-gray-400 rounded flex-shrink-0">
+                                  {/* Empty checkbox for printing */}
+                                </div>
+                                {task.name}
+                              </div>
+                            </td>
+                            <td className="py-2 px-4 border-b border-yellow-100">
+                              {moment(task.dueDate).format("YYYY-MM-DD")}
+                            </td>
+                            <td className="py-2 px-4 border-b border-yellow-100">
+                              <span className={`px-3 py-1 rounded-full text-sm ${
+                                task.priority === "Medium" || task.status === "In Progress"
+                                  ? "bg-purple-100 text-purple-800" 
+                                  : task.priority === "High" || task.status === "Not Started"
+                                  ? "bg-red-100 text-red-800" 
+                                  : "bg-green-100 text-green-800"
+                              }`}>
+                                {task.status || task.priority || "Low"}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+              
+              {/* Services Section */}
+              {event.eventVendors && event.eventVendors.length > 0 && (
+                <div>
+                  <h3 className="text-pink-600 text-2xl font-bold mb-4">Services</h3>
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-xl overflow-hidden">
+                    <table className="w-full">
+                      <thead className="bg-yellow-100">
+                        <tr>
+                          <th className="py-2 px-4 text-left text-yellow-800 font-bold border-b border-yellow-200">Sr. No.</th>
+                          <th className="py-2 px-4 text-left text-yellow-800 font-bold border-b border-yellow-200">Service Name</th>
+                          <th className="py-2 px-4 text-left text-yellow-800 font-bold border-b border-yellow-200">Service Category</th>
+                          <th className="py-2 px-4 text-left text-yellow-800 font-bold border-b border-yellow-200">Price</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {event.eventVendors.map((vendor, vendorIndex) => (
+                          <tr key={vendor.id} className={vendorIndex % 2 === 0 ? "bg-yellow-50" : "bg-white"}>
+                            <td className="py-2 px-4 border-b border-yellow-100">{vendorIndex + 1}</td>
+                            <td className="py-2 px-4 border-b border-yellow-100">{vendor.name}</td>
+                            <td className="py-2 px-4 border-b border-yellow-100">{vendor.category || "Wedding Vendor"}</td>
+                            <td className="py-2 px-4 border-b border-yellow-100">Rs. {parseFloat(vendor.price).toLocaleString('en-IN')}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               )}
             </div>
             
-            {/* Tasks - Fixed task display */}
-            {event.eventTask && event.eventTask.length > 0 && (
-              <div className="mb-8">
-                <div className="flex items-center mb-4">
-                  <div className="w-8 h-8 mr-2">
-                    <svg viewBox="0 0 24 24" fill="none" className="w-full h-full">
-                      <path d="M9 11l3 3l8-8" stroke="#D53F8C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      <path d="M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h9" stroke="#D53F8C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </div>
-                  <h2 className="text-2xl font-serif text-pink-600">Tasks</h2>
-                </div>
-                <div className="bg-white bg-opacity-80 p-5 rounded-lg shadow border border-pink-200">
-                  <table className="w-full text-base">
-                    <thead>
-                      <tr className="text-left border-b-2 border-pink-200">
-                        <th className="pb-2 text-yellow-800 font-bold">Task</th>
-                        <th className="pb-2 text-yellow-800 font-bold">Status</th>
-                        <th className="pb-2 text-yellow-800 font-bold">Due Date</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {event.eventTask.map((task, taskIndex) => (
-                        <tr key={task.id} className={taskIndex % 2 === 0 ? "bg-pink-50 bg-opacity-50" : ""}>
-                          <td className="py-2 text-gray-700">{task.name}</td>
-                          <td className="py-2">
-                            <span className={`px-2 py-1 rounded-full text-sm ${
-                              task.priority == "Medium" 
-                                ? "bg-yellow-100 text-yellow-800" 
-                                : ""
-                            }${
-                              task.priority == "High" 
-                                ? "bg-red-100 text-red-800" 
-                                : ""
-                            }${
-                              task.priority1 == "Low" 
-                                ? "bg-green-100 text-green-800" 
-                                : ""
-                            }`}>
-                              {task.priority}
-                            </span>
-                          </td>
-                          <td className="py-2 text-gray-700">{moment(task.dueDate).format("DD MMM, YYYY")}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
-            
-            {/* Vendors - Improved spacing */}
-            {event.eventVendors && event.eventVendors.length > 0 && (
-              <div>
-                <div className="flex items-center mb-4">
-                  <div className="w-8 h-8 mr-2">
-                    <svg viewBox="0 0 24 24" fill="none" className="w-full h-full">
-                      <path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke="#D53F8C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </div>
-                  <h2 className="text-2xl font-serif text-pink-600">Vendors</h2>
-                </div>
-                <div className="bg-white bg-opacity-80 p-5 rounded-lg shadow border border-pink-200">
-                  <table className="w-full text-base">
-                    <thead>
-                      <tr className="text-left border-b-2 border-pink-200">
-                        <th className="pb-2 text-yellow-800 font-bold">Vendor</th>
-                        <th className="pb-2 text-yellow-800 font-bold">Price</th>
-                        <th className="pb-2 text-yellow-800 font-bold">Unit</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {event.eventVendors.map((vendor, vendorIndex) => (
-                        <tr key={vendor.id} className={vendorIndex % 2 === 0 ? "bg-pink-50 bg-opacity-50" : ""}>
-                          <td className="py-2 text-gray-700">{vendor.name}</td>
-                          <td className="py-2 text-gray-700">₹ {parseFloat(vendor.price).toLocaleString('en-IN', { 
-                            minimumFractionDigits: 2, 
-                            maximumFractionDigits: 2 
-                          })}</td>
-                          <td className="py-2 text-gray-700">{vendor.unit}</td>
-                        </tr>
-                      ))}
-                      <tr className="border-t-2 border-pink-200 font-medium">
-                        <td className="pt-2 text-yellow-800 font-bold">Total</td>
-                        <td className="pt-2 text-pink-600 font-bold">₹ {event.eventVendors.reduce((sum, vendor) => 
-                          sum + parseFloat(vendor.price), 0).toLocaleString('en-IN', { 
-                            minimumFractionDigits: 2, 
-                            maximumFractionDigits: 2 
-                          })}
-                        </td>
-                        <td></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
-            
-            {/* Page Number - Improved position */}
-            <div className="absolute bottom-6 right-10 text-pink-600 font-medium text-lg">
-              Page {index + 1} of {events.length}
-            </div>
+            {/* Lotus decorations at bottom */}
+            <img 
+              src="/eventPlannerpdf/Grouplotuspdf.png" 
+              alt="Lotus Left" 
+              className="absolute bottom-8 left-8 w-32 h-32 opacity-70"
+            />
+            <img 
+              src="/eventPlannerpdf/Grouplotuspdf.png" 
+              alt="Lotus Right" 
+              className="absolute bottom-8 right-8 w-32 h-32 opacity-70"
+            />
           </div>
         ))}
       </div>
