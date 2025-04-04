@@ -744,32 +744,13 @@ useEffect(() => {
     const activeObject = canvas.getActiveObject();
     if (!activeObject || activeObject.type !== "i-text") return;
   
-    // Update color
-    if (styles.color) {
-      activeObject.set("fill", styles.color);
-    }
-  
-    // Update font family
-    if (styles.fontFamily) {
-      activeObject.set("fontFamily", styles.fontFamily);
-    }
-  
-    // Update text shadow
+    if (styles.color) activeObject.set("fill", styles.color);
+    if (styles.fontFamily) activeObject.set("fontFamily", styles.fontFamily);
     if (styles.textShadow !== undefined) {
       activeObject.set("shadow", styles.textShadow === "none" ? null : styles.textShadow);
     }
-  
-    // Update opacity
-    if (styles.opacity !== undefined) {
-      activeObject.set("opacity", styles.opacity);
-    }
-  
-    // Apply animation
-    if (styles.animation) {
-      applyAnimation(activeObject, styles.animation);
-    }
-  
-    // Apply glow effect
+    if (styles.opacity !== undefined) activeObject.set("opacity", styles.opacity);
+    if (styles.animation) applyAnimation(activeObject, styles.animation);
     if (styles.glow !== undefined) {
       if (styles.glow) {
         activeObject.set("shadow", `0 0 8px ${selectedColor}`);
@@ -777,31 +758,15 @@ useEffect(() => {
         activeObject.set("shadow", styles.textShadow === "none" ? null : styles.textShadow);
       }
     }
+    if (styles.fontStyle) activeObject.set("fontStyle", styles.fontStyle);
+    if (styles.fontWeight) activeObject.set("fontWeight", styles.fontWeight);
+    if (styles.textDecoration) activeObject.set("textDecoration", styles.textDecoration);
+    if (styles.underline !== undefined) activeObject.set("underline", styles.underline);
+    if (styles.linethrough !== undefined) activeObject.set("linethrough", styles.linethrough);
+    if (styles.textBackgroundColor) activeObject.set("textBackgroundColor", styles.textBackgroundColor);
+    if (styles.backgroundColor) activeObject.set("backgroundColor", styles.backgroundColor);
+    if (styles.fontSize) activeObject.set("fontSize", parseInt(styles.fontSize));
   
-    // Apply bold, italic, underline, and strikethrough styles
-    if(styles.fontStyle){
-      activeObject.set("fontStyle", styles.fontStyle);
-    }
-    if(styles.fontWeight){
-      activeObject.set("fontWeight", styles.fontWeight);
-    }
-    if(styles.textDecoration){
-      activeObject.set("textDecoration", styles.textDecoration); 
-    }
-
-    if(styles.textBackgroundColor){
-      activeObject.set("textBackgroundColor", styles.textBackgroundColor)
-    }
-
-    if(styles.backgroundColor){
-      activeObject.set("backgroundColor", styles.backgroundColor)
-    }
-
-    if(styles.fontSize){
-      activeObject.set("fontSize", styles.fontSize)
-    }
-  
-    // Render updates
     canvas.renderAll();
   };
   
@@ -819,9 +784,8 @@ useEffect(() => {
   const saveTemplate = async () => {
     if (!canvas) return;
 
-    
     // Capture canvas as image
-    const canvasElement = document.querySelector("canvas"); // Ensure this targets the correct canvas
+    const canvasElement = document.querySelector("canvas"); 
     const screenshot = await html2canvas(canvasElement);
     
     // Convert canvas to blob

@@ -41,6 +41,7 @@ const VendorHeader = ({ isOpen, toggleSidebar }) => {
       if (success) {
         toast.success(message);
         dispatch(userlogout());
+        localStorage.removeItem("hasVisited")
         navigate("/vendorLogin");
         return;
       }
