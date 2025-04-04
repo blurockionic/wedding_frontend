@@ -23,8 +23,6 @@ const StyleOptions = ({
   setTextShadow,
   opacity,
   setOpacity,
-  glowEffect,
-  setGlowEffect,
   fontStyles,
   animations,
   updateSelectedElementStyle,
@@ -247,26 +245,6 @@ const StyleOptions = ({
               }}
               className="w-full accent-blue-500"
             />
-          </div>
-          <div className="space-y-3">
-            <label className="text-sm text-blue-600 flex items-center gap-2">
-              <Layers className="w-4 h-4" /> Glow Effect
-            </label>
-            <motion.button
-              className={`w-full px-4 py-3 rounded-lg border border-gray-300 ${
-                glowEffect
-                  ? "bg-blue-100 text-blue-700"
-                  : "bg-white text-gray-700"
-              }`}
-              onClick={() => {
-                setGlowEffect(!glowEffect);
-                updateSelectedElementStyle({ glow: !glowEffect });
-              }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              {glowEffect ? "On" : "Off"}
-            </motion.button>
           </div>
         </div>
       </div>
