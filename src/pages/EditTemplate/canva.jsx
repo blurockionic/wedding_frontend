@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 import { useLocation } from "react-router-dom";
 import html2canvas from "html2canvas";
 import TemplateOtherDetails from "./component/TemplateOtherDetails";
+import { red } from "@mui/material/colors";
 
 const templates = [
   {
@@ -270,10 +271,10 @@ const Canva = () => {
   const [textShadow, setTextShadow] = useState("none");
   const [opacity, setOpacity] = useState(1);
   const [glowEffect, setGlowEffect] = useState(false);
-  const [textStyle, setTextStyle] = useState("normal")
-  const [textBackgroundColor,setTextBackgroundColor] =  useState("#ffffff")
-  const [backgroundColor, setBackgroundColor]= useState("#ffffff")
-  const [selectedFontSize, setSelectedFontSize] = useState(0)
+  const [textStyle, setTextStyle] = useState("normal");
+  const [textBackgroundColor, setTextBackgroundColor] = useState("#ffffff");
+  const [backgroundColor, setBackgroundColor] = useState("#ffffff");
+  const [selectedFontSize, setSelectedFontSize] = useState(0);
 
   const [textEffects, setTextEffects] = useState({
     glow: false,
@@ -287,7 +288,6 @@ const Canva = () => {
     lineHeight: 1,
   });
 
-
   const [createTemplate] = useCreateTemplateMutation();
   const { user } = useSelector((state) => state.auth);
   const [upl] = useUplMutation();
@@ -297,19 +297,16 @@ const Canva = () => {
   const location = useLocation();
   const template = location.state?.template;
 
-
   useEffect(() => {
     const fabricCanvas = new fabric.Canvas(canvasRef.current, {
       width: 400,
       height: 600,
-      // backgroundColor: "#fff",
+      backgroundColor: "#fff",
       preserveObjectStacking: true, // Ensure stacking order is preserved even when selecting
     });
     setCanvas(fabricCanvas);
-    console.log("Canvas initialized:", fabricCanvas, "Fabric.js version:", fabric.version);
 
     const updateTextProperties = (activeObject) => {
-      console.log(activeObject)
       if (activeObject) {
         setSelectedText(activeObject.type === "i-text" ? activeObject : null);
         setSelectedColor(activeObject.fill || "#000000");
@@ -319,19 +316,24 @@ const Canva = () => {
           `${activeObject.fontWeight === "bold" ? "Bold " : ""}${
             activeObject.fontStyle === "italic" ? "Italic " : ""
           }${activeObject.textDecoration === "underline" ? "Underline " : ""}${
-            activeObject.textDecoration === "line-through" ? "Strikethrough" : ""
+            activeObject.textDecoration === "line-through"
+              ? "Strikethrough"
+              : ""
           }`.trim()
         );
-        setSelectedFontSize(activeObject.fontSize)
-        setTextBackgroundColor(activeObject.textBackgroundColor)
-        setTextShadow(activeObject.shadow ? activeObject.shadow.toString() : "none");
-        setGlowEffect(activeObject.shadow && activeObject.shadow.includes("8px"));
-        setBackgroundColor(activeObject.backgroundColor)
+        setSelectedFontSize(activeObject.fontSize);
+        setTextBackgroundColor(activeObject.textBackgroundColor);
+        setTextShadow(
+          activeObject.shadow ? activeObject.shadow.toString() : "none"
+        );
+        setGlowEffect(
+          activeObject.shadow && activeObject.shadow.includes("8px")
+        );
+        setBackgroundColor(activeObject.backgroundColor);
         setIsStyleOptionsOpen(activeObject.type === "i-text");
-        updateCanvasOrder(); 
+        updateCanvasOrder();
       }
     };
-
 
     fabricCanvas.on("selection:created", (event) => {
       updateTextProperties(event.target);
@@ -339,7 +341,7 @@ const Canva = () => {
 
     fabricCanvas.on("selection:updated", (event) => {
       updateTextProperties(event.target);
-      console.log(event.target)
+      console.log(event.target);
     });
 
     fabricCanvas.on("object:modified", (event) => {
@@ -349,7 +351,7 @@ const Canva = () => {
       setSelectedText(null);
       setSelectedColor("#000000");
       setSelectedFont("Arial");
-      setTextStyle("normal")
+      setTextStyle("normal");
       setOpacity(1);
       setTextShadow("none");
       setGlowEffect(false);
@@ -372,58 +374,54 @@ const Canva = () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
-  
-//load the template on canvas
-useEffect(() => {
-  if (!canvas || !template?.jsonData) {
-    console.log("Canvas or template not ready yet:", { canvas, template });
-    return;
-  }
 
-  console.log("Loading template from Review:", template.jsonData);
-
-  canvas.clear();
-
-  // Load the JSON data onto the canvas
-  canvas.loadFromJSON(
-    template.jsonData,
-    () => {
-      console.log("Template loaded successfully");
-
-      const objects = canvas.getObjects();
-      objects.forEach((obj) => {
-        if (obj.type === "image" && obj.src) {
-          fabric.Image.fromURL(
-            obj.src,
-            (img) => {
-              img.set({
-                left: obj.left || 0,
-                top: obj.top || 0,
-                scaleX: obj.scaleX || 1,
-                scaleY: obj.scaleY || 1,
-              });
-              canvas.add(img);
-              canvas.renderAll(); 
-            },
-            { crossOrigin: "anonymous" }
-          );
-        }
-      });
-
-      
-      canvas.renderAll();
-      canvas.requestRenderAll();
-    },
-    (error) => {
-      console.error("Error loading template:", error);
+  //load the template on canvas
+  useEffect(() => {
+    if (!canvas || !template?.jsonData) {
+      console.log("Canvas or template not ready yet:", { canvas, template });
+      return;
     }
-  );
 
-  setTimeout(() => {
-    canvas.requestRenderAll();
-  }, 0); 
-}, [canvas, template]);
+    canvas.clear();
 
+    // Load the JSON data onto the canvas
+    canvas.loadFromJSON(
+      template.jsonData,
+      () => {
+        console.log("Template loaded successfully");
+
+        const objects = canvas.getObjects();
+        objects.forEach((obj) => {
+          if (obj.type === "image" && obj.src) {
+            fabric.Image.fromURL(
+              obj.src,
+              (img) => {
+                img.set({
+                  left: obj.left || 0,
+                  top: obj.top || 0,
+                  scaleX: obj.scaleX || 1,
+                  scaleY: obj.scaleY || 1,
+                });
+                canvas.add(img);
+                canvas.renderAll();
+              },
+              { crossOrigin: "anonymous" }
+            );
+          }
+        });
+
+        canvas.renderAll();
+        canvas.requestRenderAll();
+      },
+      (error) => {
+        console.error("Error loading template:", error);
+      }
+    );
+
+    setTimeout(() => {
+      canvas.requestRenderAll();
+    }, 0);
+  }, [canvas, template]);
 
   const addCustomTextElement = (text, size, style) => {
     if (!canvas) return;
@@ -475,21 +473,34 @@ useEffect(() => {
       return;
     }
     const objects = canvas.getObjects();
-    const lockedObjects = objects.filter(obj => obj.lockMovementX);
+    const lockedObjects = objects.filter((obj) => obj.lockMovementX);
     const index = objects.indexOf(activeObject);
-    if (index === objects.length - 1 || (lockedObjects.length > 0 && index === objects.length - lockedObjects.length - 1)) {
+    if (
+      index === objects.length - 1 ||
+      (lockedObjects.length > 0 &&
+        index === objects.length - lockedObjects.length - 1)
+    ) {
       console.log("Object is already at the front or below locked objects");
       return;
     }
     canvas.remove(activeObject);
     if (lockedObjects.length > 0) {
-      canvas._objects.splice(objects.length - lockedObjects.length, 0, activeObject);
+      canvas._objects.splice(
+        objects.length - lockedObjects.length,
+        0,
+        activeObject
+      );
     } else {
       canvas.add(activeObject);
     }
     updateCanvasOrder();
     canvas.setActiveObject(activeObject);
-    console.log("Object brought to front:", activeObject, "New order:", canvas.getObjects());
+    console.log(
+      "Object brought to front:",
+      activeObject,
+      "New order:",
+      canvas.getObjects()
+    );
   };
 
   const sendToBack = () => {
@@ -509,7 +520,12 @@ useEffect(() => {
     canvas._objects.unshift(activeObject);
     updateCanvasOrder();
     canvas.setActiveObject(activeObject);
-    console.log("Object sent to back:", activeObject, "New order:", canvas.getObjects());
+    console.log(
+      "Object sent to back:",
+      activeObject,
+      "New order:",
+      canvas.getObjects()
+    );
   };
 
   const bringForward = () => {
@@ -520,9 +536,13 @@ useEffect(() => {
       return;
     }
     const objects = canvas.getObjects();
-    const lockedObjects = objects.filter(obj => obj.lockMovementX);
+    const lockedObjects = objects.filter((obj) => obj.lockMovementX);
     const index = objects.indexOf(activeObject);
-    if (index === objects.length - 1 || (lockedObjects.length > 0 && index === objects.length - lockedObjects.length - 1)) {
+    if (
+      index === objects.length - 1 ||
+      (lockedObjects.length > 0 &&
+        index === objects.length - lockedObjects.length - 1)
+    ) {
       console.log("Object is already at the front or below locked objects");
       return;
     }
@@ -531,7 +551,12 @@ useEffect(() => {
     canvas._objects = objects;
     updateCanvasOrder();
     canvas.setActiveObject(activeObject);
-    console.log("Object brought forward:", activeObject, "New order:", canvas.getObjects());
+    console.log(
+      "Object brought forward:",
+      activeObject,
+      "New order:",
+      canvas.getObjects()
+    );
   };
 
   const sendBackward = () => {
@@ -552,7 +577,12 @@ useEffect(() => {
     canvas._objects = objects;
     updateCanvasOrder();
     canvas.setActiveObject(activeObject);
-    console.log("Object sent backward:", activeObject, "New order:", canvas.getObjects());
+    console.log(
+      "Object sent backward:",
+      activeObject,
+      "New order:",
+      canvas.getObjects()
+    );
   };
 
   const lockObject = () => {
@@ -597,10 +627,15 @@ useEffect(() => {
     console.log("Object unlocked:", activeObject);
   };
 
+  //handle to add image on canvas
+  //element adding on canvas by maintaining the cors policy
   const handleImageUpload = (imageUrl) => {
     if (!canvas) return;
+  
     const imgElement = new Image();
+    imgElement.crossOrigin = "anonymous"; // ✅ Enables CORS
     imgElement.src = imageUrl;
+  
     imgElement.onload = () => {
       const fabricImage = new fabric.Image(imgElement, {
         left: 100,
@@ -610,10 +645,16 @@ useEffect(() => {
         selectable: true,
         hasControls: true,
       });
+  
       canvas.add(fabricImage);
       canvas.renderAll();
     };
+  
+    imgElement.onerror = () => {
+      console.error("Failed to load image. Make sure the URL allows CORS.");
+    };
   };
+  
 
   //add template to the canvas
   const addTemplateToCanvas = (jsonData) => {
@@ -627,49 +668,59 @@ useEffect(() => {
       return;
     }
   
-    console.log("Adding template from Sidebar:", jsonData);
-  
     canvas.clear();
+    console.log("🟡 Loading template...");
   
-    // Load the template
+    console.log(jsonData)
+    // Load the JSON onto canvas
     canvas.loadFromJSON(
       jsonData,
       () => {
-        console.log("Template loaded successfully");
-  
-        canvas.getObjects().forEach((obj) => {
-          if (obj.type === "image" && obj.src) {
-            fabric.Image.fromURL(
-              obj.src,
-              (img) => {
-                img.set({
-                  left: obj.left || 0,
-                  top: obj.top || 0,
-                  scaleX: obj.scaleX || 1,
-                  scaleY: obj.scaleY || 1,
-                });
-                canvas.add(img);
-                canvas.renderAll(); 
-              },
-              { crossOrigin: "anonymous" }
-            );
-          }
-        });
-  
-        canvas.renderAll();
-        canvas.requestRenderAll();
+        console.log("✅ Template JSON loaded");
+    
+        setTimeout(() => {
+          const allObjects = canvas.getObjects();
+          console.log("🔍 Objects on canvas after delay:", allObjects);
+    
+          allObjects.forEach((obj, index) => {
+            console.log(`➡️ Object ${index + 1}:`, obj);
+    
+            if (obj.type.toLowerCase() === "image") {
+              const imageUrl = obj.src || obj._originalElement?.src || obj._element?.currentSrc;
+              console.log(imageUrl);
+    
+              if (imageUrl) {
+                fabric.Image.fromURL(
+                  imageUrl,
+                  (img) => {
+                    img.set({
+                      left: obj.left || 0,
+                      top: obj.top || 0,
+                      scaleX: obj.scaleX || 1,
+                      scaleY: obj.scaleY || 1,
+                    });
+                    canvas.remove(obj); // remove placeholder image
+                    canvas.add(img); // add fresh image
+                    canvas.renderAll();
+                  },
+                  { crossOrigin: "anonymous" }
+                );
+              }
+            }
+          });
+    
+          canvas.renderAll();
+        }, 100); // Give it 100ms to complete loading
       },
       (error) => {
-        console.error("Error loading template:", error);
+        console.error("❌ Error loading template:", error);
       }
     );
-  
-    // Force immediate render
+    // Force re-render as fallback
     setTimeout(() => {
       canvas.requestRenderAll();
-    }, 0); // Ensure render happens after the current event loop
+    }, 0);
   };
-  
   
 
   const applyAnimation = (object, animation) => {
@@ -692,30 +743,41 @@ useEffect(() => {
 
       switch (name) {
         case "Bounce":
-          const bounceY = variant.y[Math.floor(progress * (variant.y.length - 1))];
+          const bounceY =
+            variant.y[Math.floor(progress * (variant.y.length - 1))];
           object.set("top", object.originalTop + bounceY);
           break;
         case "Fade In":
-          const fadeOpacity = variant.opacity[0] + (variant.opacity[1] - variant.opacity[0]) * progress;
+          const fadeOpacity =
+            variant.opacity[0] +
+            (variant.opacity[1] - variant.opacity[0]) * progress;
           object.set("opacity", fadeOpacity);
           break;
         case "Scale Pop":
-          const scaleValue = variant.scale[Math.floor(progress * (variant.scale.length - 1))];
+          const scaleValue =
+            variant.scale[Math.floor(progress * (variant.scale.length - 1))];
           object.set("scaleX", scaleValue);
           object.set("scaleY", scaleValue);
           break;
         case "Slide In":
-          const slideX = variant.x[0] + (variant.x[1] - variant.x[0]) * progress;
-          const slideOpacity = variant.opacity[0] + (variant.opacity[1] - variant.opacity[0]) * progress;
+          const slideX =
+            variant.x[0] + (variant.x[1] - variant.x[0]) * progress;
+          const slideOpacity =
+            variant.opacity[0] +
+            (variant.opacity[1] - variant.opacity[0]) * progress;
           object.set("left", object.originalLeft + slideX);
           object.set("opacity", slideOpacity);
           break;
         case "Blinking":
-          const blinkOpacity = variant.opacity[Math.floor((elapsed / duration) % variant.opacity.length)];
+          const blinkOpacity =
+            variant.opacity[
+              Math.floor((elapsed / duration) % variant.opacity.length)
+            ];
           object.set("opacity", blinkOpacity);
           break;
         case "Wave":
-          const waveY = variant.y[Math.floor((elapsed / duration) % variant.y.length)];
+          const waveY =
+            variant.y[Math.floor((elapsed / duration) % variant.y.length)];
           object.set("top", object.originalTop + waveY);
           break;
         default:
@@ -743,33 +805,45 @@ useEffect(() => {
     if (!canvas) return;
     const activeObject = canvas.getActiveObject();
     if (!activeObject || activeObject.type !== "i-text") return;
-  
+
     if (styles.color) activeObject.set("fill", styles.color);
     if (styles.fontFamily) activeObject.set("fontFamily", styles.fontFamily);
     if (styles.textShadow !== undefined) {
-      activeObject.set("shadow", styles.textShadow === "none" ? null : styles.textShadow);
+      activeObject.set(
+        "shadow",
+        styles.textShadow === "none" ? null : styles.textShadow
+      );
     }
-    if (styles.opacity !== undefined) activeObject.set("opacity", styles.opacity);
+    if (styles.opacity !== undefined)
+      activeObject.set("opacity", styles.opacity);
     if (styles.animation) applyAnimation(activeObject, styles.animation);
     if (styles.glow !== undefined) {
       if (styles.glow) {
         activeObject.set("shadow", `0 0 8px ${selectedColor}`);
       } else {
-        activeObject.set("shadow", styles.textShadow === "none" ? null : styles.textShadow);
+        activeObject.set(
+          "shadow",
+          styles.textShadow === "none" ? null : styles.textShadow
+        );
       }
     }
     if (styles.fontStyle) activeObject.set("fontStyle", styles.fontStyle);
     if (styles.fontWeight) activeObject.set("fontWeight", styles.fontWeight);
-    if (styles.textDecoration) activeObject.set("textDecoration", styles.textDecoration);
-    if (styles.underline !== undefined) activeObject.set("underline", styles.underline);
-    if (styles.linethrough !== undefined) activeObject.set("linethrough", styles.linethrough);
-    if (styles.textBackgroundColor) activeObject.set("textBackgroundColor", styles.textBackgroundColor);
-    if (styles.backgroundColor) activeObject.set("backgroundColor", styles.backgroundColor);
-    if (styles.fontSize) activeObject.set("fontSize", parseInt(styles.fontSize));
-  
+    if (styles.textDecoration)
+      activeObject.set("textDecoration", styles.textDecoration);
+    if (styles.underline !== undefined)
+      activeObject.set("underline", styles.underline);
+    if (styles.linethrough !== undefined)
+      activeObject.set("linethrough", styles.linethrough);
+    if (styles.textBackgroundColor)
+      activeObject.set("textBackgroundColor", styles.textBackgroundColor);
+    if (styles.backgroundColor)
+      activeObject.set("backgroundColor", styles.backgroundColor);
+    if (styles.fontSize)
+      activeObject.set("fontSize", parseInt(styles.fontSize));
+
     canvas.renderAll();
   };
-  
 
   const downloadImage = () => {
     if (!canvas) return;
@@ -784,72 +858,62 @@ useEffect(() => {
   const saveTemplate = async () => {
     if (!canvas) return;
 
-    // Capture canvas as image
-    const canvasElement = document.querySelector("canvas"); 
-    const screenshot = await html2canvas(canvasElement);
-    
-    // Convert canvas to blob
-    const blob = await new Promise((resolve) =>
-      screenshot.toBlob(resolve, "image/png")
-    );
-    console.log(blob)
+    await new Promise((resolve) => setTimeout(resolve, 500)); // Ensure all DOM updates are complete
 
-    // Upload to Cloudinary
-    const formData = new FormData();
-    formData.append("file", blob);
-    console.log(formData) 
+    const targetElement = document.querySelector("canvas"); // Selects the first <canvas> element
+    if (!targetElement) return console.error("Capture area not found");
 
-     // Upload to Cloudinary using RTK Query mutation
-     const cloudinaryData = await upl(formData).unwrap();
 
-      const url = cloudinaryData.file?.path
+    try {
+      const screenshot = await html2canvas(targetElement, {
+        allowTaint: false, // Ensures only properly loaded images are included
+        useCORS: true, // Allows fetching CORS-enabled images
+        backgroundColor: null,
+        logging: false,
+      });
+      // document.body.appendChild(screenshot);
 
-    // formData.append("upload_preset", "your_upload_preset"); // Replace with Cloudinary upload preset
+      // return;
 
-    
-    const jsonData = canvas.toJSON();
-    setTemplateData({
-      name: "",
-      description: "",
-      userId: user?.id,
-      jsonData: jsonData,
-      price: 0.0,
-      categoryByAmount: "FREE",
-      categoryByMood: "WEDDING",
-      categoryByRequirement: "LATEST",
-      additionalTags: [],
-      designedBy: user?.user_name,
-      thumbnailUrl: url,
-      rating: 0.0,
-      status: "DRAFT",
-      paymentDetails: [],
-      orderDetails: [],
-    });
+      const blob = await new Promise((resolve) =>
+        screenshot.toBlob(resolve, "image/png")
+      );
 
-    setShowModal(true);
-    // const templateData = {
-    //   name: "Sample Template", 
-    //   description: "A sample invitation template", 
-    //   userId: user?.id, 
-    //   jsonData: jsonData,
-    //   price: 500, 
-    //   categoryByAmount: "PAID",
-    //   categoryByMood: "WEDDING",
-    //   categoryByRequirement: "LATEST",
-    //   additionalTags: ["wedding", "invitation"], 
-    //   designedBy: "Designer Name", 
-    //   thumbnailUrl: url || "https://example.com/thumbnail.jpg" , 
-    //   rating: 0.0,
-    //   status: "DRAFT",
-    //   paymentDetails: [], // Populate if needed
-    //   orderDetails: [], // Populate if needed
-    // };
-  
-  
+      if (!blob) return console.error("Failed to create image blob");
+
+      // Upload to Cloudinary
+      const formData = new FormData();
+      formData.append("file", blob);
+      formData.append("upload_preset", "your_upload_preset"); // 🔥 Required for unsigned uploads
+
+      const cloudinaryData = await upl(formData).unwrap(); // Your RTK Query mutation
+      const url = cloudinaryData.file?.path || cloudinaryData.secure_url;
+
+      const jsonData = canvas.toJSON();
+
+      setTemplateData({
+        name: "",
+        description: "",
+        userId: user?.id,
+        jsonData: jsonData,
+        price: 0.0,
+        categoryByAmount: "FREE",
+        categoryByMood: "WEDDING",
+        categoryByRequirement: "LATEST",
+        additionalTags: [],
+        designedBy: user?.user_name,
+        thumbnailUrl: url,
+        rating: 0.0,
+        status: "DRAFT",
+        paymentDetails: [],
+        orderDetails: [],
+      });
+
+      setShowModal(true);
+    } catch (err) {
+      console.error("Error saving template:", err);
+    }
   };
-
- 
- 
 
   const loadTemplate = () => {
     if (!canvas) return;
@@ -864,29 +928,44 @@ useEffect(() => {
     }
   };
 
+  //element adding on canvas by maintaining the cors policy
   const addDesignElement = (design) => {
     if (!canvas) return;
+  
     const imgElement = new Image();
-    imgElement.src = design.src;
-    const designImg = new fabric.Image(imgElement, {
-      left: 150,
-      top: 150,
-      scaleX: 0.3,
-      scaleY: 0.3,
-      selectable: true,
-      hasControls: true,
-    });
-    canvas.add(designImg);
-    canvas.renderAll();
+    imgElement.crossOrigin = "anonymous"; // ✅ Enables CORS
+    imgElement.src = design?.src;
+  
+    imgElement.onload = () => {
+      const fabricImage = new fabric.Image(imgElement, {
+        left: 100,
+        top: 100,
+        scaleX: 0.06,
+        scaleY: 0.1,
+        selectable: true,
+        hasControls: true,
+      });
+  
+      canvas.add(fabricImage);
+      canvas.renderAll();
+    };
+  
+    imgElement.onerror = () => {
+      console.error("Failed to load image. Make sure the URL allows CORS.");
+    };
   };
 
   const onWallpaperSelect = (src) => {
     if (!canvas) return;
-    fabric.Image.fromURL(src, (img) => {
-      img.scaleToWidth(canvas.width);
-      img.scaleToHeight(canvas.height);
-      canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
-    }, { crossOrigin: "anonymous" });
+    fabric.Image.fromURL(
+      src,
+      (img) => {
+        img.scaleToWidth(canvas.width);
+        img.scaleToHeight(canvas.height);
+        canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+      },
+      { crossOrigin: "anonymous" }
+    );
   };
 
   const deleteSelectedObject = () => {
@@ -899,10 +978,9 @@ useEffect(() => {
   };
 
   //finaly save to cloud
-  const saveTemplateToCloud = (finalTemplateData)=>{
-    console.log(finalTemplateData)
+  const saveTemplateToCloud = (finalTemplateData) => {
     try {
-        createTemplate(finalTemplateData)
+      createTemplate(finalTemplateData)
         .unwrap()
         .then(() => {
           toast.success("Template saved successfully!");
@@ -911,14 +989,14 @@ useEffect(() => {
           console.error("Error saving template:", error);
           toast.error("Failed to save template. Please try again.");
         });
-      } catch (error) {
-        console.error("Error saving template:", error);
-        toast.error("Failed to save template. Please try again.");
-      }
-  }
+    } catch (error) {
+      console.error("Error saving template:", error);
+      toast.error("Failed to save template. Please try again.");
+    }
+  };
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden">
+    <div className="flex flex-col h-screen overflow-hidden ">
       <div className="block md:hidden w-full flex-shrink-0">
         <MobileSidebar
           templates={templates}
@@ -943,26 +1021,26 @@ useEffect(() => {
       </div>
       <div className="flex flex-col md:flex-row flex-grow overflow-hidden">
         <div className="hidden md:flex md:h-full md:flex-shrink-0">
-        <Sidebar
-          templates={templates}
-          designs={designs}
-          handleImageUpload={handleImageUpload}
-          addTemplateToCanvas={addTemplateToCanvas}
-          downloadImage={downloadImage}
-          saveTemplate={saveTemplate}
-          loadTemplate={loadTemplate}
-          addDesignElement={addDesignElement}
-          onWallpaperSelect={onWallpaperSelect}
-          addCustomTextElement={addCustomTextElement}
-          textEffects={textEffects}
-          setTextEffects={setTextEffects}
-          bringToFront={bringToFront} // Added layering functions
-          sendToBack= {sendToBack}
-          bringForward={bringForward}
-          sendBackward={sendBackward}
-          lockObject={lockObject}
-          unlockObject={unlockObject}
-        />
+          <Sidebar
+            templates={templates}
+            designs={designs}
+            handleImageUpload={handleImageUpload}
+            addTemplateToCanvas={addTemplateToCanvas}
+            downloadImage={downloadImage}
+            saveTemplate={saveTemplate}
+            loadTemplate={loadTemplate}
+            addDesignElement={addDesignElement}
+            onWallpaperSelect={onWallpaperSelect}
+            addCustomTextElement={addCustomTextElement}
+            textEffects={textEffects}
+            setTextEffects={setTextEffects}
+            bringToFront={bringToFront} // Added layering functions
+            sendToBack={sendToBack}
+            bringForward={bringForward}
+            sendBackward={sendBackward}
+            lockObject={lockObject}
+            unlockObject={unlockObject}
+          />
         </div>
         <div className="flex flex-grow bg-slate-300">
           <CanvasArea canvasRef={canvasRef} />
@@ -1002,7 +1080,11 @@ useEffect(() => {
         </button>
       </div>
       {showModal && (
-        <TemplateOtherDetails onClose={() => setShowModal(false)} onSave={saveTemplateToCloud} templateData={templateData} />
+        <TemplateOtherDetails
+          onClose={() => setShowModal(false)}
+          onSave={saveTemplateToCloud}
+          templateData={templateData}
+        />
       )}
     </div>
   );

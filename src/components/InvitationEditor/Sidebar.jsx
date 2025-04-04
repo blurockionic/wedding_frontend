@@ -52,7 +52,7 @@ const Sidebar = ({
   const handleTemplateClick = (template) => {
     setSelectedTemplate(template);
     addTemplateToCanvas(template.jsonData);
-    console.log(template)
+    // console.log(template)
   };
 
   const renderSectionContent = () => {
