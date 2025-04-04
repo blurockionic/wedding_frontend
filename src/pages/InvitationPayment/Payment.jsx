@@ -4,7 +4,9 @@ import { IoIosLock } from "react-icons/io";
 import { FaLock } from "react-icons/fa";
 import { IoShieldCheckmarkOutline } from "react-icons/io5";
 import { MdOutlineCreditScore } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useTemplateCreateOrderMutation } from "../../redux/payment";
+import { toast } from "react-toastify";
 
 function Payment() {
   const [responseId, setResponseId] = React.useState("");
@@ -12,6 +14,12 @@ function Payment() {
   const [paymentSuccess, setPaymentSuccess] = React.useState(false);
 
   const navigate = useNavigate();
+
+  const location = useLocation();
+  const { amount, template } = location.state || {};
+
+  const [createRazorpayOrder, { isLoading: creatingOrderLoader }] =
+    useTemplateCreateOrderMutation();
 
   const loadScript = (src) => {
     return new Promise((resolve) => {
@@ -30,62 +38,75 @@ function Payment() {
     });
   };
 
-  const createRazorpayOrder = (amount) => {
-    let data = JSON.stringify({
-      amount: amount * 100,
-      currency: "INR",
-    });
+  const handleCreateRazorpayOrder = async () => {
+    try {
+      const { order, success } = await createRazorpayOrder({
+        tempId: template.id,
+      }).unwrap();
 
-    let config = {
-      method: "post",
-      maxBodyLength: Infinity,
-      url: `${import.meta.env.VITE_API_URL}/orders`,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
-
-    axios
-      .request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data));
-        handleRazorpayScreen(response.data.amount);
-      })
-      .catch((error) => {
-        console.log("error at", error);
-      });
+      if (success) {
+        handleRazorpayScreen(order);
+      }
+    } catch (error) {
+      console.error("Error creating Razorpay order:", error);
+      toast.error("Error creating order");
+    }
   };
 
-  const handleRazorpayScreen = async (amount) => {
+  const handleRazorpayScreen = async (order) => {
     const res = await loadScript(
       "https://checkout.razorpay.com/v1/checkout.js"
     );
 
     if (!res) {
-      alert("Some error at razorpay screen loading");
+      alert("Some error at Razorpay screen loading");
       return;
     }
 
     const options = {
       key: import.meta.env.VITE_PAY_ID,
-      amount: amount,
-      currency: "INR",
-      name: "marriage vendors",
-      description: "payment to marriage vendors",
+      amount: order.amount * 100,
+      currency: order.currency || "INR",
+      name: "Marriage Vendors",
+      description: "Payment to Marriage Vendors",
       image: "https://www.marriagevendors.com/assets/brandlogo-U4Jufhk5.png",
-      handler: function (response) {
-        setResponseId(response.razorpay_payment_id);
-        setPaymentSuccess(true);
-        navigate("/preview");
+      order_id: order.orderId, // Pass Order ID from backend
+      handler: async function (response) {
+        try {
+          // Send payment details to backend for verification
+          const verifyRes = await fetch(
+            `${import.meta.env.VITE_API_URL}/api/v1/template/verify-payment`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                order_id: order.orderId,
+                payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+              }),
+              credentials: "include",
+            }
+          );
+
+          const verifyData = await verifyRes.json();
+
+          if (verifyData.success) {
+            setResponseId(response.razorpay_payment_id);
+            setPaymentSuccess(true);
+            navigate("/update_editor");
+          } else {
+            toast.error("Payment verification failed");
+          }
+        } catch (error) {
+          console.error("Error verifying payment:", error);
+          toast.error("Error verifying payment");
+        }
       },
       prefill: {
-        name: "marriage vendors",
-        email: "marriagevendorsworks@gmail.com",
+        name: order?.notes?.name || "Marriage Vendors",
+        email: order?.notes?.email || "marriagevendorsworks@gmail.com",
       },
-      theme: {
-        color: "#F4C430",
-      },
+      theme: { color: "#F4C430" },
     };
 
     const paymentObject = new window.Razorpay(options);
@@ -134,7 +155,7 @@ function Payment() {
               <div className="absolute inset-0 bg-gradient-to-r from-violet-600/5 to-indigo-600/5 transform -skew-y-12 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
               <div className="text-center relative">
                 <span className="text-4xl font-bold bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 inline-block text-transparent bg-clip-text tracking-tight">
-                  ₹100.00
+                  ₹{amount}
                 </span>
                 <p className="text-gray-600 mt-3 font-medium">
                   For your amazing service
@@ -143,7 +164,7 @@ function Payment() {
             </div>
             <div className="flex justify-center items-center mt-11">
               <button
-                onClick={() => createRazorpayOrder(100)}
+                onClick={handleCreateRazorpayOrder}
                 className="md:w-[60%] w-[100%] group relative overflow-hidden px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl text-white font-semibold shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl active:scale-95 flex justify-center items-center"
               >
                 <FaLock />
