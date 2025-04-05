@@ -15,7 +15,7 @@ export default function Transactions() {
           <h2 className="text-2xl font-semibold text-pink-600 mb-3 break-words whitespace-normal w-full">Transactions</h2>
           <div>
           {transactions.data.vendorTransactions.length > 0 && (
-            <table className="min-w-full bg-white">
+            <table className="min-w-full bg-white text-xs">
               <thead>
                 <tr>
                   <th className="py-2 px-4 border-b">Vendor Id</th>
@@ -30,15 +30,15 @@ export default function Transactions() {
               <tbody>
                 {transactions.data.vendorTransactions.map((transaction) => (
                   <tr key={transaction.id}>
-                    <td className="py-2 px-4 border-b">{transaction.vendorId}</td>
-                    <td className="py-2 px-4 border-b">{transaction.subscriptionId}</td>
+                    <td className="py-2 px-4 border-b">{transaction.vendorId || "Not Available"}</td>
+                    <td className="py-2 px-4 border-b">{transaction.subscriptionId || "Not Available"}</td>
                     <td className="py-2 px-4 border-b">
-                      {transaction.currency + transaction.amount}
+                      {transaction.currency + transaction.amount || "Not Available"}
                     </td>
-                    <td className="py-2 px-4 border-b">{transaction.status}</td>
-                    <td className="py-2 px-4 border-b">{transaction.payment_method}</td>
-                    <td className="py-2 px-4 border-b">{transaction.razorpay_order_id}</td>
-                    <td className="py-2 px-4 border-b">{transaction.razorpay_payment_id}</td>
+                    <td className="py-2 px-4 border-b">{transaction.status || "Not Available"}</td>
+                    <td className="py-2 px-4 border-b">{transaction.payment_method || "Not Available"}</td>
+                    <td className="py-2 px-4 border-b">{transaction.razorpay_order_id || "Not Available"}</td>
+                    <td className="py-2 px-4 border-b">{transaction.razorpay_payment_id || "Not Available"}</td>
                   </tr>
                 ))}
               </tbody>

@@ -111,7 +111,7 @@ export default function Admin() {
               />
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 w-full px-5 md:px-0 mt-4">
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-10 w-full px-5 md:px-0 mt-4">
               <div>
                 <p className="text-xl font-semibold text-pink-600 mb-3 break-words whitespace-normal w-full">
                   Total Services by Type
@@ -128,7 +128,7 @@ export default function Admin() {
                       cy: 100,
                     },
                   ]}
-                  width={500}
+                  width={800}
                   height={225}
                 />
               </div>
@@ -148,7 +148,7 @@ export default function Admin() {
                       cy: 100,
                     },
                   ]}
-                  width={500}
+                  width={800}
                   height={225}
                 />
               </div>
@@ -195,7 +195,7 @@ export default function Admin() {
                       cy: 100,
                     },
                   ]}
-                  width={500}
+                  width={800}
                   height={225}
                 />
               </div>

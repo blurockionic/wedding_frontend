@@ -282,7 +282,7 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute
             component={() => wrapWithSuspense(UserDashboard)}
-            allowedRoles={["user", "admin"]}
+            allowedRoles={["user", "admin", "super_admin"]}
           />
         ),
         // Protected route
@@ -304,7 +304,7 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute
             component={() => wrapWithSuspense(VendorDashboard)}
-            allowedRoles={["vendor", "admin"]}
+            allowedRoles={["vendor", "admin", "super_admin"]}
           />
         ), // Protected route
         children: [

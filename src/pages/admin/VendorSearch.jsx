@@ -3,6 +3,7 @@ import { useSearchVendorsMutation } from "../../redux/adminApiSlice";
 
 export default function VendorSearch() {
   const [name, setName] = useState("");
+  const [id, setId] = useState("");
   const [serviceType, setServiceType] = useState("");
   const [location, setLocation] = useState("");
   const [results, setResults] = useState([]);
@@ -12,7 +13,7 @@ export default function VendorSearch() {
     e.preventDefault();
 
     try {
-      const response = await searchVendors({ name, serviceType, location }).unwrap();
+      const response = await searchVendors({ name, id, serviceType, location }).unwrap();
       setResults(response.data);
     } catch (err) {
       console.error("Failed to fetch vendors:", err);
@@ -29,6 +30,13 @@ export default function VendorSearch() {
             placeholder="Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            className="p-2 border border-gray-300 rounded"
+          />
+          <input
+            type="text"
+            placeholder="Id"
+            value={id}
+            onChange={(e) => setId(e.target.value)}
             className="p-2 border border-gray-300 rounded"
           />
           <input
@@ -59,6 +67,7 @@ export default function VendorSearch() {
           <thead>
             <tr>
               <th className="py-2 px-4 border-b">Name</th>
+              <th className="py-2 px-4 border-b">Id</th>
               <th className="py-2 px-4 border-b">Business Name</th>
               <th className="py-2 px-4 border-b">Service Type</th>
               <th className="py-2 px-4 border-b">Location</th>
@@ -68,15 +77,16 @@ export default function VendorSearch() {
           <tbody>
             {results.map((vendor) => (
               <tr key={vendor._id.$oid}>
-                <td className="py-2 px-4 border-b">{vendor.name}</td>
-                <td className="py-2 px-4 border-b">{vendor.business_name}</td>
+                <td className="py-2 px-4 border-b">{vendor.name || "Not Available"}</td>
+                <td className="py-2 px-4 border-b">{vendor._id.$oid || "Not Available"}</td>
+                <td className="py-2 px-4 border-b">{vendor.business_name || "Not Available"}</td>
                 <td className="py-2 px-4 border-b">
                   {vendor.service_type.length > 2
                     ? `${vendor.service_type.slice(0, 2).join(", ")}...`
-                    : vendor.service_type.join(", ")}
+                    : vendor.service_type.join(", ") || "Not Available"}
                 </td>
-                <td className="py-2 px-4 border-b">{vendor.location}</td>
-                <td className="py-2 px-4 border-b">{vendor.totalViews}</td>
+                <td className="py-2 px-4 border-b">{vendor.location || "Not Available"}</td>
+                <td className="py-2 px-4 border-b">{vendor.totalViews || "Not Available"}</td>
               </tr>
             ))}
           </tbody>
