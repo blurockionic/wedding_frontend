@@ -48,7 +48,7 @@ const EventSummary = ({ summary = {} }) => {
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4  bg-gray-50 rounded-lg ">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4  bg-gray-50 rounded-lg mt-3">
       {summaryItems.map((item, index) => (
         <div
           key={index}
