@@ -25,6 +25,8 @@ const TemplatesSection = ({ templates, onTemplateClick, selectedTemplate }) => {
     );
   if (error) return <p>Error fetching templates</p>;
 
+  console.log(data)
+
   return (
     <div className="h-screen bg-white text-black overflow-y-auto">
       <div className="p-4">
@@ -71,6 +73,7 @@ const TemplatesSection = ({ templates, onTemplateClick, selectedTemplate }) => {
                 <img
                   src={template.thumbnailUrl}
                   alt={template.name}
+                  crossOrigin="anonymous"
                   className="w-full h-52 object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent p-2 flex flex-col justify-end">

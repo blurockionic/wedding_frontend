@@ -16,7 +16,7 @@ const UploadsSection = ({ onImageUpload }) => {
   const [uploading, setUploading] = useState(false);
   const [uploadToCloudinary] = useUploadToCloudinaryMutation();
 
-  const { data } = useGetImagesForTemplateQuery();
+  const { data } = useGetImagesForTemplateQuery(  "user_assets" );
 
   console.log(data?.images);
 
@@ -29,7 +29,7 @@ const UploadsSection = ({ onImageUpload }) => {
 
     try {
       setUploading(true);
-      uploadToCloudinary({ files, folder: "user-uploads" });
+      uploadToCloudinary({ files, folder: "user_assets" });
     } catch (error) {
       console.error("Error uploading files:", error);
     } finally {
