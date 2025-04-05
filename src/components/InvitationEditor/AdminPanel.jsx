@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useUploadToCloudinaryMutation } from "../../redux/cloudinaryApiSlice";
 
-export default function AdminPanel() {
+export default function AdminPanel({saveTemplate}) {
   const [uploadFile, { isLoading, isError }] = useUploadToCloudinaryMutation();
   const fileInputRef = useRef(null);
   const [tag, setTag] = useState("select");
@@ -104,6 +104,14 @@ export default function AdminPanel() {
       >
         Upload Files
       </button>
+
+      <button
+                    onClick={saveTemplate}
+                    className="p-2 bg-purple-500 text-white rounded-lg w-full hover:bg-purple-600"
+                  >
+                    Save Template
+                  </button>
+                  
 
       {/* Upload Status */}
       {isLoading && <p className="text-blue-500">Uploading...</p>}
