@@ -270,10 +270,11 @@ const Canva = () => {
   const [selectedAnimation, setSelectedAnimation] = useState(animations[0]);
   const [textShadow, setTextShadow] = useState("none");
   const [opacity, setOpacity] = useState(1);
-  const [textStyle, setTextStyle] = useState("normal")
-  const [textBackgroundColor,setTextBackgroundColor] =  useState("#ffffff")
-  const [backgroundColor, setBackgroundColor]= useState("#ffffff")
-  const [selectedFontSize, setSelectedFontSize] = useState(0)
+  const [glowEffect, setGlowEffect] = useState(false);
+  const [textStyle, setTextStyle] = useState("normal");
+  const [textBackgroundColor, setTextBackgroundColor] = useState("#ffffff");
+  const [backgroundColor, setBackgroundColor] = useState("#ffffff");
+  const [selectedFontSize, setSelectedFontSize] = useState(0);
   const [updateTemplate, { isLoading }] = useUpdateTemplateMutation();
 
   const [textEffects, setTextEffects] = useState({
@@ -288,7 +289,6 @@ const Canva = () => {
     lineHeight: 1,
   });
 
-
   const [createTemplate] = useCreateTemplateMutation();
   const { user } = useSelector((state) => state.auth);
   const [upl] = useUplMutation();
@@ -301,19 +301,18 @@ const Canva = () => {
   const location = useLocation();
   const template = location.state?.template;
 
-
   useEffect(() => {
     const fabricCanvas = new fabric.Canvas(canvasRef.current, {
       width: 400,
       height: 600,
-      preserveObjectStacking: true,
+      backgroundColor: "#fff",
+      preserveObjectStacking: true, // Ensure stacking order is preserved even when selecting
     });
     setCanvas(fabricCanvas);
    
 
     const updateTextProperties = (activeObject) => {
       if (activeObject) {
-        console.log("Active Object:", activeObject.type, activeObject);
         setSelectedText(activeObject.type === "i-text" ? activeObject : null);
         setSelectedColor(activeObject.fill || "#000000");
         setSelectedFont(activeObject.fontFamily || "Arial");
@@ -322,57 +321,48 @@ const Canva = () => {
           `${activeObject.fontWeight === "bold" ? "Bold " : ""}${
             activeObject.fontStyle === "italic" ? "Italic " : ""
           }${activeObject.textDecoration === "underline" ? "Underline " : ""}${
-            activeObject.textDecoration === "line-through" ? "Strikethrough" : ""
+            activeObject.textDecoration === "line-through"
+              ? "Strikethrough"
+              : ""
           }`.trim()
         );
         setSelectedFontSize(activeObject.fontSize);
         setTextBackgroundColor(activeObject.textBackgroundColor);
-        setTextShadow(activeObject.shadow ? activeObject.shadow.toString() : "none");
+        setTextShadow(
+          activeObject.shadow ? activeObject.shadow.toString() : "none"
+        );
+        setGlowEffect(
+          activeObject.shadow && activeObject.shadow.includes("8px")
+        );
         setBackgroundColor(activeObject.backgroundColor);
-        setIsStyleOptionsOpen(true); // Har object ke liye khulega
+        setIsStyleOptionsOpen(activeObject.type === "i-text");
         updateCanvasOrder();
       }
     };
-  
+
     fabricCanvas.on("selection:created", (event) => {
-      console.log("Selection Created:", event.target);
       updateTextProperties(event.target);
     });
-  
+
     fabricCanvas.on("selection:updated", (event) => {
-      console.log("Selection Updated:", event.target);
       updateTextProperties(event.target);
+      console.log(event.target);
     });
-  
+
     fabricCanvas.on("object:modified", (event) => {
-      console.log("Object Modified:", event.target);
       updateTextProperties(event.target);
     });
-  
     fabricCanvas.on("selection:cleared", () => {
-      console.log("Selection Cleared");
       setSelectedText(null);
       setSelectedColor("#000000");
       setSelectedFont("Arial");
       setTextStyle("normal");
       setOpacity(1);
       setTextShadow("none");
+      setGlowEffect(false);
       setIsStyleOptionsOpen(false);
     });
-  
-    // Updated mouse:down event
-    fabricCanvas.on("mouse:down", (event) => {
-      const activeObject = fabricCanvas.getActiveObject();
-      if (activeObject) {
-        console.log("Mouse Down on Object:", activeObject.type);
-        const validTypes = ["i-text", "circle", "rect", "triangle", "polygon", "path","Heart"];
-        if (validTypes.includes(activeObject.type)) {
-          setIsStyleOptionsOpen(true);
-          updateTextProperties(activeObject);
-        }
-      }
-    });
-  
+
     const handleKeyDown = (e) => {
       if (e.key === "Delete") {
         const activeObject = fabricCanvas.getActiveObject();
@@ -383,68 +373,64 @@ const Canva = () => {
       }
     };
     window.addEventListener("keydown", handleKeyDown);
-  
+
     return () => {
       fabricCanvas.dispose();
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
-  
-//load the template on canvas
-useEffect(() => {
-  if (!canvas || !template?.jsonData) {
-    console.log("Canvas or template not ready yet:", { canvas, template });
-    return;
-  }
 
-  console.log("Loading template from Review:", template.jsonData);
-
-  canvas.clear();
-
-  // Load the JSON data onto the canvas
-  canvas.loadFromJSON(
-    template.jsonData,
-    () => {
-      console.log("Template loaded successfully");
-
-      const objects = canvas.getObjects();
-      objects.forEach((obj) => {
-        if (obj.type === "image" && obj.src) {
-          fabric.Image.fromURL(
-            obj.src,
-            (img) => {
-              img.set({
-                left: obj.left || 0,
-                top: obj.top || 0,
-                scaleX: obj.scaleX || 1,
-                scaleY: obj.scaleY || 1,
-              });
-              canvas.add(img);
-              canvas.renderAll(); 
-            },
-            { crossOrigin: "anonymous" }
-          );
-        }
-      });
-
-      
-      canvas.renderAll();
-      canvas.requestRenderAll();
-    },
-    (error) => {
-      console.error("Error loading template:", error);
+  //load the template on canvas
+  useEffect(() => {
+    if (!canvas || !template?.jsonData) {
+      console.log("Canvas or template not ready yet:", { canvas, template });
+      return;
     }
-  );
 
-  setTimeout(() => {
-    canvas.requestRenderAll();
-  }, 0); 
+    canvas.clear();
+
+    // Load the JSON data onto the canvas
+    canvas.loadFromJSON(
+      template.jsonData,
+      () => {
+        console.log("Template loaded successfully");
+
+        const objects = canvas.getObjects();
+        objects.forEach((obj) => {
+          if (obj.type === "image" && obj.src) {
+            fabric.Image.fromURL(
+              obj.src,
+              (img) => {
+                img.set({
+                  left: obj.left || 0,
+                  top: obj.top || 0,
+                  scaleX: obj.scaleX || 1,
+                  scaleY: obj.scaleY || 1,
+                });
+                canvas.add(img);
+                canvas.renderAll();
+              },
+              { crossOrigin: "anonymous" }
+            );
+          }
+        });
+
+        canvas.renderAll();
+        canvas.requestRenderAll();
+      },
+      (error) => {
+        console.error("Error loading template:", error);
+      }
+    );
+
+    setTimeout(() => {
+      canvas.requestRenderAll();
+    }, 0);
 
     //load initial template
     const json = canvas.toJSON();
     initialJsonRef.current = JSON.stringify(json);
-}, [canvas, template]);
-
+  }, [canvas, template]);
 
   // Detect refresh or close tab
   useEffect(() => {
@@ -515,21 +501,34 @@ useEffect(() => {
       return;
     }
     const objects = canvas.getObjects();
-    const lockedObjects = objects.filter(obj => obj.lockMovementX);
+    const lockedObjects = objects.filter((obj) => obj.lockMovementX);
     const index = objects.indexOf(activeObject);
-    if (index === objects.length - 1 || (lockedObjects.length > 0 && index === objects.length - lockedObjects.length - 1)) {
+    if (
+      index === objects.length - 1 ||
+      (lockedObjects.length > 0 &&
+        index === objects.length - lockedObjects.length - 1)
+    ) {
       console.log("Object is already at the front or below locked objects");
       return;
     }
     canvas.remove(activeObject);
     if (lockedObjects.length > 0) {
-      canvas._objects.splice(objects.length - lockedObjects.length, 0, activeObject);
+      canvas._objects.splice(
+        objects.length - lockedObjects.length,
+        0,
+        activeObject
+      );
     } else {
       canvas.add(activeObject);
     }
     updateCanvasOrder();
     canvas.setActiveObject(activeObject);
-    console.log("Object brought to front:", activeObject, "New order:", canvas.getObjects());
+    console.log(
+      "Object brought to front:",
+      activeObject,
+      "New order:",
+      canvas.getObjects()
+    );
   };
 
   const sendToBack = () => {
@@ -549,7 +548,12 @@ useEffect(() => {
     canvas._objects.unshift(activeObject);
     updateCanvasOrder();
     canvas.setActiveObject(activeObject);
-    console.log("Object sent to back:", activeObject, "New order:", canvas.getObjects());
+    console.log(
+      "Object sent to back:",
+      activeObject,
+      "New order:",
+      canvas.getObjects()
+    );
   };
 
   const bringForward = () => {
@@ -560,9 +564,13 @@ useEffect(() => {
       return;
     }
     const objects = canvas.getObjects();
-    const lockedObjects = objects.filter(obj => obj.lockMovementX);
+    const lockedObjects = objects.filter((obj) => obj.lockMovementX);
     const index = objects.indexOf(activeObject);
-    if (index === objects.length - 1 || (lockedObjects.length > 0 && index === objects.length - lockedObjects.length - 1)) {
+    if (
+      index === objects.length - 1 ||
+      (lockedObjects.length > 0 &&
+        index === objects.length - lockedObjects.length - 1)
+    ) {
       console.log("Object is already at the front or below locked objects");
       return;
     }
@@ -571,7 +579,12 @@ useEffect(() => {
     canvas._objects = objects;
     updateCanvasOrder();
     canvas.setActiveObject(activeObject);
-    console.log("Object brought forward:", activeObject, "New order:", canvas.getObjects());
+    console.log(
+      "Object brought forward:",
+      activeObject,
+      "New order:",
+      canvas.getObjects()
+    );
   };
 
   const sendBackward = () => {
@@ -592,7 +605,12 @@ useEffect(() => {
     canvas._objects = objects;
     updateCanvasOrder();
     canvas.setActiveObject(activeObject);
-    console.log("Object sent backward:", activeObject, "New order:", canvas.getObjects());
+    console.log(
+      "Object sent backward:",
+      activeObject,
+      "New order:",
+      canvas.getObjects()
+    );
   };
 
   const lockObject = () => {
@@ -637,10 +655,15 @@ useEffect(() => {
     console.log("Object unlocked:", activeObject);
   };
 
+  //handle to add image on canvas
+  //element adding on canvas by maintaining the cors policy
   const handleImageUpload = (imageUrl) => {
     if (!canvas) return;
+  
     const imgElement = new Image();
+    imgElement.crossOrigin = "anonymous"; // ✅ Enables CORS
     imgElement.src = imageUrl;
+  
     imgElement.onload = () => {
       const fabricImage = new fabric.Image(imgElement, {
         left: 100,
@@ -650,10 +673,16 @@ useEffect(() => {
         selectable: true,
         hasControls: true,
       });
+  
       canvas.add(fabricImage);
       canvas.renderAll();
     };
+  
+    imgElement.onerror = () => {
+      console.error("Failed to load image. Make sure the URL allows CORS.");
+    };
   };
+  
 
   //add template to the canvas
   const addTemplateToCanvas = (template) => {
@@ -669,49 +698,59 @@ useEffect(() => {
       return;
     }
   
-    console.log("Adding template from Sidebar:", jsonData);
-  
     canvas.clear();
+    console.log("🟡 Loading template...");
   
-    // Load the template
+    console.log(jsonData)
+    // Load the JSON onto canvas
     canvas.loadFromJSON(
       jsonData,
       () => {
-        console.log("Template loaded successfully");
-  
-        canvas.getObjects().forEach((obj) => {
-          if (obj.type === "image" && obj.src) {
-            fabric.Image.fromURL(
-              obj.src,
-              (img) => {
-                img.set({
-                  left: obj.left || 0,
-                  top: obj.top || 0,
-                  scaleX: obj.scaleX || 1,
-                  scaleY: obj.scaleY || 1,
-                });
-                canvas.add(img);
-                canvas.renderAll(); 
-              },
-              { crossOrigin: "anonymous" }
-            );
-          }
-        });
-  
-        canvas.renderAll();
-        canvas.requestRenderAll();
+        console.log("✅ Template JSON loaded");
+    
+        setTimeout(() => {
+          const allObjects = canvas.getObjects();
+          console.log("🔍 Objects on canvas after delay:", allObjects);
+    
+          allObjects.forEach((obj, index) => {
+            console.log(`➡️ Object ${index + 1}:`, obj);
+    
+            if (obj.type.toLowerCase() === "image") {
+              const imageUrl = obj.src || obj._originalElement?.src || obj._element?.currentSrc;
+              console.log(imageUrl);
+    
+              if (imageUrl) {
+                fabric.Image.fromURL(
+                  imageUrl,
+                  (img) => {
+                    img.set({
+                      left: obj.left || 0,
+                      top: obj.top || 0,
+                      scaleX: obj.scaleX || 1,
+                      scaleY: obj.scaleY || 1,
+                    });
+                    canvas.remove(obj); // remove placeholder image
+                    canvas.add(img); // add fresh image
+                    canvas.renderAll();
+                  },
+                  { crossOrigin: "anonymous" }
+                );
+              }
+            }
+          });
+    
+          canvas.renderAll();
+        }, 100); // Give it 100ms to complete loading
       },
       (error) => {
-        console.error("Error loading template:", error);
+        console.error("❌ Error loading template:", error);
       }
     );
-  
-    // Force immediate render
+    // Force re-render as fallback
     setTimeout(() => {
       canvas.requestRenderAll();
-    }, 0); // Ensure render happens after the current event loop
+    }, 0);
   };
-  
   
 
   const applyAnimation = (object, animation) => {
@@ -734,30 +773,41 @@ useEffect(() => {
 
       switch (name) {
         case "Bounce":
-          const bounceY = variant.y[Math.floor(progress * (variant.y.length - 1))];
+          const bounceY =
+            variant.y[Math.floor(progress * (variant.y.length - 1))];
           object.set("top", object.originalTop + bounceY);
           break;
         case "Fade In":
-          const fadeOpacity = variant.opacity[0] + (variant.opacity[1] - variant.opacity[0]) * progress;
+          const fadeOpacity =
+            variant.opacity[0] +
+            (variant.opacity[1] - variant.opacity[0]) * progress;
           object.set("opacity", fadeOpacity);
           break;
         case "Scale Pop":
-          const scaleValue = variant.scale[Math.floor(progress * (variant.scale.length - 1))];
+          const scaleValue =
+            variant.scale[Math.floor(progress * (variant.scale.length - 1))];
           object.set("scaleX", scaleValue);
           object.set("scaleY", scaleValue);
           break;
         case "Slide In":
-          const slideX = variant.x[0] + (variant.x[1] - variant.x[0]) * progress;
-          const slideOpacity = variant.opacity[0] + (variant.opacity[1] - variant.opacity[0]) * progress;
+          const slideX =
+            variant.x[0] + (variant.x[1] - variant.x[0]) * progress;
+          const slideOpacity =
+            variant.opacity[0] +
+            (variant.opacity[1] - variant.opacity[0]) * progress;
           object.set("left", object.originalLeft + slideX);
           object.set("opacity", slideOpacity);
           break;
         case "Blinking":
-          const blinkOpacity = variant.opacity[Math.floor((elapsed / duration) % variant.opacity.length)];
+          const blinkOpacity =
+            variant.opacity[
+              Math.floor((elapsed / duration) % variant.opacity.length)
+            ];
           object.set("opacity", blinkOpacity);
           break;
         case "Wave":
-          const waveY = variant.y[Math.floor((elapsed / duration) % variant.y.length)];
+          const waveY =
+            variant.y[Math.floor((elapsed / duration) % variant.y.length)];
           object.set("top", object.originalTop + waveY);
           break;
         default:
@@ -784,41 +834,46 @@ useEffect(() => {
   const updateSelectedElementStyle = (styles) => {
     if (!canvas) return;
     const activeObject = canvas.getActiveObject();
-    if (!activeObject) return;
-  
+    if (!activeObject || activeObject.type !== "i-text") return;
+
     if (styles.color) activeObject.set("fill", styles.color);
     if (styles.fontFamily) activeObject.set("fontFamily", styles.fontFamily);
     if (styles.textShadow !== undefined) {
-      activeObject.set("shadow", styles.textShadow === "none" ? null : styles.textShadow);
+      activeObject.set(
+        "shadow",
+        styles.textShadow === "none" ? null : styles.textShadow
+      );
     }
-    if (styles.opacity !== undefined) activeObject.set("opacity", styles.opacity);
+    if (styles.opacity !== undefined)
+      activeObject.set("opacity", styles.opacity);
     if (styles.animation) applyAnimation(activeObject, styles.animation);
     if (styles.glow !== undefined) {
       if (styles.glow) {
         activeObject.set("shadow", `0 0 8px ${selectedColor}`);
       } else {
-        activeObject.set("shadow", styles.textShadow === "none" ? null : styles.textShadow);
+        activeObject.set(
+          "shadow",
+          styles.textShadow === "none" ? null : styles.textShadow
+        );
       }
     }
     if (styles.fontStyle) activeObject.set("fontStyle", styles.fontStyle);
     if (styles.fontWeight) activeObject.set("fontWeight", styles.fontWeight);
-    if (styles.textDecoration) activeObject.set("textDecoration", styles.textDecoration);
-    if (styles.underline !== undefined) activeObject.set("underline", styles.underline);
-    if (styles.linethrough !== undefined) activeObject.set("linethrough", styles.linethrough);
-    if (styles.textBackgroundColor) activeObject.set("textBackgroundColor", styles.textBackgroundColor);
-    // Background Color ko fill pe map kiya shapes ke liye
-    if (styles.backgroundColor) {
-      if (activeObject.type !== "i-text") {
-        activeObject.set("fill", styles.backgroundColor);
-      } else {
-        activeObject.set("backgroundColor", styles.backgroundColor);
-      }
-    }
-    if (styles.fontSize) activeObject.set("fontSize", parseInt(styles.fontSize));
-  
+    if (styles.textDecoration)
+      activeObject.set("textDecoration", styles.textDecoration);
+    if (styles.underline !== undefined)
+      activeObject.set("underline", styles.underline);
+    if (styles.linethrough !== undefined)
+      activeObject.set("linethrough", styles.linethrough);
+    if (styles.textBackgroundColor)
+      activeObject.set("textBackgroundColor", styles.textBackgroundColor);
+    if (styles.backgroundColor)
+      activeObject.set("backgroundColor", styles.backgroundColor);
+    if (styles.fontSize)
+      activeObject.set("fontSize", parseInt(styles.fontSize));
+
     canvas.renderAll();
   };
-  
 
   const downloadImage = () => {
     if (!canvas) return;
@@ -887,203 +942,49 @@ useEffect(() => {
       setShowModal(true);
     } catch (err) {
       console.error("Error saving template:", err);
-    }
-  };
- 
- 
+    }
+  };
 
  
 
+  //element adding on canvas by maintaining the cors policy
   const addDesignElement = (design) => {
     if (!canvas) return;
-    let element;
   
-    if (design.type === "shape") {
-      switch (design.name) {
-        case "Circle":
-          element = new fabric.Circle({
-            radius: 50,
-            left: 150,
-            top: 150,
-            fill: "#000000",
-            selectable: true,
-            hasControls: true,
-          });
-          break;
-        case "Square":
-          element = new fabric.Rect({
-            width: 100,
-            height: 100,
-            left: 150,
-            top: 150,
-            fill: "#000000",
-            selectable: true,
-            hasControls: true,
-          });
-          break;
-        case "Rectangle":
-          element = new fabric.Rect({
-            width: 150,
-            height: 100,
-            left: 150,
-            top: 150,
-            fill: "#000000",
-            selectable: true,
-            hasControls: true,
-          });
-          break;
-        case "Triangle":
-          element = new fabric.Triangle({
-            width: 100,
-            height: 100,
-            left: 150,
-            top: 150,
-            fill: "#000000",
-            selectable: true,
-            hasControls: true,
-          });
-          break;
-        case "Pentagon":
-          element = new fabric.Polygon(
-            [
-              { x: 50, y: 0 },
-              { x: 100, y: 38 },
-              { x: 82, y: 100 },
-              { x: 18, y: 100 },
-              { x: 0, y: 38 },
-            ],
-            {
-              left: 150,
-              top: 150,
-              fill: "#000000",
-              selectable: true,
-              hasControls: true,
-            }
-          );
-          break;
-        case "Hexagon":
-          element = new fabric.Polygon(
-            [
-              { x: 50, y: 0 },
-              { x: 93, y: 25 },
-              { x: 93, y: 75 },
-              { x: 50, y: 100 },
-              { x: 7, y: 75 },
-              { x: 7, y: 25 },
-            ],
-            {
-              left: 150,
-              top: 150,
-              fill: "#000000",
-              selectable: true,
-              hasControls: true,
-            }
-          );
-          break;
-        case "Star":
-          element = new fabric.Polygon(
-            [
-              { x: 50, y: 0 },
-              { x: 61, y: 35 },
-              { x: 98, y: 35 },
-              { x: 68, y: 57 },
-              { x: 79, y: 91 },
-              { x: 50, y: 70 },
-              { x: 21, y: 91 },
-              { x: 32, y: 57 },
-              { x: 2, y: 35 },
-              { x: 39, y: 35 },
-            ],
-            {
-              left: 150,
-              top: 150,
-              fill: "#000000",
-              selectable: true,
-              hasControls: true,
-            }
-          );
-          break;
-        case "Location":
-          element = new fabric.Path(
-            "M 50 10 C 70 10 90 30 90 50 C 90 70 70 90 50 110 C 30 90 10 70 10 50 C 10 30 30 10 50 10 Z",
-            {
-              left: 150,
-              top: 150,
-              fill: "#000000",
-              selectable: true,
-              hasControls: true,
-              scaleX: 0.5,
-              scaleY: 0.5,
-            }
-          );
-          break;
-        case "Diamond":
-          element = new fabric.Polygon(
-            [
-              { x: 50, y: 0 },
-              { x: 100, y: 50 },
-              { x: 50, y: 100 },
-              { x: 0, y: 50 },
-            ],
-            {
-              left: 150,
-              top: 150,
-              fill: "#000000",
-              selectable: true,
-              hasControls: true,
-            }
-          );
-          break;
-        case "Octagon":
-          element = new fabric.Polygon(
-            [
-              { x: 35, y: 0 },
-              { x: 65, y: 0 },
-              { x: 100, y: 35 },
-              { x: 100, y: 65 },
-              { x: 65, y: 100 },
-              { x: 35, y: 100 },
-              { x: 0, y: 65 },
-              { x: 0, y: 35 },
-            ],
-            {
-              left: 150,
-              top: 150,
-              fill: "#000000",
-              selectable: true,
-              hasControls: true,
-            }
-          );
-          break;
-        default:
-          return;
-      }
-    } else {
-      const imgElement = new Image();
-      imgElement.src = design.src;
-      element = new fabric.Image(imgElement, {
-        left: 150,
-        top: 150,
-        scaleX: 0.3,
-        scaleY: 0.3,
+    const imgElement = new Image();
+    imgElement.crossOrigin = "anonymous"; // ✅ Enables CORS
+    imgElement.src = design?.src;
+  
+    imgElement.onload = () => {
+      const fabricImage = new fabric.Image(imgElement, {
+        left: 100,
+        top: 100,
+        scaleX: 0.06,
+        scaleY: 0.1,
         selectable: true,
         hasControls: true,
       });
-    }
   
-    canvas.add(element);
-    canvas.setActiveObject(element);
-    setIsStyleOptionsOpen(true);
-    canvas.renderAll();
+      canvas.add(fabricImage);
+      canvas.renderAll();
+    };
+  
+    imgElement.onerror = () => {
+      console.error("Failed to load image. Make sure the URL allows CORS.");
+    };
   };
 
   const onWallpaperSelect = (src) => {
     if (!canvas) return;
-    fabric.Image.fromURL(src, (img) => {
-      img.scaleToWidth(canvas.width);
-      img.scaleToHeight(canvas.height);
-      canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
-    }, { crossOrigin: "anonymous" });
+    fabric.Image.fromURL(
+      src,
+      (img) => {
+        img.scaleToWidth(canvas.width);
+        img.scaleToHeight(canvas.height);
+        canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+      },
+      { crossOrigin: "anonymous" }
+    );
   };
 
   const deleteSelectedObject = () => {
@@ -1096,10 +997,9 @@ useEffect(() => {
   };
 
   //finaly save to cloud
-  const saveTemplateToCloud = (finalTemplateData)=>{
-    console.log(finalTemplateData)
+  const saveTemplateToCloud = (finalTemplateData) => {
     try {
-        createTemplate(finalTemplateData)
+      createTemplate(finalTemplateData)
         .unwrap()
         .then(() => {
           toast.success("Template saved successfully!");
@@ -1170,7 +1070,7 @@ useEffect(() => {
 
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden">
+    <div className="flex flex-col h-screen overflow-hidden ">
       <div className="block md:hidden w-full flex-shrink-0">
         <MobileSidebar
           templates={templates}
@@ -1233,6 +1133,8 @@ useEffect(() => {
             setTextShadow={setTextShadow}
             opacity={opacity}
             setOpacity={setOpacity}
+            glowEffect={glowEffect}
+            setGlowEffect={setGlowEffect}
             fontStyles={fontStyles}
             animations={animations}
             updateSelectedElementStyle={updateSelectedElementStyle}
@@ -1252,37 +1154,11 @@ useEffect(() => {
         </button>
       </div>
       {showModal && (
-        <TemplateOtherDetails onClose={() => setShowModal(false)} onSave={saveTemplateToCloud} templateData={templateData} />
-      )}
-
-      {/* <div className="absolute right-10 lg:right-96 top-24 md:top-1">
-        <button className="bg-primary px-7 py-2 rounded-lg text-white" onClick={()=>handleOnUpdateDesign()}>
-        {isLoading ? <Loader2 className="animate-spin"/> : "Save Design"}
-        </button>
-      </div> */}
-
-      {/* Save Prompt Modal */}
-      {showSavePrompt && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-xl shadow-md text-center space-y-4">
-            <h2 className="text-xl font-semibold">Unsaved Changes</h2>
-            <p>Do you want to save your design before leaving?</p>
-            <div className="flex justify-center gap-4">
-              <button
-                onClick={handleOnUpdateDesign}
-                className="bg-green-500 text-white px-4 py-2 rounded"
-              >
-                {isLoading ? <Loader2 className="animate-spin"/> : "Save Design"}
-              </button>
-              <button
-                onClick={() => setShowSavePrompt(false)}
-                className="bg-gray-300 px-4 py-2 rounded"
-              >
-                Leave Without Saving
-              </button>
-            </div>
-          </div>
-        </div>
+        <TemplateOtherDetails
+          onClose={() => setShowModal(false)}
+          onSave={saveTemplateToCloud}
+          templateData={templateData}
+        />
       )}
 
       {/* <div className="absolute right-10 lg:right-96 top-24 md:top-1">
@@ -1319,3 +1195,10 @@ useEffect(() => {
 };
 
 export default Canva;
+
+
+
+
+
+
+
