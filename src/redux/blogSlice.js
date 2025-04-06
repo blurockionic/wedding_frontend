@@ -31,7 +31,7 @@ export const blogApiSlice = createApi({
     getAllBlogs: builder.query({
       query: () => ({
         url: `/allBlog`,
-        method: "GET",
+        method: "GET"
       }),
     }),
 
@@ -39,7 +39,7 @@ export const blogApiSlice = createApi({
     getBlogById: builder.query({
       query: (id) => ({
         url: `/allBlog/${id}`,
-        method: "GET",
+        method: "GET"
       }),
     }),
 
@@ -56,7 +56,7 @@ export const blogApiSlice = createApi({
     deleteBlog: builder.mutation({
       query: (id) => ({
         url: `/allBlog/${id}`,
-        method: "DELETE",
+        method: "DELETE"
       }),
     }),
 
@@ -64,7 +64,7 @@ export const blogApiSlice = createApi({
     toggleLikeBlog: builder.mutation({
       query: (id) => ({
         url: `/allBlog/${id}/togglelike`,
-        method: "POST",
+        method: "POST"
       }),
     }),
 
@@ -81,7 +81,7 @@ export const blogApiSlice = createApi({
     deleteComment: builder.mutation({
       query: ({ id, commentId }) => ({
         url: `/allBlog/${id}/comment/${commentId}`,
-        method: "DELETE",
+        method: "DELETE"
       }),
     }),
 
@@ -89,7 +89,7 @@ export const blogApiSlice = createApi({
     getBlogCount: builder.query({
       query: () => ({
         url: `/blog_count`,
-        method: "GET",
+        method: "GET"
       }),
     }),
 
@@ -97,7 +97,32 @@ export const blogApiSlice = createApi({
     getViewCount: builder.query({
       query: () => ({
         url: `/view_count`,
+        method: "GET"
+      }),
+    }),
+
+    // Search blogs
+    searchBlogs: builder.query({
+      query: (searchTerm) => ({
+        url: `/searchBlog`,
         method: "GET",
+        params: { q: searchTerm },
+      }),
+    }),
+
+    // Fetch blogs by tag
+    getBlogsByTag: builder.query({
+      query: (tagName) => ({
+        url: `/getBlogsByTag/${tagName}`,
+        method: "GET"
+      }),
+    }),
+
+    // Fetch published blogs
+    getPublishedBlogs: builder.query({
+      query: () => ({
+        url: `/publishedBlogs`,
+        method: "GET"
       }),
     }),
   }),
@@ -114,4 +139,7 @@ export const {
   useDeleteCommentMutation,
   useGetBlogCountQuery,
   useGetViewCountQuery,
+  useSearchBlogsQuery,
+  useGetBlogsByTagQuery,
+  useGetPublishedBlogsQuery,
 } = blogApiSlice;
