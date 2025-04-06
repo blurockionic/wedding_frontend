@@ -62,7 +62,6 @@ export const cloudinaryApi = createApi({
           if (uploadedFiles.length === 0)
             throw new Error("All uploads failed.");
 
-          // Save successfully uploaded files to DB
           const saveResponse = await fetch(
             `${import.meta.env.VITE_API_URL}/api/v1/editorAssets`,
             {
@@ -73,10 +72,9 @@ export const cloudinaryApi = createApi({
             }
           );
 
+
           if (!saveResponse.ok) throw new Error("Failed to save images to DB");
-
           const savedData = await saveResponse.json();
-
           return { data: { savedData, failedFiles } };
         } catch (error) {
           return { error: error.message };
@@ -85,7 +83,7 @@ export const cloudinaryApi = createApi({
     }),
 
     getImagesForTemplate: builder.query({
-      query: () => "/editorAssets",
+      query: (type) => `/editorAssets?asset_folder=${type}`,
     }),
   }),
 });

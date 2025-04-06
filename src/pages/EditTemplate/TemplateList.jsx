@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Payment from "../InvitationPayment/Payment";
 
-const TemplateList = ({data}) => {
-  const navigate = useNavigate()
+const TemplateList = ({ data }) => {
+  const navigate = useNavigate();
   const [filters, setFilters] = useState({
     name: "",
     minPrice: "",
@@ -20,7 +21,15 @@ const TemplateList = ({data}) => {
   // if (error) return <p>Error fetching templates</p>;
 
   const handleOnNavigate = (template) => {
-    navigate("/update_editor", { state: { template } });
+    if (template.categoryByAmount === "FREE") {
+      navigate("/update_editor", { state: { template } });
+      return;
+    }
+  
+    if (template.categoryByAmount === "PAID") {
+      navigate("/payment", { state: { amount: template.price, template } });
+      return;
+    }
   };
 
   return (
@@ -73,7 +82,11 @@ const TemplateList = ({data}) => {
       {/* Templates */}
       <div className="grid grid-cols-3 gap-4">
         {data?.data?.map((template) => (
-          <div key={template.id} className="border p-4 shadow-md" onClick={()=>handleOnNavigate(template)}>
+          <div
+            key={template.id}
+            className="border p-4 shadow-md"
+            onClick={() => handleOnNavigate(template)}
+          >
             <img
               src={template.thumbnailUrl}
               alt={template.name}

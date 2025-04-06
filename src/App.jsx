@@ -1,4 +1,4 @@
-import { Suspense, lazy, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -282,7 +282,7 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute
             component={() => wrapWithSuspense(UserDashboard)}
-            allowedRoles={["user", "admin"]}
+            allowedRoles={["user", "admin", "super_admin"]}
           />
         ),
         // Protected route
@@ -304,7 +304,7 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute
             component={() => wrapWithSuspense(VendorDashboard)}
-            allowedRoles={["vendor", "admin"]}
+            allowedRoles={["vendor", "admin", "super_admin"]}
           />
         ), // Protected route
         children: [
@@ -333,6 +333,15 @@ const router = createBrowserRouter([
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    const hasVisited = localStorage.getItem("hasVisited");
+    if (hasVisited) {
+      setShowSplash(false);
+    } else {
+      localStorage.setItem("hasVisited", "true");
+    }
+  }, []);
 
   return (
     <>

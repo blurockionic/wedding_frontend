@@ -9,6 +9,9 @@ import ElementsSection from "./ElementsSection"; // Import the new component
 import TextSection from "./TextSection";
 import UploadsSection from "./UploadsSection";
 import AdminPanel from "./AdminPanel";
+import { SiAdminer } from "react-icons/si";
+import { MdUpdate } from "react-icons/md";
+import { Loader2 } from "lucide-react";
 
 
 const Sidebar = ({
@@ -18,7 +21,6 @@ const Sidebar = ({
   addTemplateToCanvas,
   downloadImage,
   saveTemplate,
-  loadTemplate,
   addDesignElement,
   onWallpaperSelect,
   addCustomTextElement,
@@ -30,6 +32,8 @@ const Sidebar = ({
   sendBackward,
   lockObject,
   unlockObject,
+  handleOnUpdateDesign,
+  isLoading
 }) => {
   const [activeSection, setActiveSection] = useState(null);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
@@ -41,7 +45,8 @@ const Sidebar = ({
     { id: "uploads", label: "Uploads", icon: <BsCloudArrowUp className="w-6 h-6 text-rose-500" /> },
     { id: "projects", label: "Projects", icon: <BsFolder className="w-6 h-6 text-rose-500" /> },
     { id: "positions", label: "Positions", icon: <FaLayerGroup className="w-6 h-6 text-rose-500" /> },
-    { id: "admin", label: "admin", icon: <FaLayerGroup className="w-6 h-6 text-rose-500" /> },
+    { id: "admin", label: "Admin", icon: <SiAdminer className="w-6 h-6 text-rose-500" /> },
+    { id: "update", label: "Save design", icon: <MdUpdate className="w-6 h-6 text-rose-500" /> },
     
   ];
 
@@ -51,8 +56,8 @@ const Sidebar = ({
 
   const handleTemplateClick = (template) => {
     setSelectedTemplate(template);
-    addTemplateToCanvas(template.jsonData);
-    console.log(template)
+    addTemplateToCanvas(template);
+    // console.log(template)
   };
 
   const renderSectionContent = () => {
@@ -84,22 +89,19 @@ const Sidebar = ({
       case "uploads":
         return <UploadsSection onImageUpload={handleImageUpload} />;
       case "admin":
-        return <AdminPanel />;
+        return <AdminPanel saveTemplate={saveTemplate}/>;
+      case "update":
+        return (<>
+        
+        <button className="bg-primary px-7 py-2 rounded-lg text-white" onClick={handleOnUpdateDesign}>
+        {isLoading ? <Loader2 className="animate-spin"/> : "Save Design"}
+        </button>
+      
+        </>);
       case "projects":
         return (
           <div className="space-y-3 p-4">
-            <button
-              onClick={saveTemplate}
-              className="p-2 bg-purple-500 text-white rounded-lg w-full hover:bg-purple-600"
-            >
-              Save Template
-            </button>
-            <button
-              onClick={loadTemplate}
-              className="p-2 bg-orange-500 text-white rounded-lg w-full hover:bg-orange-600"
-            >
-              Load Template
-            </button>
+            
             <button
               onClick={downloadImage}
               className="p-2 bg-red-500 text-white rounded-lg flex items-center justify-center gap-2 hover:bg-red-600"
@@ -172,7 +174,7 @@ const Sidebar = ({
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen overflow-y-scroll">
       {/* Icon Sidebar */}
       <div className="p-2 flex md:flex-col flex-row items-center md:py-6 py-2 space-x-4 md:space-x-0 space-y-6 border-r border-gray-200 overflow-x-auto md:overflow-x-visible ">
         {sidebarItems.map((item) => (

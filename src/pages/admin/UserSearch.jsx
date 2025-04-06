@@ -77,12 +77,12 @@ export default function UserSearch() {
           <tbody>
             {results.map((user) => (
               <tr key={user.id}>
-                <td className="py-2 px-4 border-b">{user.user_name}</td>
-                <td className="py-2 px-4 border-b">{user.email}</td>
-                <td className="py-2 px-4 border-b">{user.phone_number}</td>
-                <td className="py-2 px-4 border-b">{user.wedding_location}</td>
-                <td className="py-2 px-4 border-b">{user.role}</td>
-                <td className="py-2 px-4 border-b">{user.created_at}</td>              
+                <td className="py-2 px-4 border-b">{user.user_name || "Not Available"}</td>
+                <td className="py-2 px-4 border-b">{user.email || "Not Available"}</td>
+                <td className="py-2 px-4 border-b">{user.phone_number || "Not Available"}</td>
+                <td className="py-2 px-4 border-b">{user.wedding_location || "Not Available"}</td>
+                <td className="py-2 px-4 border-b">{user.role || "Not Available"}</td>
+                <td className="py-2 px-4 border-b">{user.created_at.slice(0,10) || "Not Available"}</td>              
               </tr>
             ))}
           </tbody>
