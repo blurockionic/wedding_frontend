@@ -20,6 +20,7 @@ const AdminDashBoard = () => {
     { name: "User Search", path: "userSearch" },
     { name: "Bill & transactions", path: "transactions" },
     { name: "Reports", path: "" },
+    { name: "Blog", path: "../blog_dashboard" },
   ];
 
   if (userRole === "super_admin") {
