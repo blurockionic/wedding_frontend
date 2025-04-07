@@ -1,9 +1,13 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const getBaseUrl = (role) => {
-  switch (role) {
+const getBaseUrl = (user) => {
+  const userRole = user?.role?.toUpperCase();
+  console.log("User Role:", userRole);
+  switch (userRole) {
     case "ADMIN":
       return `${import.meta.env.VITE_API_URL}/api/v1/blog/admin`;
+    case "SUPER_ADMIN":
+        return `${import.meta.env.VITE_API_URL}/api/v1/blog/admin`;
     case "USER":
       return `${import.meta.env.VITE_API_URL}/api/v1/blog/user`;
     default:
@@ -13,10 +17,18 @@ const getBaseUrl = (role) => {
 
 export const blogApiSlice = createApi({
   reducerPath: "blogApiSlice",
-  baseQuery: fetchBaseQuery({
-    baseUrl: getBaseUrl(import.meta.env.VITE_USER_ROLE),
-    credentials: "include",
-  }),
+  baseQuery: async (args, api, extraOptions) => {
+    const state = api.getState();
+    const user = state.auth?.user;
+    const dynamicBaseUrl = getBaseUrl(user);
+    console.log(`Using dynamic base URL: ${dynamicBaseUrl}`);
+    const rawBaseQuery = fetchBaseQuery({
+      baseUrl: dynamicBaseUrl,
+      credentials: "include",
+    });
+    return rawBaseQuery(args, api, extraOptions);
+  },
+  
   endpoints: (builder) => ({
     // Create a new blog
     createBlog: builder.mutation({
