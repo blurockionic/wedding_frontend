@@ -842,14 +842,16 @@ const Canva = () => {
     const activeObject = canvas.getActiveObject();
     if (!activeObject) return;
   
-    const validTypes = ["i-text", "circle", "rect", "triangle", "image"];
+    // Include 'polygon' and 'path' in validTypes
+    const validTypes = ["i-text", "circle", "rect", "triangle", "image", "polygon", "path"];
     if (!validTypes.includes(activeObject.type)) return;
   
-    if (styles.color) activeObject.set("fill", styles.color); // Works for shapes and text, not images directly
+    // Apply common styles for all valid types
+    if (styles.color) activeObject.set("fill", styles.color); // Works for shapes (including polygon, path) and text
     if (styles.opacity !== undefined) activeObject.set("opacity", styles.opacity); // Works for all
   
+    // Text-specific styles
     if (activeObject.type === "i-text") {
-      // Text-specific styles
       if (styles.fontFamily) activeObject.set("fontFamily", styles.fontFamily);
       if (styles.textShadow !== undefined) {
         activeObject.set("shadow", styles.textShadow === "none" ? null : styles.textShadow);
@@ -870,7 +872,8 @@ const Canva = () => {
       if (styles.textBackgroundColor) activeObject.set("textBackgroundColor", styles.textBackgroundColor);
       if (styles.backgroundColor) activeObject.set("backgroundColor", styles.backgroundColor);
       if (styles.fontSize) activeObject.set("fontSize", parseInt(styles.fontSize));
-    } 
+    }
+  
     canvas.renderAll();
   };
 
