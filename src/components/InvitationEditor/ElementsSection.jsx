@@ -1,6 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { useGetImagesForTemplateQuery } from "../../redux/cloudinaryApiSlice";
+import { FaCircle } from "react-icons/fa";
+import { FaSquare } from "react-icons/fa";
+import { RiRectangleFill } from "react-icons/ri";
+import { BsFillTriangleFill, BsFillPentagonFill } from "react-icons/bs";
+import { MdHexagon, MdOutlineStarPurple500 } from "react-icons/md";
+import { FaLocationPin } from "react-icons/fa6";
+import { BsFillDiamondFill, BsFillOctagonFill } from "react-icons/bs";
 
 // SearchBar Component
 const SearchBar = ({ setSearchQuery }) => (
@@ -21,17 +28,22 @@ const DesignItem = ({ design, addDesignElement }) => (
     className="relative rounded-lg overflow-hidden cursor-pointer transition-transform hover:scale-[1.02] bg-white/10 p-2 flex-shrink-0"
     onClick={() => addDesignElement(design)}
   >
-    <img
-      src={design.src || design.url}
-      alt={design.name || design.public_id}
-      className="w-16 h-16 object-contain"
-    />
-    <span className="text-xs text-center block mt-1 ">
+    {typeof design.src === "string" ? (
+      <img
+        src={design.src || design.url}
+        alt={design.name || design.public_id}
+        className="w-16 h-16 object-contain"
+      />
+    ) : (
+      <div className="w-16 h-16 flex items-center justify-center">
+        {design.src}
+      </div>
+    )}
+    <span className="text-xs text-center block mt-1">
       {design.name ? design.name.slice(0, 6) : ""}
     </span>
   </div>
 );
-
 
 const DesignList = ({ name, type, designs, addDesignElement, refMap, searchQuery }) => {
   const ref = useRef(null);
@@ -77,6 +89,19 @@ const ElementsSection = ({ designs: parentDesigns, addDesignElement }) => {
   const [designs, setDesigns] = useState(parentDesigns);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const shapes = [
+    { id: 101, type: "shape", src: <FaCircle size={70} />, name: "Circle" },
+    { id: 102, type: "shape", src: <FaSquare size={60} />, name: "Square" },
+    { id: 103, type: "shape", src: <RiRectangleFill size={70} />, name: "Rectangle" },
+    { id: 104, type: "shape", src: <BsFillTriangleFill size={70} />, name: "Triangle" },
+    { id: 105, type: "shape", src: <BsFillPentagonFill size={60} />, name: "Pentagon" },
+    { id: 106, type: "shape", src: <MdHexagon size={80} />, name: "Hexagon" },
+    { id: 107, type: "shape", src: <MdOutlineStarPurple500 size={70} />, name: "Star" },
+    { id: 108, type: "shape", src: <FaLocationPin size={60} />, name: "Location" },
+    { id: 109, type: "shape", src: <BsFillDiamondFill size={70} />, name: "Diamond" },
+    { id: 110, type: "shape", src: <BsFillOctagonFill size={70} />, name: "Octagon" },
+  ];
+
   const designTypes = [
     { name: "Flowers", type: "flower" },
     { name: "Borders", type: "border" },
@@ -85,23 +110,24 @@ const ElementsSection = ({ designs: parentDesigns, addDesignElement }) => {
     { name: "Decoration", type: "decoration" },
     { name: "Background", type: "background" },
     { name: "Texture", type: "texture" },
+    { name: "Shapes", type: "shape" },
   ];
 
   useEffect(() => {
-    if (data?.images) {
-      setDesigns((prevDesigns) => {
-        const validTypes = new Set(designTypes.map(({ type }) => type));
-        const newDesigns = data.images.flatMap((image) =>
-          image.tags
-            .filter((tag) => validTypes.has(tag))
-            .map((tag) => ({ ...image, type: tag }))
-        );
-        return Array.from(
-          new Map([...prevDesigns, ...newDesigns].map((item) => [item.id, item])).values()
-        );
-      });
-    }
-  }, [data?.images]);
+    setDesigns((prevDesigns) => {
+      const validTypes = new Set(designTypes.map(({ type }) => type));
+      const newDesigns = data?.images
+        ? data.images.flatMap((image) =>
+            image.tags
+              .filter((tag) => validTypes.has(tag))
+              .map((tag) => ({ ...image, type: tag }))
+          )
+        : [];
+      return Array.from(
+        new Map([...prevDesigns, ...newDesigns, ...shapes].map((item) => [item.id, item])).values()
+      );
+    });
+  }, [data?.images, parentDesigns]);
 
   return (
     <div className="h-screen text-black overflow-y-auto bg-white w-full">

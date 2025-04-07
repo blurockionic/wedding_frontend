@@ -8,14 +8,14 @@ import { MdDelete } from "react-icons/md";
 import image_7 from "../../../public/image_7.jpg";
 import image_5 from "../../../public/image_5.jpg";
 import image_2 from "../../../public/image_2.jpg";
-import { useCreateTemplateMutation } from "../../redux/invitationTemplateForAdminSlice";
+import { useCreateTemplateMutation, useUpdateTemplateMutation } from "../../redux/invitationTemplateForAdminSlice";
 import { useSelector } from "react-redux";
 import { useUplMutation } from "../../redux/uploadSlice";
 import { toast } from "react-toastify";
 import { useLocation } from "react-router-dom";
 import html2canvas from "html2canvas";
 import TemplateOtherDetails from "./component/TemplateOtherDetails";
-import { red } from "@mui/material/colors";
+import { Loader2 } from "lucide-react";
 
 const templates = [
   {
@@ -275,6 +275,7 @@ const Canva = () => {
   const [textBackgroundColor, setTextBackgroundColor] = useState("#ffffff");
   const [backgroundColor, setBackgroundColor] = useState("#ffffff");
   const [selectedFontSize, setSelectedFontSize] = useState(0);
+  const [updateTemplate, { isLoading }] = useUpdateTemplateMutation();
 
   const [textEffects, setTextEffects] = useState({
     glow: false,
@@ -293,6 +294,9 @@ const Canva = () => {
   const [upl] = useUplMutation();
   const [showModal, setShowModal] = useState(false);
   const [templateData, setTemplateData] = useState(null);
+  const [templateId, setTemplateId] =  useState("")
+  const initialJsonRef = useRef(null);
+  const [showSavePrompt, setShowSavePrompt] = useState(false);
 
   const location = useLocation();
   const template = location.state?.template;
@@ -305,6 +309,7 @@ const Canva = () => {
       preserveObjectStacking: true, // Ensure stacking order is preserved even when selecting
     });
     setCanvas(fabricCanvas);
+   
 
     const updateTextProperties = (activeObject) => {
       if (activeObject) {
@@ -421,7 +426,30 @@ const Canva = () => {
     setTimeout(() => {
       canvas.requestRenderAll();
     }, 0);
+
+    //load initial template
+    const json = canvas.toJSON();
+    initialJsonRef.current = JSON.stringify(json);
   }, [canvas, template]);
+
+  // Detect refresh or close tab
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      const currentJson = JSON.stringify(canvas.toJSON());
+      const initialJson = initialJsonRef.current;
+
+      if (currentJson !== initialJson) {
+        setShowSavePrompt(true); // Show custom modal
+
+        // Browser fallback to show warning
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, []);
 
   const addCustomTextElement = (text, size, style) => {
     if (!canvas) return;
@@ -657,7 +685,9 @@ const Canva = () => {
   
 
   //add template to the canvas
-  const addTemplateToCanvas = (jsonData) => {
+  const addTemplateToCanvas = (template) => {
+    const jsonData = template.jsonData
+    setTemplateId(template.id)
     if (!canvas) {
       console.error("Canvas is not initialized");
       return;
@@ -915,18 +945,7 @@ const Canva = () => {
     }
   };
 
-  const loadTemplate = () => {
-    if (!canvas) return;
-    const savedJson = localStorage.getItem("savedTemplate");
-    if (savedJson) {
-      canvas.loadFromJSON(savedJson, () => {
-        canvas.renderAll();
-        alert("Template loaded successfully!");
-      });
-    } else {
-      alert("No saved template found!");
-    }
-  };
+ 
 
   //element adding on canvas by maintaining the cors policy
   const addDesignElement = (design) => {
@@ -995,6 +1014,61 @@ const Canva = () => {
     }
   };
 
+  // handle on update the latest desing 
+  const handleOnUpdateDesign = async () => {
+    try {
+      const jsonData = canvas.toJSON();
+      const id = templateId;
+
+      await new Promise((resolve) => setTimeout(resolve, 500)); // Ensure all DOM updates are complete
+
+    const targetElement = document.querySelector("canvas"); // Selects the first <canvas> element
+    if (!targetElement) return console.error("Capture area not found");
+
+
+    
+      const screenshot = await html2canvas(targetElement, {
+        allowTaint: false, // Ensures only properly loaded images are included
+        useCORS: true, // Allows fetching CORS-enabled images
+        backgroundColor: null,
+        logging: false,
+      });
+      // document.body.appendChild(screenshot);
+
+      // return;
+
+      const blob = await new Promise((resolve) =>
+        screenshot.toBlob(resolve, "image/png")
+      );
+
+      if (!blob) return console.error("Failed to create image blob");
+
+      // Upload to Cloudinary
+      const formData = new FormData();
+      formData.append("file", blob);
+      formData.append("upload_preset", "your_upload_preset"); // 🔥 Required for unsigned uploads
+
+      const cloudinaryData = await upl(formData).unwrap(); // Your RTK Query mutation
+      const url = cloudinaryData.file?.path || cloudinaryData.secure_url;
+
+
+      if (!id) {
+        console.error("User ID is missing");
+        return;
+      }
+
+      const response = await updateTemplate({ id, updatedData:{jsonData,
+        thumbnailUrl: url
+      } }).unwrap();
+      toast.success("Template updated successfully:");
+      setShowSavePrompt(false); // Close modal if open
+    } catch (error) {
+      console.error("Failed to update template:", error);
+    }
+  };
+
+
+
   return (
     <div className="flex flex-col h-screen overflow-hidden ">
       <div className="block md:hidden w-full flex-shrink-0">
@@ -1005,7 +1079,6 @@ const Canva = () => {
           addTemplateToCanvas={addTemplateToCanvas}
           downloadImage={downloadImage}
           saveTemplate={saveTemplate}
-          loadTemplate={loadTemplate}
           addDesignElement={addDesignElement}
           onWallpaperSelect={onWallpaperSelect}
           addCustomTextElement={addCustomTextElement}
@@ -1028,7 +1101,6 @@ const Canva = () => {
             addTemplateToCanvas={addTemplateToCanvas}
             downloadImage={downloadImage}
             saveTemplate={saveTemplate}
-            loadTemplate={loadTemplate}
             addDesignElement={addDesignElement}
             onWallpaperSelect={onWallpaperSelect}
             addCustomTextElement={addCustomTextElement}
@@ -1040,6 +1112,8 @@ const Canva = () => {
             sendBackward={sendBackward}
             lockObject={lockObject}
             unlockObject={unlockObject}
+            handleOnUpdateDesign={()=>handleOnUpdateDesign()}
+            isLoading={isLoading}
           />
         </div>
         <div className="flex flex-grow bg-slate-300">
@@ -1086,8 +1160,45 @@ const Canva = () => {
           templateData={templateData}
         />
       )}
+
+      {/* <div className="absolute right-10 lg:right-96 top-24 md:top-1">
+        <button className="bg-primary px-7 py-2 rounded-lg text-white" onClick={()=>handleOnUpdateDesign()}>
+        {isLoading ? <Loader2 className="animate-spin"/> : "Save Design"}
+        </button>
+      </div> */}
+
+      {/* Save Prompt Modal */}
+      {showSavePrompt && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-xl shadow-md text-center space-y-4">
+            <h2 className="text-xl font-semibold">Unsaved Changes</h2>
+            <p>Do you want to save your design before leaving?</p>
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={handleOnUpdateDesign}
+                className="bg-green-500 text-white px-4 py-2 rounded"
+              >
+                {isLoading ? <Loader2 className="animate-spin"/> : "Save Design"}
+              </button>
+              <button
+                onClick={() => setShowSavePrompt(false)}
+                className="bg-gray-300 px-4 py-2 rounded"
+              >
+                Leave Without Saving
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default Canva;
+
+
+
+
+
+
+
