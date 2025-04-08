@@ -306,13 +306,13 @@ const Canva = () => {
       width: 400,
       height: 600,
       backgroundColor: "#fff",
-      preserveObjectStacking: true, // Ensure stacking order is preserved even when selecting
+      preserveObjectStacking: true,
     });
     setCanvas(fabricCanvas);
-   
-
+  
     const updateTextProperties = (activeObject) => {
       if (activeObject) {
+        console.log("Active Object:", activeObject.type, activeObject);
         setSelectedText(activeObject.type === "i-text" ? activeObject : null);
         setSelectedColor(activeObject.fill || "#000000");
         setSelectedFont(activeObject.fontFamily || "Arial");
@@ -321,37 +321,30 @@ const Canva = () => {
           `${activeObject.fontWeight === "bold" ? "Bold " : ""}${
             activeObject.fontStyle === "italic" ? "Italic " : ""
           }${activeObject.textDecoration === "underline" ? "Underline " : ""}${
-            activeObject.textDecoration === "line-through"
-              ? "Strikethrough"
-              : ""
+            activeObject.textDecoration === "line-through" ? "Strikethrough" : ""
           }`.trim()
         );
         setSelectedFontSize(activeObject.fontSize);
         setTextBackgroundColor(activeObject.textBackgroundColor);
-        setTextShadow(
-          activeObject.shadow ? activeObject.shadow.toString() : "none"
-        );
-        setGlowEffect(
-          activeObject.shadow && activeObject.shadow.includes("8px")
-        );
+        setTextShadow(activeObject.shadow ? activeObject.shadow.toString() : "none");
         setBackgroundColor(activeObject.backgroundColor);
-        setIsStyleOptionsOpen(activeObject.type === "i-text");
+        setIsStyleOptionsOpen(true); // Har object ke liye khulega
         updateCanvasOrder();
       }
     };
-
+  
     fabricCanvas.on("selection:created", (event) => {
       updateTextProperties(event.target);
     });
-
+  
     fabricCanvas.on("selection:updated", (event) => {
       updateTextProperties(event.target);
-      console.log(event.target);
     });
-
+  
     fabricCanvas.on("object:modified", (event) => {
       updateTextProperties(event.target);
     });
+  
     fabricCanvas.on("selection:cleared", () => {
       setSelectedText(null);
       setSelectedColor("#000000");
@@ -362,7 +355,20 @@ const Canva = () => {
       setGlowEffect(false);
       setIsStyleOptionsOpen(false);
     });
-
+  
+    // Handle re-selection of any element
+    fabricCanvas.on("mouse:down", (event) => {
+      const activeObject = event.target;
+      if (activeObject) {
+        const validTypes = ["i-text", "circle", "rect", "triangle", "image"];
+        if (validTypes.includes(activeObject.type)) {
+          updateTextProperties(activeObject);
+          fabricCanvas.setActiveObject(activeObject);
+          fabricCanvas.renderAll();
+        }
+      }
+    });
+  
     const handleKeyDown = (e) => {
       if (e.key === "Delete") {
         const activeObject = fabricCanvas.getActiveObject();
@@ -373,7 +379,7 @@ const Canva = () => {
       }
     };
     window.addEventListener("keydown", handleKeyDown);
-
+  
     return () => {
       fabricCanvas.dispose();
       window.removeEventListener("keydown", handleKeyDown);
@@ -834,44 +840,40 @@ const Canva = () => {
   const updateSelectedElementStyle = (styles) => {
     if (!canvas) return;
     const activeObject = canvas.getActiveObject();
-    if (!activeObject || activeObject.type !== "i-text") return;
-
-    if (styles.color) activeObject.set("fill", styles.color);
-    if (styles.fontFamily) activeObject.set("fontFamily", styles.fontFamily);
-    if (styles.textShadow !== undefined) {
-      activeObject.set(
-        "shadow",
-        styles.textShadow === "none" ? null : styles.textShadow
-      );
-    }
-    if (styles.opacity !== undefined)
-      activeObject.set("opacity", styles.opacity);
-    if (styles.animation) applyAnimation(activeObject, styles.animation);
-    if (styles.glow !== undefined) {
-      if (styles.glow) {
-        activeObject.set("shadow", `0 0 8px ${selectedColor}`);
-      } else {
-        activeObject.set(
-          "shadow",
-          styles.textShadow === "none" ? null : styles.textShadow
-        );
+    if (!activeObject) return;
+  
+    // Include 'polygon' and 'path' in validTypes
+    const validTypes = ["i-text", "circle", "rect", "triangle", "image", "polygon", "path"];
+    if (!validTypes.includes(activeObject.type)) return;
+  
+    // Apply common styles for all valid types
+    if (styles.color) activeObject.set("fill", styles.color); // Works for shapes (including polygon, path) and text
+    if (styles.opacity !== undefined) activeObject.set("opacity", styles.opacity); // Works for all
+  
+    // Text-specific styles
+    if (activeObject.type === "i-text") {
+      if (styles.fontFamily) activeObject.set("fontFamily", styles.fontFamily);
+      if (styles.textShadow !== undefined) {
+        activeObject.set("shadow", styles.textShadow === "none" ? null : styles.textShadow);
       }
+      if (styles.animation) applyAnimation(activeObject, styles.animation);
+      if (styles.glow !== undefined) {
+        if (styles.glow) {
+          activeObject.set("shadow", `0 0 8px ${selectedColor}`);
+        } else {
+          activeObject.set("shadow", styles.textShadow === "none" ? null : styles.textShadow);
+        }
+      }
+      if (styles.fontStyle) activeObject.set("fontStyle", styles.fontStyle);
+      if (styles.fontWeight) activeObject.set("fontWeight", styles.fontWeight);
+      if (styles.textDecoration) activeObject.set("textDecoration", styles.textDecoration);
+      if (styles.underline !== undefined) activeObject.set("underline", styles.underline);
+      if (styles.linethrough !== undefined) activeObject.set("linethrough", styles.linethrough);
+      if (styles.textBackgroundColor) activeObject.set("textBackgroundColor", styles.textBackgroundColor);
+      if (styles.backgroundColor) activeObject.set("backgroundColor", styles.backgroundColor);
+      if (styles.fontSize) activeObject.set("fontSize", parseInt(styles.fontSize));
     }
-    if (styles.fontStyle) activeObject.set("fontStyle", styles.fontStyle);
-    if (styles.fontWeight) activeObject.set("fontWeight", styles.fontWeight);
-    if (styles.textDecoration)
-      activeObject.set("textDecoration", styles.textDecoration);
-    if (styles.underline !== undefined)
-      activeObject.set("underline", styles.underline);
-    if (styles.linethrough !== undefined)
-      activeObject.set("linethrough", styles.linethrough);
-    if (styles.textBackgroundColor)
-      activeObject.set("textBackgroundColor", styles.textBackgroundColor);
-    if (styles.backgroundColor)
-      activeObject.set("backgroundColor", styles.backgroundColor);
-    if (styles.fontSize)
-      activeObject.set("fontSize", parseInt(styles.fontSize));
-
+  
     canvas.renderAll();
   };
 
@@ -951,29 +953,195 @@ const Canva = () => {
   const addDesignElement = (design) => {
     if (!canvas) return;
   
-    const imgElement = new Image();
-    imgElement.crossOrigin = "anonymous"; // ✅ Enables CORS
-    imgElement.src = design?.src;
-  
-    imgElement.onload = () => {
-      const fabricImage = new fabric.Image(imgElement, {
-        left: 100,
-        top: 100,
-        scaleX: 0.06,
-        scaleY: 0.1,
-        selectable: true,
-        hasControls: true,
-      });
-  
-      canvas.add(fabricImage);
+    if (design.type === "shape") {
+      let shape;
+      switch (design.name) {
+        case "Circle":
+          shape = new fabric.Circle({
+            radius: 50,
+            left: 100,
+            top: 100,
+            fill: "#000000",
+            selectable: true,
+            hasControls: true,
+          });
+          break;
+        case "Square":
+          shape = new fabric.Rect({
+            width: 100,
+            height: 100,
+            left: 100,
+            top: 100,
+            fill: "#000000",
+            selectable: true,
+            hasControls: true,
+          });
+          break;
+        case "Rectangle":
+          shape = new fabric.Rect({
+            width: 150,
+            height: 100,
+            left: 100,
+            top: 100,
+            fill: "#000000",
+            selectable: true,
+            hasControls: true,
+          });
+          break;
+        case "Triangle":
+          shape = new fabric.Triangle({
+            width: 100,
+            height: 100,
+            left: 100,
+            top: 100,
+            fill: "#000000",
+            selectable: true,
+            hasControls: true,
+          });
+          break;
+          case "Pentagon":
+            shape = new fabric.Polygon(
+              [
+                { x: 50, y: 0 },
+                { x: 100, y: 38 },
+                { x: 82, y: 100 },
+                { x: 18, y: 100 },
+                { x: 0, y: 38 },
+              ],
+              {
+                left: 100,
+                top: 100,
+                fill: "#000000",
+                selectable: true,
+                hasControls: true,
+              }
+            );
+            break;
+          case "Hexagon":
+            shape = new fabric.Polygon(
+              [
+                { x: 50, y: 0 },
+                { x: 93, y: 25 },
+                { x: 93, y: 75 },
+                { x: 50, y: 100 },
+                { x: 7, y: 75 },
+                { x: 7, y: 25 },
+              ],
+              {
+                left: 150,
+                top: 150,
+                fill: "#000000",
+                selectable: true,
+                hasControls: true,
+              }
+            );
+            break;
+          case "Star":
+            shape = new fabric.Polygon(
+              [
+                { x: 50, y: 0 },
+                { x: 61, y: 35 },
+                { x: 98, y: 35 },
+                { x: 68, y: 57 },
+                { x: 79, y: 91 },
+                { x: 50, y: 70 },
+                { x: 21, y: 91 },
+                { x: 32, y: 57 },
+                { x: 2, y: 35 },
+                { x: 39, y: 35 },
+              ],
+              {
+                left: 150,
+                top: 150,
+                fill: "#000000",
+                selectable: true,
+                hasControls: true,
+              }
+            );
+            break;
+          case "Location":
+            shape = new fabric.Path(
+              "M 50 10 C 70 10 90 30 90 50 C 90 70 70 90 50 110 C 30 90 10 70 10 50 C 10 30 30 10 50 10 Z",
+              {
+                left: 150,
+                top: 150,
+                fill: "#000000",
+                selectable: true,
+                hasControls: true,
+                scaleX: 0.5,
+                scaleY: 0.5,
+              }
+            );
+            break;
+          case "Diamond":
+            shape = new fabric.Polygon(
+              [
+                { x: 50, y: 0 },
+                { x: 100, y: 50 },
+                { x: 50, y: 100 },
+                { x: 0, y: 50 },
+              ],
+              {
+                left: 150,
+                top: 150,
+                fill: "#000000",
+                selectable: true,
+                hasControls: true,
+              }
+            );
+            break;
+          case "Octagon":
+            shape = new fabric.Polygon(
+              [
+                { x: 35, y: 0 },
+                { x: 65, y: 0 },
+                { x: 100, y: 35 },
+                { x: 100, y: 65 },
+                { x: 65, y: 100 },
+                { x: 35, y: 100 },
+                { x: 0, y: 65 },
+                { x: 0, y: 35 },
+              ],
+              {
+                left: 150,
+                top: 150,
+                fill: "#000000",
+                selectable: true,
+                hasControls: true,
+              }
+            );
+          break;
+          default:
+          return;
+      }
+      canvas.add(shape);
+      canvas.setActiveObject(shape);
+      setIsStyleOptionsOpen(true);
       canvas.renderAll();
-    };
+    } else {
+      const imgElement = new Image();
+      imgElement.crossOrigin = "anonymous";
+      imgElement.src = design?.src;
   
-    imgElement.onerror = () => {
-      console.error("Failed to load image. Make sure the URL allows CORS.");
-    };
+      imgElement.onload = () => {
+        const fabricImage = new fabric.Image(imgElement, {
+          left: 100,
+          top: 100,
+          scaleX: 0.06,
+          scaleY: 0.1,
+          selectable: true,
+          hasControls: true,
+        });
+        canvas.add(fabricImage);
+        canvas.renderAll();
+      };
+  
+      imgElement.onerror = () => {
+        console.error("Failed to load image. Make sure the URL allows CORS.");
+      };
+    }
   };
-
+  
   const onWallpaperSelect = (src) => {
     if (!canvas) return;
     fabric.Image.fromURL(
@@ -1195,10 +1363,3 @@ const Canva = () => {
 };
 
 export default Canva;
-
-
-
-
-
-
-
