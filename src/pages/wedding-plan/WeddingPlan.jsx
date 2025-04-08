@@ -11,6 +11,7 @@ import moment from "moment";
 import { useSelector } from "react-redux";
 import CreateTaskForm from "./component/CreateTaskForm";
 import DocumentTemplate from "./component/DocumentTemplate";
+import imagebg1 from "../../../public/userprofile/imagebg1.png";
 
 const WeddingPlan = () => {
   const { user } = useSelector((state) => state.auth);
@@ -160,26 +161,36 @@ const WeddingPlan = () => {
       )}
 
       <section className="flex flex-col lg:flex-row w-full">
-        {/* Mobile sidebar toggle button */}
-        <div className="lg:hidden flex justify-between items-center p-4 bg-pink-50">
-          <h3 className="text-lg font-medium text-pink-600">Wedding Planner</h3>
-          <button 
-            onClick={toggleSidebar}
-            className="p-2 rounded-full bg-pink-100 hover:bg-pink-200 transition-colors"
-          >
-            <Menu className="text-pink-600" size={24} />
-          </button>
-        </div>
-
-        {/* Main content area */}
-        <div className="w-full p-2 sm:p-3 h-screen overflow-auto">
-          <HeadingCard user={user} />
+      <div className="w-full flex flex-col gap-6 lg:gap-10  lg:h-screen overflow-y-scroll">
+          <div className="relative font-montserrat ">
+            <div className=" inset-0 ">
+              <img
+                className="w-full h-[15vh]  md:h-[25vh] object-cover"
+                src={imagebg1}
+                alt="bg image"
+              />
+            </div>
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-white   text-center">
+              <h2 className="text-[5vw] sm:text-[3vw] md:text-[2vw] lg:text-[3vw] font-bold mb-2">
+                From Wishes to Reality!
+              </h2>
+              <h5 className="text-[2.5vw] md:text-[2vw] lg:text-[1.5vw] font-light">
+                Curate your favorites and plan with ease.
+              </h5>
+            </div>
+          </div>
+          <div className=" lg:hidden w-full lg:w-1/3">
+            <WeddingPlanSideNavber
+              handleToSelectSuggestion={handleToSelectSuggestion}
+            />
+          </div>
           <ActionHeader
-            eventSummary={data?.event_summary}
+            eventSummary={data.event_summary}
             handleOnShare={handleOnShare}
             handleOnEventActive={handleOnActive}
-            handleOnDownloadPlan={handleOnDownloadPlan}
+            handleOnDownloadPlan={() => handleOnDownloadPlan(data.events)}
           />
+
           <WeddingEventList
             events={events}
             handleOnAddSubEvent={handleOnAddSubEvent}
@@ -188,27 +199,12 @@ const WeddingPlan = () => {
             handleOnDeleteService={handleOnDeleteService}
           />
         </div>
-
-        {/* Sidebar - conditionally shown on mobile */}
-        <div className={`
-          ${showSidebar ? 'fixed inset-y-0 right-0 w-full sm:w-72 z-40 bg-white shadow-lg lg:shadow-none lg:static lg:block' : 'hidden lg:block'}
-          lg:w-72 transition-all duration-300 ease-in-out
-        `}>
-          <div className="h-full overflow-auto">
-            {/* Close button for mobile sidebar */}
-            <div className="lg:hidden flex justify-end p-4">
-              <button 
-                onClick={toggleSidebar}
-                className="text-gray-500 hover:text-red-500"
-              >
-                <X size={24} />
-              </button>
-            </div>
-            <WeddingPlanSideNavber
-              handleToSelectSuggestion={handleToSelectSuggestion}
-            />
-          </div>
+        <div className="hidden lg:block w-full lg:w-1/3">
+          <WeddingPlanSideNavber
+            handleToSelectSuggestion={handleToSelectSuggestion}
+          />
         </div>
+
       </section>
 
       {/* Backdrop for mobile sidebar */}
