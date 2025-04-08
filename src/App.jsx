@@ -11,9 +11,7 @@ const Signup = lazy(() => import("./pages/auth/Signup.jsx"));
 const Login = lazy(() => import("./pages/auth/Login.jsx"));
 const ServiceDetail = lazy(() => import("./pages/serviceDeatails.jsx"));
 
-const VendorRegistration = lazy(() =>
-  import("./pages/auth/vendor _auth/VendorSignup.jsx")
-);
+const VendorRegistration = lazy(() =>import("./pages/auth/vendor_auth/VendorSignup.jsx"));
 import VendorDashboard from "./pages/vendorDashboard/Dashboard.jsx";
 const Subscription = lazy(() => import("./pages/Subscription.jsx"));
 import { HelmetProvider } from "react-helmet-async";
@@ -51,7 +49,7 @@ const VendorServicesPage = lazy(() =>
   import("./pages/vendorDashboard/VendorServicePage.jsx")
 );
 const VendorLogin = lazy(() =>
-  import("./pages/auth/vendor _auth/VendorLogin.jsx")
+  import("./pages/auth/vendor_auth/VendorLogin.jsx")
 );
 const DashBoardDetailPage = lazy(() =>
   import("./pages/vendorDashboard/component/DashBoardDetailPage.jsx")
@@ -63,7 +61,7 @@ const UserDashboard = lazy(() =>
 );
 const Success = lazy(() => import("./pages/success/Success.jsx"));
 const VendorForgotPassword = lazy(() =>
-  import("./pages/auth/vendor _auth/VendorForgotPassword.jsx")
+  import("./pages/auth/vendor_auth/VendorForgotPassword.jsx")
 );
 const UserForgotPassword = lazy(() =>
   import("./pages/auth/UserForgotPassword.jsx")
