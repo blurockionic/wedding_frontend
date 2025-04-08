@@ -1177,15 +1177,6 @@ const Canva = () => {
     toast.success("Element deleted!");
   };
 
-  const deleteSelectedObject = () => {
-    if (!canvas) return;
-    const activeObject = canvas.getActiveObject();
-    if (activeObject) {
-      canvas.remove(activeObject);
-      canvas.renderAll();
-    }
-  };
-
   // Copy function
   const handleCopy = () => {
     if (!canvas) return;
@@ -1413,12 +1404,6 @@ const Canva = () => {
             setSelectedFontSize={setSelectedFontSize}
           />
         </div>
-        <button
-          onClick={deleteSelectedObject}
-          className="absolute top-1 right-1 bg-red-500 text-white px-2 py-2 rounded hover:bg-red-600 z-10 md:hidden block"
-        >
-          <MdDelete />
-        </button>
       </div>
       {showModal && (
         <TemplateOtherDetails
