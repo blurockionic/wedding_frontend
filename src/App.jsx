@@ -285,7 +285,6 @@ const router = createBrowserRouter([
             allowedRoles={["user", "admin", "super_admin"]}
           />
         ),
-        // Protected route
         children: [
           { path: "", index: true, element: wrapWithSuspense(UserProfile) },
           { path: "favoriteList", element: wrapWithSuspense(FavoriteListPage) },
@@ -342,6 +341,51 @@ function App() {
       localStorage.setItem("hasVisited", "true");
     }
   }, []);
+
+  
+function App() {
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    const hasVisited = localStorage.getItem("hasVisited");
+    if (hasVisited) {
+      setShowSplash(false);
+    } else {
+      localStorage.setItem("hasVisited", "true");
+    }
+  
+    const handleChunkError = (event) => {
+      window.location.reload(); 
+    };
+  
+    // Add Vite chunk error handler
+    window.addEventListener('vite:preloadError', handleChunkError);
+  
+    return () => {
+      window.removeEventListener('vite:preloadError', handleChunkError);
+    };
+  }, []);
+  
+
+  return (
+    <HelmetProvider>
+      <ErrorBoundary>
+        {showSplash ? (
+          <SplashScreen onFinish={() => setShowSplash(false)} />
+        ) : (
+          <>
+            <RouterProvider router={router} />
+            <ToastContainer />
+          </>
+        )}
+      </ErrorBoundary>
+    </HelmetProvider>
+  );
+}
+
+
+
+
 
   return (
     <>

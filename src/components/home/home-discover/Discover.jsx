@@ -38,6 +38,19 @@ const Discover = () => {
       },
     },
     {
+      key: "topPhotographers",
+      title: "Top Wedding Photographers",
+      subtitle: "Find top wedding Photographers in your city",
+      bgColor: "#D4F6FF",
+      filter: {
+        limit: 20,
+        page: 1,
+        service_type: "wedding Photographers",
+        sort_by: "rating",
+        sort_order: "desc",
+      },
+    },
+    {
       key: "topDj",
       title: "Top DJ Services",
       subtitle: "Find top DJ services in your city",

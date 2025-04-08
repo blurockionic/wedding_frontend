@@ -11,7 +11,7 @@ const ImageGallery = ({ images }) => {
           <img
             src={selectedImage}
             alt="Selected"
-            className="w-full h-full object-cover rounded-lg"
+            className="w-full h-full object-cover  rounded-lg"
           />
         ) : (
           <span className="text-gray-500">No Image Available</span>
