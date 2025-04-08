@@ -29,6 +29,7 @@ const VendorServicesPage = () => {
     page: currentPage,
     limit: pageSize,
     vendorId,
+    status: selectedFilter === "all" ? "" : selectedFilter,
   };
   const { data, isLoading, error, refetch } = useGetServicesQuery(filters);
 
