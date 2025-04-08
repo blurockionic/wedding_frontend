@@ -1,7 +1,7 @@
 import { GoEye, GoEyeClosed, GoLock } from "react-icons/go";
 import CustomText from "../text/CustomText";  // Assuming CustomText is the same as used in InputField
 
-export const PasswordField = ({ label, id, register, isShow, setIsShow, error }) => (
+export const PasswordField = ({ label, id, register, isShow, setIsShow, error,autoComplete }) => (
   
 
   <div className="my-4">
@@ -17,6 +17,7 @@ export const PasswordField = ({ label, id, register, isShow, setIsShow, error })
         id={id}
         {...register(id)}
         placeholder={label}
+        autoComplete={autoComplete}
         className="w-full px-10 py-2 border  border-border focus:ring-ring rounded"
       />
       <span

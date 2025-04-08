@@ -11,12 +11,10 @@ import { MdCurrencyRupee } from "react-icons/md";
 import { MdRoomService } from "react-icons/md";
 import { GiTwoCoins } from "react-icons/gi";
 
-const ServiceCard = React.memo(({ service, category}) => {
+const ServiceCard = React.memo(({ service, category }) => {
   const [toggleCart] = useToggleCartMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  
-
 
   const favoriteList = useSelector((state) => {
     return state.favorites.favorites || [];
@@ -34,17 +32,20 @@ const ServiceCard = React.memo(({ service, category}) => {
   };
 
   const handleFavoriteClick = async (e, id) => {
-    e.stopPropagation(); 
-  
+    e.stopPropagation();
+
     try {
       const response = await toggleCart(id).unwrap();
-  
+
       if (response.success) {
         dispatch(toggleFavorite(id));
         toast.success(response.message || "Added to favorites!");
-      } 
+      }
     } catch (error) {
-      toast.error(error?.data?.message||"Failed to update favorite status. Please try again.");
+      toast.error(
+        error?.data?.message ||
+          "Failed to update favorite status. Please try again."
+      );
     }
   };
 
@@ -56,18 +57,23 @@ const ServiceCard = React.memo(({ service, category}) => {
     ) {
       return service.media[0].image_urls[0].path;
     }
-  
-   
+
     return `https://placehold.co/300x200?text=${encodeURIComponent(
       service?.service_type || "No Image"
     )}`;
   }, [service]);
 
-
   return (
     <div
       className="group relative w-[250px] bg-white  md:w-[300px] border border-gray-400 p-3 bg-muted rounded shadow-lg overflow-hidden transform transition-all duration-300  hover:shadow-xl"
-      onClick={()=>handleCardClick(service?.service_type, service?.state, service?.city, service?.id)}
+      onClick={() =>
+        handleCardClick(
+          service?.service_type,
+          service?.state,
+          service?.city,
+          service?.id
+        )
+      }
       aria-label={`View details of ${service?.service_name}`}
     >
       {/* Image Section */}
@@ -95,30 +101,40 @@ const ServiceCard = React.memo(({ service, category}) => {
       </div>
 
       {/* Content Section */}
-      <div className="my-2">
-       <div className="flex justify-between items-center">
-       <h3
-          className="text-lg font-bold text-gray-800 truncate capitalize"
-          title={service?.service_name}
-        >
-          {service?.service_name}
-        </h3>
-        <span className="text-sm text-gray-500">⭐ {service?.rating}</span>
-       </div>
-        <div className="flex items-center justify-between text-sm text-gray-500 mt-1">
-          <span className="flex items-center gap-1">
-            <strong className="font-semibold capitalize"><span><GoLocation className="text-red-500"/></span></strong> <span className="capitalize">{service?.city}</span>
-          </span>
-          <span className="capitalize flex items-center gap-1">
-            <MdRoomService size={16}/>
-            {service?.service_type}
+      <div className="my-2  bg-white  rounded-lg">
+        <div className="flex justify-between items-center">
+          <h3
+            className="text-lg font-bold text-gray-800 truncate capitalize"
+            title={service?.service_name}
+          >
+            {service?.service_name}
+          </h3>
+          <span className="text-sm text-yellow-600 font-medium flex items-center gap-1">
+            ⭐ {service?.rating}
           </span>
         </div>
+
+        <div className="flex items-center justify-between text-sm mt-1">
+          <span className="flex items-center gap-1 text-gray-600">
+            <GoLocation className="text-red-500" />
+            <span className="capitalize">{service?.city}</span>
+          </span>
+        </div>
+
+        <p className="capitalize flex items-center gap-1 mt-1 text-gray-700">
+          <MdRoomService size={16} className="text-gray-700" />
+          {service?.service_type}
+        </p>
+
         <div className="mt-2 flex items-center justify-between">
-         
-          <span className="text-sm text-gray-700 font-semibold flex items-center gap-1 " >
-            <GiTwoCoins size={16}/>
-            From <span className="flex items-center"><MdCurrencyRupee/>{service?.min_price}</span> / {service?.service_unit}
+          <span className="text-sm text-green-700 font-semibold flex items-center gap-1">
+            <GiTwoCoins size={16} className="text-gray-700" />
+            From
+            <span className="flex items-center text-black">
+              <MdCurrencyRupee className="text-black" />
+              {service?.min_price}
+            </span>
+            / {service?.service_unit}
           </span>
         </div>
       </div>

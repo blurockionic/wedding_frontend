@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import baseQueryWithReauth from "./baseQueryWithReauth";
+import { get } from "lodash";
 
 export const userDataTemplateSlice = createApi({
   reducerPath: "templateSlice",
@@ -39,6 +40,19 @@ export const userDataTemplateSlice = createApi({
       }),
     }),
 
+    getTemplateWatchHistory: builder.query({
+      query: () => `/templateWatchHistory/`,
+    }),
+
+    addOrUpdateWatchHistory: builder.mutation({
+      query: (templateId) => ({
+        url: `/templateWatchHistory/${templateId}`,
+        method: "POST",
+      }),
+    }),
+
+
+
   }),
 });
 
@@ -48,4 +62,7 @@ export const {
   useAddTemplateMutation,
   useUpdateTemplateMutation,
   useDeleteTemplateMutation,
+  useGetTemplateWatchHistoryQuery,
+
+  useAddOrUpdateWatchHistoryMutation,
 } = userDataTemplateSlice;

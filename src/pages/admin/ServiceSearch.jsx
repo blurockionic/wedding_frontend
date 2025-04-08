@@ -4,6 +4,7 @@ import { useSearchServicesMutation } from "../../redux/adminApiSlice";
 export default function ServiceSearch() {
   const [serviceName, setName] = useState("");
   const [serviceType, setServiceType] = useState("");
+  const [vendorId, setVendorId] = useState("");
   const [location, setLocation] = useState("");
   const [sortBy, setsortBy] = useState("views");
   const [results, setResults] = useState([]);
@@ -13,7 +14,7 @@ export default function ServiceSearch() {
     e.preventDefault();
 
     try {
-      const response = await searchServices({ serviceName, serviceType, location, sortBy }).unwrap();
+      const response = await searchServices({ serviceName, serviceType, vendorId,location, sortBy }).unwrap();
       setResults(response.data);
     } catch (err) {
       console.error("Failed to fetch services:", err);
@@ -37,6 +38,13 @@ export default function ServiceSearch() {
             placeholder="Service Type"
             value={serviceType}
             onChange={(e) => setServiceType(e.target.value)}
+            className="p-2 border border-gray-300 rounded"
+          />
+          <input
+            type="text"
+            placeholder="Vendor Id"
+            value={vendorId}
+            onChange={(e) => setVendorId(e.target.value)}
             className="p-2 border border-gray-300 rounded"
           />
           <input
@@ -68,6 +76,7 @@ export default function ServiceSearch() {
             <tr>
               <th className="py-2 px-4 border-b">Name</th>
               <th className="py-2 px-4 border-b">Service Type</th>
+              <th className="py-2 px-4 border-b">Vendor Id</th>
               <th className="py-2 px-4 border-b">Location</th>
               <th className="py-2 px-4 border-b">Total Views</th>
               <th className="py-2 px-4 border-b">Average Rating</th>
@@ -76,13 +85,14 @@ export default function ServiceSearch() {
           <tbody>
             {results.map((service) => (
               <tr key={service._id.$oid}>
-                <td className="py-2 px-4 border-b">{service.service_name}</td>
-                <td className="py-2 px-4 border-b">{service.service_type}</td>
+                <td className="py-2 px-4 border-b">{service.service_name || "Not Available"}</td>
+                <td className="py-2 px-4 border-b">{service.service_type || "Not Available"}</td>
+                <td className="py-2 px-4 border-b">{service.vendorId.$oid || "Not Available"}</td>
                 <td className="py-2 px-4 border-b">
-                  {service.city + ", " + service.state + ", " + service.country}
+                  {service.city + ", " + service.state + ", " + service.country || "Not Available"}
                 </td>
-                <td className="py-2 px-4 border-b">{service.totalViews}</td>
-                <td className="py-2 px-4 border-b">{service.averageRating}</td>
+                <td className="py-2 px-4 border-b">{service.totalViews || "0"}</td>
+                <td className="py-2 px-4 border-b">{service.averageRating || "0"}</td>
               </tr>
             ))}
           </tbody>

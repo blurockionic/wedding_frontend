@@ -4,18 +4,19 @@ import Sidebar from "../../components/InvitationEditor/Sidebar";
 import CanvasArea from "../../components/InvitationEditor/CanvasArea";
 import StyleOptions from "../../components/InvitationEditor/StyleOptions";
 import MobileSidebar from "../../components/InvitationEditor/MobileSidebar";
+import { MdContentCopy, MdContentPaste } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import image_7 from "../../../public/image_7.jpg";
 import image_5 from "../../../public/image_5.jpg";
 import image_2 from "../../../public/image_2.jpg";
-import { useCreateTemplateMutation } from "../../redux/invitationTemplateForAdminSlice";
+import { useCreateTemplateMutation, useUpdateTemplateMutation } from "../../redux/invitationTemplateForAdminSlice";
 import { useSelector } from "react-redux";
 import { useUplMutation } from "../../redux/uploadSlice";
 import { toast } from "react-toastify";
 import { useLocation } from "react-router-dom";
 import html2canvas from "html2canvas";
 import TemplateOtherDetails from "./component/TemplateOtherDetails";
-import { red } from "@mui/material/colors";
+import { Loader2 } from "lucide-react";
 
 const templates = [
   {
@@ -260,6 +261,9 @@ const animations = [
   },
 ];
 
+const deleteIcon =
+  "data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg version='1.1' id='Ebene_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='595.275px' height='595.275px' viewBox='200 215 230 470' xml:space='preserve'%3E%3Ccircle style='fill:%23F44336;' cx='299.76' cy='439.067' r='218.516'/%3E%3Cg%3E%3Crect x='267.162' y='307.978' transform='matrix(0.7071 -0.7071 0.7071 0.7071 -222.6202 340.6915)' style='fill:white;' width='65.545' height='262.18'/%3E%3Crect x='266.988' y='308.153' transform='matrix(0.7071 0.7071 -0.7071 0.7071 398.3889 -83.3116)' style='fill:white;' width='65.544' height='262.179'/%3E%3C/g%3E%3C/svg%3E";
+
 const Canva = () => {
   const canvasRef = useRef(null);
   const [canvas, setCanvas] = useState(null);
@@ -275,6 +279,7 @@ const Canva = () => {
   const [textBackgroundColor, setTextBackgroundColor] = useState("#ffffff");
   const [backgroundColor, setBackgroundColor] = useState("#ffffff");
   const [selectedFontSize, setSelectedFontSize] = useState(0);
+  const [updateTemplate, { isLoading }] = useUpdateTemplateMutation();
 
   const [textEffects, setTextEffects] = useState({
     glow: false,
@@ -293,6 +298,12 @@ const Canva = () => {
   const [upl] = useUplMutation();
   const [showModal, setShowModal] = useState(false);
   const [templateData, setTemplateData] = useState(null);
+  const [templateId, setTemplateId] =  useState("")
+  const initialJsonRef = useRef(null);
+  const [showSavePrompt, setShowSavePrompt] = useState(false);
+
+  const [clipboard, setClipboard] = useState(null); // To store the copied object
+  const [showIcons, setShowIcons] = useState(false); // Toggle icon visibility
 
   const location = useLocation();
   const template = location.state?.template;
@@ -302,12 +313,13 @@ const Canva = () => {
       width: 400,
       height: 600,
       backgroundColor: "#fff",
-      preserveObjectStacking: true, // Ensure stacking order is preserved even when selecting
+      preserveObjectStacking: true,
     });
     setCanvas(fabricCanvas);
-
+  
     const updateTextProperties = (activeObject) => {
       if (activeObject) {
+        console.log("Active Object:", activeObject.type, activeObject);
         setSelectedText(activeObject.type === "i-text" ? activeObject : null);
         setSelectedColor(activeObject.fill || "#000000");
         setSelectedFont(activeObject.fontFamily || "Arial");
@@ -316,37 +328,34 @@ const Canva = () => {
           `${activeObject.fontWeight === "bold" ? "Bold " : ""}${
             activeObject.fontStyle === "italic" ? "Italic " : ""
           }${activeObject.textDecoration === "underline" ? "Underline " : ""}${
-            activeObject.textDecoration === "line-through"
-              ? "Strikethrough"
-              : ""
+            activeObject.textDecoration === "line-through" ? "Strikethrough" : ""
           }`.trim()
         );
         setSelectedFontSize(activeObject.fontSize);
         setTextBackgroundColor(activeObject.textBackgroundColor);
-        setTextShadow(
-          activeObject.shadow ? activeObject.shadow.toString() : "none"
-        );
-        setGlowEffect(
-          activeObject.shadow && activeObject.shadow.includes("8px")
-        );
+        setTextShadow(activeObject.shadow ? activeObject.shadow.toString() : "none");
         setBackgroundColor(activeObject.backgroundColor);
-        setIsStyleOptionsOpen(activeObject.type === "i-text");
+        setIsStyleOptionsOpen(true); // Har object ke liye khulega
+
+        // Simply show the icons without calculating position
+        setShowIcons(true);
+
         updateCanvasOrder();
       }
     };
-
+  
     fabricCanvas.on("selection:created", (event) => {
       updateTextProperties(event.target);
     });
-
+  
     fabricCanvas.on("selection:updated", (event) => {
       updateTextProperties(event.target);
-      console.log(event.target);
     });
-
+  
     fabricCanvas.on("object:modified", (event) => {
       updateTextProperties(event.target);
     });
+  
     fabricCanvas.on("selection:cleared", () => {
       setSelectedText(null);
       setSelectedColor("#000000");
@@ -356,8 +365,22 @@ const Canva = () => {
       setTextShadow("none");
       setGlowEffect(false);
       setIsStyleOptionsOpen(false);
+      setShowIcons(false); // Hide icons when selection is cleared
     });
-
+  
+    // Handle re-selection of any element
+    fabricCanvas.on("mouse:down", (event) => {
+      const activeObject = event.target;
+      if (activeObject) {
+        const validTypes = ["i-text", "circle", "rect", "triangle", "image"];
+        if (validTypes.includes(activeObject.type)) {
+          updateTextProperties(activeObject);
+          fabricCanvas.setActiveObject(activeObject);
+          fabricCanvas.renderAll();
+        }
+      }
+    });
+  
     const handleKeyDown = (e) => {
       if (e.key === "Delete") {
         const activeObject = fabricCanvas.getActiveObject();
@@ -368,7 +391,7 @@ const Canva = () => {
       }
     };
     window.addEventListener("keydown", handleKeyDown);
-
+  
     return () => {
       fabricCanvas.dispose();
       window.removeEventListener("keydown", handleKeyDown);
@@ -421,7 +444,30 @@ const Canva = () => {
     setTimeout(() => {
       canvas.requestRenderAll();
     }, 0);
+
+    //load initial template
+    const json = canvas.toJSON();
+    initialJsonRef.current = JSON.stringify(json);
   }, [canvas, template]);
+
+  // Detect refresh or close tab
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      const currentJson = JSON.stringify(canvas.toJSON());
+      const initialJson = initialJsonRef.current;
+
+      if (currentJson !== initialJson) {
+        setShowSavePrompt(true); // Show custom modal
+
+        // Browser fallback to show warning
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, []);
 
   const addCustomTextElement = (text, size, style) => {
     if (!canvas) return;
@@ -657,7 +703,9 @@ const Canva = () => {
   
 
   //add template to the canvas
-  const addTemplateToCanvas = (jsonData) => {
+  const addTemplateToCanvas = (template) => {
+    const jsonData = template.jsonData
+    setTemplateId(template.id)
     if (!canvas) {
       console.error("Canvas is not initialized");
       return;
@@ -804,44 +852,40 @@ const Canva = () => {
   const updateSelectedElementStyle = (styles) => {
     if (!canvas) return;
     const activeObject = canvas.getActiveObject();
-    if (!activeObject || activeObject.type !== "i-text") return;
-
-    if (styles.color) activeObject.set("fill", styles.color);
-    if (styles.fontFamily) activeObject.set("fontFamily", styles.fontFamily);
-    if (styles.textShadow !== undefined) {
-      activeObject.set(
-        "shadow",
-        styles.textShadow === "none" ? null : styles.textShadow
-      );
-    }
-    if (styles.opacity !== undefined)
-      activeObject.set("opacity", styles.opacity);
-    if (styles.animation) applyAnimation(activeObject, styles.animation);
-    if (styles.glow !== undefined) {
-      if (styles.glow) {
-        activeObject.set("shadow", `0 0 8px ${selectedColor}`);
-      } else {
-        activeObject.set(
-          "shadow",
-          styles.textShadow === "none" ? null : styles.textShadow
-        );
+    if (!activeObject) return;
+  
+    // Include 'polygon' and 'path' in validTypes
+    const validTypes = ["i-text", "circle", "rect", "triangle", "image", "polygon", "path"];
+    if (!validTypes.includes(activeObject.type)) return;
+  
+    // Apply common styles for all valid types
+    if (styles.color) activeObject.set("fill", styles.color); // Works for shapes (including polygon, path) and text
+    if (styles.opacity !== undefined) activeObject.set("opacity", styles.opacity); // Works for all
+  
+    // Text-specific styles
+    if (activeObject.type === "i-text") {
+      if (styles.fontFamily) activeObject.set("fontFamily", styles.fontFamily);
+      if (styles.textShadow !== undefined) {
+        activeObject.set("shadow", styles.textShadow === "none" ? null : styles.textShadow);
       }
+      if (styles.animation) applyAnimation(activeObject, styles.animation);
+      if (styles.glow !== undefined) {
+        if (styles.glow) {
+          activeObject.set("shadow", `0 0 8px ${selectedColor}`);
+        } else {
+          activeObject.set("shadow", styles.textShadow === "none" ? null : styles.textShadow);
+        }
+      }
+      if (styles.fontStyle) activeObject.set("fontStyle", styles.fontStyle);
+      if (styles.fontWeight) activeObject.set("fontWeight", styles.fontWeight);
+      if (styles.textDecoration) activeObject.set("textDecoration", styles.textDecoration);
+      if (styles.underline !== undefined) activeObject.set("underline", styles.underline);
+      if (styles.linethrough !== undefined) activeObject.set("linethrough", styles.linethrough);
+      if (styles.textBackgroundColor) activeObject.set("textBackgroundColor", styles.textBackgroundColor);
+      if (styles.backgroundColor) activeObject.set("backgroundColor", styles.backgroundColor);
+      if (styles.fontSize) activeObject.set("fontSize", parseInt(styles.fontSize));
     }
-    if (styles.fontStyle) activeObject.set("fontStyle", styles.fontStyle);
-    if (styles.fontWeight) activeObject.set("fontWeight", styles.fontWeight);
-    if (styles.textDecoration)
-      activeObject.set("textDecoration", styles.textDecoration);
-    if (styles.underline !== undefined)
-      activeObject.set("underline", styles.underline);
-    if (styles.linethrough !== undefined)
-      activeObject.set("linethrough", styles.linethrough);
-    if (styles.textBackgroundColor)
-      activeObject.set("textBackgroundColor", styles.textBackgroundColor);
-    if (styles.backgroundColor)
-      activeObject.set("backgroundColor", styles.backgroundColor);
-    if (styles.fontSize)
-      activeObject.set("fontSize", parseInt(styles.fontSize));
-
+  
     canvas.renderAll();
   };
 
@@ -915,46 +959,201 @@ const Canva = () => {
     }
   };
 
-  const loadTemplate = () => {
-    if (!canvas) return;
-    const savedJson = localStorage.getItem("savedTemplate");
-    if (savedJson) {
-      canvas.loadFromJSON(savedJson, () => {
-        canvas.renderAll();
-        alert("Template loaded successfully!");
-      });
-    } else {
-      alert("No saved template found!");
-    }
-  };
+ 
 
   //element adding on canvas by maintaining the cors policy
   const addDesignElement = (design) => {
     if (!canvas) return;
   
-    const imgElement = new Image();
-    imgElement.crossOrigin = "anonymous"; // ✅ Enables CORS
-    imgElement.src = design?.src;
-  
-    imgElement.onload = () => {
-      const fabricImage = new fabric.Image(imgElement, {
-        left: 100,
-        top: 100,
-        scaleX: 0.06,
-        scaleY: 0.1,
-        selectable: true,
-        hasControls: true,
-      });
-  
-      canvas.add(fabricImage);
+    if (design.type === "shape") {
+      let shape;
+      switch (design.name) {
+        case "Circle":
+          shape = new fabric.Circle({
+            radius: 50,
+            left: 100,
+            top: 100,
+            fill: "#000000",
+            selectable: true,
+            hasControls: true,
+          });
+          break;
+        case "Square":
+          shape = new fabric.Rect({
+            width: 100,
+            height: 100,
+            left: 100,
+            top: 100,
+            fill: "#000000",
+            selectable: true,
+            hasControls: true,
+          });
+          break;
+        case "Rectangle":
+          shape = new fabric.Rect({
+            width: 150,
+            height: 100,
+            left: 100,
+            top: 100,
+            fill: "#000000",
+            selectable: true,
+            hasControls: true,
+          });
+          break;
+        case "Triangle":
+          shape = new fabric.Triangle({
+            width: 100,
+            height: 100,
+            left: 100,
+            top: 100,
+            fill: "#000000",
+            selectable: true,
+            hasControls: true,
+          });
+          break;
+          case "Pentagon":
+            shape = new fabric.Polygon(
+              [
+                { x: 50, y: 0 },
+                { x: 100, y: 38 },
+                { x: 82, y: 100 },
+                { x: 18, y: 100 },
+                { x: 0, y: 38 },
+              ],
+              {
+                left: 100,
+                top: 100,
+                fill: "#000000",
+                selectable: true,
+                hasControls: true,
+              }
+            );
+            break;
+          case "Hexagon":
+            shape = new fabric.Polygon(
+              [
+                { x: 50, y: 0 },
+                { x: 93, y: 25 },
+                { x: 93, y: 75 },
+                { x: 50, y: 100 },
+                { x: 7, y: 75 },
+                { x: 7, y: 25 },
+              ],
+              {
+                left: 150,
+                top: 150,
+                fill: "#000000",
+                selectable: true,
+                hasControls: true,
+              }
+            );
+            break;
+          case "Star":
+            shape = new fabric.Polygon(
+              [
+                { x: 50, y: 0 },
+                { x: 61, y: 35 },
+                { x: 98, y: 35 },
+                { x: 68, y: 57 },
+                { x: 79, y: 91 },
+                { x: 50, y: 70 },
+                { x: 21, y: 91 },
+                { x: 32, y: 57 },
+                { x: 2, y: 35 },
+                { x: 39, y: 35 },
+              ],
+              {
+                left: 150,
+                top: 150,
+                fill: "#000000",
+                selectable: true,
+                hasControls: true,
+              }
+            );
+            break;
+          case "Location":
+            shape = new fabric.Path(
+              "M 50 10 C 70 10 90 30 90 50 C 90 70 70 90 50 110 C 30 90 10 70 10 50 C 10 30 30 10 50 10 Z",
+              {
+                left: 150,
+                top: 150,
+                fill: "#000000",
+                selectable: true,
+                hasControls: true,
+                scaleX: 0.5,
+                scaleY: 0.5,
+              }
+            );
+            break;
+          case "Diamond":
+            shape = new fabric.Polygon(
+              [
+                { x: 50, y: 0 },
+                { x: 100, y: 50 },
+                { x: 50, y: 100 },
+                { x: 0, y: 50 },
+              ],
+              {
+                left: 150,
+                top: 150,
+                fill: "#000000",
+                selectable: true,
+                hasControls: true,
+              }
+            );
+            break;
+          case "Octagon":
+            shape = new fabric.Polygon(
+              [
+                { x: 35, y: 0 },
+                { x: 65, y: 0 },
+                { x: 100, y: 35 },
+                { x: 100, y: 65 },
+                { x: 65, y: 100 },
+                { x: 35, y: 100 },
+                { x: 0, y: 65 },
+                { x: 0, y: 35 },
+              ],
+              {
+                left: 150,
+                top: 150,
+                fill: "#000000",
+                selectable: true,
+                hasControls: true,
+              }
+            );
+          break;
+          default:
+          return;
+      }
+      canvas.add(shape);
+      canvas.setActiveObject(shape);
+      setIsStyleOptionsOpen(true);
       canvas.renderAll();
-    };
+    } else {
+      const imgElement = new Image();
+      imgElement.crossOrigin = "anonymous";
+      imgElement.src = design?.src;
   
-    imgElement.onerror = () => {
-      console.error("Failed to load image. Make sure the URL allows CORS.");
-    };
+      imgElement.onload = () => {
+        const fabricImage = new fabric.Image(imgElement, {
+          left: 100,
+          top: 100,
+          scaleX: 0.2,
+          scaleY: 0.2,
+          selectable: true,
+          hasControls: true,
+        });
+        canvas.add(fabricImage);
+        canvas.renderAll();
+      };
+  
+      imgElement.onerror = () => {
+        console.error("Failed to load image. Make sure the URL allows CORS.");
+      };
+    }
   };
-
+  
   const onWallpaperSelect = (src) => {
     if (!canvas) return;
     fabric.Image.fromURL(
@@ -968,14 +1167,57 @@ const Canva = () => {
     );
   };
 
-  const deleteSelectedObject = () => {
+  const handleDelete = () => {
     if (!canvas) return;
     const activeObject = canvas.getActiveObject();
-    if (activeObject) {
-      canvas.remove(activeObject);
-      canvas.renderAll();
-    }
+    if (!activeObject) return;
+  
+    canvas.remove(activeObject);
+    canvas.renderAll();
+    toast.success("Element deleted!");
   };
+
+  // Copy function
+  const handleCopy = () => {
+    if (!canvas) return;
+    const activeObject = canvas.getActiveObject();
+    if (!activeObject) return;
+
+    activeObject.clone().then((cloned) => {
+      setClipboard(cloned);
+      toast.success("Element copied!");
+    });
+  };
+
+  // Paste function
+  const handlePaste = async () => {
+    if (!canvas || !clipboard) return;
+
+    const clonedObj = await clipboard.clone();
+    canvas.discardActiveObject();
+    clonedObj.set({
+      left: clonedObj.left + 10, // Offset by 10px
+      top: clonedObj.top + 10,
+      evented: true,
+    });
+
+    if (clonedObj instanceof fabric.ActiveSelection) {
+      clonedObj.canvas = canvas;
+      clonedObj.forEachObject((obj) => {
+        canvas.add(obj);
+      });
+      clonedObj.setCoords();
+    } else {
+      canvas.add(clonedObj);
+    }
+
+    clipboard.top += 10;
+    clipboard.left += 10;
+    canvas.setActiveObject(clonedObj);
+    canvas.renderAll();
+    toast.success("Element pasted!");
+  };
+  
 
   //finaly save to cloud
   const saveTemplateToCloud = (finalTemplateData) => {
@@ -995,6 +1237,61 @@ const Canva = () => {
     }
   };
 
+  // handle on update the latest desing 
+  const handleOnUpdateDesign = async () => {
+    try {
+      const jsonData = canvas.toJSON();
+      const id = templateId;
+
+      await new Promise((resolve) => setTimeout(resolve, 500)); // Ensure all DOM updates are complete
+
+    const targetElement = document.querySelector("canvas"); // Selects the first <canvas> element
+    if (!targetElement) return console.error("Capture area not found");
+
+
+    
+      const screenshot = await html2canvas(targetElement, {
+        allowTaint: false, // Ensures only properly loaded images are included
+        useCORS: true, // Allows fetching CORS-enabled images
+        backgroundColor: null,
+        logging: false,
+      });
+      // document.body.appendChild(screenshot);
+
+      // return;
+
+      const blob = await new Promise((resolve) =>
+        screenshot.toBlob(resolve, "image/png")
+      );
+
+      if (!blob) return console.error("Failed to create image blob");
+
+      // Upload to Cloudinary
+      const formData = new FormData();
+      formData.append("file", blob);
+      formData.append("upload_preset", "your_upload_preset"); // 🔥 Required for unsigned uploads
+
+      const cloudinaryData = await upl(formData).unwrap(); // Your RTK Query mutation
+      const url = cloudinaryData.file?.path || cloudinaryData.secure_url;
+
+
+      if (!id) {
+        console.error("User ID is missing");
+        return;
+      }
+
+      const response = await updateTemplate({ id, updatedData:{jsonData,
+        thumbnailUrl: url
+      } }).unwrap();
+      toast.success("Template updated successfully:");
+      setShowSavePrompt(false); // Close modal if open
+    } catch (error) {
+      console.error("Failed to update template:", error);
+    }
+  };
+
+
+
   return (
     <div className="flex flex-col h-screen overflow-hidden ">
       <div className="block md:hidden w-full flex-shrink-0">
@@ -1005,7 +1302,6 @@ const Canva = () => {
           addTemplateToCanvas={addTemplateToCanvas}
           downloadImage={downloadImage}
           saveTemplate={saveTemplate}
-          loadTemplate={loadTemplate}
           addDesignElement={addDesignElement}
           onWallpaperSelect={onWallpaperSelect}
           addCustomTextElement={addCustomTextElement}
@@ -1028,7 +1324,6 @@ const Canva = () => {
             addTemplateToCanvas={addTemplateToCanvas}
             downloadImage={downloadImage}
             saveTemplate={saveTemplate}
-            loadTemplate={loadTemplate}
             addDesignElement={addDesignElement}
             onWallpaperSelect={onWallpaperSelect}
             addCustomTextElement={addCustomTextElement}
@@ -1040,10 +1335,47 @@ const Canva = () => {
             sendBackward={sendBackward}
             lockObject={lockObject}
             unlockObject={unlockObject}
+            handleOnUpdateDesign={()=>handleOnUpdateDesign()}
+            isLoading={isLoading}
           />
         </div>
         <div className="flex flex-grow bg-slate-300">
           <CanvasArea canvasRef={canvasRef} />
+
+          {showIcons && (
+            <div
+              className="absolute flex space-x-2"
+              style={{
+                top: "10px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                zIndex: 1000,
+              }}
+            >
+              <button
+                onClick={handleCopy}
+                className="bg-blue-500 text-white p-1 rounded hover:bg-blue-600"
+                title="Copy"
+              >
+                <MdContentCopy size={20} />
+              </button>
+              <button
+                onClick={handlePaste}
+                className="bg-green-500 text-white p-1 rounded hover:bg-green-600"
+                title="Paste"
+              >
+                <MdContentPaste size={20} />
+              </button>
+              <button
+                onClick={handleDelete}
+                className="bg-red-500 text-white p-1 rounded hover:bg-red-600"
+                title="Delete"
+              >
+                <img src={deleteIcon} alt="Delete" className="w-5 h-5" />
+              </button>
+            </div>
+          )}
+
         </div>
         <div className="flex flex-col md:flex-row overflow-hidden bg-black">
           <StyleOptions
@@ -1072,12 +1404,6 @@ const Canva = () => {
             setSelectedFontSize={setSelectedFontSize}
           />
         </div>
-        <button
-          onClick={deleteSelectedObject}
-          className="absolute top-1 right-1 bg-red-500 text-white px-2 py-2 rounded hover:bg-red-600 z-10 md:hidden block"
-        >
-          <MdDelete />
-        </button>
       </div>
       {showModal && (
         <TemplateOtherDetails
@@ -1085,6 +1411,36 @@ const Canva = () => {
           onSave={saveTemplateToCloud}
           templateData={templateData}
         />
+      )}
+
+      {/* <div className="absolute right-10 lg:right-96 top-24 md:top-1">
+        <button className="bg-primary px-7 py-2 rounded-lg text-white" onClick={()=>handleOnUpdateDesign()}>
+        {isLoading ? <Loader2 className="animate-spin"/> : "Save Design"}
+        </button>
+      </div> */}
+
+      {/* Save Prompt Modal */}
+      {showSavePrompt && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-xl shadow-md text-center space-y-4">
+            <h2 className="text-xl font-semibold">Unsaved Changes</h2>
+            <p>Do you want to save your design before leaving?</p>
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={handleOnUpdateDesign}
+                className="bg-green-500 text-white px-4 py-2 rounded"
+              >
+                {isLoading ? <Loader2 className="animate-spin"/> : "Save Design"}
+              </button>
+              <button
+                onClick={() => setShowSavePrompt(false)}
+                className="bg-gray-300 px-4 py-2 rounded"
+              >
+                Leave Without Saving
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
