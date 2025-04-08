@@ -4,6 +4,7 @@ import Sidebar from "../../components/InvitationEditor/Sidebar";
 import CanvasArea from "../../components/InvitationEditor/CanvasArea";
 import StyleOptions from "../../components/InvitationEditor/StyleOptions";
 import MobileSidebar from "../../components/InvitationEditor/MobileSidebar";
+import { MdContentCopy, MdContentPaste } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import image_7 from "../../../public/image_7.jpg";
 import image_5 from "../../../public/image_5.jpg";
@@ -260,6 +261,9 @@ const animations = [
   },
 ];
 
+const deleteIcon =
+  "data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg version='1.1' id='Ebene_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='595.275px' height='595.275px' viewBox='200 215 230 470' xml:space='preserve'%3E%3Ccircle style='fill:%23F44336;' cx='299.76' cy='439.067' r='218.516'/%3E%3Cg%3E%3Crect x='267.162' y='307.978' transform='matrix(0.7071 -0.7071 0.7071 0.7071 -222.6202 340.6915)' style='fill:white;' width='65.545' height='262.18'/%3E%3Crect x='266.988' y='308.153' transform='matrix(0.7071 0.7071 -0.7071 0.7071 398.3889 -83.3116)' style='fill:white;' width='65.544' height='262.179'/%3E%3C/g%3E%3C/svg%3E";
+
 const Canva = () => {
   const canvasRef = useRef(null);
   const [canvas, setCanvas] = useState(null);
@@ -298,6 +302,9 @@ const Canva = () => {
   const initialJsonRef = useRef(null);
   const [showSavePrompt, setShowSavePrompt] = useState(false);
 
+  const [clipboard, setClipboard] = useState(null); // To store the copied object
+  const [showIcons, setShowIcons] = useState(false); // Toggle icon visibility
+
   const location = useLocation();
   const template = location.state?.template;
 
@@ -329,6 +336,10 @@ const Canva = () => {
         setTextShadow(activeObject.shadow ? activeObject.shadow.toString() : "none");
         setBackgroundColor(activeObject.backgroundColor);
         setIsStyleOptionsOpen(true); // Har object ke liye khulega
+
+        // Simply show the icons without calculating position
+        setShowIcons(true);
+
         updateCanvasOrder();
       }
     };
@@ -354,6 +365,7 @@ const Canva = () => {
       setTextShadow("none");
       setGlowEffect(false);
       setIsStyleOptionsOpen(false);
+      setShowIcons(false); // Hide icons when selection is cleared
     });
   
     // Handle re-selection of any element
@@ -1127,8 +1139,8 @@ const Canva = () => {
         const fabricImage = new fabric.Image(imgElement, {
           left: 100,
           top: 100,
-          scaleX: 0.06,
-          scaleY: 0.1,
+          scaleX: 0.2,
+          scaleY: 0.2,
           selectable: true,
           hasControls: true,
         });
@@ -1155,6 +1167,16 @@ const Canva = () => {
     );
   };
 
+  const handleDelete = () => {
+    if (!canvas) return;
+    const activeObject = canvas.getActiveObject();
+    if (!activeObject) return;
+  
+    canvas.remove(activeObject);
+    canvas.renderAll();
+    toast.success("Element deleted!");
+  };
+
   const deleteSelectedObject = () => {
     if (!canvas) return;
     const activeObject = canvas.getActiveObject();
@@ -1163,6 +1185,48 @@ const Canva = () => {
       canvas.renderAll();
     }
   };
+
+  // Copy function
+  const handleCopy = () => {
+    if (!canvas) return;
+    const activeObject = canvas.getActiveObject();
+    if (!activeObject) return;
+
+    activeObject.clone().then((cloned) => {
+      setClipboard(cloned);
+      toast.success("Element copied!");
+    });
+  };
+
+  // Paste function
+  const handlePaste = async () => {
+    if (!canvas || !clipboard) return;
+
+    const clonedObj = await clipboard.clone();
+    canvas.discardActiveObject();
+    clonedObj.set({
+      left: clonedObj.left + 10, // Offset by 10px
+      top: clonedObj.top + 10,
+      evented: true,
+    });
+
+    if (clonedObj instanceof fabric.ActiveSelection) {
+      clonedObj.canvas = canvas;
+      clonedObj.forEachObject((obj) => {
+        canvas.add(obj);
+      });
+      clonedObj.setCoords();
+    } else {
+      canvas.add(clonedObj);
+    }
+
+    clipboard.top += 10;
+    clipboard.left += 10;
+    canvas.setActiveObject(clonedObj);
+    canvas.renderAll();
+    toast.success("Element pasted!");
+  };
+  
 
   //finaly save to cloud
   const saveTemplateToCloud = (finalTemplateData) => {
@@ -1286,6 +1350,41 @@ const Canva = () => {
         </div>
         <div className="flex flex-grow bg-slate-300">
           <CanvasArea canvasRef={canvasRef} />
+
+          {showIcons && (
+            <div
+              className="absolute flex space-x-2"
+              style={{
+                top: "10px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                zIndex: 1000,
+              }}
+            >
+              <button
+                onClick={handleCopy}
+                className="bg-blue-500 text-white p-1 rounded hover:bg-blue-600"
+                title="Copy"
+              >
+                <MdContentCopy size={20} />
+              </button>
+              <button
+                onClick={handlePaste}
+                className="bg-green-500 text-white p-1 rounded hover:bg-green-600"
+                title="Paste"
+              >
+                <MdContentPaste size={20} />
+              </button>
+              <button
+                onClick={handleDelete}
+                className="bg-red-500 text-white p-1 rounded hover:bg-red-600"
+                title="Delete"
+              >
+                <img src={deleteIcon} alt="Delete" className="w-5 h-5" />
+              </button>
+            </div>
+          )}
+
         </div>
         <div className="flex flex-col md:flex-row overflow-hidden bg-black">
           <StyleOptions
