@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import VendorServiceList from "./component/VendorServiceList";
 import ServiceModel from "./component/ServiceModel";
 import { useGetServicesQuery } from "../../redux/serviceSlice";
 import { PiPlus } from "react-icons/pi";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { userlogout } from "../../redux/authSlice";
 
 const filters2 = [
   { key: "all", label: "All " },
@@ -18,48 +17,44 @@ const VendorServicesPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedFilter, setSelectedFilter] = useState("all");
-  const [filteredServices, setFilteredServices] = useState([]);
 
   const pageSize = 10;
   const vendorId = useSelector((state) => state?.auth?.user?.id);
-  const navigate = useNavigate();
 
-  const filters = {
-    search: searchTerm,
-    page: currentPage,
-    limit: pageSize,
-    vendorId,
-    status: selectedFilter === "all" ? "" : selectedFilter,
-  };
-  const { data, isLoading, error, refetch } = useGetServicesQuery(filters);
+  // Memoize the filters object
+  const filters = useMemo(
+    () => ({
+      search: searchTerm,
+      page: currentPage,
+      limit: pageSize,
+      vendorId,
+      status: selectedFilter === "all" ? "" : selectedFilter,
+    }),
+    [searchTerm, currentPage, pageSize, vendorId, selectedFilter]
+  );
 
-  useEffect(() => {
-    refetch();
-  }, [selectedFilter, refetch]);
+  const { data, isLoading, error } = useGetServicesQuery(filters);
 
-  useEffect(() => {
-    if (data?.ServiceResult) {
-      let filteredData = data.ServiceResult;
-      if (selectedFilter === "active") {
-        filteredData = data.ServiceResult.filter(
-          (service) => service.status === "active"
-        );
-      } else if (selectedFilter === "archived") {
-        filteredData = data.ServiceResult.filter(
-          (service) => service.status === "archived"
-        );
-      }
-      setFilteredServices(filteredData);
+  // Memoize filteredServices
+  const filteredServices = useMemo(() => {
+    if (!data?.ServiceResult) return [];
+    if (selectedFilter === "active") {
+      return data.ServiceResult.filter(
+        (service) => service?.status === "active"
+      );
+    } else if (selectedFilter === "archived") {
+      return data.ServiceResult.filter(
+        (service) => service?.status === "archived"
+      );
     }
+    return data.ServiceResult;
   }, [data, selectedFilter]);
 
   const handlePageChange = (page) => setCurrentPage(page);
-  const handleFilterChange = (filter) => setSelectedFilter(filter);
-
-  if (error && typeof error === "string" && error.includes("expire")) {
-    userlogout();
-    navigate("/vendorLogin");
-  }
+  const handleFilterChange = (filter) => {
+    setSelectedFilter(filter);
+    setCurrentPage(1); // Reset to first page on filter change
+  };
 
   return (
     <div className="max-w-7xl mx-auto min-h-screen flex flex-col">
@@ -95,6 +90,8 @@ const VendorServicesPage = () => {
               </button>
             </div>
           </div>
+
+          {/* Filter Buttons for Mobile */}
           <div className="flex md:hidden my-5 justify-between gap-5 sm:justify-start">
             {filters2.map(({ key, label }) => (
               <button
@@ -110,11 +107,16 @@ const VendorServicesPage = () => {
               </button>
             ))}
           </div>
-          <div className="flex-grow overflow-y-auto">
+
+          {/* Services List */}
+          <div className=" flex-grow overflow-y-auto">
             {isLoading ? (
               <div>Loading...</div>
             ) : error ? (
-              <div>No service created</div>
+              <div className=" capitalize mt-20 flex text-3xl font-semibold justify-center text-center px-2  md:px-5 items-center h-full">
+                {" "}
+                {error?.data?.message || "Something went wrong"}
+              </div>
             ) : (
               <VendorServiceList services={filteredServices} />
             )}
@@ -123,8 +125,10 @@ const VendorServicesPage = () => {
       ) : (
         <ServiceModel onClose={() => setShowFormPage(false)} />
       )}
+
       <Outlet />
 
+      {/* Pagination */}
       {!showFormPage && (
         <div className="sticky bottom-0 left-0 right-0 flex justify-end py-4">
           <button
