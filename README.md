@@ -1,10 +1,10 @@
 ## 🚀 Latest Update
 
-✅ Last Commit: 4362c2f - 🤖 Auto-update README (Midnight)
+✅ Last Commit: d5b9464 - updated ui and download feature
 
 🌟 Current Version: v1.0.0
 
-📅 Updated on: Thu Mar 27 00:56:12 UTC 2025
+📅 Updated on: Wed Apr  9 00:57:02 UTC 2025
 
 💻 Build Status: ![CI/CD Status](https://github.com/SaiAryan1784/wedding_frontend/actions/workflows/update-readme.yml/badge.svg)
 
