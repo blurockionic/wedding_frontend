@@ -81,7 +81,7 @@ function BlogDashboard() {
   };
 
   const handleEditClick = (post) => {
-    navigate(`/update-blog-post/${post.id}`);
+    navigate(`/update-blog-post/${post.urlTitle}`);
   };
 
   const handleDeleteConfirm = async () => {

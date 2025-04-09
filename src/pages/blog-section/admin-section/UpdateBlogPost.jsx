@@ -3,13 +3,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import BlogPreview from '../blog-section/BlogPreview';
-import { useUpdateBlogMutation, useGetBlogByIdQuery } from '../../../redux/blogSlice';
+import { useUpdateBlogMutation, useGetBlogByUrlTitleQuery } from '../../../redux/blogSlice';
 
 const UpdateBlogPost = () => {
   const navigate = useNavigate();
   const { id } = useParams(); // Get the blog ID from the URL params
   const [updateBlog] = useUpdateBlogMutation();
-  const { data: blog, isLoading, isError } = useGetBlogByIdQuery(id); // Fetch blog data by ID
+  const { data: blog, isLoading, isError } = useGetBlogByUrlTitleQuery(id); // Fetch blog data by ID
   
 
   // State variables for form fields
