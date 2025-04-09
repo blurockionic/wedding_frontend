@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FaRegComment, FaRegHeart, FaHeart, FaShare, FaWhatsapp, FaInstagram, FaFacebook, FaLink, FaLock } from 'react-icons/fa';
-import { useAddCommentMutation, useDeleteCommentMutation, useToggleLikeBlogMutation, useGetBlogByIdQuery } from "../../../redux/blogSlice";
+import { useAddCommentMutation, useDeleteCommentMutation, useToggleLikeBlogMutation, useGetBlogByUrlTitleQuery } from "../../../redux/blogSlice";
 
 const Blog = ({ currentUser }) => {
   // Get the blog ID from URL parameters
-  const { id: blogId } = useParams();
+  const { urlTitle: blogUrlTitle } = useParams();
 
   // Fetch blog data using RTK Query
-  const { data: blogData, isLoading, error } = useGetBlogByIdQuery(blogId);
+  const { data: blogData, isLoading, error } = useGetBlogByUrlTitleQuery(blogUrlTitle);
 
   // RTK Query mutations
   const [addComment] = useAddCommentMutation();
@@ -30,7 +30,7 @@ const Blog = ({ currentUser }) => {
       // Logic to check if user has liked the blog
       const userHasLiked = blogData.data.likes && 
         Array.isArray(blogData.data.likes) && 
-        blogData.data.likes.includes(currentUser.id);
+        blogData.data.likes.includes(currentUser.urlTitle);
       setLiked(userHasLiked);
     }
   }, [blogData, currentUser]);
@@ -42,7 +42,7 @@ const Blog = ({ currentUser }) => {
     }
 
     try {
-      await toggleLike({ blogId, userId: currentUser.id });
+      await toggleLike({ blogUrlTitle, userUrlTitle: currentUser.urlTitle });
       setLiked(!liked);
     } catch (err) {
       console.error('Failed to toggle like:', err);
@@ -59,8 +59,8 @@ const Blog = ({ currentUser }) => {
     if (newComment.trim()) {
       try {
         await addComment({
-          blogId,
-          userId: currentUser.id,
+          blogUrlTitle,
+          userUrlTitle: currentUser.urlTitle,
           content: newComment
         });
         setNewComment('');
@@ -70,9 +70,9 @@ const Blog = ({ currentUser }) => {
     }
   };
 
-  const handleDeleteComment = async (commentId) => {
+  const handleDeleteComment = async (commentUrlTitle) => {
     try {
-      await deleteComment({ commentId, blogId });
+      await deleteComment({ commentUrlTitle, blogUrlTitle });
     } catch (err) {
       console.error('Failed to delete comment:', err);
     }
@@ -99,7 +99,7 @@ const Blog = ({ currentUser }) => {
   if (error) return <div className="text-center py-10 text-red-500">Error loading blog</div>;
   if (!blogData) return <div className="text-center py-10">Blog not found</div>;
 
-  const { title, content, tags, comments = [], likes = 0, createdAt, authorId } = blogData.data;
+  const { title, content, tags, comments = [], likes = 0, createdAt, authorUrlTitle } = blogData.data;
 
   return (
     <div className="flex-grow px-6 py-4 overflow-y-auto relative">
@@ -207,14 +207,14 @@ const Blog = ({ currentUser }) => {
             {/* Comment List */}
             <div className="space-y-4">
               {comments && comments.map(comment => (
-                <div key={comment.id} className="border-b pb-3">
+                <div key={comment.urlTitle} className="border-b pb-3">
                   <div className="flex justify-between items-center mb-1">
                     <p className="font-semibold">{comment.author?.name || 'Anonymous'}</p>
                     <div className="flex items-center">
                       <p className="text-xs text-gray-500 mr-2">{formatDate(comment.createdAt)}</p>
-                      {currentUser && comment.authorId === currentUser.id && (
+                      {currentUser && comment.authorUrlTitle === currentUser.urlTitle && (
                         <button
-                          onClick={() => handleDeleteComment(comment.id)}
+                          onClick={() => handleDeleteComment(comment.urlTitle)}
                           className="text-xs text-red-500 hover:text-red-700"
                         >
                           Delete

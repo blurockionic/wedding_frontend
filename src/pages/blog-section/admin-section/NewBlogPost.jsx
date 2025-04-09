@@ -3,12 +3,12 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import BlogPreview from '../blog-section/BlogPreview';
-import { useCreateBlogMutation, useUpdateBlogMutation } from '../../../redux/blogSlice';
+import { useAddBlogMutation, useUpdateBlogMutation } from '../../../redux/blogSlice';
 
 const NewBlogPost = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [createBlog] = useCreateBlogMutation();
+  const [createBlog] = useAddBlogMutation();
   const [updateBlog] = useUpdateBlogMutation();
 
   const [title, setTitle] = useState('');

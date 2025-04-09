@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useGetAllBlogsQuery } from "../../../redux/blogSlice.js";
+import { useGetBlogsQuery } from "../../../redux/blogSlice.js";
 
 const BlogList = () => {
-  const { data, error, isLoading } = useGetAllBlogsQuery();
+  const { data, error, isLoading } = useGetBlogsQuery();
   const [blogs, setBlogs] = useState([]);
 
   useEffect(() => {
     if (data && data.success) {
+      console.log(data);
       const transformedBlogs = data.data.map(blog => ({
         id: blog.id,
         title: blog.title,
+        urlTitle: blog.urlTitle,
         coverImage: 'https://via.placehold.co/600x300',
         date: blog.createdAt,
         hashtags: blog.tags,
-        readTime: `${Math.ceil(blog.content.length / 500)} min read`
+        // readTime: `${Math.ceil(blog.content.length / 500)} min read`
       }));
       setBlogs(transformedBlogs);
     }
@@ -64,7 +66,7 @@ const BlogList = () => {
                 </h2>
 
                 <Link 
-                  to={`/blogs/${heroBlog.id}`} // Dynamic link to the blog post
+                  to={`/blogs/${heroBlog.urlTitle}`} // Dynamic link to the blog post
                   className="inline-flex items-center px-6 py-3 rounded-lg bg-[#f20574] text-white font-medium text-lg transition-all hover:bg-[#d30062] hover:shadow-lg self-start"
                 >
                   Read Article
@@ -101,7 +103,7 @@ const BlogList = () => {
                 </div>
                 
                 <h3 className="text-xl font-bold text-gray-800 mb-3 hover:text-[#f20574] transition duration-300">
-                  <Link to={`/blogs/${blog.id}`}> {/* Dynamic link to the blog post */}
+                  <Link to={`/blogs/${blog.urlTitle}`}> {/* Dynamic link to the blog post */}
                     {blog.title}
                   </Link>
                 </h3>
@@ -110,16 +112,16 @@ const BlogList = () => {
                   <div className="flex flex-wrap gap-2 mb-4">
                     {blog.hashtags.map(tag => (
                       <span 
-                        key={tag} 
+                        key={tag.id} 
                         className="text-xs bg-pink-50 text-[#f20574] px-3 py-1 rounded-full hover:bg-pink-100 transition duration-300"
                       >
-                        #{tag}
+                        #{tag.tagName}
                       </span>
                     ))}
                   </div>
                   
                   <Link 
-                    to={`/blogs/${blog.id}`} // Dynamic link to the blog post
+                    to={`/blogs/${blog.urlTitle}`} // Dynamic link to the blog post
                     className="text-[#f20574] font-medium inline-flex items-center hover:text-[#d30062] transition duration-300"
                   >
                     Read more

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Footer from "../../Footer";
 import { FiPlus, FiTrash2, FiEdit, FiSearch, FiBarChart, FiUsers, FiSettings, FiHome, FiFolder, FiCalendar, FiEye, FiShare2, FiArchive, FiArrowUp } from 'react-icons/fi';
-import { useGetViewCountQuery, useGetBlogCountQuery, useGetAllBlogsQuery, useDeleteBlogMutation } from '../../../redux/blogSlice';
+import { useGetTotalViewCountQuery, useGetBlogCountQuery, useGetBlogsQuery, useDeleteBlogMutation } from '../../../redux/blogSlice';
 
 function BlogDashboard() {
   const navigate = useNavigate();
@@ -10,8 +10,8 @@ function BlogDashboard() {
 
   // Fetch blog and view counts using the hooks
   const { data: blogCountData, error: blogCountError, isLoading: blogCountLoading } = useGetBlogCountQuery();
-  const { data: viewCountData, error: viewCountError, isLoading: viewCountLoading } = useGetViewCountQuery();
-  const { data: allBlogsData, error: allBlogsError, isLoading: allBlogsLoading } = useGetAllBlogsQuery();
+  const { data: viewCountData, error: viewCountError, isLoading: viewCountLoading } = useGetTotalViewCountQuery();
+  const { data: allBlogsData, error: allBlogsError, isLoading: allBlogsLoading } = useGetBlogsQuery();
   const [deleteBlog, { isLoading: deleting, error: deleteError }] = useDeleteBlogMutation(); // Use deleteBlog mutation
 
   // Update the datetime every minute
@@ -32,6 +32,7 @@ function BlogDashboard() {
       setBlogPosts(allBlogsData.data.map(blog => ({
         id: blog.id,
         title: blog.title,
+        urlTitle: blog.urlTitle,
         content: blog.content,
         status: 'published', // Assuming all fetched blogs are published
         date: new Date(blog.createdAt).toISOString().split('T')[0],
@@ -153,7 +154,7 @@ function BlogDashboard() {
   };
 
   const handleShareClick = (post) => {
-    const shareUrl = `${window.location.origin}/blogs/${post.id}`;
+    const shareUrl = `${window.location.origin}/blogs/${post.urlTitle}`;
     navigator.clipboard.writeText(shareUrl);
     alert('Blog URL copied to clipboard!');
   };
@@ -182,6 +183,7 @@ function BlogDashboard() {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentPosts = filteredPosts.slice(indexOfFirstItem, indexOfLastItem);
+  console.log("currentPosts",currentPosts);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 

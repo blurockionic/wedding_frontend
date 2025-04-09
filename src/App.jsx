@@ -156,7 +156,7 @@ const router = createBrowserRouter([
       { path: "/blog_dashboard", element: wrapWithSuspense(BlogDashboard) },
       { path: "/new-blog-post", element: wrapWithSuspense(NewBlogPost) },
       { path: "/blogs", element: wrapWithSuspense(BlogList) },
-      { path: "/blogs/:id", element: wrapWithSuspense(Blog) },
+      { path: "/blogs/:urlTitle", element: wrapWithSuspense(Blog) },
       {
         path: "/update-blog-post/:id",
         element: wrapWithSuspense(UpdateBlogPost),
