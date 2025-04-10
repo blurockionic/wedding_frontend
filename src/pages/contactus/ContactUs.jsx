@@ -17,7 +17,7 @@ const ContactUs = () => {
     contactPoint: {
       "@type": "ContactPoint",
       telephone: "+91-6200932331",
-      email: "support@blurockionic.com",
+      email: "help@marriagevendors.com",
       contactType: "Customer Support",
       areaServed: "India",
       availableLanguage: ["English", "Hindi"],
@@ -107,7 +107,7 @@ const ContactUs = () => {
                 Email Support
               </h3>
               <p className="text-gray-600">
-                Reach us at support@blurockionic.com for detailed inquiries.
+                Reach us at help@marriagevendors.com for detailed inquiries.
               </p>
             </div>
             <div className="flex flex-col items-center border border-ring p-6 rounded-lg shadow-lg">

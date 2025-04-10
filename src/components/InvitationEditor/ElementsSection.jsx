@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { useGetImagesForTemplateQuery } from "../../redux/cloudinaryApiSlice";
 import { FaCircle } from "react-icons/fa";
@@ -30,7 +30,7 @@ const DesignItem = ({ design, addDesignElement }) => (
   >
     {typeof design.src === "string" ? (
       <img
-        src={design.src || design.url}
+        src={design.src || design?.url}
         alt={design.name || design.public_id}
         className="w-16 h-16 object-contain"
       />
@@ -103,12 +103,11 @@ const ElementsSection = ({ designs: parentDesigns, addDesignElement }) => {
   ];
 
   const designTypes = [
+    { name: "Background", type: "background" },
     { name: "Flowers", type: "flower" },
     { name: "Borders", type: "border" },
-    { name: "Simple", type: "simple" },
-    { name: "Wallpaper", type: "wallpaper" },
+    { name: "Couple", type: "couple" },
     { name: "Decoration", type: "decoration" },
-    { name: "Background", type: "background" },
     { name: "Texture", type: "texture" },
     { name: "Shapes", type: "shape" },
   ];

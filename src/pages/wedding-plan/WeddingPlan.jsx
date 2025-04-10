@@ -266,18 +266,17 @@ const WeddingPlan = () => {
 
       {/* Pop-out Form for Vendor */}
       <div
-        className={`fixed top-0 right-0 h-full w-full sm:w-[500px] bg-white shadow-lg p-4 sm:p-6 transform ${
+        className={`fixed top-0 right-0 h-full w-[90%] bg-white shadow-lg p-4 sm:p-6 transform ${
           isActiveVendor ? "translate-x-0" : "translate-x-full"
         } transition-transform duration-300 ease-in-out z-50`}
       >
         {/* Close Button */}
         <button
-          className="absolute top-4 right-4 text-gray-500 hover:text-red-500"
+          className="absolute top-4 right-4 text-white hover:text-gray-100 z-50 bg-primary rounded-full"
           onClick={() => setIsActiveVendor(false)}
         >
           <X />
         </button>
-
         {/* Vendor Form */}
         <AddVevdors eventId={eventId} />
       </div>
