@@ -421,7 +421,7 @@ export default function VendorLogin() {
                 Email Support
               </h3>
               <p className="text-gray-600">
-                Reach us at support@blurockionic.com for detailed inquiries
+                Reach us at help@marriagevendors.com for detailed inquiries
               </p>
             </div>
 

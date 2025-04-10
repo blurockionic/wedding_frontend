@@ -51,6 +51,19 @@ const Discover = () => {
       },
     },
     {
+      key: "topVideographers",
+      title: "Top Wedding Videographers",
+      subtitle: "Find top wedding Photographers in your city",
+      bgColor: "#b9f8cf",
+      filter: {
+        limit: 20,
+        page: 1,
+        service_type: "Wedding Videographers",
+        sort_by: "rating",
+        sort_order: "desc",
+      },
+    },
+    {
       key: "topBridal",
       title: "Top Bridal serives",
       subtitle: "Find top bridal services in your city",
