@@ -51,6 +51,19 @@ const Discover = () => {
       },
     },
     {
+      key: "topBridal",
+      title: "Top Bridal serives",
+      subtitle: "Find top bridal services in your city",
+      bgColor: "#ddd6fe",
+      filter: {
+        limit: 20,
+        page: 1,
+        service_type: "Makeup Salon",
+        sort_by: "rating",
+        sort_order: "desc",
+      },
+    },
+    {
       key: "topDj",
       title: "Top DJ Services",
       subtitle: "Find top DJ services in your city",
