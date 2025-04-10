@@ -3,17 +3,18 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import BlogPreview from '../blog-section/BlogPreview';
-import { useUpdateBlogMutation, useGetBlogByIdQuery } from '../../../redux/blogSlice';
+import { useUpdateBlogMutation, useGetBlogByUrlTitleQuery } from '../../../redux/blogSlice';
 
 const UpdateBlogPost = () => {
   const navigate = useNavigate();
-  const { id } = useParams(); // Get the blog ID from the URL params
+  const { urlTitle } = useParams(); // Get the blog ID from the URL params
   const [updateBlog] = useUpdateBlogMutation();
-  const { data: blog, isLoading, isError } = useGetBlogByIdQuery(id); // Fetch blog data by ID
+  const { data: blog, isLoading, isError } = useGetBlogByUrlTitleQuery(urlTitle); // Fetch blog data by ID
   
 
   // State variables for form fields
   const [title, setTitle] = useState('');
+  const [id, setId] = useState('');
   const [content, setContent] = useState('');
   const [coverImage, setCoverImage] = useState('');
   const [coverImagePreview, setCoverImagePreview] = useState('');
@@ -26,6 +27,7 @@ const UpdateBlogPost = () => {
   useEffect(() => {
     if (blog) {
       setTitle(blog.data.title || ''); // Set title
+      setId(blog.data.id || ''); // Set id
       setContent(blog.data.content || ''); // Set content
       setTags(blog.data.tags || []); // Set tags (ensure it's an array)
       setCoverImagePreview(blog.data.coverImage || ''); // Set cover image preview
@@ -47,6 +49,7 @@ const UpdateBlogPost = () => {
     setSaving(true);
     const blogData = { title, content, tags, coverImage };
     try {
+      console.log("blog data", blogData);
       await updateBlog({ id, blogData }).unwrap(); // Update the blog post
       alert('Blog post updated successfully!');
       navigate('/blog_dashboard'); // Navigate back to the dashboard
