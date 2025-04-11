@@ -13,7 +13,7 @@ const BlogList = () => {
         id: blog.id,
         title: blog.title,
         urlTitle: blog.urlTitle,
-        coverImage: 'https://via.placehold.co/600x300',
+        coverImage: blog.coverImage || 'https://via.placehold.co/600x300',
         date: blog.createdAt,
         hashtags: blog.tags,
         // readTime: `${Math.ceil(blog.content.length / 500)} min read`

@@ -39,7 +39,7 @@ export const blogApiSlice = createApi({
 
     // 🔐 ADMIN
     addBlog: builder.mutation({ query: (body) => ({ url: `/blogs`, method: "POST", body }) }),
-    updateBlog: builder.mutation({ query: ({ id, blogData }) => ({ url: `/blogs/${id}`, method: "PUT", body: blogData }) }),
+    updateBlog: builder.mutation({ query: ({ id, blogData }) => ({ url: `/blogs/${id}`, method: "PATCH", body: blogData }) }),
     deleteBlog: builder.mutation({ query: (id) => ({ url: `/blogs/${id}`, method: "DELETE" }) }),
     addTag: builder.mutation({ query: (body) => ({ url: `/tags`, method: "POST", body }) }),
     updateTag: builder.mutation({ query: ({ id, body }) => ({ url: `/tags/${id}`, method: "PUT", body }) }),
