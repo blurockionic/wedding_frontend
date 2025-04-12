@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { paymentApi } from "../../redux/payment";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useAddOrUpdateWatchHistoryMutation, useGetTemplateWatchHistoryQuery } from "../../redux/TemplateSlice";
 import { FaCrown } from "react-icons/fa";
 
@@ -44,6 +44,7 @@ const TemplateList = ({ data }) => {
     limit: 10,
   });
 
+   const loggedInUser = useSelector((state) => state?.auth?.user);
   const { data: watchHistory, refetch: refetchWatchHistory } = useGetTemplateWatchHistoryQuery();
   const [addOrUpdateWatchHistory] = useAddOrUpdateWatchHistoryMutation();
 
@@ -52,6 +53,15 @@ const TemplateList = ({ data }) => {
   }, []);
 
   const handleOnNavigate = async (template) => {
+
+
+    if (!loggedInUser) {
+      navigate("/login",{ state: { from: "/browse" } });
+      return;
+      
+    }
+
+
     addOrUpdateWatchHistory(template.id);
 
     if (template.categoryByAmount === "FREE") {

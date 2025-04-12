@@ -23,10 +23,10 @@ export const Introduction = () => {
     limit: 10,
   });
 
-  const loggedInUser = useSelector((state) => state?.auth?.user);
+ 
 
 
-  
+   const loggedInUser = useSelector((state) => state?.auth?.user);
 
   //get data from db
   const { data, error, isLoading } = useGetAllTemplatesQuery(filters);
@@ -82,12 +82,12 @@ export const Introduction = () => {
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 items-center justify-center lg:justify-start z-50 w-full md:w-full mt-10">
-        <Link to={loggedInUser ? "/browse" : "/login"}>
+        <Link to="/browse">
           <span className="px-8 py-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-full font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 hover:from-pink-600 hover:to-rose-600">
             Browse Templates
           </span>
         </Link>
-        <Link to="/update_editor" className="mt-8 md:mt-0">
+        <Link state={"/templates"} to={loggedInUser?"/update_editor":"/login"} className="mt-8 md:mt-0">
           <span className="border px-8 py-4 bg-gradient-to-r from-gray-50 to-salte-50 text-gray-500 rounded-full font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 hover:text-primary">
             Create Custom Design
           </span>

@@ -100,8 +100,7 @@ export default function Login() {
       wedding_location: extraData?.wedding_location,
       phone_number: extraData?.phone_number,
     };
-  
-    console.log(location.state?.from );
+
     
 
     try {
