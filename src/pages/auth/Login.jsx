@@ -19,13 +19,12 @@ import { hydrateFavorites } from "../../redux/favoriteSlice";
 import useProtectAfterLogin from "../../hooks/useProtectAfterLogin";
 import { signInWithGoogle } from "../../utils/googleAuthProvider";
 import { useGoogleLoginMutation } from "../../redux/apiSlice.auth";
+import { SignInModal } from "../../components/modal/SignInModel";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters long."),
 });
-
-
 
 export default function Login() {
   useProtectAfterLogin(["user"], "/");
@@ -38,6 +37,10 @@ export default function Login() {
   const navigate = useNavigate();
   const [isBuyClicked, setIsBuyClicked] = useState(false);
   const [googleLoginMutation, { isLoading }] = useGoogleLoginMutation();
+  const [addData, setAddData] = useState({});
+  const [googleUserData, setGoogleUserData] = useState(null);
+  const [googleToken, setGoogleToken] = useState(null);
+  const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
 
   const {
     register,
@@ -64,13 +67,11 @@ export default function Login() {
         toast.success(message);
 
         const from = location.state?.from || "/";
-        if (user.role == "ADMIN" || user.role == "SUPER_ADMIN"){
+        if (user.role == "ADMIN" || user.role == "SUPER_ADMIN") {
           navigate("/admin");
-        }
-        else{
+        } else {
           navigate(from);
         }
-
       }
     } catch (error) {
       const errorMessage =
@@ -78,32 +79,61 @@ export default function Login() {
         error.message ||
         "An unexpected error occurred.";
       toast.error(errorMessage, {
-        position: "top-right",
+        position: "botom-right",
         autoClose: 5000,
         theme: "light",
       });
     }
   };
 
-  const handleGoogleLogin = async () => {
-    const { googleUser } = await signInWithGoogle();
+  const proceedWithGoogleLogin = async (userInfo, token, extraData = addData) => {
+    const data = {
+      googleUid: userInfo.uid,
+      email: userInfo.email,
+      displayName: userInfo.displayName,
+      photoURL: userInfo.photoURL,
+      googleIdToken: token,
+      wedding_location: extraData?.wedding_location,
+      phone_number: extraData?.phone_number,
+    };
   
-    const token = await googleUser.getIdToken();
-  
-    if (googleUser) {
-      const { success, user, message } = await googleLoginMutation({
-        googleUid: googleUser.uid,
-        email: googleUser.email,
-        displayName: googleUser.displayName,
-        photoURL: googleUser.photoURL,
-        googleIdToken: token,
-      }).unwrap();
+    console.log(data);
+    
+
+    try {
+      const { success, user, message } = await googleLoginMutation(data).unwrap();
   
       if (success) {
         dispatch(login(user));
         toast.success(message);
+        navigate("/");
       }
+    } catch (err) {
+      toast.error("Google Login failed");
     }
+  };
+  
+  const handleGoogleLogin = async () => {
+    const { googleUser } = await signInWithGoogle();
+    if (!googleUser) return;
+  
+    const token = await googleUser.getIdToken();
+    setGoogleUserData(googleUser);
+    setGoogleToken(token);
+
+
+    
+
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/users/check-for-phone?email=${googleUser.email}`);
+  const result = await response.json();
+
+
+  if (!result?.phone_number || !result?.wedding_location) {
+    setIsSignInModalOpen(true);
+  } else {
+    proceedWithGoogleLogin(googleUser, token, result);
+  }
+
   };
 
   const structuredData = {
@@ -215,7 +245,6 @@ export default function Login() {
                   <span>or</span>
                   <div className="h-[1px] px-3 w-full bg-gray-300"></div>
                 </div>
-
                 <CustomButton
                   type="button"
                   text="Login with Google"
@@ -225,7 +254,6 @@ export default function Login() {
                 />
               </div>
             </form>
-
             <div className="mt-6 text-center">
               <CustomText variant="paragraph" className="text-sm">
                 Don’t have an account?{" "}
@@ -240,6 +268,16 @@ export default function Login() {
           </div>
         </div>
       </div>
+      {isSignInModalOpen && (
+  <SignInModal
+    setAddData={setAddData}
+    setIsSignInModalOpen={setIsSignInModalOpen}
+    googleUserData={googleUserData}
+    googleToken={googleToken}
+    proceedWithGoogleLogin={proceedWithGoogleLogin}
+  />
+)}
     </>
   );
 }
+
