@@ -29,6 +29,8 @@ const loginSchema = z.object({
 export default function Login() {
   useProtectAfterLogin(["user"], "/");
 
+
+
   const dispatch = useDispatch();
   const [loginMutation, { isLoading: loading }] = useLoginMutation();
   const [getCartMutation] = useGetCartMutation();
@@ -41,6 +43,8 @@ export default function Login() {
   const [googleUserData, setGoogleUserData] = useState(null);
   const [googleToken, setGoogleToken] = useState(null);
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
+ 
+ 
 
   const {
     register,
@@ -97,16 +101,18 @@ export default function Login() {
       phone_number: extraData?.phone_number,
     };
   
-    console.log(data);
+    console.log(location.state?.from );
     
 
     try {
       const { success, user, message } = await googleLoginMutation(data).unwrap();
   
+      
+
       if (success) {
         dispatch(login(user));
         toast.success(message);
-        navigate("/");
+        navigate(location.state?.from || "/", { replace: true }); 
       }
     } catch (err) {
       toast.error("Google Login failed");

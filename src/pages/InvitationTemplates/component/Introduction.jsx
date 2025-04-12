@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import bg from "../../../../public/template/background.png";
 import fr from "../../../../public/template/flower_right.svg";
 import flower_top_r from "../../../../public/template/flower_top_r.png";
@@ -9,23 +9,28 @@ import flower_bottom_r from "../../../../public/template/flower_bottom_r.png";
 import flower_top_l from "../../../../public/template/flower_top_l.png";
 import flower_b_l from "../../../../public/template/flower_b_l.png";
 import { useGetAllTemplatesQuery } from "../../../redux/invitationTemplateForAdminSlice";
+import { useSelector } from "react-redux";
 
 export const Introduction = () => {
   const [filters, setFilters] = useState({
-      name: "",
-      minPrice: "",
-      maxPrice: "",
-      categoryByMood: "",
-      categoryByAmount: "",
-      categoryByRequirement: "",
-      page: 1,
-      limit: 10,
-    });
+    name: "",
+    minPrice: "",
+    maxPrice: "",
+    categoryByMood: "",
+    categoryByAmount: "",
+    categoryByRequirement: "",
+    page: 1,
+    limit: 10,
+  });
+
+  const loggedInUser = useSelector((state) => state?.auth?.user);
+
+
   
-    //get data from db
-    const { data, error, isLoading } = useGetAllTemplatesQuery(filters);
-  
-    
+
+  //get data from db
+  const { data, error, isLoading } = useGetAllTemplatesQuery(filters);
+
   return (
     <section className="relative grid  w-full place-content-start overflow-hidden  px-4 md:px-16 py-10 ">
       {/* <h2 className="relative z-0 text-[10vw] font-black text-neutral-800 md:text-[10vw]">
@@ -77,18 +82,16 @@ export const Introduction = () => {
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 items-center justify-center lg:justify-start z-50 w-full md:w-full mt-10">
-        <Link to="/browse">
+        <Link to={loggedInUser ? "/browse" : "/login"}>
           <span className="px-8 py-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-full font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 hover:from-pink-600 hover:to-rose-600">
             Browse Templates
           </span>
-          
         </Link>
         <Link to="/update_editor" className="mt-8 md:mt-0">
           <span className="border px-8 py-4 bg-gradient-to-r from-gray-50 to-salte-50 text-gray-500 rounded-full font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 hover:text-primary">
             Create Custom Design
           </span>
         </Link>
-        
       </div>
       <span className="hidden lg:block mt-10 text-xs w-auto text-gray-500 italic px-2 py-1  rounded-md">
         Hint: Drag elements to design invitation card
