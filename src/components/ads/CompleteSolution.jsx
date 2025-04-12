@@ -1,4 +1,4 @@
-import banner from '../../../public/ads/dgbanner.gif';
+import banner from '../../../public/ads/dgbanner_h.gif';
 
 const CompleteSolution = () => {
   return (

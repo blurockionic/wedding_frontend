@@ -16,10 +16,10 @@ export default function LandingPage() {
       <LazySection id="/" Component={Home} />
       <LazySection id="suggestion" Component={BrowseSuggestion} />
       <LazySection id="aboutus" Component={AboutLanding} />
+      <LazySection id="ads" Component={CompleteSolution} />
       <LazySection id="serviceCategories" Component={ServiceCategoriesPage} />
       <LazySection id="discover" Component={Discover} />
       <LazySection id="benefit" Component={Benefits} />
-      <LazySection id="ads" Component={CompleteSolution} />
       <LazySection id="destinationwedding" Component={DestinationWedding} />
       <LazySection id="testimonialSection" Component={Testimonials} />
       <LazySection id="footer" Component={Footer} />
