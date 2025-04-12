@@ -213,10 +213,10 @@ function BlogDashboard() {
   };
 
   // Admin dashboard stats
-  const totalPosts = blogCountData?.data?.blogCount || 0;
-  const totalViews = viewCountData?.data?.totalViewCount || 0;
-  const publishedPosts = blogPosts.filter(post => post.status === 'published').length;
-  const draftPosts = blogPosts.filter(post => post.status === 'draft').length;
+  const totalPosts = blogCountData?.all || 0;
+  const totalViews = viewCountData?.totalViews || 0;
+  const publishedPosts = blogCountData?.published || 0;
+  const draftPosts = blogCountData?.draft || 0;
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">

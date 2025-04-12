@@ -54,7 +54,7 @@ const UpdateBlogPost = () => {
       setValue('id', blog.data.id || '');
       // setValue('content', blog.data.content || '');
       setContent(blog.data.content || ''); // Set content
-      setTags(blog.data.tags || []); // Set tags (ensure it's an array)
+      setTags(blog.data.tags ? blog.data.tags.map(tag => tag.tagName) : []); // Set tags (ensure it's an array)
       setCoverImagePreview(blog.data.coverImage || '');
     }
   }, [blog, setValue]);
@@ -93,7 +93,7 @@ const UpdateBlogPost = () => {
     const updatePayload = new FormData();
     updatePayload.append('title', formData.title);
     updatePayload.append('content', content);
-    updatePayload.append('tags', tags); // adjust format as needed
+    updatePayload.append('tags', JSON.stringify(tags)); // adjust format as needed
 
     if (coverImage) {
       updatePayload.append('coverImage', coverImage);

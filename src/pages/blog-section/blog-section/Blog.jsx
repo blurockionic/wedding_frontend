@@ -99,7 +99,7 @@ const Blog = ({ currentUser }) => {
   if (error) return <div className="text-center py-10 text-red-500">Error loading blog</div>;
   if (!blogData) return <div className="text-center py-10">Blog not found</div>;
 
-  const { title, content, tags, comments = [], likes = 0, createdAt, authorUrlTitle } = blogData.data;
+  const { title, content, tags = [], comments = [], likes = 0, createdAt, authorUrlTitle } = blogData.data;
 
   return (
     <div className="flex-grow px-6 py-4 overflow-y-auto relative">
@@ -125,11 +125,11 @@ const Blog = ({ currentUser }) => {
             <div className="flex flex-wrap gap-2">
               {tags.map((tag, index) => (
                 <Link
-                  key={index}
-                  to={`/blogs?tag=${tag}`}
+                  key={tag.id}
+                  to={`/blogs?tag=${tag.tagName}`}
                   className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-pink-100 text-[#f20574] hover:underline"
                 >
-                  #{tag}
+                  #{tag.tagName}
                 </Link>
               ))}
             </div>

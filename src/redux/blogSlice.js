@@ -29,21 +29,21 @@ export const blogApiSlice = createApi({
 
   endpoints: (builder) => ({
     // 🔓 PUBLIC
-    getBlogs: builder.query({ query: () => `/blogs` }),
-    getBlogByUrlTitle: builder.query({ query: (urlTitle) => `/blogs/${urlTitle}` }),
+    getBlogs: builder.query({ query: () => `/` }),
+    getBlogByUrlTitle: builder.query({ query: (urlTitle) => `/${urlTitle}` }),
     getAllTags: builder.query({ query: () => `/tags` }),
     getTagByName: builder.query({ query: (tagName) => `/tags/${tagName}` }),
-    getBlogsByTag: builder.query({ query: (tagName) => `/blogs/tag/${tagName}` }),
-    getBlogCount: builder.query({ query: () => `/blog-count` }),
-    getTotalViewCount: builder.query({ query: () => `/view-count` }),
+    getBlogsByTag: builder.query({ query: (tagName) => `/tag/${tagName}` }),    
 
     // 🔐 ADMIN
-    addBlog: builder.mutation({ query: (body) => ({ url: `/blogs`, method: "POST", body }) }),
-    updateBlog: builder.mutation({ query: ({ id, blogData }) => ({ url: `/blogs/${id}`, method: "PATCH", body: blogData }) }),
-    deleteBlog: builder.mutation({ query: (id) => ({ url: `/blogs/${id}`, method: "DELETE" }) }),
+    addBlog: builder.mutation({ query: (body) => ({ url: `/`, method: "POST", body }) }),
+    updateBlog: builder.mutation({ query: ({ id, blogData }) => ({ url: `/${id}`, method: "PATCH", body: blogData }) }),
+    deleteBlog: builder.mutation({ query: (id) => ({ url: `/${id}`, method: "DELETE" }) }),
     addTag: builder.mutation({ query: (body) => ({ url: `/tags`, method: "POST", body }) }),
     updateTag: builder.mutation({ query: ({ id, body }) => ({ url: `/tags/${id}`, method: "PUT", body }) }),
     deleteTag: builder.mutation({ query: () => ({ url: `/tags`, method: "DELETE" }) }),
+    getTotalViewCount: builder.query({ query: () => `/viewCount` }),
+    getBlogCount: builder.query({ query: () => `blog-count/` }),
 
     // 🔑 USER
     addComment: builder.mutation({ query: ({ blogId, body }) => ({ url: `/blogs/${blogId}/comments`, method: "POST", body }) }),
