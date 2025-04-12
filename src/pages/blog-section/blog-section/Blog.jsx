@@ -2,8 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FaRegComment, FaRegHeart, FaHeart, FaShare, FaWhatsapp, FaInstagram, FaFacebook, FaLink, FaLock } from 'react-icons/fa';
 import { useAddCommentMutation, useDeleteCommentMutation, useToggleLikeBlogMutation, useGetBlogByUrlTitleQuery } from "../../../redux/blogSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { use } from 'react';
+import { set } from 'lodash';
 
-const Blog = ({ currentUser }) => {
+const Blog = () => {
+
   // Get the blog ID from URL parameters
   const { urlTitle: blogUrlTitle } = useParams();
 
@@ -20,17 +24,22 @@ const Blog = ({ currentUser }) => {
   const [newComment, setNewComment] = useState('');
   const [showShareOptions, setShowShareOptions] = useState(false);
   const [liked, setLiked] = useState(false);
+  const [likes, setLikes] = useState(0);
 
   // Check if user is signed in
-  const isSignedIn = !!currentUser;
+  const currentUser = useSelector((state) => state.auth.user);
+  const isSignedIn = useSelector((state) => state.auth.isLoggedIn);
+
+  useEffect(() => {
+    setLikes(blogData?.data.likes || 0);
+  }, [blogData]);
 
   // Update liked state when blog data changes
   useEffect(() => {
     if (blogData && currentUser) {
       // Logic to check if user has liked the blog
       const userHasLiked = blogData.data.likes && 
-        Array.isArray(blogData.data.likes) && 
-        blogData.data.likes.includes(currentUser.urlTitle);
+        blogData.data.likedBy.map(user => user.userId).includes(currentUser.id);
       setLiked(userHasLiked);
     }
   }, [blogData, currentUser]);
@@ -42,7 +51,12 @@ const Blog = ({ currentUser }) => {
     }
 
     try {
-      await toggleLike({ blogUrlTitle, userUrlTitle: currentUser.urlTitle });
+      await toggleLike(blogData.data.id);
+      if (liked) {
+        setLikes(likes - 1);
+      } else {
+        setLikes(likes + 1);
+      }
       setLiked(!liked);
     } catch (err) {
       console.error('Failed to toggle like:', err);
@@ -99,7 +113,7 @@ const Blog = ({ currentUser }) => {
   if (error) return <div className="text-center py-10 text-red-500">Error loading blog</div>;
   if (!blogData) return <div className="text-center py-10">Blog not found</div>;
 
-  const { title, content, tags = [], comments = [], likes = 0, createdAt, authorUrlTitle } = blogData.data;
+  const { title, content, tags = [], comments = [], createdAt, authorUrlTitle } = blogData.data;
 
   return (
     <div className="flex-grow px-6 py-4 overflow-y-auto relative">
@@ -160,7 +174,7 @@ const Blog = ({ currentUser }) => {
                   <FaRegHeart size={20} />
                 </div>
               )}
-              <span>{typeof likes === 'number' ? likes : (Array.isArray(likes) ? likes.length : 0)}</span>
+              <span>{likes || 0}</span>
             </button>
 
             <button

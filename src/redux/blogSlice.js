@@ -46,10 +46,10 @@ export const blogApiSlice = createApi({
     getBlogCount: builder.query({ query: () => `blog-count/` }),
 
     // 🔑 USER
-    addComment: builder.mutation({ query: ({ blogId, body }) => ({ url: `/blogs/${blogId}/comments`, method: "POST", body }) }),
-    deleteComment: builder.mutation({ query: (commentId) => ({ url: `/blogs/comments/${commentId}`, method: "DELETE" }) }),
-    toggleLikeBlog: builder.mutation({ query: (blogId) => ({ url: `/blogs/${blogId}/like`, method: "POST" }) }),
-    searchBlogs: builder.query({ query: (params) => ({ url: `/blogs/search`, params }) }),
+    addComment: builder.mutation({ query: ({ blogId, body }) => ({ url: `/${blogId}/comments`, method: "POST", body }) }),
+    deleteComment: builder.mutation({ query: (commentId) => ({ url: `/comments/${commentId}`, method: "DELETE" }) }),
+    toggleLikeBlog: builder.mutation({ query: (blogId) => ({ url: `/${blogId}/like`, method: "POST" }) }),
+    searchBlogs: builder.query({ query: (params) => ({ url: `/search`, params }) }),
   }),
 });
 
