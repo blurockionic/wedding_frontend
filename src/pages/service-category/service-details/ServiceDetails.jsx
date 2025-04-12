@@ -82,7 +82,6 @@ const ServiceDetails = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const [service, setService] = useState(null);
   const [realService, setRealService] = useState(null);
-
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -144,7 +143,7 @@ const ServiceDetails = () => {
       console.error(error);
     }
   };
-
+  console.log(data)
   return (
     <>
       {isLoggedIn ? (
