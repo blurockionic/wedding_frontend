@@ -1,20 +1,23 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  paymentApi,
-  useGetTemplatePaymentHistoryQuery,
-} from "../../redux/payment";
+import { paymentApi } from "../../redux/payment";
 import { useDispatch } from "react-redux";
-import {
-  useAddOrUpdateWatchHistoryMutation,
-  useGetTemplateWatchHistoryQuery,
-} from "../../redux/TemplateSlice";
+import { useAddOrUpdateWatchHistoryMutation, useGetTemplateWatchHistoryQuery } from "../../redux/TemplateSlice";
+import { FaCrown } from "react-icons/fa";
 
 const TemplateCard = React.memo(({ template, onClick }) => (
   <div
-    className="border p-4 shadow-md cursor-pointer hover:shadow-lg transition-shadow"
+    className="border p-4 shadow-md cursor-pointer hover:shadow-lg transition-shadow relative group"
     onClick={() => onClick(template)}
   >
+    {template.categoryByAmount === "PAID" && (
+      <div className="absolute flex items-center justify-start w-[40px] h-[40px] bg-blue-500 text-white rounded-lg overflow-hidden transition-all duration-300 ease-in-out group-hover:w-[120px] px-2 -top-2 left-2 z-10">
+        <FaCrown className="text-white text-[24px] flex-shrink-0" />
+        <span className="ml-2 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          Premium
+        </span>
+      </div>
+    )}
     <img
       src={template.thumbnailUrl}
       alt={template.name}
@@ -41,19 +44,12 @@ const TemplateList = ({ data }) => {
     limit: 10,
   });
 
-  const { data: watchHistory, refetch: refetchWatchHistory } =
-    useGetTemplateWatchHistoryQuery();
+  const { data: watchHistory, refetch: refetchWatchHistory } = useGetTemplateWatchHistoryQuery();
   const [addOrUpdateWatchHistory] = useAddOrUpdateWatchHistoryMutation();
 
   useEffect(() => {
     refetchWatchHistory();
   }, []);
-
-  console.log(watchHistory);
-
-  const handleFilterChange = (key, value) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-  };
 
   const handleOnNavigate = async (template) => {
     addOrUpdateWatchHistory(template.id);
@@ -67,9 +63,7 @@ const TemplateList = ({ data }) => {
       try {
         const paymentData = await dispatch(
           paymentApi.endpoints.getTemplatePaymentHistory.initiate(
-            {
-              tempId: template.id,
-            },
+            { tempId: template.id },
             { forceRefetch: true }
           )
         ).unwrap();
@@ -79,9 +73,7 @@ const TemplateList = ({ data }) => {
           return;
         }
 
-        navigate("/payment", {
-          state: { amount: template.price, template },
-        });
+        navigate("/payment", { state: { amount: template.price, template } });
       } catch (error) {
         console.error("Error fetching payment data:", error);
       }
@@ -91,53 +83,6 @@ const TemplateList = ({ data }) => {
   return (
     <div className="p-4">
       <h2 className="text-xl font-bold mb-4">Templates</h2>
-
-      {/* Filters (optional) */}
-      {/* 
-      <div className="flex gap-4 mb-4">
-        <input
-          type="text"
-          placeholder="Search by name"
-          className="border p-2"
-          value={filters.name}
-          onChange={(e) => handleFilterChange("name", e.target.value)}
-        />
-        <input
-          type="number"
-          placeholder="Min Price"
-          className="border p-2"
-          value={filters.minPrice}
-          onChange={(e) => handleFilterChange("minPrice", e.target.value)}
-        />
-        <input
-          type="number"
-          placeholder="Max Price"
-          className="border p-2"
-          value={filters.maxPrice}
-          onChange={(e) => handleFilterChange("maxPrice", e.target.value)}
-        />
-        <select
-          className="border p-2"
-          value={filters.categoryByMood}
-          onChange={(e) =>
-            handleFilterChange("categoryByMood", e.target.value)
-          }
-        >
-          <option value="">All Categories</option>
-          <option value="WEDDING">Wedding</option>
-          <option value="BIRTHDAY">Birthday</option>
-          <option value="BUSINESS">Business</option>
-        </select>
-        <button
-          className="bg-blue-500 text-white px-4 py-2"
-          onClick={() => setFilters({ ...filters, page: 1 })}
-        >
-          Search
-        </button>
-      </div>
-      */}
-
-      {/* Templates */}
       {data?.data?.length ? (
         <div className="grid grid-cols-3 gap-4">
           {data.data.map((template) => (
@@ -151,8 +96,6 @@ const TemplateList = ({ data }) => {
       ) : (
         <p>No templates available.</p>
       )}
-
-      {/* Pagination */}
       <div className="mt-4 flex justify-between">
         <button
           disabled={filters.page <= 1}

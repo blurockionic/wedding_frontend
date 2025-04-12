@@ -153,7 +153,7 @@ const VendorCardForEvent = ({
           </h3>
           <span className="text-sm text-gray-500">⭐ {service?.rating}</span>
         </div>
-        <div className="flex items-center justify-between text-sm text-gray-500 mt-1">
+        <div className="flex flex-col items-start text-sm text-gray-500 mt-1">
           <span className="flex items-center gap-1">
             <strong className="font-semibold capitalize">
               <span>
@@ -171,7 +171,7 @@ const VendorCardForEvent = ({
           <span className="text-sm text-gray-700 font-semibold flex items-center gap-1 ">
             <GiTwoCoins size={16} />
             From{" "}
-            <span className="flex items-center">
+            <span className="flex items-center text-green-500">
               <MdCurrencyRupee />
               {service?.min_price}
             </span>{" "}

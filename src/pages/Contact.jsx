@@ -43,7 +43,7 @@ export default function Contact() {
             <BiPhone className="inline mr-2" /> Phone: +91-6200932331
           </p>
           <p data-aos="fade-up" data-aos-delay="1100">
-            <MdEmail className="inline mr-2" /> Email: blurockionic@support.com
+            <MdEmail className="inline mr-2" /> Email: help@marriagevendors.com
           </p>
           <p data-aos="fade-up" data-aos-delay="1300">
             <FaAddressBook className="inline mr-2" /> Address: Ludhiana, Punjab, India

@@ -14,6 +14,7 @@ import {
   Hand,
 } from "lucide-react"; // Import icons
 import { useNavigate } from "react-router-dom";
+import CompleteSolution from "../ads/CompleteSolution";
 
 const weddingCategories = [
 //   { name: "Bridal Wear", icon: <Diamond size={24} /> },
