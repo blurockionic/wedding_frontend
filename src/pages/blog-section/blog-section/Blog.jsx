@@ -133,7 +133,8 @@ const Blog = () => {
           <div className="flex items-center text-gray-500 mb-6">
             <span className="mr-2">{formatDate(createdAt)}</span>
             <span className="mr-2">|</span>
-            <span>by {author?.name || 'Admin'}</span>
+            {/* <span>by {author?.name || 'Admin'}</span> */}
+            <span>by marraigevendors.com</span>
           </div>
 
           {/* Divider */}
@@ -158,7 +159,7 @@ const Blog = () => {
 
           {/* Cover Image */}
           {coverImage && (
-            <div className="mb-8 rounded-lg overflow-hidden">
+            <div className="mb-1 rounded-lg overflow-hidden">
               <img
                 src={coverImage}
                 alt={title}
@@ -166,6 +167,11 @@ const Blog = () => {
               />
             </div>
           )}
+
+          {/* View Count */}
+          <div className="mb-8 text-gray-500 text-sm text-right">
+            {blogData.data.viewCount || 0} views
+          </div>
 
           {/* Blog Content */}
           <div className="mb-8">
