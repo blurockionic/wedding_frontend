@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Footer from "../../Footer";
-import { FiPlus, FiTrash2, FiEdit, FiSearch, FiBarChart, FiUsers, FiSettings, FiHome, FiFolder, FiCalendar, FiEye, FiShare2, FiArchive, FiArrowUp, FiChevronLeft, FiChevronRight, FiTag, FiFilter } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiEdit, FiSearch, FiBarChart, FiUsers, FiSettings, FiHome, FiFolder, FiCalendar, FiEye, FiShare2, FiChevronLeft, FiChevronRight, FiTag, FiFilter } from 'react-icons/fi';
 import { useGetTotalViewCountQuery, useGetBlogCountQuery, useGetBlogsQuery, useDeleteBlogMutation } from '../../../redux/blogSlice';
 
 function BlogDashboard() {
@@ -150,13 +150,6 @@ function BlogDashboard() {
       setSortBy(field);
       setSortOrder('asc');
     }
-  };
-
-  const handleArchiveClick = (id, newStatus) => {
-    // This would need to be implemented with a proper API call
-    setBlogPosts(blogPosts.map(post =>
-      post.id === id ? { ...post, status: newStatus } : post
-    ));
   };
 
   const handleShareClick = (post) => {
@@ -480,7 +473,6 @@ function BlogDashboard() {
                     <option value="All">All Statuses</option>
                     <option value="PUBLISHED">Published</option>
                     <option value="DRAFT">Draft</option>
-                    <option value="ARCHIVED">Archived</option>
                   </select>
                   
                   {(selectedTag || statusFilter !== 'All' || searchTerm) && (
@@ -560,12 +552,6 @@ function BlogDashboard() {
                             className="text-red-600 hover:text-red-800"
                           >
                             <FiTrash2 className="h-5 w-5" />
-                          </button>
-                          <button
-                            onClick={() => handleArchiveClick(post.id, post.status === 'archived' ? 'published' : 'archived')}
-                            className={`text-yellow-600 hover:text-yellow-800 ${post.status === 'archived' ? 'text-green-600 hover:text-green-800' : ''}`}
-                          >
-                            {post.status === 'archived' ? <FiArrowUp className="h-5 w-5" /> : <FiArchive className="h-5 w-5" />}
                           </button>
                           <button
                             onClick={() => handleShareClick(post)}

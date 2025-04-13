@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useGetBlogsQuery } from "../../../redux/blogSlice.js";
 import Footer from "../../Footer";
+import { BsArrowRightCircleFill, BsArrowLeftCircleFill  } from "react-icons/bs";
 
 const BlogList = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
-  const blogsPerPage = 6;
+  const blogsPerPage = 10;
   
   // Get search params from URL if any
   useEffect(() => {
@@ -27,14 +28,13 @@ const BlogList = () => {
   const { data, error, isLoading } = useGetBlogsQuery({
     s: skip,
     t: blogsPerPage,
-    ...(searchQuery && { tag: searchQuery }) // Use tag parameter for search if needed
+    ...(searchQuery && { tag: searchQuery })
   });
   
   const [totalBlogs, setTotalBlogs] = useState(0);
   
   // Calculate total pages based on total blog count from backend
   useEffect(() => {
-    // If backend provides total count, use it
     if (data && data.success) {
       setTotalBlogs(data.totalCount || 0);
     }
@@ -48,6 +48,12 @@ const BlogList = () => {
     const queryParams = new URLSearchParams(location.search);
     queryParams.set('page', pageNumber);
     navigate(`${location.pathname}?${queryParams.toString()}`);
+    
+    // Scroll to the top of the page
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   };
   
   const handleSearch = (e) => {
@@ -76,7 +82,8 @@ const BlogList = () => {
     coverImage: blog.coverImage || 'https://via.placehold.co/600x300',
     date: blog.createdAt,
     hashtags: blog.tags,
-    readTime: `${Math.ceil((blog._count?.comments || 0) / 2) + 3} min read`, // Alternative calculation since content isn't available
+    preview: blog.content.replace(/<[^>]*>|&nbsp;|\u00A0/g, ' ').substring(0, 150) + '...', // Add preview text
+    readTime: `${Math.ceil((blog.content.length || 0) / 1000)} min read`,
     commentCount: blog._count?.comments || 0,
     likeCount: blog._count?.likedBy || 0
   })) || [];
@@ -104,7 +111,7 @@ const BlogList = () => {
             <span>/</span>
             <Link to="/blogs" className="hover:text-[#f20574]">Wedding ideas</Link>
           </nav>
-          <form onSubmit={handleSearch} className="relative flex items-center">
+          {/* <form onSubmit={handleSearch} className="relative flex items-center">
             <input
               type="text"
               placeholder="Search Blogs"
@@ -120,7 +127,7 @@ const BlogList = () => {
             <button type="submit" className="ml-2 bg-[#f20574] text-white px-5 py-2 rounded-lg hover:bg-[#d30062] transition-colors">
               Search
             </button>
-          </form>
+          </form> */}
         </div>
       </div>
 
@@ -156,6 +163,10 @@ const BlogList = () => {
                   {heroBlog.title}
                 </h2>
 
+                <p className="text-gray-200 mb-6 line-clamp-2">
+                  {heroBlog.preview.replace(/<[^>]*>/g, '')}
+                </p>
+
                 <Link 
                   to={`/blogs/${heroBlog.urlTitle}`}
                   className="inline-flex items-center px-6 py-3 rounded-lg bg-[#f20574] text-white font-medium text-lg transition-all hover:bg-[#d30062] hover:shadow-lg self-start"
@@ -171,7 +182,7 @@ const BlogList = () => {
         )}
 
         {/* Other Blog Posts Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {otherBlogs.map((blog) => (
             <div 
               key={blog.id} 
@@ -198,6 +209,11 @@ const BlogList = () => {
                     {blog.title}
                   </Link>
                 </h3>
+
+                {/* Preview text added here */}
+                <p className="text-gray-600 mb-4 line-clamp-3">
+                  {blog.preview.replace(/<[^>]*>/g, '')}
+                </p>
 
                 <div className="mt-auto">
                   <div className="flex flex-wrap gap-2 mb-4">
@@ -236,9 +252,7 @@ const BlogList = () => {
                 className={`relative inline-flex items-center px-3 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium ${currentPage === 1 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-50'}`}
               >
                 <span className="sr-only">Previous</span>
-                <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
+                <BsArrowLeftCircleFill />
               </button>
               
               {/* Page numbers - limit to 5 visible pages */}
@@ -260,7 +274,7 @@ const BlogList = () => {
                     key={pageNum}
                     onClick={() => paginate(pageNum)}
                     className={`relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium ${currentPage === pageNum
-                      ? 'z-10 bg-[#f20574] text-white border-[#f20574]'
+                      ? 'font-bold bg-[#f20574] text-pink-600 border-[#f20574]'
                       : 'text-gray-700 hover:bg-gray-50'
                     }`}
                   >
@@ -275,9 +289,7 @@ const BlogList = () => {
                 className={`relative inline-flex items-center px-3 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium ${currentPage === totalPages ? 'text-gray-300 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-50'}`}
               >
                 <span className="sr-only">Next</span>
-                <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4-4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                </svg>
+                <BsArrowRightCircleFill />
               </button>
             </nav>
             <div className="text-gray-500 ml-4 self-center text-sm">

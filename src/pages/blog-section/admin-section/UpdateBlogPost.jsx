@@ -12,7 +12,6 @@ const UpdateBlogPost = () => {
   const [updateBlog] = useUpdateBlogMutation();
   const { data: blog, isLoading, isError } = useGetBlogByUrlTitleQuery(urlTitle); // Fetch blog data by ID
   
-
   // State variables for form fields
   // const [title, setTitle] = useState('');
   // const [id, setId] = useState('');
