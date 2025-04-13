@@ -93,7 +93,7 @@ function Payment() {
           if (verifyData.success) {
             setResponseId(response.razorpay_payment_id);
             setPaymentSuccess(true);
-            navigate("/update_editor");
+            navigate("/update_editor", { state: { template },replace: true });
           } else {
             toast.error("Payment verification failed");
           }

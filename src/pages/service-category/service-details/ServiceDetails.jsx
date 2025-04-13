@@ -82,7 +82,6 @@ const ServiceDetails = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const [service, setService] = useState(null);
   const [realService, setRealService] = useState(null);
-
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -144,7 +143,7 @@ const ServiceDetails = () => {
       console.error(error);
     }
   };
-
+  console.log(data)
   return (
     <>
       {isLoggedIn ? (
@@ -181,7 +180,7 @@ const ServiceDetails = () => {
                 <p className="mt-2 text-gray-500 capitalize">
                   By{" "}
                   <span className="hover:underline hover:text-pink-500 cursor-pointer">
-                    {data?.service?.vendor?.name}
+                    {data?.service?.vendor?.business_name}
                   </span>
                 </p>
                 <p className="mt-2 font-semibold">

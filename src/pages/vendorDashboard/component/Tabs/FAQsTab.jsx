@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { MdClose } from "react-icons/md";
-import { useCreateFAQMutation, useUpdateFAQMutation } from "../../../../redux/serviceSlice";
+import {
+  useCreateFAQMutation,
+  useUpdateFAQMutation,
+} from "../../../../redux/serviceSlice";
 import { toast } from "react-toastify";
 import CustomButton from "../../../../components/global/button/CustomButton";
 import { FaPlus } from "react-icons/fa";
 
-export default function FAQsTab({ serviceId ,handleCloseFAQ }) {
+export default function FAQsTab({ serviceId, handleCloseFAQ }) {
   const [createFAQ] = useCreateFAQMutation();
   // const {} = useUpdateFAQMutation();
 
@@ -21,31 +24,30 @@ export default function FAQsTab({ serviceId ,handleCloseFAQ }) {
     name: "faqs",
   });
 
-  const [selectedIndex, setSelectedIndex] = useState(0); // Default to the first FAQ
+  const [selectedIndex, setSelectedIndex] = useState(0); 
 
-  // Ensure the last FAQ is selected if a new FAQ is added
   useEffect(() => {
     if (fields.length > 0) {
-      setSelectedIndex(fields.length - 1); // Select the last FAQ
+      setSelectedIndex(fields.length - 1); 
     }
-  }, [fields]); // Trigger this effect whenever fields change
+  }, [fields]); 
 
-  const onSubmit = async(data) => {
+  const onSubmit = async (data) => {
     try {
-       const response = await createFAQ({id: serviceId,
-        data: data.faqs
-       }).unwrap()
+      const response = await createFAQ({
+        id: serviceId,
+        data: data.faqs,
+      }).unwrap();
 
-       console.log(response)
+      console.log(response);
 
-       const {success, message} =  response
-       if(success){
-        toast.success(message)
-        handleCloseFAQ(true)
-       }
-
+      const { success, message } = response;
+      if (success) {
+        toast.success(message);
+        handleCloseFAQ(true);
+      }
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
   };
 
@@ -65,7 +67,6 @@ export default function FAQsTab({ serviceId ,handleCloseFAQ }) {
           className="absolute top-3 right-3 bg-gray-100 text-primary rounded-full p-2 hover:bg-gray-200 transition"
         >
           <MdClose className="w-5 h-5" />
-
         </button>
 
         {/* FAQ Index Stack */}
@@ -97,7 +98,13 @@ export default function FAQsTab({ serviceId ,handleCloseFAQ }) {
                 <div className="absolute top-0 right-0 mt-2 mr-2">
                   <button
                     type="button"
-                    onClick={() => remove(selectedIndex)}
+                    onClick={() => {
+                      remove(selectedIndex);
+                      setSelectedIndex((prev) => {
+                        if (fields.length === 1) return 0;
+                        return prev === fields.length - 1 ? prev - 1 : prev;
+                      });
+                    }}
                     className="relative bg-gray-300 text-primary rounded-lg w-8 h-8 flex items-center justify-center shadow-md hover:shadow-lg transition-all transform hover:scale-125"
                   >
                     x
@@ -164,18 +171,17 @@ export default function FAQsTab({ serviceId ,handleCloseFAQ }) {
           <div className="flex gap-4 justify-center mt-6">
             <CustomButton
               type="button"
-              leftIcon={<FaPlus/>}
+              leftIcon={<FaPlus />}
               text="ADD"
               onClick={() => append({ question: "", answer: "" })}
               className="px-8 py-2 bg-primary text-white font-medium rounded-lg shadow-md hover:bg-pink-500 transition transform hover:scale-105"
             />
-              
-            
+
             <button
               type="submit"
               className="px-8 py-2 border border-ring text-green-500 font-medium rounded-lg shadow-md hover:bg-green-100 transition transform hover:scale-105"
             >
-              SAVE 
+              SAVE
             </button>
           </div>
         </form>

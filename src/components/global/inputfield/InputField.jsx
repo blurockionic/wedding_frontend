@@ -12,6 +12,7 @@ export const InputField = ({
   register,
   disabled = false,
   error,
+  autoComplete,
   icon,
   onChange = () => {},
   placeholder,
@@ -32,6 +33,7 @@ export const InputField = ({
         type={type}
         autoFocus={autoFocus}
         id={id}
+        autoComplete={autoComplete}
         min={min}
         max={max}
         step={step}
