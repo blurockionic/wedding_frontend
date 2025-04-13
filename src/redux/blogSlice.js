@@ -29,7 +29,21 @@ export const blogApiSlice = createApi({
 
   endpoints: (builder) => ({
     // 🔓 PUBLIC
-    getBlogs: builder.query({ query: () => `/` }),
+    getBlogs: builder.query({
+      query: (params = {}) => {
+        // Convert params object to URL query string
+        const queryParams = new URLSearchParams();
+        if (params.s !== undefined) queryParams.append('s', params.s);
+        if (params.t !== undefined) queryParams.append('t', params.t);
+        if (params.tag) queryParams.append('tag', params.tag);
+        if (params.status) queryParams.append('status', params.status);
+        
+        return {
+          url: `/?${queryParams.toString()}`,
+          method: 'GET',
+        };
+      },
+    }),
     getBlogByUrlTitle: builder.query({ query: (urlTitle) => `/${urlTitle}` }),
     getAllTags: builder.query({ query: () => `/tags` }),
     getTagByName: builder.query({ query: (tagName) => `/tags/${tagName}` }),

@@ -5,6 +5,7 @@ import { useAddCommentMutation, useDeleteCommentMutation, useToggleLikeBlogMutat
 import { useDispatch, useSelector } from "react-redux";
 import { use } from 'react';
 import { set } from 'lodash';
+import Footer from '../../Footer';
 
 const Blog = () => {
 
@@ -103,9 +104,7 @@ const Blog = () => {
     return date.toLocaleString('en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+      day: 'numeric'
     });
   };
 
@@ -116,15 +115,9 @@ const Blog = () => {
   const { title, content, tags = [], comments = [], createdAt, authorUrlTitle } = blogData.data;
 
   return (
+    <div>
     <div className="flex-grow px-6 py-4 overflow-y-auto relative">
       <div className="max-w-4xl mx-auto">
-        {/* View All Blogs Button - SIMPLE PINK STYLING ON LEFT */}
-        <div className="mb-6 text-left">
-          <Link to="/blogs" className="inline-block px-4 py-2 rounded-md bg-pink-500 text-white hover:bg-pink-600 transition-colors duration-200">
-            View All Blogs
-          </Link>
-        </div>
-
         {/* Blog Title */}
         <h1 className="text-4xl font-bold mb-6">{title}</h1>
 
@@ -247,6 +240,17 @@ const Blog = () => {
         )}
       </div>
 
+      {/* Floating All Blogs Button - now at bottom left */}
+      <div className="fixed bottom-8 left-8">
+        <Link 
+          to="/blogs" 
+          className="flex items-center justify-center bg-white text-pink-500 hover:text-pink-600 rounded-full p-3 shadow-lg focus:outline-none transition-all duration-200 hover:shadow-xl"
+          title="View All Blogs"
+        >
+          <span className="text-sm font-medium">All Blogs</span>
+        </Link>
+      </div>
+
       {/* Floating Share Button */}
       <div className="fixed bottom-8 right-8">
         <div className="relative">
@@ -284,12 +288,14 @@ const Blog = () => {
           )}
           <button
             onClick={() => setShowShareOptions(!showShareOptions)}
-            className="bg-pink-500 hover:bg-pink-600 text-white rounded-full p-3 shadow-lg focus:outline-none"
+            className="bg-white text-pink-500 hover:text-pink-600 rounded-full p-3 shadow-lg focus:outline-none transition-all duration-200 hover:shadow-xl"
           >
             <FaShare size={18} />
           </button>
         </div>
       </div>
+    </div>
+      <Footer/>
     </div>
   );
 };
