@@ -7,22 +7,26 @@ import Footer from '../../Footer';
 
 const Blog = () => {
   const { urlTitle: blogUrlTitle } = useParams();
-  const { data: blogData, isLoading, error } = useGetBlogByUrlTitleQuery(blogUrlTitle);
+  const { data: blogData, isLoading, error, refetch } = useGetBlogByUrlTitleQuery(blogUrlTitle);
   const [addComment] = useAddCommentMutation();
   const [deleteComment] = useDeleteCommentMutation();
   const [toggleLike] = useToggleLikeBlogMutation();
+  const [isCommentLoading, setIsCommentLoading] = useState(false);
 
   const [showComments, setShowComments] = useState(false);
   const [newComment, setNewComment] = useState('');
   const [showShareOptions, setShowShareOptions] = useState(false);
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState(0);
+  const [comments, setComments] = useState([]);
 
   const currentUser = useSelector((state) => state.auth.user);
   const isSignedIn = useSelector((state) => state.auth.isLoggedIn);
 
   useEffect(() => {
     setLikes(blogData?.data.likes || 0);
+    setComments(blogData?.data.comments || []);
+    console.log(comments);
   }, [blogData]);
 
   useEffect(() => {
@@ -61,21 +65,26 @@ const Blog = () => {
 
     if (newComment.trim()) {
       try {
+        setIsCommentLoading(true);
         await addComment({
-          blogUrlTitle,
-          userUrlTitle: currentUser.urlTitle,
-          content: newComment
+          blogId: blogData.data.id,
+          content: {content: newComment}
         });
+        await refetch();
         setNewComment('');
+        setIsCommentLoading(false);
       } catch (err) {
         console.error('Failed to add comment:', err);
       }
     }
   };
 
-  const handleDeleteComment = async (commentUrlTitle) => {
+  const handleDeleteComment = async (commentId) => {
     try {
-      await deleteComment({ commentUrlTitle, blogUrlTitle });
+      setIsCommentLoading(true);
+      await deleteComment(commentId);
+      await refetch();
+      setIsCommentLoading(false);
     } catch (err) {
       console.error('Failed to delete comment:', err);
     }
@@ -100,7 +109,7 @@ const Blog = () => {
   if (error) return <div className="text-center py-10 text-red-500">Error loading blog</div>;
   if (!blogData) return <div className="text-center py-10">Blog not found</div>;
 
-  const { title, content, tags = [], comments = [], createdAt, authorUrlTitle, coverImage, author } = blogData.data;
+  const { title, content, tags = [], createdAt, authorUrlTitle, coverImage, author } = blogData.data;
 
   return (
     <div>
@@ -229,30 +238,38 @@ const Blog = () => {
 
               {/* Comment List */}
               <div className="space-y-4">
+                {isCommentLoading && <p className="text-gray-500">Loading comments...</p>}
                 {comments && comments.length > 0 ? (
                   comments.map(comment => (
-                    <div key={comment.urlTitle} className="border-b pb-3">
+                    <div key={comment.id} className="border-b pb-3">
                       <div className="flex justify-between items-center mb-1">
                         <div className="flex items-center">
                           <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-2">
-                            {comment.author?.profilePicture ? (
-                              <img src={comment.author.profilePicture} alt={comment.author?.name} className="w-full h-full object-cover rounded-full" />
+                            {comment.author?.profile_photo? (
+                              <img src={comment.author.profile_photo} alt={comment.author?.user_name} className="w-full h-full object-cover rounded-full" />
                             ) : (
                               <FaUser className="text-gray-400" size={14} />
                             )}
                           </div>
-                          <p className="font-semibold">{comment.author?.name || 'Anonymous'}</p>
+                          <p className="font-semibold">{comment.author?.user_name || 'Anonymous'}</p>
                         </div>
                         <div className="flex items-center">
                           <p className="text-xs text-gray-500 mr-2">{formatDate(comment.createdAt)}</p>
-                          {currentUser && comment.authorUrlTitle === currentUser.urlTitle && (
+                          {currentUser && (comment.authorId === currentUser.id) ? (
                             <button
-                              onClick={() => handleDeleteComment(comment.urlTitle)}
+                              onClick={() => handleDeleteComment(comment.id)}
                               className="text-xs text-red-500 hover:text-red-700"
                             >
                               Delete
                             </button>
-                          )}
+                          ) : currentUser && (currentUser.role === 'ADMIN' || currentUser.role === 'SUPER_ADMIN') && 
+                            <button
+                              onClick={() => handleDeleteComment(comment.id)}
+                              className="text-xs text-red-500 hover:text-red-700"
+                            >
+                              Admin Delete
+                            </button>
+                          }
                         </div>
                       </div>
                       <p className="pl-10">{comment.content}</p>
