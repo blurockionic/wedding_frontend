@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useGetBlogsQuery } from "../../../redux/blogSlice.js";
 import Footer from "../../Footer";
-import { BsArrowRightCircleFill, BsArrowLeftCircleFill  } from "react-icons/bs";
+import { GrFormNext, GrFormPrevious  } from "react-icons/gr";
 
 const BlogList = () => {
   const location = useLocation();
@@ -85,7 +85,8 @@ const BlogList = () => {
     preview: blog.content.replace(/<[^>]*>|&nbsp;|\u00A0/g, ' ').substring(0, 150) + '...', // Add preview text
     readTime: `${Math.ceil((blog.content.length || 0) / 1000)} min read`,
     commentCount: blog._count?.comments || 0,
-    likeCount: blog._count?.likedBy || 0
+    likeCount: blog._count?.likedBy || 0,
+    viewCount: blog.viewCount || 0,
   })) || [];
   
   // Get hero blog and other blogs
@@ -157,6 +158,7 @@ const BlogList = () => {
                   </span>
                   <span className="text-gray-200 text-sm">{formatDate(heroBlog.date)}</span>
                   <span className="text-gray-200 text-sm">• {heroBlog.readTime}</span>
+                  <span className="text-gray-200 text-sm">• {heroBlog.viewCount} Views</span>
                 </div>
                 
                 <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4 leading-tight">
@@ -201,7 +203,8 @@ const BlogList = () => {
               
               <div className="p-6 flex flex-col flex-grow">
                 <div className="flex items-center mb-3">
-                  <span className="text-sm text-gray-500">{formatDate(blog.date)}</span>
+                  <span className="text-sm text-gray-500">{formatDate(blog.date)} </span>
+                  <span className="text-sm text-gray-500">&nbsp;• {blog.viewCount} Views</span>
                 </div>
                 
                 <h3 className="text-xl font-bold text-gray-800 mb-3 hover:text-[#f20574] transition duration-300">
@@ -252,7 +255,7 @@ const BlogList = () => {
                 className={`relative inline-flex items-center px-3 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium ${currentPage === 1 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-50'}`}
               >
                 <span className="sr-only">Previous</span>
-                <BsArrowLeftCircleFill />
+                <GrFormPrevious />
               </button>
               
               {/* Page numbers - limit to 5 visible pages */}
@@ -289,7 +292,7 @@ const BlogList = () => {
                 className={`relative inline-flex items-center px-3 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium ${currentPage === totalPages ? 'text-gray-300 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-50'}`}
               >
                 <span className="sr-only">Next</span>
-                <BsArrowRightCircleFill />
+                <GrFormNext />
               </button>
             </nav>
             <div className="text-gray-500 ml-4 self-center text-sm">
