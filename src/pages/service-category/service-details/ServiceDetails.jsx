@@ -89,6 +89,7 @@ const ServiceDetails = () => {
         ))}
       </div>
     );
+    const isUser = isLoggedIn && role?.toLowerCase() === "user";
 
     const contactButtons = (
       <>
@@ -117,7 +118,7 @@ const ServiceDetails = () => {
               break;
           }
     
-          const isUser = isLoggedIn && role?.toLowerCase() === "user";
+          
     
           return (
             <button
@@ -195,9 +196,10 @@ const ServiceDetails = () => {
               <button
                 className="w-full mt-4 bg-green-600 text-white py-2 rounded-lg font-semibold"
                 onClick={() => {
-                  if (isLoggedIn) {
+                  if (!isUser) {
                     setShowLoginModal(true);
                   } else {
+                    leadHandler();
                     setShowPhone(true);
                   }
                 }}
