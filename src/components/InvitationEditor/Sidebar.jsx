@@ -5,14 +5,14 @@ import { TfiText } from "react-icons/tfi";
 import { TbIcons } from "react-icons/tb";
 import { FiDownload } from "react-icons/fi";
 import TemplatesSection from "./TemplatesSection";
-import ElementsSection from "./ElementsSection"; // Import the new component
+import ElementsSection from "./ElementsSection";
 import TextSection from "./TextSection";
 import UploadsSection from "./UploadsSection";
 import AdminPanel from "./AdminPanel";
 import { SiAdminer } from "react-icons/si";
 import { MdUpdate } from "react-icons/md";
 import { Loader2 } from "lucide-react";
-
+import { useSelector } from "react-redux";
 
 const Sidebar = ({
   templates,
@@ -37,6 +37,7 @@ const Sidebar = ({
 }) => {
   const [activeSection, setActiveSection] = useState(null);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const userRole = useSelector((state) => state.auth.user?.role);
 
   const sidebarItems = [
     { id: "templates", label: "Templates", icon: <BsGrid className="w-6 h-6 text-rose-500" /> },
@@ -45,9 +46,10 @@ const Sidebar = ({
     { id: "uploads", label: "Uploads", icon: <BsCloudArrowUp className="w-6 h-6 text-rose-500" /> },
     { id: "projects", label: "Projects", icon: <BsFolder className="w-6 h-6 text-rose-500" /> },
     { id: "positions", label: "Positions", icon: <FaLayerGroup className="w-6 h-6 text-rose-500" /> },
-    { id: "admin", label: "Admin", icon: <SiAdminer className="w-6 h-6 text-rose-500" /> },
+    ...(userRole === "admin" || userRole === "superadmin"
+      ? [{ id: "admin", label: "Admin", icon: <SiAdminer className="w-6 h-6 text-rose-500" /> }]
+      : []),
     { id: "update", label: "Save design", icon: <MdUpdate className="w-6 h-6 text-rose-500" /> },
-    
   ];
 
   const handleSectionToggle = (sectionId) => {
@@ -57,7 +59,6 @@ const Sidebar = ({
   const handleTemplateClick = (template) => {
     setSelectedTemplate(template);
     addTemplateToCanvas(template);
-    // console.log(template)
   };
 
   const renderSectionContent = () => {
@@ -89,19 +90,30 @@ const Sidebar = ({
       case "uploads":
         return <UploadsSection onImageUpload={handleImageUpload} />;
       case "admin":
-        return <AdminPanel saveTemplate={saveTemplate}/>;
+        if (userRole === "admin" || userRole === "superadmin") {
+          return <AdminPanel saveTemplate={saveTemplate} />;
+        }
+        return null;
       case "update":
-        return (<>
-        
-        <button className="bg-primary px-7 py-2 rounded-lg text-white" onClick={handleOnUpdateDesign}>
-        {isLoading ? <Loader2 className="animate-spin"/> : "Save Design"}
-        </button>
-      
-        </>);
+        return (
+          <div className="space-y-3 p-4">
+            <button 
+              className="bg-primary px-7 py-2 rounded-lg text-white w-full" 
+              onClick={handleOnUpdateDesign}
+            >
+              {isLoading ? <Loader2 className="animate-spin"/> : "Update Design"}
+            </button>
+            <button
+              onClick={saveTemplate}
+              className="p-2 bg-purple-500 text-white rounded-lg w-full hover:bg-purple-600"
+            >
+              Save Template
+            </button>
+          </div>
+        );
       case "projects":
         return (
           <div className="space-y-3 p-4">
-            
             <button
               onClick={downloadImage}
               className="p-2 bg-red-500 text-white rounded-lg flex items-center justify-center gap-2 hover:bg-red-600"
@@ -113,7 +125,6 @@ const Sidebar = ({
       case "positions":
         return (
           <div className="space-y-3 p-4">
-            {/* Layering Section */}
             <div>
               <h3 className="text-md font-semibold mb-2 flex items-center gap-2">
                 <FaLayerGroup /> Layering
@@ -145,8 +156,6 @@ const Sidebar = ({
                 </button>
               </div>
             </div>
-
-            {/* Lock/Unlock Section */}
             <div className="mt-4">
               <h3 className="text-md font-semibold mb-2 flex items-center gap-2">
                 <FaLock /> Lock/Unlock
@@ -175,7 +184,6 @@ const Sidebar = ({
 
   return (
     <div className="flex h-screen overflow-y-scroll">
-      {/* Icon Sidebar */}
       <div className="p-2 flex md:flex-col flex-row items-center md:py-6 py-2 space-x-4 md:space-x-0 space-y-6 border-r border-gray-200 overflow-x-auto md:overflow-x-visible ">
         {sidebarItems.map((item) => (
           <button
@@ -189,8 +197,6 @@ const Sidebar = ({
           </button>
         ))}
       </div>
-
-      {/* Content Area */}
       <div
         className={`md:w-[320px] w-full bg-white flex flex-col gap-4 transition-all duration-300 ${
           activeSection ? "block" : "hidden"

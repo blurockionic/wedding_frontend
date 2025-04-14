@@ -74,7 +74,7 @@ const UploadsSection = ({ onImageUpload }) => {
         />
       </div>
       <div className="flex gap-4 mb-4">
-        {["Images", "Videos", "Audio"].map((tab) => (
+        {["Images"].map((tab) => (
           <button
             key={tab}
             className={`pb-2 text-sm font-semibold ${
