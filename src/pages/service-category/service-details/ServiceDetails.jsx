@@ -19,9 +19,9 @@ import useIsDesktop from "../../../hooks/useIsDesktop";
 const ServiceDetails = () => {
   const { id } = useParams();
 
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const isLoggedIn = useSelector((state) => state.auth?.isLoggedIn);
 
-  const { role } = useSelector((state) => state.auth.user);
+  const { role } = useSelector((state) => state.auth?.user);
 
   const navigate = useNavigate();
   const isDesktop = useIsDesktop();
