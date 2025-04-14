@@ -21,7 +21,7 @@ const ServiceDetails = () => {
 
   const isLoggedIn = useSelector((state) => state.auth?.isLoggedIn);
 
-  const { role } = useSelector((state) => state.auth?.user);
+  const role = useSelector((state) => state.auth?.user?.role) ?? "";
 
   const navigate = useNavigate();
   const isDesktop = useIsDesktop();
