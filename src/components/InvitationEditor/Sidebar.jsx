@@ -37,6 +37,7 @@ const Sidebar = ({
 }) => {
   const [activeSection, setActiveSection] = useState(null);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [isDownloadOpen, setIsDownloadOpen] = useState(false);
   const userRole = useSelector((state) => state.auth.user?.role);
   console.log(userRole.role);
 
@@ -60,6 +61,16 @@ const Sidebar = ({
   const handleTemplateClick = (template) => {
     setSelectedTemplate(template);
     addTemplateToCanvas(template);
+  };
+
+  const toggleDownloadDropdown = () => {
+    setIsDownloadOpen(!isDownloadOpen);
+  };
+
+  const handleDownload = (format) => {
+    console.log(`Downloading as ${format}`); // Debug log to confirm format
+    downloadImage(format);
+    setIsDownloadOpen(false);
   };
 
   const renderSectionContent = () => {
@@ -115,12 +126,30 @@ const Sidebar = ({
       case "projects":
         return (
           <div className="space-y-3 p-4">
-            <button
-              onClick={downloadImage}
-              className="p-2 bg-red-500 text-white rounded-lg flex items-center justify-center gap-2 hover:bg-red-600"
-            >
-              <FiDownload /> Download
-            </button>
+            <div className="relative">
+              <button
+                onClick={toggleDownloadDropdown}
+                className="p-2 bg-red-500 text-white rounded-lg flex items-center justify-center gap-2 w-full hover:bg-red-600"
+              >
+                <FiDownload /> Download
+              </button>
+              {isDownloadOpen && (
+                <div className="absolute mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                  <button
+                    onClick={() => handleDownload("png")}
+                    className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
+                  >
+                    PNG
+                  </button>
+                  <button
+                    onClick={() => handleDownload("jpeg")}
+                    className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
+                  >
+                    JPG
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         );
       case "positions":
