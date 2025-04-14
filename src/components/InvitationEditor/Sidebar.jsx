@@ -38,6 +38,7 @@ const Sidebar = ({
   const [activeSection, setActiveSection] = useState(null);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const userRole = useSelector((state) => state.auth.user?.role);
+  console.log(userRole.role);
 
   const sidebarItems = [
     { id: "templates", label: "Templates", icon: <BsGrid className="w-6 h-6 text-rose-500" /> },

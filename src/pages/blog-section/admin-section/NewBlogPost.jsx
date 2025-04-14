@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import BlogPreview from '../blog-section/BlogPreview';
-import { useCreateBlogMutation, useUpdateBlogMutation } from '../../../redux/blogSlice';
+import { useAddBlogMutation, useUpdateBlogMutation } from '../../../redux/blogSlice';
 
 const NewBlogPost = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [createBlog] = useCreateBlogMutation();
+  const [createBlog] = useAddBlogMutation();
   const [updateBlog] = useUpdateBlogMutation();
 
-  const [title, setTitle] = useState('');
+  // const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [coverImage, setCoverImage] = useState('');
   const [coverImagePreview, setCoverImagePreview] = useState('');
@@ -20,8 +21,19 @@ const NewBlogPost = () => {
   const [saving, setSaving] = useState(false);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [currentDate] = useState(new Date());
-  const [isEditMode, setIsEditMode] = useState(false);
+  // const [isEditMode, setIsEditMode] = useState(false);
   const [blogId, setBlogId] = useState(null);
+
+  // Setup react-hook-form with default values
+    const { register, handleSubmit, setValue } = useForm({
+      defaultValues: {
+        title: '',
+        // id: '',
+        // content: '',
+        // tags: [], 
+        // tagInput: '',
+      },
+    });
 
   // Custom toolbar options for Quill editor
   const modules = {
@@ -33,21 +45,48 @@ const NewBlogPost = () => {
     }
   };
 
-  const saveDraft = async () => {
+  // const saveDraft = async () => {
+  //   setSaving(true);
+  //   const blogData = { title, content, tags, coverImage };
+  //   try {
+  //     if (isEditMode) {
+  //       await updateBlog({ id: blogId, blogData });
+  //       alert('Blog post updated successfully!');
+  //     } else {
+  //       await createBlog(blogData);
+  //       alert('Blog post created successfully!');
+  //     }
+  //     navigate('/blog_dashboard');
+  //   } catch (error) {
+  //     console.error('Error saving blog post:', error);
+  //     alert('Error saving blog post.');
+  //   } finally {
+  //     setSaving(false);
+  //   }
+  // };
+
+  // Form submit handler
+  const saveDraft = async (formData) => {
     setSaving(true);
-    const blogData = { title, content, tags, coverImage };
+    // Create a FormData payload to include the cover image if provided
+    const createPayload = new FormData();
+    createPayload.append('title', formData.title);
+    createPayload.append('content', content);
+    createPayload.append('tags', JSON.stringify(tags)); // adjust format as needed
+
+    if (coverImage) {
+      createPayload.append('coverImage', coverImage);
+    }
+
     try {
-      if (isEditMode) {
-        await updateBlog({ id: blogId, blogData });
-        alert('Blog post updated successfully!');
-      } else {
-        await createBlog(blogData);
-        alert('Blog post created successfully!');
-      }
-      navigate('/blog_dashboard');
+      console.log("blog data", createPayload);
+      // await updateBlog({ id, blogData }).unwrap(); // Update the blog post
+      await createBlog(createPayload).unwrap();
+      alert('Blog post created successfully!');
+      navigate('/blog_dashboard'); // Navigate back to the dashboard
     } catch (error) {
-      console.error('Error saving blog post:', error);
-      alert('Error saving blog post.');
+      console.error('Error creating blog post:', error);
+      alert('Error creating blog post.');
     } finally {
       setSaving(false);
     }
@@ -98,30 +137,31 @@ const NewBlogPost = () => {
     }
   };
 
-  // Load data from query parameters
-  useEffect(() => {
-    const id = searchParams.get('id');
-    const title = searchParams.get('title');
-    const content = searchParams.get('content');
-    const tags = searchParams.get('tags')?.split(',') || [];
+  // // Load data from query parameters
+  // useEffect(() => {
+  //   const id = searchParams.get('id');
+  //   const title = searchParams.get('title');
+  //   const content = searchParams.get('content');
+  //   const tags = searchParams.get('tags')?.split(',') || [];
 
-    if (id) {
-      setIsEditMode(true);
-      setBlogId(id);
-      setTitle(title || '');
-      setContent(content || '');
-      setTags(tags);
-    }
-  }, [searchParams]);
+  //   if (id) {
+  //     setIsEditMode(true);
+  //     setBlogId(id);
+  //     setTitle(title || '');
+  //     setContent(content || '');
+  //     setTags(tags);
+  //   }
+  // }, [searchParams]);
 
-  // Format date for display
-  const formattedDate = currentDate.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
+  // // Format date for display
+  // const formattedDate = currentDate.toLocaleDateString('en-US', {
+  //   year: 'numeric',
+  //   month: 'long',
+  //   day: 'numeric'
+  // });
 
   return (
+    <form onSubmit={handleSubmit(saveDraft)}>
     <div className="flex flex-col h-screen bg-gray-50">
       {/* First level navbar */}
       <div className="flex items-center justify-between px-8 py-4 bg-white border-b border-gray-200 shadow-sm">
@@ -142,8 +182,7 @@ const NewBlogPost = () => {
             type="text"
             placeholder="Blog Title"
             className="w-full px-5 py-3 text-xl font-medium border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#f20574] focus:border-[#f20574] outline-none transition-all bg-white"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            {...register('title', { required: true })}
             disabled={isPreviewMode}
           />
         </div>
@@ -158,10 +197,10 @@ const NewBlogPost = () => {
           </button>
           <button
             className="px-4 py-2 text-sm font-medium text-[#f20574] bg-white border border-[#f20574] rounded-md hover:bg-pink-50 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#f20574] disabled:opacity-50"
-            onClick={saveDraft}
+            type="submit"
             disabled={saving || isPreviewMode}
           >
-            {saving ? 'Saving...' : isEditMode ? 'Update' : 'Publish'}
+            {saving ? 'Saving...' : 'Publish'}
           </button>
         </div>
       </div>
@@ -328,6 +367,7 @@ const NewBlogPost = () => {
         </div>
       </div>
     </div>
+    </form>
   );
 };
 

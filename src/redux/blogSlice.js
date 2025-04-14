@@ -1,8 +1,12 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const getBaseUrl = (role) => {
-  switch (role) {
+const getBaseUrl = (user) => {
+  const userRole = user?.role?.toUpperCase();
+  console.log("User Role:", userRole);
+  switch (userRole) {
     case "ADMIN":
+      return `${import.meta.env.VITE_API_URL}/api/v1/blog/admin`;
+    case "SUPER_ADMIN":
       return `${import.meta.env.VITE_API_URL}/api/v1/blog/admin`;
     case "USER":
       return `${import.meta.env.VITE_API_URL}/api/v1/blog/user`;
@@ -13,105 +17,75 @@ const getBaseUrl = (role) => {
 
 export const blogApiSlice = createApi({
   reducerPath: "blogApiSlice",
-  baseQuery: fetchBaseQuery({
-    baseUrl: getBaseUrl(import.meta.env.VITE_USER_ROLE),
-    credentials: "include",
-  }),
+  baseQuery: async (args, api, extraOptions) => {
+    const state = api.getState();
+    const user = state.auth?.user;
+    const dynamicBaseUrl = getBaseUrl(user);
+    const rawBaseQuery = fetchBaseQuery({
+      baseUrl: dynamicBaseUrl,
+      credentials: "include",
+    });
+    return rawBaseQuery(args, api, extraOptions);
+  },
+
   endpoints: (builder) => ({
-    // Create a new blog
-    createBlog: builder.mutation({
-      query: (blogData) => ({
-        url: `/add`,
-        method: "POST",
-        body: blogData,
-      }),
+    // 🔓 PUBLIC
+    getBlogs: builder.query({
+      query: (params = {}) => {
+        // Convert params object to URL query string
+        const queryParams = new URLSearchParams();
+        if (params.s !== undefined) queryParams.append('s', params.s);
+        if (params.t !== undefined) queryParams.append('t', params.t);
+        if (params.tag) queryParams.append('tag', params.tag);
+        if (params.status) queryParams.append('status', params.status);
+        
+        return {
+          url: `/?${queryParams.toString()}`,
+          method: 'GET',
+        };
+      },
     }),
+    getBlogByUrlTitle: builder.query({ query: (urlTitle) => `/${urlTitle}` }),
+    getAllTags: builder.query({ query: () => `/tags` }),
+    getTagByName: builder.query({ query: (tagName) => `/tags/${tagName}` }),
+    getBlogsByTag: builder.query({ query: (tagName) => `/tag/${tagName}` }),    
 
-    // Fetch all blogs
-    getAllBlogs: builder.query({
-      query: () => ({
-        url: `/allBlog`,
-        method: "GET",
-      }),
-    }),
+    // 🔐 ADMIN
+    addBlog: builder.mutation({ query: (body) => ({ url: `/`, method: "POST", body }) }),
+    updateBlog: builder.mutation({ query: ({ id, blogData }) => ({ url: `/${id}`, method: "PATCH", body: blogData }) }),
+    deleteBlog: builder.mutation({ query: (id) => ({ url: `/${id}`, method: "DELETE" }) }),
+    addTag: builder.mutation({ query: (body) => ({ url: `/tags`, method: "POST", body }) }),
+    updateTag: builder.mutation({ query: ({ id, body }) => ({ url: `/tags/${id}`, method: "PUT", body }) }),
+    deleteTag: builder.mutation({ query: () => ({ url: `/tags`, method: "DELETE" }) }),
+    getTotalViewCount: builder.query({ query: () => `/viewCount` }),
+    getBlogCount: builder.query({ query: () => `blog-count/` }),
 
-    // Fetch a single blog by ID
-    getBlogById: builder.query({
-      query: (id) => ({
-        url: `/allBlog/${id}`,
-        method: "GET",
-      }),
-    }),
-
-    // Update a blog
-    updateBlog: builder.mutation({
-      query: ({ id, blogData }) => ({
-        url: `/allBlog/${id}`,
-        method: "PUT",
-        body: blogData,
-      }),
-    }),
-
-    // Delete a blog
-    deleteBlog: builder.mutation({
-      query: (id) => ({
-        url: `/allBlog/${id}`,
-        method: "DELETE",
-      }),
-    }),
-
-    // Toggle like on a blog
-    toggleLikeBlog: builder.mutation({
-      query: (id) => ({
-        url: `/allBlog/${id}/togglelike`,
-        method: "POST",
-      }),
-    }),
-
-    // Add a comment to a blog
-    addComment: builder.mutation({
-      query: ({ id, content }) => ({
-        url: `/allBlog/${id}/comment`,
-        method: "POST",
-        body: { content },
-      }),
-    }),
-
-    // Delete a comment
-    deleteComment: builder.mutation({
-      query: ({ id, commentId }) => ({
-        url: `/allBlog/${id}/comment/${commentId}`,
-        method: "DELETE",
-      }),
-    }),
-
-    // Get blog count
-    getBlogCount: builder.query({
-      query: () => ({
-        url: `/blog_count`,
-        method: "GET",
-      }),
-    }),
-
-    // Get view count
-    getViewCount: builder.query({
-      query: () => ({
-        url: `/view_count`,
-        method: "GET",
-      }),
-    }),
+    // 🔑 USER
+    addComment: builder.mutation({ query: ({ blogId, content }) => ({ url: `/${blogId}/comments`, method: "POST", body: content }) }),
+    deleteComment: builder.mutation({ query: (commentId) => ({ url: `/comments/${commentId}`, method: "DELETE" }) }),
+    toggleLikeBlog: builder.mutation({ query: (blogId) => ({ url: `/${blogId}/like`, method: "POST" }) }),
+    searchBlogs: builder.query({ query: (params) => ({ url: `/search`, params }) }),
   }),
 });
 
 export const {
-  useCreateBlogMutation,
-  useGetAllBlogsQuery,
-  useGetBlogByIdQuery,
+  useGetBlogsQuery,
+  useGetBlogByUrlTitleQuery,
+  useGetAllTagsQuery,
+  useGetTagByNameQuery,
+  useGetBlogsByTagQuery,
+  useGetBlogCountQuery,
+  useGetTotalViewCountQuery,
+
+  useAddBlogMutation,
   useUpdateBlogMutation,
   useDeleteBlogMutation,
-  useToggleLikeBlogMutation,
+  useAddTagMutation,
+  useUpdateTagMutation,
+  useDeleteTagMutation,
+
   useAddCommentMutation,
   useDeleteCommentMutation,
-  useGetBlogCountQuery,
-  useGetViewCountQuery,
+  useToggleLikeBlogMutation,
+  useSearchBlogsQuery,
 } = blogApiSlice;

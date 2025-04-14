@@ -17,6 +17,7 @@ const UploadsSection = ({ onImageUpload }) => {
   const [uploadToCloudinary] = useUploadToCloudinaryMutation();
 
   const { data } = useGetImagesForTemplateQuery(  "user_assets" );
+  console.log(data);
 
   console.log(data?.images);
 
