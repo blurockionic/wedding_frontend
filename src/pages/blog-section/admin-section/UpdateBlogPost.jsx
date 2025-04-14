@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import BlogPreview from '../blog-section/BlogPreview';
-import { useUpdateBlogMutation, useGetBlogByIdQuery } from '../../../redux/blogSlice';
+import { useUpdateBlogMutation, useGetBlogByUrlTitleQuery } from '../../../redux/blogSlice';
 
 const UpdateBlogPost = () => {
   const navigate = useNavigate();
-  const { id } = useParams(); // Get the blog ID from the URL params
+  const { urlTitle } = useParams(); // Get the blog ID from the URL params
   const [updateBlog] = useUpdateBlogMutation();
-  const { data: blog, isLoading, isError } = useGetBlogByIdQuery(id); // Fetch blog data by ID
+  const { data: blog, isLoading, isError } = useGetBlogByUrlTitleQuery(urlTitle); // Fetch blog data by ID
   
-
   // State variables for form fields
-  const [title, setTitle] = useState('');
+  // const [title, setTitle] = useState('');
+  // const [id, setId] = useState('');
   const [content, setContent] = useState('');
   const [coverImage, setCoverImage] = useState('');
   const [coverImagePreview, setCoverImagePreview] = useState('');
@@ -22,15 +23,40 @@ const UpdateBlogPost = () => {
   const [saving, setSaving] = useState(false);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
 
-  // Pre-fill form fields with existing blog data
+  // Setup react-hook-form with default values
+  const { register, handleSubmit, setValue } = useForm({
+    defaultValues: {
+      title: '',
+      id: '',
+      // content: '',
+      // tags: [], 
+      // tagInput: '',
+    },
+  });
+
+  // // Pre-fill form fields with existing blog data
+  // useEffect(() => {
+  //   if (blog) {
+  //     setTitle(blog.data.title || ''); // Set title
+  //     setId(blog.data.id || ''); // Set id
+  //     setContent(blog.data.content || ''); // Set content
+  //     setTags(blog.data.tags || []); // Set tags (ensure it's an array)
+  //     setCoverImagePreview(blog.data.coverImage || ''); // Set cover image preview
+  //   }
+  // }, [blog]); // Dependency on `blog` ensures this runs when data is fetched
+
+  // Pre-fill the form when blog data is loaded
   useEffect(() => {
     if (blog) {
-      setTitle(blog.data.title || ''); // Set title
+      // Assume blog.data contains the necessary fields
+      setValue('title', blog.data.title || '');
+      setValue('id', blog.data.id || '');
+      // setValue('content', blog.data.content || '');
       setContent(blog.data.content || ''); // Set content
-      setTags(blog.data.tags || []); // Set tags (ensure it's an array)
-      setCoverImagePreview(blog.data.coverImage || ''); // Set cover image preview
+      setTags(blog.data.tags ? blog.data.tags.map(tag => tag.tagName) : []); // Set tags (ensure it's an array)
+      setCoverImagePreview(blog.data.coverImage || '');
     }
-  }, [blog]); // Dependency on `blog` ensures this runs when data is fetched
+  }, [blog, setValue]);
 
   // Custom toolbar options for Quill editor
   const modules = {
@@ -42,12 +68,40 @@ const UpdateBlogPost = () => {
     }
   };
 
-  // Save or update the blog post
-  const saveDraft = async () => {
+  // // Save or update the blog post
+  // const saveDraft = async () => {
+  //   setSaving(true);
+  //   const blogData = { title, content, tags, coverImage };
+  //   try {
+  //     console.log("blog data", blogData);
+  //     await updateBlog({ id, blogData }).unwrap(); // Update the blog post
+  //     alert('Blog post updated successfully!');
+  //     navigate('/blog_dashboard'); // Navigate back to the dashboard
+  //   } catch (error) {
+  //     console.error('Error updating blog post:', error);
+  //     alert('Error updating blog post.');
+  //   } finally {
+  //     setSaving(false);
+  //   }
+  // };
+
+  // Form submit handler
+  const saveDraft = async (formData) => {
     setSaving(true);
-    const blogData = { title, content, tags, coverImage };
+    // Create a FormData payload to include the cover image if provided
+    const updatePayload = new FormData();
+    updatePayload.append('title', formData.title);
+    updatePayload.append('content', content);
+    updatePayload.append('tags', JSON.stringify(tags)); // adjust format as needed
+
+    if (coverImage) {
+      updatePayload.append('coverImage', coverImage);
+    }
+
     try {
-      await updateBlog({ id, blogData }).unwrap(); // Update the blog post
+      console.log("blog data", updatePayload);
+      // await updateBlog({ id, blogData }).unwrap(); // Update the blog post
+      await updateBlog({ id: blog.data.id, blogData: updatePayload }).unwrap();
       alert('Blog post updated successfully!');
       navigate('/blog_dashboard'); // Navigate back to the dashboard
     } catch (error) {
@@ -85,6 +139,7 @@ const UpdateBlogPost = () => {
   // Add a tag
   const addTag = () => {
     if (tagInput.trim() && !tags.includes(tagInput.trim())) {
+      // setValue('tags', [...tags, tagInput.trim()]);
       setTags([...tags, tagInput.trim()]);
       setTagInput('');
     }
@@ -92,6 +147,7 @@ const UpdateBlogPost = () => {
 
   // Remove a tag
   const removeTag = (tag) => {
+    // setValue('tags', tags.filter(t => t !== tag));
     setTags(tags.filter(t => t !== tag));
   };
 
@@ -108,6 +164,7 @@ const UpdateBlogPost = () => {
   if (isError) return <div>Error loading blog post.</div>;
 
   return (
+    <form onSubmit={handleSubmit(saveDraft)}>
     <div className="flex flex-col h-screen bg-gray-50">
       {/* First level navbar */}
       <div className="flex items-center justify-between px-8 py-4 bg-white border-b border-gray-200 shadow-sm">
@@ -122,14 +179,13 @@ const UpdateBlogPost = () => {
             Back to Dashboard
           </button>
         </div>
-
+        
         <div className="flex-grow mx-8">
           <input
             type="text"
             placeholder="Blog Title"
             className="w-full px-5 py-3 text-xl font-medium border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#f20574] focus:border-[#f20574] outline-none transition-all bg-white"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            {...register('title', { required: true })}
             disabled={isPreviewMode}
           />
         </div>
@@ -144,7 +200,7 @@ const UpdateBlogPost = () => {
           </button>
           <button
             className="px-4 py-2 text-sm font-medium text-[#f20574] bg-white border border-[#f20574] rounded-md hover:bg-pink-50 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#f20574] disabled:opacity-50"
-            onClick={saveDraft}
+            type="submit"
             disabled={saving || isPreviewMode}
           >
             {saving ? 'Saving...' : 'Update'}
@@ -314,7 +370,7 @@ const UpdateBlogPost = () => {
         </div>
       </div>
     </div>
-  );
+  </form>);
 };
 
 export default UpdateBlogPost;
