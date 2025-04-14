@@ -12,6 +12,7 @@ import AdminPanel from "./AdminPanel";
 import { SiAdminer } from "react-icons/si";
 import { MdUpdate } from "react-icons/md";
 import { Loader2 } from "lucide-react";
+import { useSelector } from "react-redux";
 
 
 const Sidebar = ({
@@ -37,7 +38,9 @@ const Sidebar = ({
 }) => {
   const [activeSection, setActiveSection] = useState(null);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const userData =  useSelector((state)=> state.auth.user)
 
+  console.log(userData.role)
   const sidebarItems = [
     { id: "templates", label: "Templates", icon: <BsGrid className="w-6 h-6 text-rose-500" /> },
     { id: "elements", label: "Elements", icon: <TbIcons className="w-6 h-6 text-rose-500" /> },

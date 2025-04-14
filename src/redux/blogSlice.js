@@ -5,6 +5,7 @@ const getBaseUrl = (user) => {
   console.log("User Role:", userRole);
   switch (userRole) {
     case "ADMIN":
+      return `${import.meta.env.VITE_API_URL}/api/v1/blog/admin`;
     case "SUPER_ADMIN":
       return `${import.meta.env.VITE_API_URL}/api/v1/blog/admin`;
     case "USER":
