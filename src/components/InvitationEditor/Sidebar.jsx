@@ -45,9 +45,9 @@ const Sidebar = ({
     { id: "elements", label: "Elements", icon: <TbIcons className="w-6 h-6 text-rose-500" /> },
     { id: "text", label: "Text", icon: <TfiText className="w-6 h-6 text-rose-500" /> },
     { id: "uploads", label: "Uploads", icon: <BsCloudArrowUp className="w-6 h-6 text-rose-500" /> },
-    { id: "projects", label: "Projects", icon: <BsFolder className="w-6 h-6 text-rose-500" /> },
+    { id: "projects", label: "My Template", icon: <BsFolder className="w-6 h-6 text-rose-500" /> },
     { id: "positions", label: "Positions", icon: <FaLayerGroup className="w-6 h-6 text-rose-500" /> },
-    ...(userRole === "admin" || userRole === "superadmin"
+    ...(userRole === "ADMIN" || userRole === "SUPER_ADMIN"
       ? [{ id: "admin", label: "Admin", icon: <SiAdminer className="w-6 h-6 text-rose-500" /> }]
       : []),
     { id: "update", label: "Save design", icon: <MdUpdate className="w-6 h-6 text-rose-500" /> },
@@ -91,7 +91,7 @@ const Sidebar = ({
       case "uploads":
         return <UploadsSection onImageUpload={handleImageUpload} />;
       case "admin":
-        if (userRole === "admin" || userRole === "superadmin") {
+        if (userRole === "ADMIN" || userRole === "SUPER_ADMIN") {
           return <AdminPanel saveTemplate={saveTemplate} />;
         }
         return null;
