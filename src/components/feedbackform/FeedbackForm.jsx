@@ -4,7 +4,7 @@ import { useCreateFeedbackMutation } from "../../redux/serviceSlice";
 import { toast } from "react-toastify";
 import { Loader2 } from "lucide-react";
 
-const FeedbackForm = ({ serviceId, setIsLoading }) => {
+const FeedbackForm = ({ serviceId }) => {
   const [createFeedback, { isLoading }] = useCreateFeedbackMutation();
   const [rating, setRating] = useState(0);
 
@@ -29,7 +29,6 @@ const FeedbackForm = ({ serviceId, setIsLoading }) => {
         toast.success(res.message);
         reset();
         setRating(0);
-        setIsLoading(true);
       } else {
         toast.error(res.message || "Failed to submit feedback");
       }
