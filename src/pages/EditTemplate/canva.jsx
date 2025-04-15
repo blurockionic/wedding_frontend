@@ -1356,7 +1356,7 @@ const Canva = () => {
                 top: "10px",
                 left: "50%",
                 transform: "translateX(-50%)",
-                zIndex: 1000,
+                zIndex: 1,
               }}
             >
               <button
