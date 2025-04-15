@@ -31,6 +31,7 @@ import signup_bg from "../../../../public/signup/sign-bg.webp";
 import brandlogo from "../../../../public/logo/brandlogo.png";
 import { Loader2 } from "lucide-react";
 import CustomButton from "../../../components/global/button/CustomButton";
+import CompleteSolution from "../../../components/ads/CompleteSolution";
 
 const serviceTypes = [
   {
@@ -359,6 +360,11 @@ export default function VendorLogin() {
         ))}
 
         {/* //dashboard  */}
+      </div>
+
+      {/* ads  */}
+      <div>
+        <CompleteSolution/>
       </div>
 
       {/* sign up  */}

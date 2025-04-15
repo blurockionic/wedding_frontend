@@ -5,6 +5,7 @@ import { links } from "../../static/static";
 import brandlogo from "../../../public/logo/brandlogo.png";
 import { useGetSubscriptionQuery } from "../../redux/payment";
 import { getRemainingDays } from "../../static/helper";
+import CompleteSolution from "../../components/ads/CompleteSolution";
 
 const VendorSidebar = ({ footer, setIsOpen, isOpen }) => {
   const location = useLocation();
@@ -103,6 +104,9 @@ const VendorSidebar = ({ footer, setIsOpen, isOpen }) => {
         </nav>
         <div className="h-1 bg-white"></div>
         <div className="text-center">
+          {/* ads */}
+          <CompleteSolution/>
+
           {subLoading ? (
             <p className="text-sm text-gray-500">Loading subscription...</p>
           ) : isError || !activeSubscription ? (

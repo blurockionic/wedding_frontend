@@ -889,12 +889,19 @@ const Canva = () => {
     canvas.renderAll();
   };
 
-  const downloadImage = () => {
-    if (!canvas) return;
-    const dataURL = canvas.toDataURL({ format: "png" });
+  const downloadImage = (format) => {
+    if (!canvas) {
+      console.error("Canvas not found");
+      return;
+    }
+    const normalizedFormat = format.toLowerCase() === "jpeg" ? "jpeg" : "png";
+    const mimeType = `image/${normalizedFormat}`;
+    const fileExtension = normalizedFormat === "jpeg" ? "jpg" : "png";
+    const quality = normalizedFormat === "jpeg" ? 0.9 : undefined;
+    const dataURL = canvas.toDataURL({ format: normalizedFormat, quality });
     const link = document.createElement("a");
     link.href = dataURL;
-    link.download = "wedding-template.png";
+    link.download = `wedding-template.${fileExtension}`;
     link.click();
   };
 
