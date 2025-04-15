@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import { BsGrid, BsCloudArrowUp, BsFolder } from "react-icons/bs";
-import { FaLayerGroup, FaArrowUp, FaArrowDown, FaLock, FaUnlock } from "react-icons/fa";
+import {
+  FaLayerGroup,
+  FaArrowUp,
+  FaArrowDown,
+  FaLock,
+  FaUnlock,
+} from "react-icons/fa";
 import { TfiText } from "react-icons/tfi";
 import { TbIcons } from "react-icons/tb";
 import { FiDownload } from "react-icons/fi";
@@ -33,7 +39,7 @@ const Sidebar = ({
   lockObject,
   unlockObject,
   handleOnUpdateDesign,
-  isLoading
+  isLoading,
 }) => {
   const [activeSection, setActiveSection] = useState(null);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
@@ -42,16 +48,50 @@ const Sidebar = ({
   console.log(userRole.role);
 
   const sidebarItems = [
-    { id: "templates", label: "Templates", icon: <BsGrid className="w-6 h-6 text-rose-500" /> },
-    { id: "elements", label: "Elements", icon: <TbIcons className="w-6 h-6 text-rose-500" /> },
-    { id: "text", label: "Text", icon: <TfiText className="w-6 h-6 text-rose-500" /> },
-    { id: "uploads", label: "Uploads", icon: <BsCloudArrowUp className="w-6 h-6 text-rose-500" /> },
-    { id: "projects", label: "My Template", icon: <BsFolder className="w-6 h-6 text-rose-500" /> },
-    { id: "positions", label: "Positions", icon: <FaLayerGroup className="w-6 h-6 text-rose-500" /> },
+    {
+      id: "templates",
+      label: "Templates",
+      icon: <BsGrid className="w-6 h-6 text-rose-500" />,
+    },
+    {
+      id: "elements",
+      label: "Elements",
+      icon: <TbIcons className="w-6 h-6 text-rose-500" />,
+    },
+    {
+      id: "text",
+      label: "Text",
+      icon: <TfiText className="w-6 h-6 text-rose-500" />,
+    },
+    {
+      id: "uploads",
+      label: "Uploads",
+      icon: <BsCloudArrowUp className="w-6 h-6 text-rose-500" />,
+    },
+    {
+      id: "projects",
+      label: "My Template",
+      icon: <BsFolder className="w-6 h-6 text-rose-500" />,
+    },
+    {
+      id: "positions",
+      label: "Positions",
+      icon: <FaLayerGroup className="w-6 h-6 text-rose-500" />,
+    },
     ...(userRole === "ADMIN" || userRole === "SUPER_ADMIN"
-      ? [{ id: "admin", label: "Admin", icon: <SiAdminer className="w-6 h-6 text-rose-500" /> }]
+      ? [
+          {
+            id: "admin",
+            label: "Admin",
+            icon: <SiAdminer className="w-6 h-6 text-rose-500" />,
+          },
+        ]
       : []),
-    { id: "update", label: "Save design", icon: <MdUpdate className="w-6 h-6 text-rose-500" /> },
+    {
+      id: "update",
+      label: "Save design",
+      icon: <MdUpdate className="w-6 h-6 text-rose-500" />,
+    },
   ];
 
   const handleSectionToggle = (sectionId) => {
@@ -109,11 +149,15 @@ const Sidebar = ({
       case "update":
         return (
           <div className="space-y-3 p-4">
-            <button 
-              className="bg-primary px-7 py-2 rounded-lg text-white w-full" 
+            <button
+              className="bg-primary px-7 py-2 rounded-lg text-white w-full"
               onClick={handleOnUpdateDesign}
             >
-              {isLoading ? <Loader2 className="animate-spin"/> : "Update Design"}
+              {isLoading ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                "Update Design"
+              )}
             </button>
             <button
               onClick={saveTemplate}
@@ -152,61 +196,69 @@ const Sidebar = ({
             </div>
           </div>
         );
-      case "positions":
-        return (
-          <div className="space-y-3 p-4">
-            <div>
-              <h3 className="text-md font-semibold mb-2 flex items-center gap-2">
-                <FaLayerGroup /> Layering
-              </h3>
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  onClick={bringToFront}
-                  className="p-2 bg-blue-500 text-white rounded-lg flex items-center justify-center gap-2 hover:bg-blue-600"
-                >
-                  <FaArrowUp /> Bring to Front
-                </button>
-                <button
-                  onClick={sendToBack}
-                  className="p-2 bg-blue-500 text-white rounded-lg flex items-center justify-center gap-2 hover:bg-blue-600"
-                >
-                  <FaArrowDown /> Send to Back
-                </button>
-                <button
-                  onClick={bringForward}
-                  className="p-2 bg-blue-500 text-white rounded-lg flex items-center justify-center gap-2 hover:bg-blue-600"
-                >
-                  <FaArrowUp /> Bring Forward
-                </button>
-                <button
-                  onClick={sendBackward}
-                  className="p-2 bg-blue-500 text-white rounded-lg flex items-center justify-center gap-2 hover:bg-blue-600"
-                >
-                  <FaArrowDown /> Send Backward
-                </button>
+        case "positions":
+          return (
+            <div className="space-y-3 p-4">
+              <div className="bg-white bg-opacity-10 backdrop-blur-lg p-6 rounded-xl space-y-6">
+                <div>
+                  <h3 className="text-md font-bold mb-4 flex items-center gap-3 animate-slide-in text-purple-500">
+                    <FaLayerGroup className="text-purple-500" /> Layering
+                  </h3>
+                  <div className="space-y-3">
+                    <button
+                      onClick={bringToFront}
+                      className="w-full p-4 bg-gradient-to-r from-rose-500 to-pink-500 rounded-xl flex items-center justify-center gap-3 hover:from-rose-400 hover:to-pink-400 hover:scale-105 transition-all duration-300 text-white font-semibold shadow-lg animate-slide-in border border-rose-300/50 hover:shadow-rose-400/50"
+                      style={{ animationDelay: "0.1s" }}
+                    >
+                      <FaArrowUp className="text-white transform transition-transform hover:scale-110" /> Bring to Front
+                    </button>
+                    <button
+                      onClick={sendToBack}
+                      className="w-full p-4 bg-gradient-to-r from-rose-500 to-pink-500 rounded-xl flex items-center justify-center gap-3 hover:from-rose-400 hover:to-pink-400 hover:scale-105 transition-all duration-300 text-white font-semibold shadow-lg animate-slide-in border border-rose-300/50 hover:shadow-rose-400/50"
+                      style={{ animationDelay: "0.2s" }}
+                    >
+                      <FaArrowDown className="text-white transform transition-transform hover:scale-110" /> Send to Back
+                    </button>
+                    <button
+                      onClick={bringForward}
+                      className="w-full p-4 bg-gradient-to-r from-rose-500 to-pink-500 rounded-xl flex items-center justify-center gap-3 hover:from-rose-400 hover:to-pink-400 hover:scale-105 transition-all duration-300 text-white font-semibold shadow-lg animate-slide-in border border-rose-300/50 hover:shadow-rose-400/50"
+                      style={{ animationDelay: "0.3s" }}
+                    >
+                      <FaArrowUp className="text-white transform transition-transform hover:scale-110" /> Bring Forward
+                    </button>
+                    <button
+                      onClick={sendBackward}
+                      className="w-full p-4 bg-gradient-to-r from-rose-500 to-pink-500 rounded-xl flex items-center justify-center gap-3 hover:from-rose-400 hover:to-pink-400 hover:scale-105 transition-all duration-300 text-white font-semibold shadow-lg animate-slide-in border border-rose-300/50 hover:shadow-rose-400/50"
+                      style={{ animationDelay: "0.4s" }}
+                    >
+                      <FaArrowDown className="text-white transform transition-transform hover:scale-110" /> Send Backward
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-md font-bold mb-4 flex items-center gap-3 animate-slide-in text-purple-500">
+                    <FaLock className="text-purple-500" /> Lock/Unlock
+                  </h3>
+                  <div className="space-y-3">
+                    <button
+                      onClick={lockObject}
+                      className="w-full p-4 bg-gradient-to-r from-gray-600 to-gray-500 rounded-xl flex items-center justify-center gap-3 hover:from-gray-500 hover:to-gray-400 hover:scale-105 transition-all duration-300 text-white font-semibold shadow-lg animate-slide-in border border-gray-300/50 hover:shadow-gray-400/50"
+                      style={{ animationDelay: "0.5s" }}
+                    >
+                      <FaLock className="text-white transform transition-transform hover:scale-110" /> Lock
+                    </button>
+                    <button
+                      onClick={unlockObject}
+                      className="w-full p-4 bg-gradient-to-r from-gray-600 to-gray-500 rounded-xl flex items-center justify-center gap-3 hover:from-gray-500 hover:to-gray-400 hover:scale-105 transition-all duration-300 text-white font-semibold shadow-lg animate-slide-in border border-gray-300/50 hover:shadow-gray-400/50"
+                      style={{ animationDelay: "0.6s" }}
+                    >
+                      <FaUnlock className="text-white transform transition-transform hover:scale-110" /> Unlock
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="mt-4">
-              <h3 className="text-md font-semibold mb-2 flex items-center gap-2">
-                <FaLock /> Lock/Unlock
-              </h3>
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  onClick={lockObject}
-                  className="p-2 bg-green-500 text-white rounded-lg flex items-center justify-center gap-2 hover:bg-green-600"
-                >
-                  <FaLock /> Lock
-                </button>
-                <button
-                  onClick={unlockObject}
-                  className="p-2 bg-green-500 text-white rounded-lg flex items-center justify-center gap-2 hover:bg-green-600"
-                >
-                  <FaUnlock /> Unlock
-                </button>
-              </div>
-            </div>
-          </div>
-        );
+          );
       default:
         return null;
     }
@@ -219,7 +271,9 @@ const Sidebar = ({
           <button
             key={item.id}
             onClick={() => handleSectionToggle(item.id)}
-            className={`w-full p-2 bg-white rounded-lg ${activeSection === item.id ? "bg-purple-100" : "hover:bg-gray-200"}`}
+            className={`w-full p-2 bg-white rounded-lg ${
+              activeSection === item.id ? "bg-purple-100" : "hover:bg-gray-200"
+            }`}
             title={item.label}
           >
             <div className="flex items-center justify-center">{item.icon}</div>
@@ -230,7 +284,9 @@ const Sidebar = ({
       <div
         className={`md:w-[320px] w-full bg-white flex flex-col gap-4 transition-all duration-300 ${
           activeSection ? "block" : "hidden"
-        } md:${activeSection ? "opacity-100" : "opacity-0 w-0 overflow-hidden"}`}
+        } md:${
+          activeSection ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
+        }`}
       >
         {renderSectionContent()}
       </div>
