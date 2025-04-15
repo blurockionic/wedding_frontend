@@ -144,7 +144,7 @@ export default function Signup() {
           />
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="bg-white w-full p-2 md:px-8 rounded-lg"
+            className="bg-transparent h-auto w-full p-2 md:px-8 rounded-lg"
           >
             <h1 className="text-3xl font-bold text-black mb-3 text-center">
               Create Your Account | Marriage Vendors
@@ -260,18 +260,18 @@ export default function Signup() {
             </div>
 
             {/* Submit Button */}
-            <div className="flex flex-col items-center justify-center w-full">
+            <div className="flex md:flex-col md:gap-3 gap-2 items-center justify-center w-full">
               <button
                 type="submit"
                 disabled={isLoading}
-                className={`w-[50%] mb-2 ${
+                className={`w-[50%] ${
                   isLoading ? "bg-primary-300" : "bg-primary"
                 } disabled:cursor-not-allowed cursor-pointer border-2 text-foreground font-bold py-2 px-4 rounded`}
               >
                 {isLoading ? "Please wait..." : "Sign up"}
               </button>
 
-              <div className="my-4 flex items-center justify-between w-[70%] gap-x-5">
+              <div className="my-4 items-center justify-between w-[70%] gap-x-5 md:flex hidden">
                 <div className="h-[1px] px-3 w-[50%] bg-gray-300"></div>
                 <span className="text-2xl text-center">Or</span>
                 <div className="h-[1px] px-3 w-[50%] bg-gray-300"></div>
@@ -282,18 +282,18 @@ export default function Signup() {
                 type="button"
                 text="Login with Google"
                 leftIcon={<FaGoogle size={20} className="text-red-500" />}
-                className="w-[50%] mt-2 py-2 bg-white text-red-600 border-2 border-sageGreen-dark hover:bg-sageGreen-light"
+                className="w-[50%] py-2 bg-white text-red-600 border-2 border-sageGreen-dark hover:bg-sageGreen-light"
               />
 
-              <div className="mt-4">
-                <p className="text-sm text-gray-700">
+            </div>
+            <div className="mt-4">
+                <p className="text-sm text-gray-700 text-center">
                   Already have an account?{" "}
                   <Link to="/login" className="text-primary font-medium">
                     Login
                   </Link>
                 </p>
               </div>
-            </div>
           </form>
         </div>
       </div>
