@@ -11,6 +11,14 @@ const links = [
   { url: '/vendorlogin', changefreq: 'daily', priority: 0.8},
   { url: '/vendorsignup', changefreq: 'daily', priority: 0.8},
   { url: '/all', changefreq: 'daily', priority: 0.8},
+  { url: 'https://www.marriagevendors.com/all/undefined/caterers/madhya%20pradesh/gwalior/67acb750e27184a237864d2c', changefreq: 'daily', priority: 0.8 },
+  { url: 'https://www.marriagevendors.com/all/undefined/tent%20house/jharkhand/chaibasa/67f2b072394325935acd4cad', changefreq: 'daily', priority: 0.8 },
+  { url: 'https://www.marriagevendors.com/all/undefined/wedding%20photographers/jharkhand/jamshedpur/67f38783dcc8b080bff96e7c', changefreq: 'daily', priority: 0.8 },
+  { url: 'https://www.marriagevendors.com/all/undefined/wedding%20photographers/jharkhand/chaibasa/67f3f45f880a10cefe3cf49d', changefreq: 'daily', priority: 0.8 },
+  { url: 'https://www.marriagevendors.com/all/undefined/wedding%20photographers/jharkhand/ranchi/67f76f42c96e1f46a3b2e2db', changefreq: 'daily', priority: 0.8 },
+  { url: 'https://www.marriagevendors.com/all/undefined/caterers/jammu%20and%20kashmir/jammu/67f771a9c96e1f46a3b2e2e0', changefreq: 'daily', priority: 0.8 },
+  { url: 'https://www.marriagevendors.com/all/undefined/wedding%20videographers/jharkhand/ranchi/67f7728ec96e1f46a3b2e2e2', changefreq: 'daily', priority: 0.8 },
+
   
 
   

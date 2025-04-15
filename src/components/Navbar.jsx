@@ -184,6 +184,9 @@ function Navbar() {
                 <li className="cursor-pointer">
                   <NavLink to="/templates">Invitation</NavLink>
                 </li>
+                <li className="cursor-pointer">
+                  <NavLink to="/blogs">Blog</NavLink>
+                </li>
                 <li className="cursor-pointer border px-2 py-2 lg:px-2 lg:py-1 rounded-md hover:bg-pink-50 ">
                   <NavLink to="/vendorLogin" className="">
                     Vendor Login

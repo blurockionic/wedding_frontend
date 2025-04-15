@@ -1,6 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { useGetAllTemplatesQuery } from "../../redux/invitationTemplateForAdminSlice";
+import { useAddOrUpdateWatchHistoryMutation } from "../../redux/TemplateSlice"; // Corrected import
+import { paymentApi } from "../../redux/payment";
 import { motionlogo } from "../../static/static";
+import { FaCrown } from "react-icons/fa";
 
 const TemplatesSection = ({ templates, onTemplateClick, selectedTemplate }) => {
   const [filters, setFilters] = useState({
@@ -15,6 +20,41 @@ const TemplatesSection = ({ templates, onTemplateClick, selectedTemplate }) => {
   });
 
   const { data, error, isLoading } = useGetAllTemplatesQuery(filters);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [addOrUpdateWatchHistory] = useAddOrUpdateWatchHistoryMutation();
+
+  const handleOnNavigate = async (template) => {
+    addOrUpdateWatchHistory(template.id); // Update watch history
+
+    if (template.categoryByAmount === "FREE") {
+      onTemplateClick(template); // Call original onTemplateClick for free templates
+      navigate("/update_editor", { state: { template } }); // Navigate to editor
+      return;
+    }
+
+    if (template.categoryByAmount === "PAID") {
+      try {
+        const paymentData = await dispatch(
+          paymentApi.endpoints.getTemplatePaymentHistory.initiate(
+            { tempId: template.id },
+            { forceRefetch: true }
+          )
+        ).unwrap();
+
+        if (paymentData?.paymentStatus === "paid") {
+          onTemplateClick(template); // Call original onTemplateClick
+          navigate("/update_editor", { state: { template } }); // Navigate to editor
+          return;
+        }
+
+        navigate("/payment", { state: { amount: template.price, template } }); // Navigate to payment
+      } catch (error) {
+        console.error("Error fetching payment data:", error);
+        // Optionally, show user feedback (e.g., toast) instead of just logging
+      }
+    }
+  };
 
   if (isLoading)
     return (
@@ -25,7 +65,7 @@ const TemplatesSection = ({ templates, onTemplateClick, selectedTemplate }) => {
     );
   if (error) return <p>Error fetching templates</p>;
 
-  console.log(data)
+  console.log(data);
 
   return (
     <div className="h-screen bg-white text-black overflow-y-auto">
@@ -68,8 +108,16 @@ const TemplatesSection = ({ templates, onTemplateClick, selectedTemplate }) => {
                     ? "ring-2 ring-purple-400"
                     : ""
                 }`}
-                onClick={() => onTemplateClick(template)}
+                onClick={() => handleOnNavigate(template)}
               >
+                {template.categoryByAmount === "PAID" && (
+                  <div className="absolute flex items-center justify-start w-[40px] h-[40px] bg-blue-500 text-white rounded-lg overflow-hidden transition-all duration-300 ease-in-out group-hover:w-[120px] px-2 top-2 left-2 z-10">
+                    <FaCrown className="text-white text-[24px] flex-shrink-0" />
+                    <span className="ml-2 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      Premium
+                    </span>
+                  </div>
+                )}
                 <img
                   src={template.thumbnailUrl}
                   alt={template.name}

@@ -17,6 +17,7 @@ const UploadsSection = ({ onImageUpload }) => {
   const [uploadToCloudinary] = useUploadToCloudinaryMutation();
 
   const { data } = useGetImagesForTemplateQuery(  "user_assets" );
+  console.log(data);
 
   console.log(data?.images);
 
@@ -74,7 +75,7 @@ const UploadsSection = ({ onImageUpload }) => {
         />
       </div>
       <div className="flex gap-4 mb-4">
-        {["Images", "Videos", "Audio"].map((tab) => (
+        {["Images"].map((tab) => (
           <button
             key={tab}
             className={`pb-2 text-sm font-semibold ${
