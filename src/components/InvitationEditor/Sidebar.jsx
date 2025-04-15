@@ -159,12 +159,6 @@ const Sidebar = ({
                 "Update Design"
               )}
             </button>
-            <button
-              onClick={saveTemplate}
-              className="p-2 bg-purple-500 text-white rounded-lg w-full hover:bg-purple-600"
-            >
-              Save Template
-            </button>
           </div>
         );
       case "projects":
