@@ -234,7 +234,7 @@ export default function Login() {
                 isShow={isShowPassword}
               />
 
-              <div className="mb-6 text-end">
+              <div className="mb-6 text-center">
                 <Link
                   to="/user-forgot-password"
                   className="font-bold text-sm text-muted-foreground"
@@ -253,17 +253,17 @@ export default function Login() {
       text-muted font-bold py-2 px-4 rounded transition `}
                 />
 
-                <div className="my-8 flex items-center justify-between w-full gap-x-5">
-                  <div className="h-[1px] px-3 w-full bg-gray-300"></div>
-                  <span className="text-2xl">Or</span>
-                  <div className="h-[1px] px-3 w-full bg-gray-300"></div>
+                <div className="my-8 flex items-center justify-between w-[70%] gap-x-5">
+                  <div className="h-[1px] px-3 w-[50%] bg-gray-300"></div>
+                  <span className="text-2xl text-center">Or</span>
+                  <div className="h-[1px] px-3 w-[50%] bg-gray-300"></div>
                 </div>
                 <CustomButton
                   type="button"
                   text="Login with Google"
                   onClick={handleGoogleLogin}
                   leftIcon={<MdEmail size={20} className="text-red-500" />}
-                  className="w-full mt-4 py-2 bg-background text-red-600 border hover:border-ring"
+                  className="w-[30%] mt-4 py-2 bg-background text-red-600 border hover:border-ring"
                 />
               </div>
             </form>

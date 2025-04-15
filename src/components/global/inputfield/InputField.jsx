@@ -18,7 +18,7 @@ export const InputField = ({
   placeholder,
   style
 }) => (
-  <div className="my-4">
+  <div className="my-4 w-[70%] mx-auto">
     <label
       htmlFor={id}
       className="block  text-muted-foreground text-sm font-semibold mb-2"
