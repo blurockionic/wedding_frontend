@@ -25,7 +25,7 @@ const NewBlogPost = () => {
   const [blogId, setBlogId] = useState(null);
 
   // Setup react-hook-form with default values
-    const { register, handleSubmit, setValue } = useForm({
+    const { register, handleSubmit, setValue, watch } = useForm({
       defaultValues: {
         title: '',
         // id: '',
@@ -34,6 +34,7 @@ const NewBlogPost = () => {
         // tagInput: '',
       },
     });
+    const title = watch('title');
 
   // Custom toolbar options for Quill editor
   const modules = {
@@ -361,7 +362,7 @@ const NewBlogPost = () => {
               title={title}
               content={content}
               coverImagePreview={coverImagePreview}
-              tags={tags}
+              hashtags={tags}
             />
           )}
         </div>

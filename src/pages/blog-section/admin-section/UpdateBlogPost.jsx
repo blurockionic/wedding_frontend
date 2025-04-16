@@ -15,6 +15,7 @@ const UpdateBlogPost = () => {
   // State variables for form fields
   // const [title, setTitle] = useState('');
   // const [id, setId] = useState('');
+  
   const [content, setContent] = useState('');
   const [coverImage, setCoverImage] = useState('');
   const [coverImagePreview, setCoverImagePreview] = useState('');
@@ -24,7 +25,7 @@ const UpdateBlogPost = () => {
   const [isPreviewMode, setIsPreviewMode] = useState(false);
 
   // Setup react-hook-form with default values
-  const { register, handleSubmit, setValue } = useForm({
+  const { register, handleSubmit, setValue, watch } = useForm({
     defaultValues: {
       title: '',
       id: '',
@@ -33,7 +34,7 @@ const UpdateBlogPost = () => {
       // tagInput: '',
     },
   });
-
+  const title = watch('title');
   // // Pre-fill form fields with existing blog data
   // useEffect(() => {
   //   if (blog) {
@@ -364,7 +365,7 @@ const UpdateBlogPost = () => {
               title={title}
               content={content}
               coverImagePreview={coverImagePreview}
-              tags={tags}
+              hashtags={tags}
             />
           )}
         </div>
