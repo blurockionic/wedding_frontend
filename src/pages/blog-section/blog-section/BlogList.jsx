@@ -15,6 +15,7 @@ const BlogList = () => {
 
   useEffect(() => {
     if (data && data.success) {
+      
       const transformedBlogs = data.data.map(blog => ({
         id: blog.id,
         title: blog.title,
@@ -29,7 +30,11 @@ const BlogList = () => {
         .substring(0, 150)                      // Take first 150 characters
         .replace(/\s+\S*$/, '') + '...',        // Cleanly cut at last word boundary
 
-        readTime: `${Math.ceil(blog.content?.length / 500) || 3} min read`,
+        readTime: `${Math.ceil(blog.content
+          .replace(/<[^>]*>|&nbsp;|\u00A0/g, ' ') // Remove all HTML tags and non-breaking spaces
+          .replace(/\s{2,}/g, ' ')                // Replace multiple spaces with single space
+          .trim()                                 // Trim leading/trailing spaces                      // Take first 150 characters
+          .replace(/\s+\S*$/, '') + '...'?.length / 500) || 3} min read`,
         content: blog.content
       }));
       setBlogs(transformedBlogs);
