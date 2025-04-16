@@ -1,10 +1,10 @@
 ## 🚀 Latest Update
 
-✅ Last Commit: 90ac45a - 🤖 Auto-update README (Midnight)
+✅ Last Commit: 92d382b - Responsiveness bugs fixed in singup page : Logo
 
 🌟 Current Version: v1.0.0
 
-📅 Updated on: Tue Apr 15 00:58:47 UTC 2025
+📅 Updated on: Wed Apr 16 00:58:44 UTC 2025
 
 💻 Build Status: ![CI/CD Status](https://github.com/SaiAryan1784/wedding_frontend/actions/workflows/update-readme.yml/badge.svg)
 
