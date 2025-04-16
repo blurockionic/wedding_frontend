@@ -165,12 +165,15 @@ const Sidebar = ({
               ) : (
                 "Update Design"
               )}
+<<<<<<< HEAD
             </button>
             <button
               onClick={saveTemplate}
               className="p-2 bg-purple-500 text-white rounded-lg w-full hover:bg-purple-600"
             >
               Save Template
+=======
+>>>>>>> 40f341c487a709d1b3d69dedde55841447c43d54
             </button>
           </div>
         );
@@ -224,61 +227,69 @@ const Sidebar = ({
             </div>
           </div>
         );
-      case "positions":
-        return (
-          <div className="space-y-3 p-4">
-            <div>
-              <h3 className="text-md font-semibold mb-2 flex items-center gap-2">
-                <FaLayerGroup /> Layering
-              </h3>
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  onClick={bringToFront}
-                  className="p-2 bg-blue-500 text-white rounded-lg flex items-center justify-center gap-2 hover:bg-blue-600"
-                >
-                  <FaArrowUp /> Bring to Front
-                </button>
-                <button
-                  onClick={sendToBack}
-                  className="p-2 bg-blue-500 text-white rounded-lg flex items-center justify-center gap-2 hover:bg-blue-600"
-                >
-                  <FaArrowDown /> Send to Back
-                </button>
-                <button
-                  onClick={bringForward}
-                  className="p-2 bg-blue-500 text-white rounded-lg flex items-center justify-center gap-2 hover:bg-blue-600"
-                >
-                  <FaArrowUp /> Bring Forward
-                </button>
-                <button
-                  onClick={sendBackward}
-                  className="p-2 bg-blue-500 text-white rounded-lg flex items-center justify-center gap-2 hover:bg-blue-600"
-                >
-                  <FaArrowDown /> Send Backward
-                </button>
+        case "positions":
+          return (
+            <div className="space-y-3 p-4">
+              <div className="bg-white bg-opacity-10 backdrop-blur-lg p-6 rounded-xl space-y-6">
+                <div>
+                  <h3 className="text-md font-bold mb-4 flex items-center gap-3 animate-slide-in text-purple-500">
+                    <FaLayerGroup className="text-purple-500" /> Layering
+                  </h3>
+                  <div className="space-y-3">
+                    <button
+                      onClick={bringToFront}
+                      className="w-full p-4 bg-gradient-to-r from-rose-500 to-pink-500 rounded-xl flex items-center justify-center gap-3 hover:from-rose-400 hover:to-pink-400 hover:scale-105 transition-all duration-300 text-white font-semibold shadow-lg animate-slide-in border border-rose-300/50 hover:shadow-rose-400/50"
+                      style={{ animationDelay: "0.1s" }}
+                    >
+                      <FaArrowUp className="text-white transform transition-transform hover:scale-110" /> Bring to Front
+                    </button>
+                    <button
+                      onClick={sendToBack}
+                      className="w-full p-4 bg-gradient-to-r from-rose-500 to-pink-500 rounded-xl flex items-center justify-center gap-3 hover:from-rose-400 hover:to-pink-400 hover:scale-105 transition-all duration-300 text-white font-semibold shadow-lg animate-slide-in border border-rose-300/50 hover:shadow-rose-400/50"
+                      style={{ animationDelay: "0.2s" }}
+                    >
+                      <FaArrowDown className="text-white transform transition-transform hover:scale-110" /> Send to Back
+                    </button>
+                    <button
+                      onClick={bringForward}
+                      className="w-full p-4 bg-gradient-to-r from-rose-500 to-pink-500 rounded-xl flex items-center justify-center gap-3 hover:from-rose-400 hover:to-pink-400 hover:scale-105 transition-all duration-300 text-white font-semibold shadow-lg animate-slide-in border border-rose-300/50 hover:shadow-rose-400/50"
+                      style={{ animationDelay: "0.3s" }}
+                    >
+                      <FaArrowUp className="text-white transform transition-transform hover:scale-110" /> Bring Forward
+                    </button>
+                    <button
+                      onClick={sendBackward}
+                      className="w-full p-4 bg-gradient-to-r from-rose-500 to-pink-500 rounded-xl flex items-center justify-center gap-3 hover:from-rose-400 hover:to-pink-400 hover:scale-105 transition-all duration-300 text-white font-semibold shadow-lg animate-slide-in border border-rose-300/50 hover:shadow-rose-400/50"
+                      style={{ animationDelay: "0.4s" }}
+                    >
+                      <FaArrowDown className="text-white transform transition-transform hover:scale-110" /> Send Backward
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-md font-bold mb-4 flex items-center gap-3 animate-slide-in text-purple-500">
+                    <FaLock className="text-purple-500" /> Lock/Unlock
+                  </h3>
+                  <div className="space-y-3">
+                    <button
+                      onClick={lockObject}
+                      className="w-full p-4 bg-gradient-to-r from-gray-600 to-gray-500 rounded-xl flex items-center justify-center gap-3 hover:from-gray-500 hover:to-gray-400 hover:scale-105 transition-all duration-300 text-white font-semibold shadow-lg animate-slide-in border border-gray-300/50 hover:shadow-gray-400/50"
+                      style={{ animationDelay: "0.5s" }}
+                    >
+                      <FaLock className="text-white transform transition-transform hover:scale-110" /> Lock
+                    </button>
+                    <button
+                      onClick={unlockObject}
+                      className="w-full p-4 bg-gradient-to-r from-gray-600 to-gray-500 rounded-xl flex items-center justify-center gap-3 hover:from-gray-500 hover:to-gray-400 hover:scale-105 transition-all duration-300 text-white font-semibold shadow-lg animate-slide-in border border-gray-300/50 hover:shadow-gray-400/50"
+                      style={{ animationDelay: "0.6s" }}
+                    >
+                      <FaUnlock className="text-white transform transition-transform hover:scale-110" /> Unlock
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="mt-4">
-              <h3 className="text-md font-semibold mb-2 flex items-center gap-2">
-                <FaLock /> Lock/Unlock
-              </h3>
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  onClick={lockObject}
-                  className="p-2 bg-green-500 text-white rounded-lg flex items-center justify-center gap-2 hover:bg-green-600"
-                >
-                  <FaLock /> Lock
-                </button>
-                <button
-                  onClick={unlockObject}
-                  className="p-2 bg-green-500 text-white rounded-lg flex items-center justify-center gap-2 hover:bg-green-600"
-                >
-                  <FaUnlock /> Unlock
-                </button>
-              </div>
-            </div>
-          </div>
-        );
+          );
       default:
         return null;
     }

@@ -68,7 +68,7 @@ const TemplatesSection = ({ templates, onTemplateClick, selectedTemplate }) => {
   console.log(data);
 
   return (
-    <div className="h-screen bg-white text-black overflow-y-auto">
+    <div className="h-screen md:bg-white text-black overflow-y-auto z-10">
       <div className="p-4">
         <div className="mb-4">
           <input
