@@ -25,7 +25,7 @@ const NewBlogPost = () => {
   const [blogId, setBlogId] = useState(null);
 
   // Setup react-hook-form with default values
-    const { register, handleSubmit, setValue } = useForm({
+    const { register, handleSubmit, setValue, watch } = useForm({
       defaultValues: {
         title: '',
         // id: '',
@@ -34,6 +34,7 @@ const NewBlogPost = () => {
         // tagInput: '',
       },
     });
+    const title = watch('title');
 
   // Custom toolbar options for Quill editor
   const modules = {
@@ -167,6 +168,7 @@ const NewBlogPost = () => {
       <div className="flex items-center justify-between px-8 py-4 bg-white border-b border-gray-200 shadow-sm">
         <div className="flex items-center">
           <button
+            type="button"
             className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:text-[#f20574] transition-colors rounded-md hover:bg-gray-50"
             onClick={() => navigate('/blog_dashboard')}
           >
@@ -189,6 +191,7 @@ const NewBlogPost = () => {
 
         <div className="flex items-center space-x-3">
           <button
+            type="button"
             className={`px-4 py-2 text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#f20574]
               ${isPreviewMode ? 'text-[#f20574] bg-pink-50 border border-pink-200' : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'}`}
             onClick={togglePreviewMode}
@@ -361,7 +364,7 @@ const NewBlogPost = () => {
               title={title}
               content={content}
               coverImagePreview={coverImagePreview}
-              tags={tags}
+              hashtags={tags}
             />
           )}
         </div>
