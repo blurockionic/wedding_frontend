@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import { BsGrid, BsCloudArrowUp, BsFolder } from "react-icons/bs";
-import { FaLayerGroup, FaArrowUp, FaArrowDown, FaLock, FaUnlock } from "react-icons/fa";
+import {
+  FaLayerGroup,
+  FaArrowUp,
+  FaArrowDown,
+  FaLock,
+  FaUnlock,
+} from "react-icons/fa";
 import { TfiText } from "react-icons/tfi";
 import { TbIcons } from "react-icons/tb";
 import { FiDownload } from "react-icons/fi";
@@ -13,6 +19,9 @@ import { SiAdminer } from "react-icons/si";
 import { MdUpdate } from "react-icons/md";
 import { Loader2 } from "lucide-react";
 import { useSelector } from "react-redux";
+import { useGetTemplateWatchHistoryQuery } from "../../redux/TemplateSlice";
+import { TemplateCard } from "../../pages/EditTemplate/TemplateList";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = ({
   templates,
@@ -33,25 +42,63 @@ const Sidebar = ({
   lockObject,
   unlockObject,
   handleOnUpdateDesign,
-  isLoading
+  isLoading,
 }) => {
   const [activeSection, setActiveSection] = useState(null);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [isDownloadOpen, setIsDownloadOpen] = useState(false);
-  const userRole = useSelector((state) => state.auth.user?.role);
-  console.log(userRole.role);
+  const userRole = useSelector((state) => state?.auth?.user);
+
+  const { data: watchTemplateData, isLoading: watchLoading } =
+    useGetTemplateWatchHistoryQuery();
+
+  const navigate = useNavigate();
 
   const sidebarItems = [
-    { id: "templates", label: "Templates", icon: <BsGrid className="w-6 h-6 text-rose-500" /> },
-    { id: "elements", label: "Elements", icon: <TbIcons className="w-6 h-6 text-rose-500" /> },
-    { id: "text", label: "Text", icon: <TfiText className="w-6 h-6 text-rose-500" /> },
-    { id: "uploads", label: "Uploads", icon: <BsCloudArrowUp className="w-6 h-6 text-rose-500" /> },
-    { id: "projects", label: "My Template", icon: <BsFolder className="w-6 h-6 text-rose-500" /> },
-    { id: "positions", label: "Positions", icon: <FaLayerGroup className="w-6 h-6 text-rose-500" /> },
+    {
+      id: "templates",
+      label: "Templates",
+      icon: <BsGrid className="w-6 h-6 text-rose-500" />,
+    },
+    {
+      id: "elements",
+      label: "Elements",
+      icon: <TbIcons className="w-6 h-6 text-rose-500" />,
+    },
+    {
+      id: "text",
+      label: "Text",
+      icon: <TfiText className="w-6 h-6 text-rose-500" />,
+    },
+    {
+      id: "uploads",
+      label: "Uploads",
+      icon: <BsCloudArrowUp className="w-6 h-6 text-rose-500" />,
+    },
+    {
+      id: "projects",
+      label: "My Template",
+      icon: <BsFolder className="w-6 h-6 text-rose-500" />,
+    },
+    {
+      id: "positions",
+      label: "Positions",
+      icon: <FaLayerGroup className="w-6 h-6 text-rose-500" />,
+    },
     ...(userRole === "ADMIN" || userRole === "SUPER_ADMIN"
-      ? [{ id: "admin", label: "Admin", icon: <SiAdminer className="w-6 h-6 text-rose-500" /> }]
+      ? [
+          {
+            id: "admin",
+            label: "Admin",
+            icon: <SiAdminer className="w-6 h-6 text-rose-500" />,
+          },
+        ]
       : []),
-    { id: "update", label: "Save design", icon: <MdUpdate className="w-6 h-6 text-rose-500" /> },
+    {
+      id: "update",
+      label: "Save design",
+      icon: <MdUpdate className="w-6 h-6 text-rose-500" />,
+    },
   ];
 
   const handleSectionToggle = (sectionId) => {
@@ -109,11 +156,15 @@ const Sidebar = ({
       case "update":
         return (
           <div className="space-y-3 p-4">
-            <button 
-              className="bg-primary px-7 py-2 rounded-lg text-white w-full" 
+            <button
+              className="bg-primary px-7 py-2 rounded-lg text-white w-full"
               onClick={handleOnUpdateDesign}
             >
-              {isLoading ? <Loader2 className="animate-spin"/> : "Update Design"}
+              {isLoading ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                "Update Design"
+              )}
             </button>
             <button
               onClick={saveTemplate}
@@ -148,6 +199,27 @@ const Sidebar = ({
                     JPG
                   </button>
                 </div>
+              )}
+            </div>
+            <h2 className="capitalize text-center font-semibold">
+              template history
+            </h2>
+
+            <div className="grid grid-cols-2 gap-4">
+              {watchTemplateData?.lenght > 0 ? (
+                watchTemplateData?.watchHistory.map((item) => (
+                  <TemplateCard
+                    key={item.id}
+                    template={item.template}
+                    onClick={() =>
+                      navigate("/update_editor", {
+                        state: { template: item.template },
+                      })
+                    }
+                  />
+                ))
+              ) : (
+                <p>No templates available.</p>
               )}
             </div>
           </div>
@@ -219,7 +291,9 @@ const Sidebar = ({
           <button
             key={item.id}
             onClick={() => handleSectionToggle(item.id)}
-            className={`w-full p-2 bg-white rounded-lg ${activeSection === item.id ? "bg-purple-100" : "hover:bg-gray-200"}`}
+            className={`w-full p-2 bg-white rounded-lg ${
+              activeSection === item.id ? "bg-purple-100" : "hover:bg-gray-200"
+            }`}
             title={item.label}
           >
             <div className="flex items-center justify-center">{item.icon}</div>
@@ -230,7 +304,9 @@ const Sidebar = ({
       <div
         className={`md:w-[320px] w-full bg-white flex flex-col gap-4 transition-all duration-300 ${
           activeSection ? "block" : "hidden"
-        } md:${activeSection ? "opacity-100" : "opacity-0 w-0 overflow-hidden"}`}
+        } md:${
+          activeSection ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
+        }`}
       >
         {renderSectionContent()}
       </div>

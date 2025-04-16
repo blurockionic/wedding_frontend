@@ -14,6 +14,7 @@ import TemplateList from "../EditTemplate/TemplateList";
 import { useGetAllTemplatesQuery } from "../../redux/invitationTemplateForAdminSlice";
 import { MdCorporateFare } from "react-icons/md";
 import { motionlogo } from "../../static/static";
+import { useAddOrUpdateWatchHistoryMutation } from "../../redux/TemplateSlice";
 
 function Card({ pricing }) {
   return (
@@ -24,8 +25,7 @@ function Card({ pricing }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="h-[340px] browse_image_card_3 mt-4 relative group">
-        </div>
+        <div className="h-[340px] browse_image_card_3 mt-4 relative group"></div>
         <div className="flex justify-between mt-2">
           <div className="text-[20px] text-pink-600 font-bold">Lovique</div>
         </div>
@@ -56,6 +56,8 @@ function Review() {
   const [templates, setTemplates] = useState(allTemplates.slice(0, 6));
   const [loading, setLoading] = useState(false);
   const [loadedCount, setLoadedCount] = useState(6);
+  const [addOrUpdateWatch, { isLoading: loadingOnWatch }] =
+    useAddOrUpdateWatchHistoryMutation();
 
   const [filters, setFilters] = useState({
     name: "",
@@ -99,11 +101,29 @@ function Review() {
     }
   };
 
+
+
+ const handleWatchHitory = async(templateId)=>{
+
+
+  const res = await addOrUpdateWatch(templateId) 
+  console.log(res);
+  
+
+
+
+
+
+ }
+
+
   useEffect(() => {
     setTemplates(
       allTemplates
         .filter((temp) =>
-          amountCategory ? temp.temp.pricing.toLowerCase() === amountCategory : true
+          amountCategory
+            ? temp.temp.pricing.toLowerCase() === amountCategory
+            : true
         )
         .slice(0, loadedCount)
     );
@@ -151,7 +171,11 @@ function Review() {
 
   const categories = [
     { id: "HOT", name: "Hot", icon: <Flame className="w-6 h-6" /> },
-    { id: "POPULAR", name: "Popular", icon: <TrendingUp className="w-6 h-6" /> },
+    {
+      id: "POPULAR",
+      name: "Popular",
+      icon: <TrendingUp className="w-6 h-6" />,
+    },
     { id: "LATEST", name: "Latest", icon: <Clock className="w-6 h-6" /> },
   ];
   const amountCategories = [
@@ -159,10 +183,26 @@ function Review() {
     { id: "PAID", name: "Paid", icon: <FaRupeeSign className="w-5 h-5" /> },
   ];
   const eventCategories = [
-    { id: "BIRTHDAY", name: "Birthday", icon: <LiaBirthdayCakeSolid className="w-6 h-6" /> },
-    { id: "WEDDING", name: "Wedding", icon: <GiBigDiamondRing className="w-6 h-6" /> },
-    { id: "ANNIVERSARY", name: "Anniversary", icon: <GiPartyPopper className="w-6 h-6" /> },
-    { id: "CORPORATE", name: "Corporate", icon: <MdCorporateFare className="w-6 h-6" /> },
+    {
+      id: "BIRTHDAY",
+      name: "Birthday",
+      icon: <LiaBirthdayCakeSolid className="w-6 h-6" />,
+    },
+    {
+      id: "WEDDING",
+      name: "Wedding",
+      icon: <GiBigDiamondRing className="w-6 h-6" />,
+    },
+    {
+      id: "ANNIVERSARY",
+      name: "Anniversary",
+      icon: <GiPartyPopper className="w-6 h-6" />,
+    },
+    {
+      id: "CORPORATE",
+      name: "Corporate",
+      icon: <MdCorporateFare className="w-6 h-6" />,
+    },
     { id: "LOVE", name: "Love", icon: <Heart className="w-6 h-6" /> },
     { id: "COUPLE", name: "Couple", icon: <Group className="w-6 h-6" /> },
   ];
@@ -174,13 +214,17 @@ function Review() {
           <div>
             <div className="flex items-center gap-3 mb-6">
               <Filter className="w-7 h-7 text-pink-600" />
-              <h2 className="text-xl font-bold text-pink-600 tracking-wide ">Filter</h2>
+              <h2 className="text-xl font-bold text-pink-600 tracking-wide ">
+                Filter
+              </h2>
             </div>
             <div className="space-y-3 mt-4">
               {categories.map((cat) => (
                 <button
                   key={cat.id}
-                  onClick={() => setFilters({ ...filters, categoryByRequirement: cat.id })}
+                  onClick={() =>
+                    setFilters({ ...filters, categoryByRequirement: cat.id })
+                  }
                   className={`w-full flex items-center gap-4 px-5 py-3 rounded-full font-semibold transition-all duration-300 ${
                     activeCategory === cat.id
                       ? "bg-pink-100 text-pink-700 shadow-lg"
@@ -196,13 +240,17 @@ function Review() {
           <div>
             <div className="flex items-center gap-3 mb-6 mt-6">
               <FaSortAmountDown className="w-7 h-7 text-pink-600" />
-              <h2 className="text-xl font-bold text-pink-600 tracking-wide">Amount</h2>
+              <h2 className="text-xl font-bold text-pink-600 tracking-wide">
+                Amount
+              </h2>
             </div>
             <div className="space-y-3">
               {amountCategories.map((cat) => (
                 <button
                   key={cat.id}
-                  onClick={() => setFilters({ ...filters, categoryByAmount: cat.id })}
+                  onClick={() =>
+                    setFilters({ ...filters, categoryByAmount: cat.id })
+                  }
                   className={`w-full flex items-center gap-4 px-5 py-3 rounded-full font-semibold transition-all duration-300 ${
                     amountCategory === cat.id
                       ? "bg-pink-100 text-pink-700 shadow-lg"
@@ -218,13 +266,17 @@ function Review() {
           <div>
             <div className="flex items-center gap-3 mb-6 mt-6">
               <BiCategory className="w-7 h-7 text-pink-600" />
-              <h2 className="text-xl font-bold text-pink-600 tracking-wide">Category</h2>
+              <h2 className="text-xl font-bold text-pink-600 tracking-wide">
+                Category
+              </h2>
             </div>
             <div className="space-y-3">
               {eventCategories.map((cat) => (
                 <button
                   key={cat.id}
-                  onClick={() => setFilters({ ...filters, categoryByMood: cat.id })}
+                  onClick={() =>
+                    setFilters({ ...filters, categoryByMood: cat.id })
+                  }
                   className={`w-full flex items-center gap-4 px-5 py-3 rounded-full font-semibold transition-all duration-300 ${
                     category === cat.id
                       ? "bg-pink-100 text-pink-700 shadow-lg"
@@ -246,7 +298,7 @@ function Review() {
       </div>
       <div className="flex-1 p-8 bg-white shadow-2xl">
         {data.data?.length > 0 ? (
-          <TemplateList data={data} />
+          <TemplateList data={data} handleWatchHitory={handleWatchHitory} />
         ) : (
           <div className="flex justify-center flex-col gap-2 items-center h-screen">
             <p className="text-[6vw]">No template found</p>

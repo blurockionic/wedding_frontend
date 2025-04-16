@@ -36,7 +36,6 @@ export default function UserSideBar({ customClass }) {
   const location = useLocation();
 
   const userData = useSelector((state) => state.auth.user);
-  console.log(userData?.role)
   const handleLogout = async () => {
     try {
       const response = await logout();
