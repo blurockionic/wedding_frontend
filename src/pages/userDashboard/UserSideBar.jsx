@@ -8,7 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { userlogout } from "../../redux/authSlice";
 import { toast } from "react-toastify";
 import { custom } from "zod";
-import { MdOutlineVerified } from "react-icons/md";
+import { MdEmail, MdOutlineVerified } from "react-icons/md";
+import { FcInvite } from "react-icons/fc";
 
 const navItems = [
   { name: "Profile", path: "/profile", icon: <User size={20} /> },
@@ -26,6 +27,11 @@ const navItems = [
     name: "Wishlist",
     path: "/profile/favoriteList",
     icon: <Heart size={20} />,
+  },
+  {
+    name: "Invitaion Cards",
+    path: "/profile/invitationCards",
+    icon: <MdEmail size={20} />,
   },
 ];
 

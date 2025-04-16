@@ -165,15 +165,12 @@ const Sidebar = ({
               ) : (
                 "Update Design"
               )}
-<<<<<<< HEAD
             </button>
             <button
               onClick={saveTemplate}
               className="p-2 bg-purple-500 text-white rounded-lg w-full hover:bg-purple-600"
             >
               Save Template
-=======
->>>>>>> 40f341c487a709d1b3d69dedde55841447c43d54
             </button>
           </div>
         );
@@ -209,7 +206,7 @@ const Sidebar = ({
             </h2>
 
             <div className="grid grid-cols-2 gap-4">
-              {watchTemplateData?.lenght > 0 ? (
+              {watchTemplateData?.length > 0 ? (
                 watchTemplateData?.watchHistory.map((item) => (
                   <TemplateCard
                     key={item.id}
