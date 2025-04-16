@@ -41,7 +41,7 @@ export const userDataTemplateSlice = createApi({
     }),
 
     getTemplateWatchHistory: builder.query({
-      query: () => `/templateWatchHistory/`,
+      query: () => `/templateWatchHistory`,
     }),
 
     addOrUpdateWatchHistory: builder.mutation({
@@ -50,9 +50,6 @@ export const userDataTemplateSlice = createApi({
         method: "POST",
       }),
     }),
-
-
-
   }),
 });
 
@@ -63,6 +60,7 @@ export const {
   useUpdateTemplateMutation,
   useDeleteTemplateMutation,
   useGetTemplateWatchHistoryQuery,
-
   useAddOrUpdateWatchHistoryMutation,
 } = userDataTemplateSlice;
+
+

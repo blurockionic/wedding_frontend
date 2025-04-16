@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useAddOrUpdateWatchHistoryMutation, useGetTemplateWatchHistoryQuery } from "../../redux/TemplateSlice";
 import { FaCrown } from "react-icons/fa";
 
-const TemplateCard = React.memo(({ template, onClick }) => (
+export const TemplateCard = React.memo(({ template, onClick }) => (
   <div
     className="border p-4 shadow-md cursor-pointer hover:shadow-lg transition-shadow relative group"
     onClick={() => onClick(template)}
@@ -29,7 +29,7 @@ const TemplateCard = React.memo(({ template, onClick }) => (
   </div>
 ));
 
-const TemplateList = ({ data }) => {
+const TemplateList = ({ data ,handleWatchHitory}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -53,6 +53,7 @@ const TemplateList = ({ data }) => {
   }, []);
 
   const handleOnNavigate = async (template) => {
+    // handleWatchHitory()
 
 
     if (!loggedInUser) {
@@ -97,8 +98,10 @@ const TemplateList = ({ data }) => {
         <div className="grid grid-cols-3 gap-4">
           {data.data.map((template) => (
             <TemplateCard
+
               key={template.id}
               template={template}
+              // onClick={()=>handleOnNavigate(template.id)}
               onClick={handleOnNavigate}
             />
           ))}

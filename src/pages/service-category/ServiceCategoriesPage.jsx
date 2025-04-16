@@ -135,14 +135,14 @@ const ServiceCategoriesPage = () => {
             {isActive && title === category.title && (
               <div className="absolute left-0   w-full mt-4 bg-[#f1f1f1] z-10 px-5 md:px-20">
                 {/* Display Subcategories with Masonry Style */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 px-4 py-5 border border-gray-200 rounded-lg ">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 md:px-4 py-5 border border-gray-200 rounded-lg ">
                   {category.subcategories.map((sub, subIndex) => (
                     <div
                       key={subIndex}
                       onClick={() =>
                         handleOnSubCategoryNavigate(category.title, sub.name)
                       }
-                      className="relative   rounded-lg p-4 cursor-pointer overflow-hidden group"
+                      className="relative rounded-lg md:p-4 cursor-pointer overflow-hidden group"
                     >
                       {/* Image Container */}
                       <div className="relative w-full h-40 bg-gray-200 rounded-lg overflow-hidden">
