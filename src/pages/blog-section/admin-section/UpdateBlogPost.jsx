@@ -21,6 +21,8 @@ const UpdateBlogPost = () => {
   const [coverImagePreview, setCoverImagePreview] = useState('');
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState('');
+  const [createdAt, setCreatedAt] = useState('');
+  const [viewCount, setViewCount] = useState(0);
   const [saving, setSaving] = useState(false);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
 
@@ -56,6 +58,8 @@ const UpdateBlogPost = () => {
       setContent(blog.data.content || ''); // Set content
       setTags(blog.data.tags ? blog.data.tags.map(tag => tag.tagName) : []); // Set tags (ensure it's an array)
       setCoverImagePreview(blog.data.coverImage || '');
+      setCreatedAt(blog.data.createdAt || '');
+      setViewCount(blog.data.viewCount || 0);
     }
   }, [blog, setValue]);
 
@@ -368,6 +372,8 @@ const UpdateBlogPost = () => {
               content={content}
               coverImagePreview={coverImagePreview}
               hashtags={tags}
+              createdAt={createdAt}
+              viewCount={viewCount}
             />
           )}
         </div>
