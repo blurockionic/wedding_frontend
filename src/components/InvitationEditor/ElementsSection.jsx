@@ -21,6 +21,7 @@ const SearchBar = ({ setSearchQuery }) => (
   </div>
 );
 
+
 // DesignItem Component
 const DesignItem = ({ design, addDesignElement }) => (
   <div
@@ -28,7 +29,7 @@ const DesignItem = ({ design, addDesignElement }) => (
     className="relative rounded-lg overflow-hidden cursor-pointer transition-transform hover:scale-[1.02] bg-white/10 p-2 flex-shrink-0"
     onClick={() => addDesignElement(design)}
   >
-    {typeof design.src === "string" ? (
+    {(typeof design.url === "string")  ? (
       <img
         src={design.src || design?.url}
         alt={design.name || design.public_id}
@@ -85,10 +86,10 @@ const DesignList = ({ name, type, designs, addDesignElement, refMap, searchQuery
 const ElementsSection = ({ designs: parentDesigns, addDesignElement }) => {
   const refMap = useRef({});
   const { data } = useGetImagesForTemplateQuery("admin_assets");
-
+  
   const [designs, setDesigns] = useState(parentDesigns);
   const [searchQuery, setSearchQuery] = useState("");
-
+  
   const shapes = [
     { id: 101, type: "shape", src: <FaCircle size={70} />, name: "Circle" },
     { id: 102, type: "shape", src: <FaSquare size={60} />, name: "Square" },
@@ -127,6 +128,7 @@ const ElementsSection = ({ designs: parentDesigns, addDesignElement }) => {
       );
     });
   }, [data?.images, parentDesigns]);
+
 
   return (
     <div className="h-screen text-black overflow-y-auto bg-white w-full">

@@ -70,6 +70,13 @@ export default function AdminPanel({saveTemplate}) {
           <option value="flower">Flower</option>
           <option value="texture">Texture</option>
           <option value="pattern">Pattern</option>
+          <option value="border">Border</option>
+          <option value="decoration">Decoration</option>
+          <option value="nature">Nature</option>
+          <option value="sticker">Sticker</option>
+          <option value="wallpaper">Wallpaper</option>
+          <option value="animals">Animals</option>
+          <option value="birthday">Birthday</option>
         </select>
         {tagError && <p className="text-red-500 text-sm mt-1">Please select a tag.</p>}
       </div>
