@@ -1,9 +1,10 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import Footer from "../../Footer";
 import { useGetServicesQuery } from "../../../redux/serviceSlice";
 import ServiceList from "../../../components/ServiceList";
 import img from "../../../../public/destination_wedding/destination_wedding.jpg";
-// Import Random Images
+
 const randomImages = [
   "/weddingvendors/house.jpg",
   "/weddingvendors/tent.jpeg",
@@ -23,27 +24,24 @@ const getRandomImage = () => {
   return randomImages[Math.floor(Math.random() * randomImages.length)];
 };
 
+const formatName = (slug) => slug.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+const formatState = (slug) => slug.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toLowerCase());
+
 const CategoryByState = () => {
   const { category, subcategory, state } = useParams();
   const navigate = useNavigate();
 
-  // const location = useSelector(
-  //   (state) => state?.auth?.user?.wedding_location || state?.auth?.user?.city
-  // );
-
   const filters = {
-    service_type: subcategory || "",
-    state: state,
+    service_type: formatName(subcategory),
+    state: formatState(state),
   };
 
-  const { data, error, isLoading } = useGetServicesQuery(filters);
+  const { data } = useGetServicesQuery(filters);
 
-  // top in your state
   const topInYourState = data?.ServiceResult.filter(
     (detail) => detail.state === state
   ).sort((a, b) => b.rating - a.rating);
 
-  // Fetch cities only if state is valid
   const cityServiceCount = data?.ServiceResult.reduce((acc, service) => {
     const city = service?.city;
     if (city) {
@@ -52,41 +50,50 @@ const CategoryByState = () => {
     return acc;
   }, {});
 
-  // Handle navigation when state is selected
   const handleStateClick = (city) => {
-    navigate(`/all/${category}/${subcategory}/${state}/${city}`);
+    const subCitySlug = city.toLowerCase().replace(/\s+/g, '-');
+    navigate(`/all/${category}/${subcategory}/${state}/${subCitySlug}`);
   };
+
+  const pageTitle = `${formatName(subcategory)} Services in ${formatName(state)} | Wedding Vendors`;
+  const pageDescription = `Discover top-rated ${formatName(subcategory)} in ${formatName(state)}. Browse services by city and plan your perfect wedding today.`;
 
   return (
     <>
-     
-      
+      {/* 🔍 SEO Meta Tags */}
+      <Helmet>
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDescription} />
+        <meta name="keywords" content={`${formatName(subcategory)}, ${formatName(state)}, wedding services, wedding vendors, plan wedding`} />
+      </Helmet>
+
       {/* Breadcrumb Navigation */}
       <nav className="bg-gray-100 py-3 px-4 md:px-16">
         <div className=" mx-auto flex items-center text-sm text-gray-600">
           <Link to="/all" className="hover:text-primary transition">Wedding</Link>
           <span className="mx-2">/</span>
-          <Link  className="hover:text-primary transition">{category}</Link>
+          <Link className="hover:text-primary transition">{category}</Link>
           <span className="mx-2">/</span>
           <Link to={`/all/${category}/${subcategory}`} className=" capitalize">
             {subcategory}
           </Link>
           <span className="mx-2">/</span>
           <Link
-          to={`/all/${category}/${subcategory}/${state}`}
-          className="font-semibold text-primary capitalize"
-        >
-          {state}
-        </Link>
+            to={`/all/${category}/${subcategory}/${state}`}
+            className="font-semibold text-primary capitalize"
+          >
+            {state}
+          </Link>
         </div>
       </nav>
+
       <h1 className="px-4 md:px-16 text-2xl font-semibold">
-        Search for {subcategory} in {state}
+        Search for {formatName(subcategory)} in {state}
       </h1>
 
       {/* Horizontal Scroll for Cities */}
       <div className="px-4 py-2 md:px-16 md:py-4">
-        <h2 className="text-xl font-semibold">{`Select ${subcategory} by city`}</h2>
+        <h2 className="text-xl font-semibold">{`Select ${formatName(subcategory)} by city`}</h2>
       </div>
 
       <div className="px-4 md:px-16 mt-4 overflow-x-auto whitespace-nowrap flex gap-4 py-2 scrollbar-hide">
@@ -95,7 +102,7 @@ const CategoryByState = () => {
             <div key={city} className="flex flex-col items-center gap-1 md:gap-2 ">
               <img
                 src={getRandomImage()}
-                alt="Wedding Venue"
+                alt={`${city} ${formatName(subcategory)}`}
                 className="w-20 h-20 md:w-40 md:h-40 rounded-full object-cover shadow-md"
               />
               <p
@@ -104,7 +111,7 @@ const CategoryByState = () => {
               >
                 {city}
               </p>
-              <span className="text-xs">{`(${count}) ${subcategory}`}</span>
+              <span className="text-xs">{`(${count}) ${formatName(subcategory)}`}</span>
             </div>
           ))
         ) : (
@@ -114,16 +121,16 @@ const CategoryByState = () => {
 
       {/* Top Venues by Selected State */}
       <div className="mt-6 px-4 py-2 md:px-16 md:py-4">
-        <h2 className="text-xl font-semibold ">{`Top ${subcategory} in ${state}`}</h2>
+        <h2 className="text-xl font-semibold">{`Top ${subcategory} in ${state}`}</h2>
         <div className="mt-5">
           <ServiceList services={topInYourState || []} />
         </div>
       </div>
 
-      {/* 🌟 Destination Wedding Banner (Above Footer) */}
+      {/* 🌟 Destination Wedding Banner */}
       <div
         className="relative w-full h-64 lg:h-96 bg-cover bg-center mt-10"
-        style={{ backgroundImage: `url(${img})` }} // Replace with your image URL
+        style={{ backgroundImage: `url(${img})` }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center text-center text-white px-6">
           <h1 className="text-3xl lg:text-5xl font-bold">

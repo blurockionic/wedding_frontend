@@ -2,34 +2,42 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { paymentApi } from "../../redux/payment";
 import { useDispatch, useSelector } from "react-redux";
-import { useAddOrUpdateWatchHistoryMutation, useGetTemplateWatchHistoryQuery } from "../../redux/TemplateSlice";
+import {
+  useAddOrUpdateWatchHistoryMutation,
+  useGetTemplateWatchHistoryQuery,
+} from "../../redux/TemplateSlice";
 import { FaCrown } from "react-icons/fa";
 
 export const TemplateCard = React.memo(({ template, onClick }) => (
   <div
-    className="border p-4 shadow-md cursor-pointer hover:shadow-lg transition-shadow relative group"
+    className="border shadow-md cursor-pointer hover:shadow-lg transition-shadow relative group rounded-lg h-[70%] overflow-hidden"
     onClick={() => onClick(template)}
   >
     {template.categoryByAmount === "PAID" && (
-      <div className="absolute flex items-center justify-start w-[40px] h-[40px] bg-blue-500 text-white rounded-lg overflow-hidden transition-all duration-300 ease-in-out group-hover:w-[120px] px-2 -top-2 left-2 z-10">
+      <div className="absolute flex items-center justify-start w-[40px] h-[40px] bg-primary text-white rounded-lg overflow-hidden transition-all duration-300 ease-in-out group-hover:w-[120px] px-2 top-2 left-2 z-10">
         <FaCrown className="text-white text-[24px] flex-shrink-0" />
         <span className="ml-2 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           Premium
         </span>
       </div>
     )}
+
     <img
       src={template.thumbnailUrl}
-      alt={template.name}
+      alt={template.name || "Template Thumbnail"}
       loading="lazy"
-      className="w-full h-40 object-cover"
+      className="w-full h-[700px] object-fill"
     />
-    <h3 className="font-semibold mt-2">{template.name}</h3>
-    <p className="text-gray-600">₹{template.price || "Free"}</p>
+
+    {/* Overlay with black background and white text */}
+    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-800  text-white p-4 rounded-b-lg">
+      <h3 className="font-semibold text-lg">{template.name}</h3>
+      <p className="text-md">₹{template.price || "Free"}</p>
+    </div>
   </div>
 ));
 
-const TemplateList = ({ data ,handleWatchHitory}) => {
+const TemplateList = ({ data, handleWatchHitory }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -44,8 +52,9 @@ const TemplateList = ({ data ,handleWatchHitory}) => {
     limit: 10,
   });
 
-   const loggedInUser = useSelector((state) => state?.auth?.user);
-  const { data: watchHistory, refetch: refetchWatchHistory } = useGetTemplateWatchHistoryQuery();
+  const loggedInUser = useSelector((state) => state?.auth?.user);
+  const { data: watchHistory, refetch: refetchWatchHistory } =
+    useGetTemplateWatchHistoryQuery();
   const [addOrUpdateWatchHistory] = useAddOrUpdateWatchHistoryMutation();
 
   useEffect(() => {
@@ -55,13 +64,10 @@ const TemplateList = ({ data ,handleWatchHitory}) => {
   const handleOnNavigate = async (template) => {
     // handleWatchHitory()
 
-
     if (!loggedInUser) {
-      navigate("/login",{ state: { from: "/browse" } });
+      navigate("/login", { state: { from: "/browse" } });
       return;
-      
     }
-
 
     addOrUpdateWatchHistory(template.id);
 
@@ -98,7 +104,6 @@ const TemplateList = ({ data ,handleWatchHitory}) => {
         <div className="grid grid-cols-3 gap-4">
           {data.data.map((template) => (
             <TemplateCard
-
               key={template.id}
               template={template}
               // onClick={()=>handleOnNavigate(template.id)}

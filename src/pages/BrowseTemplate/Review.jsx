@@ -101,21 +101,10 @@ function Review() {
     }
   };
 
-
-
- const handleWatchHitory = async(templateId)=>{
-
-
-  const res = await addOrUpdateWatch(templateId) 
-  console.log(res);
-  
-
-
-
-
-
- }
-
+  const handleWatchHitory = async (templateId) => {
+    const res = await addOrUpdateWatch(templateId);
+    console.log(res);
+  };
 
   useEffect(() => {
     setTemplates(
