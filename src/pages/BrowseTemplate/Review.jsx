@@ -102,8 +102,7 @@ function Review() {
   };
 
   const handleWatchHitory = async (templateId) => {
-    const res = await addOrUpdateWatch(templateId);
-    console.log(res);
+    await addOrUpdateWatch(templateId);
   };
 
   useEffect(() => {

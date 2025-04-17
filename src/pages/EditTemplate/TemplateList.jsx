@@ -63,7 +63,6 @@ const TemplateList = ({ data, handleWatchHitory }) => {
 
   const handleOnNavigate = async (template) => {
     // handleWatchHitory()
-
     if (!loggedInUser) {
       navigate("/login", { state: { from: "/browse" } });
       return;

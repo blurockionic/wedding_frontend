@@ -4,6 +4,7 @@ import { FaRegComment, FaRegHeart, FaHeart, FaShare, FaWhatsapp, FaInstagram, Fa
 import { useAddCommentMutation, useDeleteCommentMutation, useToggleLikeBlogMutation, useGetBlogByUrlTitleQuery } from "../../../redux/blogSlice";
 import { useSelector } from "react-redux";
 import Footer from '../../Footer';
+import { Helmet } from 'react-helmet';
 
 const Blog = () => {
   const { urlTitle: blogUrlTitle } = useParams();
@@ -105,14 +106,40 @@ const Blog = () => {
     }).replace(/\//g, '.');
   };
 
+  
+
   if (isLoading) return <div className="text-center py-10">Loading blog...</div>;
   if (error) return <div className="text-center py-10 text-red-500">Error loading blog</div>;
   if (!blogData) return <div className="text-center py-10">Blog not found</div>;
 
   const { title, content, tags = [], createdAt, authorUrlTitle, coverImage, author } = blogData.data;
 
+  const plainTextContent = content.replace(/<[^>]+>/g, ''); // Strip HTML for meta description
+  const metaDescription = plainTextContent.slice(0, 160);
+
+  console.log(metaDescription)
+
+  const fullTitle = `${title} | Marriage Vendors Blog`;
+
   return (
     <div>
+       {/* SEO Meta Tags */}
+       <Helmet>
+        <title>{fullTitle}</title>
+        <meta name="description" content={metaDescription} />
+        <meta property="og:title" content={fullTitle} />
+        <meta property="og:description" content={metaDescription} />
+        <meta property="og:image" content={coverImage} />
+        <meta property="og:type" content="article" />
+        <meta property="og:site_name" content="Marriage Vendors" />
+        <meta property="og:url" content={typeof window !== 'undefined' ? window.location.href : ''} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={fullTitle} />
+        <meta name="twitter:description" content={metaDescription} />
+        <meta name="twitter:image" content={coverImage} />
+        <link rel="canonical" href={typeof window !== 'undefined' ? window.location.href : ''} />
+      </Helmet>
+
       <div className="flex-grow px-6 py-4 overflow-y-auto relative">
         <div className="max-w-4xl mx-auto">
           {/* View All Blogs Button - top left */}
