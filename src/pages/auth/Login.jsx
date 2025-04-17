@@ -6,8 +6,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useState } from "react";
 import { useLoginMutation } from "../../redux/apiSlice.auth";
-import loginImage from "../../../public/login/signin-bg.png";
-import Logo from "../../../public/logo/brandlogo.png";
+import loginImage from "../../../public/login/login.jpg";
 import CustomButton from "../../components/global/button/CustomButton";
 import CustomText from "../../components/global/text/CustomText";
 import { MdEmail } from "react-icons/md";
@@ -185,34 +184,28 @@ export default function Login() {
           {JSON.stringify(structuredData)}
         </script>
       </Helmet>
-      <div className="mt-3 flex md:py-5 px-10">
-        <div className="flex h-[85vh] items-center justify-center md:space-x-10 w-full">
-          <div className="hidden md:block w-2/5">
+      <div className="min-h-screen flex items-center justify-center md:py-10">
+        <div className="flex items-center justify-center md:space-x-10">
+          <div className="hidden md:block w-3/4">
             <img
               src={loginImage}
-              className="h-[85vh] w-full object-cover object-center rounded-lg"
+              className="h-[600px] w-full object-cover object-center rounded-lg"
               alt="Login Illustration"
             />
           </div>
-          <div className=" sm:bg-white bg-transparent items-center flex-col justify-center rounded-lg sm:px-8 md:px-[10rem] w-full space-y-6">
-            <img
-              src={Logo}
-              className="h-20 w-20 object-cover object-center rounded-md mx-auto mt-4"
-              alt="Logo"
-            />
+          <div className="h-[600px] sm:bg-white bg-transparent sm:shadow-md rounded-lg sm:px-8 px-4 w-full space-y-6">
             <CustomText
               variant="heading"
-              className="text-3xl font-bold text-black mt-2 text-center"
+              className="text-3xl font-bold text-black mt-2"
             >
               Welcome to Marriage Vendors
             </CustomText>
-            <CustomText variant="paragraph" className="text-sm text-gray-600 text-center">
+            <CustomText variant="paragraph" className="text-sm text-gray-600 ">
               Enter your credentials to access your account
             </CustomText>
 
             <form onSubmit={handleSubmit(handleLogin)} className="space-y-4 ">
               <InputField
-                className="w-[60%] mx-auto"
                 label="Email"
                 id="email"
                 type="email"
@@ -224,7 +217,6 @@ export default function Login() {
               />
 
               <PasswordField
-                className="w-[60%] mx-auto"
                 error={errors.password}
                 type={isShowPassword ? "text" : "password"}
                 setIsShow={setIsShowPassword}
@@ -234,7 +226,7 @@ export default function Login() {
                 isShow={isShowPassword}
               />
 
-              <div className="mb-6 text-center">
+              <div className="mb-6 text-end">
                 <Link
                   to="/user-forgot-password"
                   className="font-bold text-sm text-muted-foreground"
@@ -248,22 +240,22 @@ export default function Login() {
                   type="submit"
                   text={loading ? "Logging in..." : "Login"}
                   disabled={loading}
-                  className={`w-[30%] ${loading ? "text-primary" : "bg-primary"} 
+                  className={`w-full ${loading ? "text-primary" : "bg-primary"} 
       disabled:cursor-not-allowed cursor-pointer border-2 hover:bg-dustyRose
-      text-muted font-bold py-2 px-4 rounded transition `}
+      text-muted font-bold py-2 px-4 rounded transition`}
                 />
 
-                <div className="my-8 flex items-center justify-between w-[70%] gap-x-5">
-                  <div className="h-[1px] px-3 w-[50%] bg-gray-300"></div>
-                  <span className="text-2xl text-center">Or</span>
-                  <div className="h-[1px] px-3 w-[50%] bg-gray-300"></div>
+                <div className="my-8 flex items-center justify-between w-full gap-x-5">
+                  <div className="h-[1px] px-3 w-full bg-gray-300"></div>
+                  <span>or</span>
+                  <div className="h-[1px] px-3 w-full bg-gray-300"></div>
                 </div>
                 <CustomButton
                   type="button"
                   text="Login with Google"
                   onClick={handleGoogleLogin}
                   leftIcon={<MdEmail size={20} className="text-red-500" />}
-                  className="w-[30%] mt-4 py-2 bg-background text-red-600 border hover:border-ring"
+                  className="w-full mt-4 py-2 bg-background text-red-600 border hover:border-ring"
                 />
               </div>
             </form>
