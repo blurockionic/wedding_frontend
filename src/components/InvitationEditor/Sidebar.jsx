@@ -49,7 +49,7 @@ const Sidebar = ({
   const [activeSection, setActiveSection] = useState(null);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [isDownloadOpen, setIsDownloadOpen] = useState(false);
-  const userRole = useSelector((state) => state?.auth?.user);
+  const userRole = useSelector((state) => state?.auth?.user?.role);
 
   const { data: watchTemplateData, isLoading: watchLoading } =
     useGetTemplateWatchHistoryQuery();
