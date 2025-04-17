@@ -127,7 +127,7 @@ const SubCategories = () => {
 
       {/* Breadcrumb Navigation */}
       <nav className="bg-gray-100 py-3 px-4 md:px-16">
-        <div className="mx-auto flex items-center text-sm text-gray-600">
+        <div className="mx-auto flex items-center text-[8px] md:text-sm text-gray-600">
           <Link to="/all" className="hover:text-primary transition">Wedding Services</Link>
           <span className="mx-2">/</span>
           <Link className="hover:text-primary transition">{formatName(category)}</Link>

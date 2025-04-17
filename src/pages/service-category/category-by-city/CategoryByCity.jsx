@@ -175,7 +175,7 @@ const CategoryByCity = () => {
         <div className="w-full lg:w-3/4">
           {/* Breadcrumb Navigation */}
           <nav className=" py-3  ">
-            <div className="container mx-auto flex items-center text-sm text-gray-600">
+            <div className="container mx-auto flex items-center text-[8px] md:text-sm text-gray-600">
               <Link to="/all" className="hover:text-primary transition">
                 Wedding
               </Link>
