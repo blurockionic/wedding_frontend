@@ -107,7 +107,7 @@ const ElementsSection = ({ designs: parentDesigns, addDesignElement }) => {
 
   const designTypes = [
     { name: "Background", type: "background" },
-    { name: "Flowers", type: "flower" },
+    { name: "Flower", type: "flower" },
     { name: "Pattern", type: "pattern" },
     { name: "Border", type: "border" },
     { name: "Couple", type: "couple" },
@@ -115,7 +115,7 @@ const ElementsSection = ({ designs: parentDesigns, addDesignElement }) => {
     { name: "Texture", type: "texture" },
     { name: "Shapes", type: "shape" },
     { name: "Nature", type: "nature" },
-    { name: "Animal", type: "animal" },
+    { name: "Animals", type: "animals" },
     { name: "Sticker", type: "sticker" },
     { name: "Wallpaper", type: "wallpaper" },
     { name: "Birthday", type: "birthday" },
