@@ -89,6 +89,8 @@ const ElementsSection = ({ designs: parentDesigns, addDesignElement }) => {
   
   const [designs, setDesigns] = useState(parentDesigns);
   const [searchQuery, setSearchQuery] = useState("");
+
+  console.log(data)
   
   const shapes = [
     { id: 101, type: "shape", src: <FaCircle size={70} />, name: "Circle" },
@@ -106,12 +108,20 @@ const ElementsSection = ({ designs: parentDesigns, addDesignElement }) => {
   const designTypes = [
     { name: "Background", type: "background" },
     { name: "Flowers", type: "flower" },
-    { name: "Borders", type: "border" },
+    { name: "Pattern", type: "pattern" },
+    { name: "Border", type: "border" },
     { name: "Couple", type: "couple" },
     { name: "Decoration", type: "decoration" },
     { name: "Texture", type: "texture" },
     { name: "Shapes", type: "shape" },
+    { name: "Nature", type: "nature" },
+    { name: "Animal", type: "animal" },
+    { name: "Sticker", type: "sticker" },
+    { name: "Wallpaper", type: "wallpaper" },
+    { name: "Birthday", type: "birthday" },
   ];
+
+  
 
   useEffect(() => {
     setDesigns((prevDesigns) => {
