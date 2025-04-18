@@ -14,6 +14,7 @@ import {
   useDeleteImagesForTemplateMutation,
   useGetImagesForTemplateQuery,
 } from "../../redux/cloudinaryApiSlice";
+import { useSelector } from "react-redux";
 
 // 🔍 SearchBar Component
 const SearchBar = ({ setSearchQuery }) => (
@@ -29,6 +30,12 @@ const SearchBar = ({ setSearchQuery }) => (
 
 // 🎨 Design Item Component
 const DesignItem = ({ design, addDesignElement, onDelete }) => {
+
+  const role = useSelector(state=>state?.auth?.user?.role);
+
+  
+
+
   return (
     <div
       className="relative rounded-lg overflow-hidden cursor-pointer transition-transform hover:scale-[1.02] bg-white/10 p-2 flex-shrink-0"
@@ -48,7 +55,7 @@ const DesignItem = ({ design, addDesignElement, onDelete }) => {
       <span className="text-xs text-center block mt-1">
         {design.name ? design.name.slice(0, 6) : ""}
       </span>
-      {design.public_id && (
+      {design.public_id && (role.toLowerCase()==="admin")&&  (
         <span
           onClick={(e) => {
             e.stopPropagation();
