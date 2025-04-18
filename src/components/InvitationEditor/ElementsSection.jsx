@@ -1,15 +1,21 @@
 import { useEffect, useRef, useState } from "react";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-import { useGetImagesForTemplateQuery } from "../../redux/cloudinaryApiSlice";
-import { FaCircle } from "react-icons/fa";
-import { FaSquare } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaCircle, FaSquare } from "react-icons/fa";
 import { RiRectangleFill } from "react-icons/ri";
-import { BsFillTriangleFill, BsFillPentagonFill } from "react-icons/bs";
+import {
+  BsFillTriangleFill,
+  BsFillPentagonFill,
+  BsFillDiamondFill,
+  BsFillOctagonFill,
+} from "react-icons/bs";
 import { MdHexagon, MdOutlineStarPurple500 } from "react-icons/md";
 import { FaLocationPin } from "react-icons/fa6";
-import { BsFillDiamondFill, BsFillOctagonFill } from "react-icons/bs";
+import { X } from "lucide-react";
+import {
+  useDeleteImagesForTemplateMutation,
+  useGetImagesForTemplateQuery,
+} from "../../redux/cloudinaryApiSlice";
 
-// SearchBar Component
+// 🔍 SearchBar Component
 const SearchBar = ({ setSearchQuery }) => (
   <div className="mb-4">
     <input
@@ -21,32 +27,52 @@ const SearchBar = ({ setSearchQuery }) => (
   </div>
 );
 
+// 🎨 Design Item Component
+const DesignItem = ({ design, addDesignElement, onDelete }) => {
+  return (
+    <div
+      className="relative rounded-lg overflow-hidden cursor-pointer transition-transform hover:scale-[1.02] bg-white/10 p-2 flex-shrink-0"
+      onClick={() => addDesignElement(design)}
+    >
+      {typeof design.url === "string" ? (
+        <img
+          src={design.src || design.url}
+          alt={design.name || design.public_id}
+          className="w-16 h-16 object-contain"
+        />
+      ) : (
+        <div className="w-16 h-16 flex items-center justify-center">
+          {design.src}
+        </div>
+      )}
+      <span className="text-xs text-center block mt-1">
+        {design.name ? design.name.slice(0, 6) : ""}
+      </span>
+      {design.public_id && (
+        <span
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete(design.public_id, design.id);
+          }}
+          className="absolute top-4 right-1 bg-red-500 text-white rounded-full p-1"
+        >
+          <X size={10} />
+        </span>
+      )}
+    </div>
+  );
+};
 
-// DesignItem Component
-const DesignItem = ({ design, addDesignElement }) => (
-  <div
-    key={design.id}
-    className="relative rounded-lg overflow-hidden cursor-pointer transition-transform hover:scale-[1.02] bg-white/10 p-2 flex-shrink-0"
-    onClick={() => addDesignElement(design)}
-  >
-    {(typeof design.url === "string")  ? (
-      <img
-        src={design.src || design?.url}
-        alt={design.name || design.public_id}
-        className="w-16 h-16 object-contain"
-      />
-    ) : (
-      <div className="w-16 h-16 flex items-center justify-center">
-        {design.src}
-      </div>
-    )}
-    <span className="text-xs text-center block mt-1">
-      {design.name ? design.name.slice(0, 6) : ""}
-    </span>
-  </div>
-);
-
-const DesignList = ({ name, type, designs, addDesignElement, refMap, searchQuery }) => {
+// 📃 Design List per Type Section
+const DesignList = ({
+  name,
+  type,
+  designs,
+  addDesignElement,
+  refMap,
+  searchQuery,
+  onDelete,
+}) => {
   const ref = useRef(null);
   refMap.current[type] = ref;
 
@@ -60,18 +86,30 @@ const DesignList = ({ name, type, designs, addDesignElement, refMap, searchQuery
         <h3 className="text-lg font-semibold mb-2 text-purple-500">{name}</h3>
         <div className="relative flex items-center">
           <button
-            onClick={() => ref.current.scrollBy({ left: -200, behavior: "smooth" })}
+            onClick={() =>
+              ref.current.scrollBy({ left: -200, behavior: "smooth" })
+            }
             className="absolute -left-2 p-1 bg-gray-500 text-white rounded-full hover:bg-rose-600 transition-transform transform hover:scale-110 z-10 -mt-4"
           >
             <FaArrowLeft className="w-3 h-3" />
           </button>
-          <div ref={ref} className="flex space-x-2 overflow-hidden pb-2 scroll-smooth w-full px-10">
+          <div
+            ref={ref}
+            className="flex space-x-2 overflow-hidden pb-2 scroll-smooth w-full px-10"
+          >
             {filteredDesigns.map((design) => (
-              <DesignItem key={design.id} design={design} addDesignElement={addDesignElement} />
+              <DesignItem
+                key={design.id}
+                design={design}
+                addDesignElement={addDesignElement}
+                onDelete={onDelete}
+              />
             ))}
           </div>
           <button
-            onClick={() => ref.current.scrollBy({ left: 200, behavior: "smooth" })}
+            onClick={() =>
+              ref.current.scrollBy({ left: 200, behavior: "smooth" })
+            }
             className="absolute -right-3 p-1 bg-gray-500 text-white rounded-full hover:bg-rose-600 transition-transform transform hover:scale-110 z-10 -mt-4"
           >
             <FaArrowRight className="w-3 h-3" />
@@ -82,16 +120,15 @@ const DesignList = ({ name, type, designs, addDesignElement, refMap, searchQuery
   );
 };
 
-// ElementsSection Component (Main Container)
+// 🌟 Elements Section (Main Component)
 const ElementsSection = ({ designs: parentDesigns, addDesignElement }) => {
   const refMap = useRef({});
   const { data } = useGetImagesForTemplateQuery("admin_assets");
-  
+  const [deleteImage] = useDeleteImagesForTemplateMutation();
+
   const [designs, setDesigns] = useState(parentDesigns);
   const [searchQuery, setSearchQuery] = useState("");
 
-  console.log(data)
-  
   const shapes = [
     { id: 101, type: "shape", src: <FaCircle size={70} />, name: "Circle" },
     { id: 102, type: "shape", src: <FaSquare size={60} />, name: "Square" },
@@ -121,24 +158,31 @@ const ElementsSection = ({ designs: parentDesigns, addDesignElement }) => {
     { name: "Birthday", type: "birthday" },
   ];
 
-  
-
   useEffect(() => {
-    setDesigns((prevDesigns) => {
-      const validTypes = new Set(designTypes.map(({ type }) => type));
-      const newDesigns = data?.images
-        ? data.images.flatMap((image) =>
-            image.tags
-              .filter((tag) => validTypes.has(tag))
-              .map((tag) => ({ ...image, type: tag }))
-          )
-        : [];
-      return Array.from(
-        new Map([...prevDesigns, ...newDesigns, ...shapes].map((item) => [item.id, item])).values()
-      );
+    const validTypes = new Set(designTypes.map(({ type }) => type));
+    const newDesigns = data?.images
+      ? data.images.flatMap((image) =>
+          image.tags
+            .filter((tag) => validTypes.has(tag))
+            .map((tag) => ({ ...image, type: tag }))
+        )
+      : [];
+    setDesigns(() => {
+      const combined = [...newDesigns, ...shapes];
+      return Array.from(new Map(combined.map((item) => [item.id || item.public_id, item])).values());
     });
-  }, [data?.images, parentDesigns]);
+  }, [data?.images]);
 
+  const handleDelete = async (public_id, id) => {
+    try {
+      await deleteImage({ public_id }).unwrap();
+      setDesigns((prev) =>
+        prev.filter((design) => design.public_id !== public_id && design.id !== id)
+      );
+    } catch (error) {
+      console.error("Delete failed:", error);
+    }
+  };
 
   return (
     <div className="h-screen text-black overflow-y-auto bg-white w-full">
@@ -153,6 +197,7 @@ const ElementsSection = ({ designs: parentDesigns, addDesignElement }) => {
             addDesignElement={addDesignElement}
             refMap={refMap}
             searchQuery={searchQuery}
+            onDelete={handleDelete}
           />
         ))}
       </div>
