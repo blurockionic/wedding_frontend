@@ -4,28 +4,36 @@ import { useGetServicesQuery } from "../../../redux/serviceSlice";
 import ServiceList from "../../../components/ServiceList";
 import Sidebar from "../../../components/Sidebar";
 import { FilterIcon, Loader, X } from "lucide-react";
+import { Helmet } from "react-helmet";
 
 const CategoryByCity = () => {
   const { category, subcategory, state, city } = useParams();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [services, setServices] = useState([]);
 
+  const formatName = (slug) =>
+    slug.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+  const formatState = (slug) =>
+    slug.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toLowerCase());
+  const formatCity = (slug) =>
+    slug.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toLowerCase());
+
   // State for Filters
   const [filters, setFilters] = useState({
-    city: city || "",
-    state: state || "",
+    city: formatCity(city) || "",
+    state: formatState(state) || "",
     status: "active",
     minPrice: "",
     maxPrice: "",
     rating: "",
     sort_by: "",
     sort_order: "",
-    service_type: subcategory || "",
+    service_type: formatName(subcategory) || "",
   });
 
   useEffect(() => {
     setFilters((prev) => ({
-      ...prev
+      ...prev,
     }));
   }, [city, subcategory, state]);
 
@@ -50,7 +58,11 @@ const CategoryByCity = () => {
     [filters, currentPage]
   );
 
-  const { data: fetchedData, isLoading, refetch } = useGetServicesQuery(memoizedFilters);
+  const {
+    data: fetchedData,
+    isLoading,
+    refetch,
+  } = useGetServicesQuery(memoizedFilters);
 
   useEffect(() => {
     if (fetchedData?.ServiceResult) {
@@ -67,8 +79,55 @@ const CategoryByCity = () => {
     });
   }, [filters, refetch]);
 
+  console.log(formatName(subcategory));
+
   return (
     <>
+        {/* SEO Helmet */}
+        <Helmet>
+        <title>{`Best ${formatName(subcategory)} in ${formatName(city)}, ${formatName(state)} | Marriage Vendors`}</title>
+        <meta
+          name="description"
+          content={`Explore top-rated ${formatName(subcategory)} in ${formatName(city)}, ${formatName(state)}. Find verified vendors, view photos, pricing & reviews.`}
+        />
+        <link
+          rel="canonical"
+          href={`https://www.marriagevendors.com/${subcategory}/${state}/${city}`}
+        />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://www.marriagevendors.com"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": formatName(subcategory),
+                "item": `https://www.marriagevendors.com/${subcategory}`
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": formatName(state),
+                "item": `https://www.marriagevendors.com/${subcategory}/${state}`
+              },
+              {
+                "@type": "ListItem",
+                "position": 4,
+                "name": formatName(city),
+                "item": `https://www.marriagevendors.com/${subcategory}/${state}/${city}`
+              }
+            ]
+          })}
+        </script>
+      </Helmet>
+
       <div className="flex flex-col lg:flex-row px-4 lg:px-16 py-4 gap-6 relative">
         {/* Button to show filters on mobile */}
         <div
@@ -90,58 +149,86 @@ const CategoryByCity = () => {
         {/* Sidebar with Filters */}
         <aside
           className={`fixed lg:static top-0 left-0 w-3/4 sm:w-1/2 lg:w-1/4 h-screen bg-white shadow-md p-4 rounded-lg z-50 transition-transform duration-300 ease-in-out 
-          ${isFilterOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
+          ${
+            isFilterOpen ? "translate-x-0" : "-translate-x-full"
+          } lg:translate-x-0`}
         >
           {/* Close button for mobile view */}
           <div className="lg:hidden text-white px-3 py-1 rounded-md mb-4 flex justify-end">
-            <X className="bg-red-500 rounded-full cursor-pointer" onClick={() => setIsFilterOpen(false)} />
+            <X
+              className="bg-red-500 rounded-full cursor-pointer"
+              onClick={() => setIsFilterOpen(false)}
+            />
           </div>
 
           <h2 className="text-lg font-semibold">Filters</h2>
-          <Sidebar isLoading={isLoading} filters={filters} onFilterChange={handleFilterChange} city={city} service_type={subcategory}/>
+          <Sidebar
+            isLoading={isLoading}
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            city={city}
+            service_type={subcategory}
+          />
         </aside>
 
         {/* Service Listings */}
         <div className="w-full lg:w-3/4">
-         
           {/* Breadcrumb Navigation */}
-      <nav className=" py-3  ">
-        <div className="container mx-auto flex items-center text-sm text-gray-600">
-          <Link to="/all" className="hover:text-primary transition">Wedding</Link>
-          <span className="mx-2">/</span>
-          <Link  className="hover:text-primary transition">{category}</Link>
-          <span className="mx-2">/</span>
-          <Link to={`/all/${category}/${subcategory}`} className="capitalize">
-            {subcategory}
-          </Link>
-          <span className="mx-2">/</span>
-          <Link
-          to={`/all/${category}/${subcategory}/${state}`}
-          className="capitalize"
-        >
-          {state}
-        </Link>
-        <span className="mx-2">/</span>
-        <Link to={`/all/${category}/${subcategory}/${state}/${city}`}className="font-semibold text-primary capitalize">
-              {city}
-            </Link>
-        </div>
-      </nav>
+          <nav className=" py-3  ">
+            <div className="container mx-auto flex items-center text-[8px] md:text-sm text-gray-600">
+              <Link to="/all" className="hover:text-primary transition">
+                Wedding
+              </Link>
+              <span className="mx-2">/</span>
+              <Link className="hover:text-primary transition">{category}</Link>
+              <span className="mx-2">/</span>
+              <Link
+                to={`/all/${category}/${subcategory}`}
+                className="capitalize"
+              >
+                {subcategory}
+              </Link>
+              <span className="mx-2">/</span>
+              <Link
+                to={`/all/${category}/${subcategory}/${state}`}
+                className="capitalize"
+              >
+                {state}
+              </Link>
+              <span className="mx-2">/</span>
+              <Link
+                to={`/all/${category}/${subcategory}/${state}/${city}`}
+                className="font-semibold text-primary capitalize"
+              >
+                {city}
+              </Link>
+            </div>
+          </nav>
 
           <h1 className="text-2xl font-bold mt-2">
-            <span className="capitalize">{subcategory}</span> in <span className="capitalize">{city}</span>,{" "}
+            <span className="capitalize">{formatName(subcategory)}</span> in{" "}
+            <span className="capitalize">{city}</span>,{" "}
             <span className="capitalize">{state}</span>
           </h1>
-          <p className="mt-2">Here you will find all listings for {subcategory} in {city}.</p>
+          <p className="mt-2">
+            Here you will find all listings for {formatName(subcategory)} in{" "}
+            {city}.
+          </p>
 
           {/* Loader */}
           {isLoading ? (
             <div className="flex justify-center items-center my-10 py-10">
-              <Loader size={24} className="animate-spin"/>
+              <Loader size={24} className="animate-spin" />
             </div>
           ) : (
             <div className="my-10 overflow-y-scroll">
-              <ServiceList services={services} category={category} state={state} subCategory={subcategory} city={city} />
+              <ServiceList
+                services={services}
+                category={category}
+                state={state}
+                subCategory={subcategory}
+                city={city}
+              />
             </div>
           )}
         </div>

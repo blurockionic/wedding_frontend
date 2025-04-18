@@ -85,8 +85,19 @@ export const cloudinaryApi = createApi({
     getImagesForTemplate: builder.query({
       query: (type) => `/editorAssets?asset_folder=${type}`,
     }),
+    deleteImagesForTemplate: builder.mutation({
+      query: ({ public_id }) => ({
+        url: `/editorAssets`, 
+        method: 'DELETE',
+        body: {
+          public_id,
+        },
+      }),
+    
+     
+    }),
   }),
 });
 
-export const { useUploadToCloudinaryMutation, useGetImagesForTemplateQuery } =
+export const { useUploadToCloudinaryMutation, useGetImagesForTemplateQuery,useDeleteImagesForTemplateMutation } =
   cloudinaryApi;

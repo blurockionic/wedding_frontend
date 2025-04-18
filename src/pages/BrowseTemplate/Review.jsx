@@ -14,6 +14,7 @@ import TemplateList from "../EditTemplate/TemplateList";
 import { useGetAllTemplatesQuery } from "../../redux/invitationTemplateForAdminSlice";
 import { MdCorporateFare } from "react-icons/md";
 import { motionlogo } from "../../static/static";
+import { useAddOrUpdateWatchHistoryMutation } from "../../redux/TemplateSlice";
 
 function Card({ pricing }) {
   return (
@@ -24,8 +25,7 @@ function Card({ pricing }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="h-[340px] browse_image_card_3 mt-4 relative group">
-        </div>
+        <div className="h-[340px] browse_image_card_3 mt-4 relative group"></div>
         <div className="flex justify-between mt-2">
           <div className="text-[20px] text-pink-600 font-bold">Lovique</div>
         </div>
@@ -56,6 +56,8 @@ function Review() {
   const [templates, setTemplates] = useState(allTemplates.slice(0, 6));
   const [loading, setLoading] = useState(false);
   const [loadedCount, setLoadedCount] = useState(6);
+  const [addOrUpdateWatch, { isLoading: loadingOnWatch }] =
+    useAddOrUpdateWatchHistoryMutation();
 
   const [filters, setFilters] = useState({
     name: "",
@@ -99,11 +101,17 @@ function Review() {
     }
   };
 
+  const handleWatchHitory = async (templateId) => {
+    await addOrUpdateWatch(templateId);
+  };
+
   useEffect(() => {
     setTemplates(
       allTemplates
         .filter((temp) =>
-          amountCategory ? temp.temp.pricing.toLowerCase() === amountCategory : true
+          amountCategory
+            ? temp.temp.pricing.toLowerCase() === amountCategory
+            : true
         )
         .slice(0, loadedCount)
     );
@@ -161,7 +169,7 @@ function Review() {
   const eventCategories = [
     { id: "BIRTHDAY", name: "Birthday", icon: <LiaBirthdayCakeSolid className="w-5 h-5" /> },
     { id: "WEDDING", name: "Wedding", icon: <GiBigDiamondRing className="w-5 h-5" /> },
-    { id: "ANNIVERSARY", name: "Anniversary", icon: <GiPartyPopper className="w-5 h-5" /> },
+    { id: "ANNIVERSARY", name: "Anniversary", icon: <GiPartyPopper className="w-6 h-6" /> },
     { id: "CORPORATE", name: "Corporate", icon: <MdCorporateFare className="w-5 h-5" /> },
     { id: "LOVE", name: "Love", icon: <Heart className="w-5 h-5" /> },
     { id: "COUPLE", name: "Couple", icon: <Group className="w-5 h-5" /> },
@@ -202,7 +210,9 @@ function Review() {
               {amountCategories.map((cat) => (
                 <button
                   key={cat.id}
-                  onClick={() => setFilters({ ...filters, categoryByAmount: cat.id })}
+                  onClick={() =>
+                    setFilters({ ...filters, categoryByAmount: cat.id })
+                  }
                   className={`w-full flex items-center gap-4 px-5 py-3 rounded-full font-semibold transition-all duration-300 ${
                     amountCategory === cat.id
                       ? "bg-pink-100 text-pink-700 shadow-lg"
@@ -224,7 +234,9 @@ function Review() {
               {eventCategories.map((cat) => (
                 <button
                   key={cat.id}
-                  onClick={() => setFilters({ ...filters, categoryByMood: cat.id })}
+                  onClick={() =>
+                    setFilters({ ...filters, categoryByMood: cat.id })
+                  }
                   className={`w-full flex items-center gap-4 px-5 py-3 rounded-full font-semibold transition-all duration-300 ${
                     category === cat.id
                       ? "bg-pink-100 text-pink-700 shadow-lg"
@@ -249,7 +261,7 @@ function Review() {
       </div>
       <div className="flex-1 p-8 bg-white shadow-2xl">
         {data.data?.length > 0 ? (
-          <TemplateList data={data} />
+          <TemplateList data={data} handleWatchHitory={handleWatchHitory} />
         ) : (
           <div className="flex justify-center flex-col gap-2 items-center h-screen">
             <p className="text-[6vw]">No template found</p>

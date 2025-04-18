@@ -17,20 +17,13 @@ const ServiceCategoriesPage = () => {
   const [category, setCategory] = useState();
 
   const handleOnSubCategoryNavigate = (category, subCategory) => {
-    // const queryParams = new URLSearchParams({
-    //   category,
-    //   subCategory
-    // }).toString();
-
-    navigate(`/all/${category}/${subCategory}`);
+    const categorySlug = category.toLowerCase().replace(/\s+/g, '-');
+    const subCategorySlug = subCategory.toLowerCase().replace(/\s+/g, '-');
+    navigate(`/all/${categorySlug}/${subCategorySlug}`);
   };
 
   //handle on category
   const handleOnCategory = (c) => {
-    // // const queryParams = new URLSearchParams({
-    // //   category
-    // // }).toString();
-    // navigate(`/all/${category}`);
     setCategory(c);
   };
 

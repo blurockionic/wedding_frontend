@@ -8,7 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { userlogout } from "../../redux/authSlice";
 import { toast } from "react-toastify";
 import { custom } from "zod";
-import { MdOutlineVerified } from "react-icons/md";
+import { MdEmail, MdOutlineVerified } from "react-icons/md";
+import { FcInvite } from "react-icons/fc";
 
 const navItems = [
   { name: "Profile", path: "/profile", icon: <User size={20} /> },
@@ -27,6 +28,11 @@ const navItems = [
     path: "/profile/favoriteList",
     icon: <Heart size={20} />,
   },
+  {
+    name: "Invitaion Cards",
+    path: "/profile/invitationCards",
+    icon: <MdEmail size={20} />,
+  },
 ];
 
 export default function UserSideBar({ customClass }) {
@@ -36,7 +42,6 @@ export default function UserSideBar({ customClass }) {
   const location = useLocation();
 
   const userData = useSelector((state) => state.auth.user);
-  console.log(userData?.role)
   const handleLogout = async () => {
     try {
       const response = await logout();

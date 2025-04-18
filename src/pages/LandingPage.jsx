@@ -9,6 +9,7 @@ import AboutLanding from "./section/AboutLanding";
 import BrowseSuggestion from "../components/browse-suggestion/BrowseSuggestion";
 import DestinationWedding from "../components/destination-wedding/DestinationWedding";
 import CompleteSolution from "../components/ads/CompleteSolution";
+import BlogSection from "../components/home/BlogSection";
 
 export default function LandingPage() {
   return (
@@ -19,6 +20,7 @@ export default function LandingPage() {
       <LazySection id="ads" Component={CompleteSolution} />
       <LazySection id="serviceCategories" Component={ServiceCategoriesPage} />
       <LazySection id="discover" Component={Discover} />
+      <LazySection id="blog" Component={BlogSection} />
       <LazySection id="benefit" Component={Benefits} />
       <LazySection id="destinationwedding" Component={DestinationWedding} />
       <LazySection id="testimonialSection" Component={Testimonials} />

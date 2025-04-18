@@ -73,6 +73,9 @@ const ChangePassword = lazy(() => import("./pages/auth/ChangePassword.jsx"));
 const FavoriteListPage = lazy(() =>
   import("./pages/userDashboard/FavoriteList.jsx")
 );
+const InvitationTemplateInUserDashBord = lazy(() =>
+  import("./pages/userDashboard/InvitationTemplateInUserDashBord.jsx")
+);
 const VendorProfile = lazy(() =>
   import("./pages/vendorDashboard/VendorProfile.jsx")
 );
@@ -292,6 +295,7 @@ const router = createBrowserRouter([
             element: wrapWithSuspense(WeddingBudgetCalculator),
           },
           { path: "weddingplan", element: wrapWithSuspense(WeddingDairy) },
+          {path:"invitationCards",element:wrapWithSuspense(InvitationTemplateInUserDashBord)}
         ],
       },
 
