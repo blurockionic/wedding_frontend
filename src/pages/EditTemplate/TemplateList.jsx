@@ -10,7 +10,7 @@ import { FaCrown } from "react-icons/fa";
 
 export const TemplateCard = React.memo(({ template, onClick }) => (
   <div
-    className="bg-white cursor-pointer hover:shadow-lg transition-shadow relative group rounded-lg h-[420px] w-[325px] overflow-hidden border border-black"
+    className="bg-white cursor-pointer hover:shadow-lg transition-shadow relative group rounded-lg h-[420px] w-full max-w-[325px] mx-auto overflow-hidden border border-black"
     onClick={() => onClick(template)}
   >
     <div className="relative w-[90%] h-[325px] m-4">
@@ -30,7 +30,6 @@ export const TemplateCard = React.memo(({ template, onClick }) => (
       )}
     </div>
 
-    {/* Overlay with black background and white text */}
     <div className="bottom-0 left-0 right-0 bg-white text-white px-4 rounded-b-lg -mt-[10px]">
       <h3 className="font-semibold text-lg text-black">{template.name}</h3>
       <p className="text-md text-black">₹{template.price || "Free"}</p>
@@ -101,12 +100,11 @@ const TemplateList = ({ data, handleWatchHitory }) => {
     <div className="p-1">
       <h2 className="text-xl font-bold mb-4">Templates</h2>
       {data?.data?.length ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-6 auto-rows-fr">
           {data.data.map((template) => (
             <TemplateCard
               key={template.id}
               template={template}
-              // onClick={()=>handleOnNavigate(template.id)}
               onClick={handleOnNavigate}
             />
           ))}
