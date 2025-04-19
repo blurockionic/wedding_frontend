@@ -10,29 +10,30 @@ import { FaCrown } from "react-icons/fa";
 
 export const TemplateCard = React.memo(({ template, onClick }) => (
   <div
-    className="border shadow-md cursor-pointer hover:shadow-lg transition-shadow relative group rounded-lg h-[70%] overflow-hidden"
+    className="bg-white cursor-pointer hover:shadow-lg transition-shadow relative group rounded-lg h-[420px] w-[325px] overflow-hidden border border-black"
     onClick={() => onClick(template)}
   >
-    {template.categoryByAmount === "PAID" && (
-      <div className="absolute flex items-center justify-start w-[40px] h-[40px] bg-primary text-white rounded-lg overflow-hidden transition-all duration-300 ease-in-out group-hover:w-[120px] px-2 top-2 left-2 z-10">
-        <FaCrown className="text-white text-[24px] flex-shrink-0" />
-        <span className="ml-2 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          Premium
-        </span>
-      </div>
-    )}
-
-    <img
-      src={template.thumbnailUrl}
-      alt={template.name || "Template Thumbnail"}
-      loading="lazy"
-      className="w-full h-[700px] object-fill"
-    />
+    <div className="relative w-[90%] h-[325px] m-4">
+      <img
+        src={template.thumbnailUrl}
+        alt={template.name || "Template Thumbnail"}
+        loading="lazy"
+        className="w-full h-full rounded-md border border-black"
+      />
+      {template.categoryByAmount === "PAID" && (
+        <div className="absolute -top-[100%] left-0 z-10 bg-primary text-white w-[40px] h-[40px] rounded-lg flex items-center justify-start overflow-hidden px-2 transition-all duration-300 ease-in-out group-hover:w-[120px]">
+          <FaCrown className="text-white text-[24px] flex-shrink-0" />
+          <span className="ml-2 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            Premium
+          </span>
+        </div>
+      )}
+    </div>
 
     {/* Overlay with black background and white text */}
-    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-800  text-white p-4 rounded-b-lg">
-      <h3 className="font-semibold text-lg">{template.name}</h3>
-      <p className="text-md">₹{template.price || "Free"}</p>
+    <div className="bottom-0 left-0 right-0 bg-white text-white px-4 rounded-b-lg -mt-[10px]">
+      <h3 className="font-semibold text-lg text-black">{template.name}</h3>
+      <p className="text-md text-black">₹{template.price || "Free"}</p>
     </div>
   </div>
 ));
@@ -97,10 +98,10 @@ const TemplateList = ({ data, handleWatchHitory }) => {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-1">
       <h2 className="text-xl font-bold mb-4">Templates</h2>
       {data?.data?.length ? (
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {data.data.map((template) => (
             <TemplateCard
               key={template.id}
