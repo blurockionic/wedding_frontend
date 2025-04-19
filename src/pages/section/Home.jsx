@@ -39,6 +39,8 @@ export default function Home() {
 
   const handleNavigate = () => {
     if (category && searchLocation) {
+      // const categorySlug = category.toLowerCase().replace(/\s+/g, "-");
+      // const subcategoriesSlug = subcategories.toLowerCase().replace(/\s+/g, "-");
       navigate(`/all/${category}/${searchLocation}`);
     } else if (searchLocation) {
       toast.error("Please select vendor");

@@ -101,21 +101,9 @@ function Review() {
     }
   };
 
-
-
- const handleWatchHitory = async(templateId)=>{
-
-
-  const res = await addOrUpdateWatch(templateId) 
-  console.log(res);
-  
-
-
-
-
-
- }
-
+  const handleWatchHitory = async (templateId) => {
+    await addOrUpdateWatch(templateId);
+  };
 
   useEffect(() => {
     setTemplates(
@@ -170,81 +158,55 @@ function Review() {
   if (error) return <p>Error fetching templates</p>;
 
   const categories = [
-    { id: "HOT", name: "Hot", icon: <Flame className="w-6 h-6" /> },
-    {
-      id: "POPULAR",
-      name: "Popular",
-      icon: <TrendingUp className="w-6 h-6" />,
-    },
-    { id: "LATEST", name: "Latest", icon: <Clock className="w-6 h-6" /> },
+    { id: "HOT", name: "Hot", icon: <Flame className="w-5 h-5" /> },
+    { id: "POPULAR", name: "Popular", icon: <TrendingUp className="w-5 h-5" /> },
+    { id: "LATEST", name: "Latest", icon: <Clock className="w-5 h-5" /> },
   ];
   const amountCategories = [
-    { id: "FREE", name: "Free", icon: <FaFreeCodeCamp className="w-6 h-6" /> },
-    { id: "PAID", name: "Paid", icon: <FaRupeeSign className="w-5 h-5" /> },
+    { id: "FREE", name: "Free", icon: <FaFreeCodeCamp className="w-5 h-5" /> },
+    { id: "PAID", name: "Paid", icon: <FaRupeeSign className="w-4 h-4" /> },
   ];
   const eventCategories = [
-    {
-      id: "BIRTHDAY",
-      name: "Birthday",
-      icon: <LiaBirthdayCakeSolid className="w-6 h-6" />,
-    },
-    {
-      id: "WEDDING",
-      name: "Wedding",
-      icon: <GiBigDiamondRing className="w-6 h-6" />,
-    },
-    {
-      id: "ANNIVERSARY",
-      name: "Anniversary",
-      icon: <GiPartyPopper className="w-6 h-6" />,
-    },
-    {
-      id: "CORPORATE",
-      name: "Corporate",
-      icon: <MdCorporateFare className="w-6 h-6" />,
-    },
-    { id: "LOVE", name: "Love", icon: <Heart className="w-6 h-6" /> },
-    { id: "COUPLE", name: "Couple", icon: <Group className="w-6 h-6" /> },
+    { id: "BIRTHDAY", name: "Birthday", icon: <LiaBirthdayCakeSolid className="w-5 h-5" /> },
+    { id: "WEDDING", name: "Wedding", icon: <GiBigDiamondRing className="w-5 h-5" /> },
+    { id: "ANNIVERSARY", name: "Anniversary", icon: <GiPartyPopper className="w-6 h-6" /> },
+    { id: "CORPORATE", name: "Corporate", icon: <MdCorporateFare className="w-5 h-5" /> },
+    { id: "LOVE", name: "Love", icon: <Heart className="w-5 h-5" /> },
+    { id: "COUPLE", name: "Couple", icon: <Group className="w-5 h-5" /> },
   ];
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-gradient-to-br from-pink-50 to-white ">
-      <div className="lg:w-72 bg-white shadow-2xl p-6 border-r-2 border-pink-200 flex lg:flex-col overflow-x-auto lg:overflow-visible">
+      <div className="lg:w-72 bg-gradient-to-b from-[#fcedf4] to-[#fddfeb] shadow-2xl p-6 border-r-2 border-t-2 border-pink-300 flex lg:flex-col overflow-x-auto lg:overflow-visible">
         <div className="hidden lg:flex-col space-x-4 lg:space-x-0 lg:block">
           <div>
             <div className="flex items-center gap-3 mb-6">
-              <Filter className="w-7 h-7 text-pink-600" />
-              <h2 className="text-xl font-bold text-pink-600 tracking-wide ">
-                Filter
-              </h2>
+              <Filter className="w-6 h-6 " />
+              <h2 className="text-lg font-bold text-pink-500 tracking-wide ">Filter</h2>
             </div>
-            <div className="space-y-3 mt-4">
+            <div className="space-y-3 mt-4 text-sm">
               {categories.map((cat) => (
                 <button
                   key={cat.id}
-                  onClick={() =>
-                    setFilters({ ...filters, categoryByRequirement: cat.id })
-                  }
-                  className={`w-full flex items-center gap-4 px-5 py-3 rounded-full font-semibold transition-all duration-300 ${
+                  onClick={() => setFilters({ ...filters, categoryByRequirement: cat.id })}
+                  className={`w-full flex items-center gap-4 px-5 py-3 rounded-full font-semibold transition-all duration-300${
                     activeCategory === cat.id
-                      ? "bg-pink-100 text-pink-700 shadow-lg"
-                      : "text-gray-800 hover:bg-pink-50 hover:shadow-md"
+                      ? "bg-pink-100 text-pink-600 shadow-lg"
+                      : "text-gray-800 hover:text-pink-600 hover:bg-pink-200 hover:shadow-md hover:border hover:border-pink-500 rounded-md"
                   }`}
                 >
-                  <span className="text-pink-600">{cat.icon}</span>
-                  <span>{cat.name}</span>
+                  <span className="text-gray hover:text-pink-600">{cat.icon}</span>
+                  <span className="font-medium">{cat.name}</span>
                 </button>
               ))}
             </div>
           </div>
           <div>
             <div className="flex items-center gap-3 mb-6 mt-6">
-              <FaSortAmountDown className="w-7 h-7 text-pink-600" />
-              <h2 className="text-xl font-bold text-pink-600 tracking-wide">
-                Amount
-              </h2>
+              <FaSortAmountDown className="w-6 h-6 text-gray" />
+              <h2 className="text-lg font-bold text-pink-500 tracking-wide">Amount</h2>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-3 text-sm ">
               {amountCategories.map((cat) => (
                 <button
                   key={cat.id}
@@ -254,23 +216,21 @@ function Review() {
                   className={`w-full flex items-center gap-4 px-5 py-3 rounded-full font-semibold transition-all duration-300 ${
                     amountCategory === cat.id
                       ? "bg-pink-100 text-pink-700 shadow-lg"
-                      : "text-gray-800 hover:bg-pink-50 hover:shadow-md"
+                      : "text-gray-800 hover:text-pink-600 hover:bg-pink-200 hover:shadow-md hover:border hover:border-pink-500 rounded-md"
                   }`}
                 >
-                  <span className="text-pink-600">{cat.icon}</span>
-                  <span>{cat.name}</span>
+                  <span className="text-gray hover:text-pink-600">{cat.icon}</span>
+                  <span className="font-medium">{cat.name}</span>
                 </button>
               ))}
             </div>
           </div>
           <div>
             <div className="flex items-center gap-3 mb-6 mt-6">
-              <BiCategory className="w-7 h-7 text-pink-600" />
-              <h2 className="text-xl font-bold text-pink-600 tracking-wide">
-                Category
-              </h2>
+              <BiCategory className="w-6 h-6 text-gray" />
+              <h2 className="text-lg font-bold text-pink-500 tracking-wide">Category</h2>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-3 text-sm">
               {eventCategories.map((cat) => (
                 <button
                   key={cat.id}
@@ -280,14 +240,17 @@ function Review() {
                   className={`w-full flex items-center gap-4 px-5 py-3 rounded-full font-semibold transition-all duration-300 ${
                     category === cat.id
                       ? "bg-pink-100 text-pink-700 shadow-lg"
-                      : "text-gray-800 hover:bg-pink-50 hover:shadow-md"
+                      : "text-gray-800 hover:text-pink-600 hover:bg-pink-200 hover:shadow-md hover:border hover:border-pink-500 rounded-md"
                   }`}
                 >
-                  <span className="text-pink-600">{cat.icon}</span>
-                  <span>{cat.name}</span>
+                  <span className="text-gray hover:text-pink-600">{cat.icon}</span>
+                  <span className="font-medium">{cat.name}</span>
                 </button>
               ))}
             </div>
+          </div>
+          <div className="mt-11 hidden lg:block">
+            <p className="text-sm text-[#1d1d1d] p-4">©2024 Marriage Vendors</p>
           </div>
         </div>
       </div>
