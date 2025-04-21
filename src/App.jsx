@@ -17,6 +17,7 @@ const Subscription = lazy(() => import("./pages/Subscription.jsx"));
 import { HelmetProvider } from "react-helmet-async";
 import { motionlogo } from "./static/static.js";
 import SplashScreen from "./pages/SplashScreen/SplashScreen.jsx";
+import VendorBussinessProfile from "./pages/vendorDashboard/VendorBussinessProfile.jsx";
 
 const Billing = lazy(() => import("./pages/vendorDashboard/Billing.jsx"));
 
@@ -326,6 +327,7 @@ const router = createBrowserRouter([
           },
         ],
       },
+      {path:"vendorBussinessProfile",element:wrapWithSuspense(VendorBussinessProfile)},
 
       { path: "*", element: wrapWithSuspense(FullErrorPage) },
     ],

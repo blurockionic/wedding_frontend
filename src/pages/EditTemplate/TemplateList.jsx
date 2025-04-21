@@ -10,9 +10,10 @@ import { FaCrown } from "react-icons/fa";
 
 export const TemplateCard = React.memo(({ template, onClick }) => (
   <div
-    className="bg-white cursor-pointer hover:shadow-lg transition-shadow relative group rounded-lg h-[420px] w-[325px] overflow-hidden border border-black"
+    className="bg-white cursor-pointer hover:shadow-lg transition-shadow relative group rounded-lg h-[420px] w-full max-w-[325px] mx-auto overflow-hidden border border-black"
     onClick={() => onClick(template)}
   >
+    {/*update premium tag*/}
     <div className="relative w-[90%] h-[325px] m-4">
       <img
         src={template.thumbnailUrl}
@@ -21,8 +22,8 @@ export const TemplateCard = React.memo(({ template, onClick }) => (
         className="w-full h-full rounded-md border border-black"
       />
       {template.categoryByAmount === "PAID" && (
-        <div className="absolute -top-[100%] left-0 z-10 bg-primary text-white w-[40px] h-[40px] rounded-lg flex items-center justify-start overflow-hidden px-2 transition-all duration-300 ease-in-out group-hover:w-[120px]">
-          <FaCrown className="text-white text-[24px] flex-shrink-0" />
+        <div className="absolute -top-[97%] left-2 z-10 bg-primary text-white w-[33px] h-[33px] rounded-lg flex items-center justify-start overflow-hidden px-2 transition-all duration-300 ease-in-out group-hover:w-[120px]">
+          <FaCrown className="text-white text-[20px] flex-shrink-0 -ms-[1px]" />
           <span className="ml-2 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             Premium
           </span>
@@ -30,7 +31,6 @@ export const TemplateCard = React.memo(({ template, onClick }) => (
       )}
     </div>
 
-    {/* Overlay with black background and white text */}
     <div className="bottom-0 left-0 right-0 bg-white text-white px-4 rounded-b-lg -mt-[10px]">
       <h3 className="font-semibold text-lg text-black">{template.name}</h3>
       <p className="text-md text-black">₹{template.price || "Free"}</p>
@@ -101,12 +101,11 @@ const TemplateList = ({ data, handleWatchHitory }) => {
     <div className="p-1">
       <h2 className="text-xl font-bold mb-4">Templates</h2>
       {data?.data?.length ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-6 auto-rows-fr">
           {data.data.map((template) => (
             <TemplateCard
               key={template.id}
               template={template}
-              // onClick={()=>handleOnNavigate(template.id)}
               onClick={handleOnNavigate}
             />
           ))}
