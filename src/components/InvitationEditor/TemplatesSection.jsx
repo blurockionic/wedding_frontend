@@ -110,21 +110,24 @@ const TemplatesSection = ({ templates, onTemplateClick, selectedTemplate }) => {
                 }`}
                 onClick={() => handleOnNavigate(template)}
               >
-                {template.categoryByAmount === "PAID" && (
-                  <div className="absolute flex items-center justify-start w-[40px] h-[40px] bg-blue-500 text-white rounded-lg overflow-hidden transition-all duration-300 ease-in-out group-hover:w-[120px] px-2 top-2 left-2 z-10">
-                    <FaCrown className="text-white text-[24px] flex-shrink-0" />
-                    <span className="ml-2 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      Premium
-                    </span>
-                  </div>
-                )}
-                <img
-                  src={template.thumbnailUrl}
-                  alt={template.name}
-                  crossOrigin="anonymous"
-                  className="w-full h-52 object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent p-2 flex flex-col justify-end">
+                {/*update premium tag*/}
+              <div className="relative w-[90%] h-[215px] m-4">
+                      <img
+                        src={template.thumbnailUrl}
+                        alt={template.name || "Template Thumbnail"}
+                        loading="lazy"
+                        className="w-[99%] h-[93%] rounded-md border border-black -ms-2"
+                      />
+                      {template.categoryByAmount === "PAID" && (
+                        <div className="absolute -top-[89%] left-0 z-10 bg-primary text-white w-[30px] h-[30px] rounded-lg flex items-center justify-start overflow-hidden px-2 transition-all duration-300 ease-in-out group-hover:w-[110px]">
+                          <FaCrown className="text-white text-[18px] flex-shrink-0 -ms-[1px]" />
+                          <span className="ml-2 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            Premium
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent p-2 flex flex-col justify-end">
                   <span className="text-xs font-medium text-white">
                     {template.name}
                   </span>
