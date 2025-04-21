@@ -22,8 +22,7 @@ function VendorBussinessProfile() {
   const [serviceData, setServiceData] = useState(null);
 
   const [addProfileView] = useVendorProfileViewMutation();
-  console.log(vendorData.id);
-  
+  console.log(vendorData);
 
   useEffect(() => {
     if (!vendorData.id) return;
@@ -136,9 +135,13 @@ function VendorBussinessProfile() {
         <div className="bg-transparent rounded-lg md:flex gap-10 isolate relative">
           {/* Avatar */}
           <div className="w-40 aspect-square rounded-md overflow-hidden border-2 absolute top-0 md:top-1/2 left-1/2 md:left-10 transform -translate-x-1/2 md:-translate-x-0 -translate-y-1/2 z-10">
-            <div className="bg-gray-300 w-full h-full flex items-center justify-center text-lg font-bold text-gray-700 uppercase">
-              {vendorData?.name?.slice(0, 2) || "NN"}
-            </div>
+            {vendorData?.logo_url?.path ? (
+              <img src={vendorData.logo_url.path} alt="logo" />
+            ) : (
+              <div className="bg-gray-300 w-full h-full flex items-center justify-center text-lg font-bold text-gray-700 uppercase">
+                {vendorData?.name?.slice(0, 2) || "NN"}
+              </div>
+            )}
           </div>
 
           {/* Content */}
@@ -224,7 +227,7 @@ function VendorBussinessProfile() {
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">About Us</h2>
         <div className="bg-white rounded-lg p-6">
           <p className="text-gray-700">
-            {vendorData?.aboutUsText || "No about us information available"}
+            {vendorData?.description || "No about us information available"}
           </p>
         </div>
       </div>
@@ -258,36 +261,8 @@ function VendorBussinessProfile() {
       {/* Services */}
       <div id="services" className="container mx-auto py-8">
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">Services</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* {services?.map((service, idx) => {
-            const imageUrl =
-              service?.media?.[0]?.image_urls?.[0]?.path ||
-              `https://placehold.co/300x300?text=${encodeURIComponent(
-                service?.service_name || "Service"
-              )}`;
-
-            return (
-              <div
-                key={service?.id || idx}
-                className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200"
-              >
-                <img
-                  src={imageUrl}
-                  alt={service?.service_name || "Service"}
-                  className="aspect-square w-full object-cover"
-                  loading="lazy"
-                />
-                <div className="p-4">
-                  <h3 className="font-semibold text-gray-800 truncate">
-                    {service?.service_name}
-                  </h3>
-                  <p className="text-gray-600 text-sm mt-1">
-                    Min Price: ₹{service?.min_price} / {service?.service_unit}
-                  </p>
-                </div>
-              </div>
-            );
-          })} */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-6">
+          
           {services?.map((service, index) => (
             <ServiceCard key={index} service={service} />
           ))}
