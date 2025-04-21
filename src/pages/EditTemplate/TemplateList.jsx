@@ -30,10 +30,11 @@ export const TemplateCard = React.memo(({ template, onClick }) => (
         </div>
       )}
     </div>
-
     <div className="bottom-0 left-0 right-0 bg-white text-white px-4 rounded-b-lg -mt-[10px]">
       <h3 className="font-semibold text-lg text-black">{template.name}</h3>
-      <p className="text-md text-black">₹{template.price || "Free"}</p>
+      <p className={`text-md ${template.price === 0 ? "text-green-500" : "text-pink-500"}`}>
+        ₹{template.price || "Free"}
+      </p>
     </div>
   </div>
 ));
