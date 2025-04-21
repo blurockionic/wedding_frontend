@@ -11,6 +11,7 @@ import { MdCurrencyRupee } from "react-icons/md";
 import { MdRoomService } from "react-icons/md";
 import { GiTwoCoins } from "react-icons/gi";
 
+
 const ServiceCard = React.memo(({ service, category }) => {
   const [toggleCart] = useToggleCartMutation();
   const navigate = useNavigate();
@@ -26,10 +27,12 @@ const ServiceCard = React.memo(({ service, category }) => {
     [favoriteList, service.id]
   );
 
+
+
   // Navigate to service details
   const handleCardClick = (category, subCategory, state, city, id) => {
-    const categorySlug = category.toLowerCase().replace(/\s+/g, '-');
-    const subCategorySlug = subCategory.toLowerCase().replace(/\s+/g, '-');
+    const categorySlug = category.toLowerCase().replace(/\s+/g, "-");
+    const subCategorySlug = subCategory.toLowerCase().replace(/\s+/g, "-");
     navigate(`/all/${categorySlug}/${subCategorySlug}/${state}/${city}/${id}`);
   };
 
@@ -65,10 +68,9 @@ const ServiceCard = React.memo(({ service, category }) => {
     )}`;
   }, [service]);
 
-
   return (
     <div
-      className="group relative w-[250px] bg-white  md:w-[300px] border border-gray-400 p-3 bg-muted rounded shadow-lg overflow-hidden transform transition-all duration-300  hover:shadow-xl"
+      className="group cursor-pointer relative w-[250px] bg-white  md:w-[300px] border border-gray-400 p-3 bg-muted rounded shadow-lg overflow-hidden transform transition-all duration-300  hover:shadow-xl"
       onClick={() =>
         handleCardClick(
           service?.service_category,
