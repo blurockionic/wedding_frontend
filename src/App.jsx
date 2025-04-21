@@ -18,6 +18,7 @@ import { HelmetProvider } from "react-helmet-async";
 import { motionlogo } from "./static/static.js";
 import SplashScreen from "./pages/SplashScreen/SplashScreen.jsx";
 import VendorBussinessProfile from "./pages/vendorDashboard/VendorBussinessProfile.jsx";
+import PartnerForm from "./pages/PartnerForm.jsx"
 
 const Billing = lazy(() => import("./pages/vendorDashboard/Billing.jsx"));
 
@@ -159,6 +160,7 @@ const router = createBrowserRouter([
       { path: "/new-blog-post", element: wrapWithSuspense(NewBlogPost) },
       { path: "/blogs", element: wrapWithSuspense(BlogList) },
       { path: "/blogs/:urlTitle", element: wrapWithSuspense(Blog) },
+      {path: "/partnerform" , element: wrapWithSuspense(PartnerForm)},
       {
         path: "/update-blog-post/:urlTitle",
         element: wrapWithSuspense(UpdateBlogPost),

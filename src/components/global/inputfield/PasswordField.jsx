@@ -4,7 +4,7 @@ import CustomText from "../text/CustomText";  // Assuming CustomText is the same
 export const PasswordField = ({ label, id, register, isShow, setIsShow, error,autoComplete }) => (
   
 
-  <div className="my-4 w-full mx-auto">
+  <div className="my-4 w-[70%] mx-auto">
     <label htmlFor={id} className="block text-muted-foreground text-sm font-bold mb-2">
       {label}
     </label>
