@@ -31,8 +31,9 @@ const ServiceCard = React.memo(({ service, category }) => {
 
   // Navigate to service details
   const handleCardClick = (category, subCategory, state, city, id) => {
-    const categorySlug = category.toLowerCase().replace(/\s+/g, "-");
-    const subCategorySlug = subCategory.toLowerCase().replace(/\s+/g, "-");
+
+    const categorySlug = category?.toLowerCase().replace(/\s+/g, "-");
+    const subCategorySlug = subCategory?.toLowerCase().replace(/\s+/g, "-");
     navigate(`/all/${categorySlug}/${subCategorySlug}/${state}/${city}/${id}`);
   };
 
