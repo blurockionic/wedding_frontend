@@ -1,6 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import baseQueryWithReauth from "./baseQueryWithReauth";
 
+
 export const vendorApi = createApi({
   reducerPath: "vendorApi",
   baseQuery: baseQueryWithReauth,
@@ -54,13 +55,20 @@ export const vendorApi = createApi({
       query: ({ pass }) => ({
         url: `/vendors/change-password`,
         method: "PATCH",
-        body:{pass}
-      })
+        body: { pass },
+      }),
     }),
     vendorDeleteAccount: builder.mutation({
       query: () => ({
         url: `/vendors/delete`,
-        method: "DELETE"
+        method: "DELETE",
+      }),
+    }),
+
+    VendorProfileView: builder.mutation({
+      query: (vendorId) => ({
+        url: `/vendors/viewUpdate/${vendorId}`,
+        method: "PATCH",
       }),
     }),
   }),
@@ -75,4 +83,5 @@ export const {
   useVendorUpdateMutation,
   useVendorForgotPasswordMutation,
   useVendorChangePasswordMutation,
+  useVendorProfileViewMutation
 } = vendorApi;

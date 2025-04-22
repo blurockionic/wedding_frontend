@@ -26,7 +26,7 @@ const Analytics = () => {
     },
     {
       title: "Profile Visit",
-      count: data?.totalLeads,
+      count: data?.profileViews,
       icon: <FaUser />,
     },
   ];
