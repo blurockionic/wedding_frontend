@@ -1,10 +1,10 @@
 ## 🚀 Latest Update
 
-✅ Last Commit: 03a8ce3 - Merge branch 'main' of github.com:SaiAryan1784/wedding_frontend
+✅ Last Commit: 2260487 - [BUG] sign up signin original restored
 
 🌟 Current Version: v1.0.0
 
-📅 Updated on: Tue Apr 22 00:58:13 UTC 2025
+📅 Updated on: Wed Apr 23 00:58:39 UTC 2025
 
 💻 Build Status: ![CI/CD Status](https://github.com/SaiAryan1784/wedding_frontend/actions/workflows/update-readme.yml/badge.svg)
 
