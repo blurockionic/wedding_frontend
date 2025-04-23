@@ -1097,6 +1097,15 @@ const Canva = () => {
     }
   };
 
+    // Clear canvas function
+    const clearCanvas = () => {
+      if (!canvas) return;
+      canvas.clear();
+      canvas.setBackgroundColor("#ffffff", canvas.renderAll.bind(canvas));
+      setBackgroundColor("#ffffff");
+      toast.success("Canvas cleared!");
+    };
+
 
 
   return (
@@ -1146,8 +1155,15 @@ const Canva = () => {
             isLoading={isLoading}
           />
         </div>
-        <div className="flex flex-grow bg-slate-300">
+        <div className="flex flex-grow bg-slate-300 relative">
           <CanvasArea canvasRef={canvasRef} />
+          <button
+            onClick={clearCanvas}
+            className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded hover:bg-red-600"
+            title="Clear Canvas"
+          >
+            Clear Canvas
+          </button>
 
           {showIcons && (
             <div
