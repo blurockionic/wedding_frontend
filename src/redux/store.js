@@ -10,16 +10,14 @@ import { uploadSlice } from "./uploadSlice";
 import { vendorApi } from "./vendorSlice";
 import { paymentApi } from "./payment";
 import { blogApiSlice } from "./blogSlice";
-import { checklistApiSlice } from "./checklistApiSlice"; 
+import { checklistApiSlice } from "./checklistApiSlice";
 import { adminApiSlice } from "./adminApiSlice";
 import { apiGuestSlice } from "./apiSlice.guest";
 import { userDataTemplateSlice } from "./TemplateSlice";
-import {weddingPlanForEventApi} from "./weddingPlanSlice"
+import { weddingPlanForEventApi } from "./weddingPlanSlice";
 import { invitationTemplateForAdminSlice } from "./invitationTemplateForAdminSlice";
-import { partnerFormSlice } from "./partnerFormSlice";
+import { partnerFormApi } from "./partnerFormSlice";
 import { cloudinaryApi } from "./cloudinaryApiSlice";
-
-
 
 // Combine Reducers
 const rootReducer = combineReducers({
@@ -33,13 +31,13 @@ const rootReducer = combineReducers({
   [paymentApi.reducerPath]: paymentApi.reducer,
   [checklistApiSlice.reducerPath]: checklistApiSlice.reducer,
   [adminApiSlice.reducerPath]: adminApiSlice.reducer,
-  [apiGuestSlice.reducerPath]:apiGuestSlice.reducer,
-  [userDataTemplateSlice.reducerPath]:userDataTemplateSlice.reducer,
-  [weddingPlanForEventApi.reducerPath  ]:weddingPlanForEventApi.reducer,
-  [blogApiSlice.reducerPath ]:blogApiSlice.reducer,
-  [partnerFormSlice.reducerPath]: partnerFormSlice.reducer,
+  [apiGuestSlice.reducerPath]: apiGuestSlice.reducer,
+  [userDataTemplateSlice.reducerPath]: userDataTemplateSlice.reducer,
+  [weddingPlanForEventApi.reducerPath]: weddingPlanForEventApi.reducer,
+  [blogApiSlice.reducerPath]: blogApiSlice.reducer,
+  [partnerFormApi.reducerPath]: partnerFormApi.reducer,
   [invitationTemplateForAdminSlice.reducerPath]: invitationTemplateForAdminSlice.reducer,
-  [cloudinaryApi.reducerPath]:cloudinaryApi.reducer
+  [cloudinaryApi.reducerPath]: cloudinaryApi.reducer
 });
 
 // Configure Persist
@@ -66,13 +64,13 @@ export const store = configureStore({
       paymentApi.middleware,
       checklistApiSlice.middleware,
       adminApiSlice.middleware,
+      apiGuestSlice.middleware,
       userDataTemplateSlice.middleware,
       weddingPlanForEventApi.middleware,
       blogApiSlice.middleware,
+      partnerFormApi.middleware,
       invitationTemplateForAdminSlice.middleware,
-      partnerFormSlice.middleware,
       cloudinaryApi.middleware
-
     ),
 });
 

@@ -83,15 +83,20 @@ export default function VendorApplicationForm() {
         });
       }
       
-      // Submit form using RTK Query mutation
-      await submitPartnerForm(formDataToSubmit).unwrap();
+      console.log('Submitting form to API...');
       
-      // If successful, show success message
-      if (isSuccess) {
+      // Submit form using RTK Query mutation
+      const response = await submitPartnerForm(formDataToSubmit).unwrap();
+      console.log('API response:', response);
+      
+      // Check for success
+      if (response.success) {
         alert('Application submitted successfully! Our team will contact you within 24–48 hours if shortlisted.');
+        // Optionally reset form or redirect
       }
     } catch (submitError) {
       console.error('Error submitting form:', submitError);
+      alert(`Error submitting form: ${submitError.status === 404 ? 'API endpoint not found. Please contact support.' : submitError.message || 'Unknown error'}`);
     }
   };
 
