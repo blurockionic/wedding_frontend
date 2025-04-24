@@ -1,10 +1,10 @@
 ## 🚀 Latest Update
 
-✅ Last Commit: 2260487 - [BUG] sign up signin original restored
+✅ Last Commit: a6bf4fe - Merge branch 'blurockionic:main' into main
 
 🌟 Current Version: v1.0.0
 
-📅 Updated on: Wed Apr 23 00:58:39 UTC 2025
+📅 Updated on: Thu Apr 24 00:58:31 UTC 2025
 
 💻 Build Status: ![CI/CD Status](https://github.com/SaiAryan1784/wedding_frontend/actions/workflows/update-readme.yml/badge.svg)
 

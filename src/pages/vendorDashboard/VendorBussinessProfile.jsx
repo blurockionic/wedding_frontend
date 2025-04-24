@@ -102,7 +102,7 @@ function VendorBussinessProfile() {
   const testimonials =
     services?.flatMap((service) => service?.feedback || []) || [];
 
-  console.log(serviceData);
+  console.log(testimonials);
 
   const navLinks = [
     { name: "About ", href: "#about" },
@@ -283,18 +283,18 @@ function VendorBussinessProfile() {
               key={idx}
               className="bg-white flex flex-col justify-between rounded-lg shadow-md p-4"
             >
-              <p className="text-gray-700 italic text-center">"{testi.text}"</p>
+              <p className="text-gray-700 italic text-center">"{testi.comment}"</p>
               <div className="flex items-center">
-                <div className="w-10 aspect-auto rounded-full overflow-hidden mr-3">
+                <div className="w-10 aspect-square rounded-full overflow-hidden mr-1">
                   <img
-                    src={testi.avatarUrl}
-                    alt={testi.name}
+                   
+                    alt={testi.name} src={testi.avatarUrl ||`https://placehold.co/150x150?text=${ (testi.user_name?.substring(0, 2).toUpperCase())}&font=roboto`}
                     className="w-full h-full object-cover"
                   />
                 </div>
                 <div>
                   <p className="text-sm font-normal text-gray-500">
-                    {testi.name}
+                    @{testi.user_name}
                   </p>
                   <p className="font-thin text-gray-500 text-xs">
                     {testi.location}
