@@ -51,7 +51,7 @@ const TemplateList = ({ data, handleWatchHitory }) => {
     categoryByAmount: "",
     categoryByRequirement: "",
     page: 1,
-    limit: 10,
+    limit: 50,
   });
 
   const loggedInUser = useSelector((state) => state?.auth?.user);
@@ -114,23 +114,6 @@ const TemplateList = ({ data, handleWatchHitory }) => {
       ) : (
         <p>No templates available.</p>
       )}
-      <div className="mt-4 flex justify-between">
-        <button
-          disabled={filters.page <= 1}
-          className="bg-gray-500 text-white px-4 py-2 disabled:opacity-50"
-          onClick={() => setFilters({ ...filters, page: filters.page - 1 })}
-        >
-          Previous
-        </button>
-        <span>Page {filters.page}</span>
-        <button
-          disabled={data?.totalPages ? filters.page >= data.totalPages : true}
-          className="bg-gray-500 text-white px-4 py-2 disabled:opacity-50"
-          onClick={() => setFilters({ ...filters, page: filters.page + 1 })}
-        >
-          Next
-        </button>
-      </div>
     </div>
   );
 };
