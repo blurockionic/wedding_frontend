@@ -166,7 +166,7 @@ export const serviceApi = createApi({
     }),
 
     getMyLead: builder.query({
-      query: (city) => `partner/dashboard/${city}`,
+      query: (city) => `partners/public/dashboard/${city}`,
     }),
 
 
