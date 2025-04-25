@@ -17,6 +17,7 @@ import { userDataTemplateSlice } from "./TemplateSlice";
 import {weddingPlanForEventApi} from "./weddingPlanSlice"
 import { invitationTemplateForAdminSlice } from "./invitationTemplateForAdminSlice";
 import { cloudinaryApi } from "./cloudinaryApiSlice";
+import { partnerFormApi } from "./partnerFormSlice";
 
 
 
@@ -36,6 +37,7 @@ const rootReducer = combineReducers({
   [userDataTemplateSlice.reducerPath]:userDataTemplateSlice.reducer,
   [weddingPlanForEventApi.reducerPath  ]:weddingPlanForEventApi.reducer,
   [blogApiSlice.reducerPath ]:blogApiSlice.reducer,
+  [partnerFormApi.reducerPath]: partnerFormApi.reducer,
   [invitationTemplateForAdminSlice.reducerPath]: invitationTemplateForAdminSlice.reducer,
   [cloudinaryApi.reducerPath]:cloudinaryApi.reducer
 });
@@ -64,6 +66,7 @@ export const store = configureStore({
       paymentApi.middleware,
       checklistApiSlice.middleware,
       adminApiSlice.middleware,
+      partnerFormApi.middleware,
       userDataTemplateSlice.middleware,
       weddingPlanForEventApi.middleware,
       blogApiSlice.middleware,

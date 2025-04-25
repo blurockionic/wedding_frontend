@@ -1,5 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import baseQueryWithReauth from "./baseQueryWithReauth";
+import { get } from "lodash";
 
 export const serviceApi = createApi({
   reducerPath: "serviceApi",
@@ -163,6 +164,12 @@ export const serviceApi = createApi({
     getLocation: builder.query({
       query: () => "services/get-location",
     }),
+
+    getMyLead: builder.query({
+      query: (city) => `partner/dashboard/${city}`,
+    }),
+
+
   }),
 });
 
@@ -188,4 +195,5 @@ export const {
   useCreateFeedbackMutation,
   useUpdateFeedbackMutation,
   useGenerateAIDescriptionMutation,
+  useGetMyLeadQuery,
 } = serviceApi;
