@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Flame, TrendingUp, Clock, Filter, Group, Heart } from "lucide-react";
 import { FaSortAmountDown } from "react-icons/fa";
@@ -34,30 +34,16 @@ function Card({ pricing }) {
   );
 }
 
-const allTemplates = [
-  { id: 1, pricing: "Paid" },
-  { id: 2, pricing: "Paid" },
-  { id: 3, pricing: "Free" },
-  { id: 4, pricing: "Paid" },
-  { id: 5, pricing: "Free" },
-  { id: 6, pricing: "Paid" },
-  { id: 7, pricing: "Paid" },
-  { id: 8, pricing: "Free" },
-  { id: 9, pricing: "Free" },
-  { id: 10, pricing: "Paid" },
-  { id: 11, pricing: "Paid" },
-  { id: 12, pricing: "Paid" },
-];
-
 function Review() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [amountCategory, setAmountCategory] = useState("");
   const [category, setCategory] = useState("");
-  const [templates, setTemplates] = useState(allTemplates.slice(0, 6));
+  const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [loadedCount, setLoadedCount] = useState(6);
+  const [loadedCount, setLoadedCount] = useState(10);
   const [addOrUpdateWatch, { isLoading: loadingOnWatch }] =
     useAddOrUpdateWatchHistoryMutation();
+  const templateContainerRef = useRef(null);
 
   const [filters, setFilters] = useState({
     name: "",
@@ -67,55 +53,64 @@ function Review() {
     categoryByAmount: "",
     categoryByRequirement: "",
     page: 1,
-    limit: 10,
+    limit: 50,
   });
 
   const { data, error, isLoading } = useGetAllTemplatesQuery(filters);
 
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [loading]);
-
-  const handleScroll = () => {
-    if (
-      window.innerHeight + window.scrollY >= document.body.offsetHeight - 100 &&
-      !loading &&
-      loadedCount < 12
-    ) {
-      setLoading(true);
-      setTimeout(() => {
-        setTemplates((prevTemplates) => {
-          const newTemplates = allTemplates.filter((temp) =>
+    if (data?.data) {
+      setTemplates(
+        data.data
+          .filter((temp) =>
             amountCategory
-              ? temp.pricing.toLowerCase() === amountCategory
+              ? temp.categoryByAmount?.toLowerCase() === amountCategory
               : true
-          );
-          return newTemplates.slice(0, loadedCount + 6);
-        });
-        setLoadedCount((prevCount) =>
-          Math.min(prevCount + 6, allTemplates.length)
-        );
-        setLoading(false);
-      }, 3000);
+          )
+          .slice(0, loadedCount)
+      );
     }
-  };
+  }, [data, amountCategory, loadedCount]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!templateContainerRef.current || loading) return;
+
+      const { scrollTop, scrollHeight, clientHeight } =
+        templateContainerRef.current;
+      if (scrollTop + clientHeight >= scrollHeight - 100 && loadedCount < (data?.data?.length || 0)) {
+        setLoading(true);
+        setTimeout(() => {
+          const remainingTemplates = data.data.length - loadedCount;
+          const templatesToLoad = Math.min(remainingTemplates, 5);
+          setTemplates((prevTemplates) => [
+            ...prevTemplates,
+            ...data.data
+              .filter((temp) =>
+                amountCategory
+                  ? temp.categoryByAmount?.toLowerCase() === amountCategory
+                  : true
+              )
+              .slice(loadedCount, loadedCount + templatesToLoad)
+          ]);
+          setLoadedCount((prevCount) =>
+            Math.min(prevCount + templatesToLoad, data.data.length)
+          );
+          setLoading(false);
+        }, 3000);
+      }
+    };
+
+    const container = templateContainerRef.current;
+    if (container) {
+      container.addEventListener("scroll", handleScroll);
+      return () => container.removeEventListener("scroll", handleScroll);
+    }
+  }, [loading, loadedCount, data, amountCategory]);
 
   const handleWatchHitory = async (templateId) => {
     await addOrUpdateWatch(templateId);
   };
-
-  useEffect(() => {
-    setTemplates(
-      allTemplates
-        .filter((temp) =>
-          amountCategory
-            ? temp.temp.pricing.toLowerCase() === amountCategory
-            : true
-        )
-        .slice(0, loadedCount)
-    );
-  }, [amountCategory, loadedCount]);
 
   function Dropdown({ title, options }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -176,13 +171,13 @@ function Review() {
   ];
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-gradient-to-br from-pink-50 to-white ">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-gradient-to-br from-pink-50 to-white">
       <div className="lg:w-72 bg-gradient-to-b from-[#fcedf4] to-[#fddfeb] shadow-2xl p-6 border-r-2 border-t-2 border-pink-300 flex lg:flex-col overflow-x-auto lg:overflow-visible">
         <div className="hidden lg:flex-col space-x-4 lg:space-x-0 lg:block">
           <div>
             <div className="flex items-center gap-3 mb-6">
-              <Filter className="w-6 h-6 " />
-              <h2 className="text-lg font-bold text-pink-500 tracking-wide ">Filter</h2>
+              <Filter className="w-6 h-6" />
+              <h2 className="text-lg font-bold text-pink-500 tracking-wide">Filter</h2>
             </div>
             <div className="space-y-3 mt-4 text-sm">
               {categories.map((cat) => (
@@ -206,7 +201,7 @@ function Review() {
               <FaSortAmountDown className="w-6 h-6 text-gray" />
               <h2 className="text-lg font-bold text-pink-500 tracking-wide">Amount</h2>
             </div>
-            <div className="space-y-3 text-sm ">
+            <div className="space-y-3 text-sm">
               {amountCategories.map((cat) => (
                 <button
                   key={cat.id}
@@ -259,12 +254,31 @@ function Review() {
         <Dropdown title="Amount" options={amountCategories} />
         <Dropdown title="Category" options={eventCategories} />
       </div>
-      <div className="flex-1 p-8 bg-white shadow-2xl">
+      <div
+        className="flex-1 p-8 bg-white shadow-2xl max-h-screen overflow-y-auto"
+        ref={templateContainerRef}
+      >
         {data.data?.length > 0 ? (
-          <TemplateList data={data} handleWatchHitory={handleWatchHitory} />
+          <TemplateList
+            data={{ data: templates }}
+            handleWatchHitory={handleWatchHitory}
+          />
         ) : (
           <div className="flex justify-center flex-col gap-2 items-center h-screen">
             <p className="text-[6vw]">No template found</p>
+          </div>
+        )}
+        {loading && (
+          <div className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-6 mt-6">
+            {Array(Math.min(data.data.length - loadedCount, 5)).fill(0).map((_, index) => (
+              <motion.div
+                key={index}
+                className="w-full h-[420px] max-w-[325px] mx-auto bg-gray-200 animate-pulse rounded-lg shadow-md"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              />
+            ))}
           </div>
         )}
       </div>
