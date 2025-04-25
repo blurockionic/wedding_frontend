@@ -35,6 +35,10 @@ export default function Home() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const handleNavPartnerForm = () => {
+    navigate("/partnerform");
+  }
+
   // set value on input field
 
   const handleNavigate = () => {
@@ -245,7 +249,7 @@ export default function Home() {
 
         {/* Right Section */}
         <div className="hidden relative xl:flex flex-1 justify-center items-center w-full  md:h-[500px] xl:h-full ">
-          <div className="">
+          <div className="flex-col gap-[5rem]">
             <CircularAnimation />
           </div>
           <div className="">
@@ -257,6 +261,9 @@ export default function Home() {
             />
           </div>
         </div>
+        <button onClick={handleNavPartnerForm} className="items-center justify-center bg-primary px-10 py-3 text-white border-none">
+              Partner form
+        </button>
       </div>
       {isMobile && insightCard()}
     </>

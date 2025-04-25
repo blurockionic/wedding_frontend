@@ -1,31 +1,128 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useSubmitPartnerFormMutation } from '../redux/partnerFormSlice'; 
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
 // Main component
 export default function VendorApplicationForm() {
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phoneNumber: '',
-    cityRegion: '',
-    role: '',
-    otherRole: '',
-    experience: '',
-    workedOnWeddings: '',
-    portfolio: '',
-    governmentId: null,
-    businessCertificate: null,
-    workSamples: [],
-    whyPartner: '',
-    workingModel: '',
-    availability: '',
-    noLeadLeakage: false,
-    platformDeals: false,
-    ndaAgreement: false
-  });
   
+  // Add validation schema
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+    trigger,
+  } = useForm({
+    mode: 'onChange',
+    defaultValues: {
+      fullName: '',
+      email: '',
+      phoneNumber: '',
+      cityRegion: '',
+      role: '',
+      otherRole: '',
+      experience: '',
+      workedOnWeddings: '',
+      portfolio: '',
+      governmentId: null,
+      businessCertificate: null,
+      workSamples: [],
+      whyPartner: '',
+      workingModel: '',
+      availability: '',
+      noLeadLeakage: false,
+      platformDeals: false,
+      ndaAgreement: false
+    }
+  });
+
+  // Watch role field for conditional validation
+  const selectedRole = watch('role');
+
+  // Add validation rules to form fields
+  const registerOptions = {
+    fullName: {
+      required: 'Full name is required',
+      minLength: {
+        value: 3,
+        message: 'Name must be at least 3 characters long'
+      },
+      pattern: {
+        value: /^[a-zA-Z\s]*$/,
+        message: 'Name can only contain letters and spaces'
+      }
+    },
+    email: {
+      required: 'Email is required',
+      pattern: {
+        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+        message: 'Invalid email address'
+      }
+    },
+    phoneNumber: {
+      required: 'Phone number is required',
+      pattern: {
+        value: /^[0-9]{10}$/,
+        message: 'Please enter a valid 10-digit phone number'
+      }
+    },
+    cityRegion: {
+      required: 'City/Region is required',
+      minLength: {
+        value: 2,
+        message: 'City name must be at least 2 characters long'
+      }
+    },
+    role: {
+      required: 'Please select your role'
+    },
+    otherRole: {
+      required: selectedRole === 'Other' ? 'Please specify your role' : false
+    },
+    experience: {
+      required: 'Please select your experience level'
+    },
+    workedOnWeddings: {
+      required: 'Please indicate if you have worked on weddings'
+    },
+    portfolio: {
+      pattern: {
+        value: /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/,
+        message: 'Please enter a valid URL'
+      }
+    },
+    governmentId: {
+      required: 'Government ID is required',
+      validate: {
+        fileSize: (value) => {
+          const file = value[0];
+          return !file || file.size <= 10000000 || 'File size must be less than 10MB';
+        },
+        fileType: (value) => {
+          const file = value[0];
+          const validTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+          return !file || validTypes.includes(file.type) || 'File must be JPG, PNG, or PDF';
+        }
+      }
+    },
+    whyPartner: {
+      required: 'Please tell us why you want to partner with us',
+      minLength: {
+        value: 50,
+        message: 'Please provide a more detailed response (minimum 50 characters)'
+      }
+    },
+    workingModel: {
+      required: 'Please select your preferred working model'
+    },
+    availability: {
+      required: 'Please select your availability'
+    }
+  };
+
   // RTK Query mutation hook
   const [submitPartnerForm, { isLoading, isSuccess, isError, error }] = useSubmitPartnerFormMutation();
 
@@ -53,51 +150,56 @@ export default function VendorApplicationForm() {
     setCurrentStep(currentStep - 1);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
+  // Modify your handleSubmit function to include validation
+  const onSubmit = async (data) => {
     try {
-      // Create FormData object to handle file uploads
+      // Validate all fields before submission
+      const isValid = await trigger();
+      if (!isValid) {
+        toast.error('Please fix the validation errors before submitting');
+        return;
+      }
+
       const formDataToSubmit = new FormData();
       
-      // Add text fields to FormData
-      Object.keys(formData).forEach(key => {
+      // Add validated data to FormData
+      Object.keys(data).forEach(key => {
         if (key !== 'governmentId' && key !== 'businessCertificate' && key !== 'workSamples') {
-          formDataToSubmit.append(key, formData[key]);
+          formDataToSubmit.append(key, data[key]);
         }
       });
-      
-      // Add file fields to FormData
-      if (formData.governmentId) {
-        formDataToSubmit.append('governmentId', formData.governmentId);
+
+      // Handle file uploads with validation
+      if (data.governmentId?.[0]) {
+        formDataToSubmit.append('governmentId', data.governmentId[0]);
       }
       
-      if (formData.businessCertificate) {
-        formDataToSubmit.append('businessCertificate', formData.businessCertificate);
+      if (data.businessCertificate?.[0]) {
+        formDataToSubmit.append('businessCertificate', data.businessCertificate[0]);
       }
       
-      // Add multiple work samples
-      if (formData.workSamples.length > 0) {
-        Array.from(formData.workSamples).forEach((file, index) => {
+      if (data.workSamples?.length) {
+        Array.from(data.workSamples).forEach((file, index) => {
           formDataToSubmit.append(`workSample_${index}`, file);
         });
       }
-      
-      console.log('Submitting form to API...');
-      
-      // Submit form using RTK Query mutation
+
       const response = await submitPartnerForm(formDataToSubmit).unwrap();
-      console.log('API response:', response);
       
-      // Check for success
       if (response.success) {
-        alert('Application submitted successfully! Our team will contact you within 24–48 hours if shortlisted.');
-        // Optionally reset form or redirect
+        toast.success('Application submitted successfully!');
+        reset();
       }
-    } catch (submitError) {
-      console.error('Error submitting form:', submitError);
-      alert(`Error submitting form: ${submitError.status === 404 ? 'API endpoint not found. Please contact support.' : submitError.message || 'Unknown error'}`);
+    } catch (error) {
+      toast.error(error.message || 'Something went wrong. Please try again.');
     }
+  };
+
+  // Add error display component
+  const ErrorMessage = ({ error }) => {
+    return error ? (
+      <span className="text-red-500 text-xs mt-1">{error.message}</span>
+    ) : null;
   };
 
   // Animation variants
@@ -140,7 +242,7 @@ export default function VendorApplicationForm() {
           variants={pageVariants}
           transition={pageTransition}
         >
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             {currentStep === 1 && (
               <motion.div 
                 initial={{ opacity: 0 }}
@@ -155,11 +257,11 @@ export default function VendorApplicationForm() {
                     <input
                       type="text"
                       name="fullName"
-                      value={formData.fullName}
-                      onChange={handleInputChange}
+                      {...register('fullName', registerOptions.fullName)}
                       required
                       className="w-full px-3 py-2 border border-yellow-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
                     />
+                    <ErrorMessage error={errors.fullName} />
                   </div>
                   
                   <div>
@@ -167,11 +269,11 @@ export default function VendorApplicationForm() {
                     <input
                       type="email"
                       name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
+                      {...register('email', registerOptions.email)}
                       required
                       className="w-full px-3 py-2 border border-yellow-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
                     />
+                    <ErrorMessage error={errors.email} />
                   </div>
                   
                   <div>
@@ -179,11 +281,11 @@ export default function VendorApplicationForm() {
                     <input
                       type="tel"
                       name="phoneNumber"
-                      value={formData.phoneNumber}
-                      onChange={handleInputChange}
+                      {...register('phoneNumber', registerOptions.phoneNumber)}
                       required
                       className="w-full px-3 py-2 border border-yellow-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
                     />
+                    <ErrorMessage error={errors.phoneNumber} />
                   </div>
                   
                   <div>
@@ -191,19 +293,18 @@ export default function VendorApplicationForm() {
                     <input
                       type="text"
                       name="cityRegion"
-                      value={formData.cityRegion}
-                      onChange={handleInputChange}
+                      {...register('cityRegion', registerOptions.cityRegion)}
                       required
                       className="w-full px-3 py-2 border border-yellow-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
                     />
+                    <ErrorMessage error={errors.cityRegion} />
                   </div>
                   
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Your Role <span className="text-red-500">*</span></label>
                     <select
                       name="role"
-                      value={formData.role}
-                      onChange={handleInputChange}
+                      {...register('role', registerOptions.role)}
                       required
                       className="w-full px-3 py-2 border border-yellow-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
                     >
@@ -215,19 +316,20 @@ export default function VendorApplicationForm() {
                       <option value="Vendor – Makeup Artist">Vendor – Makeup Artist</option>
                       <option value="Other">Other</option>
                     </select>
+                    <ErrorMessage error={errors.role} />
                   </div>
                   
-                  {formData.role === 'Other' && (
+                  {selectedRole === 'Other' && (
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Specify Role <span className="text-red-500">*</span></label>
                       <input
                         type="text"
                         name="otherRole"
-                        value={formData.otherRole}
-                        onChange={handleInputChange}
+                        {...register('otherRole', registerOptions.otherRole)}
                         required
                         className="w-full px-3 py-2 border border-yellow-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
                       />
+                      <ErrorMessage error={errors.otherRole} />
                     </div>
                   )}
                 </div>
@@ -251,15 +353,15 @@ export default function VendorApplicationForm() {
                           <input
                             type="radio"
                             name="experience"
+                            {...register('experience', registerOptions.experience)}
                             value={option}
-                            checked={formData.experience === option}
-                            onChange={handleInputChange}
                             className="mr-2 text-pink-500 focus:ring-pink-400"
                           />
                           <span>{option}</span>
                         </label>
                       ))}
                     </div>
+                    <ErrorMessage error={errors.experience} />
                   </div>
                   
                   <div>
@@ -270,15 +372,15 @@ export default function VendorApplicationForm() {
                           <input
                             type="radio"
                             name="workedOnWeddings"
+                            {...register('workedOnWeddings', registerOptions.workedOnWeddings)}
                             value={option}
-                            checked={formData.workedOnWeddings === option}
-                            onChange={handleInputChange}
                             className="mr-2 text-pink-500 focus:ring-pink-400"
                           />
                           <span>{option}</span>
                         </label>
                       ))}
                     </div>
+                    <ErrorMessage error={errors.workedOnWeddings} />
                   </div>
                   
                   <div>
@@ -286,11 +388,11 @@ export default function VendorApplicationForm() {
                     <input
                       type="url"
                       name="portfolio"
-                      value={formData.portfolio}
-                      onChange={handleInputChange}
+                      {...register('portfolio', registerOptions.portfolio)}
                       placeholder="https://"
                       className="w-full px-3 py-2 border border-yellow-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
                     />
+                    <ErrorMessage error={errors.portfolio} />
                   </div>
                 </div>
               </motion.div>
@@ -319,8 +421,8 @@ export default function VendorApplicationForm() {
                               id="government-id-upload" 
                               name="governmentId" 
                               type="file" 
+                              {...register('governmentId', registerOptions.governmentId)}
                               className="sr-only"
-                              onChange={handleInputChange}
                               required
                             />
                           </label>
@@ -329,9 +431,7 @@ export default function VendorApplicationForm() {
                         <p className="text-xs text-gray-500">PNG, JPG, PDF up to 10MB</p>
                       </div>
                     </div>
-                    {formData.governmentId && (
-                      <p className="mt-2 text-sm text-green-600">File selected: {formData.governmentId.name}</p>
-                    )}
+                    <ErrorMessage error={errors.governmentId} />
                   </div>
                   
                   <div>
@@ -348,8 +448,8 @@ export default function VendorApplicationForm() {
                               id="business-certificate-upload" 
                               name="businessCertificate" 
                               type="file" 
+                              {...register('businessCertificate')}
                               className="sr-only"
-                              onChange={handleInputChange}
                             />
                           </label>
                           <p className="pl-1">or drag and drop</p>
@@ -357,9 +457,7 @@ export default function VendorApplicationForm() {
                         <p className="text-xs text-gray-500">PNG, JPG, PDF up to 10MB</p>
                       </div>
                     </div>
-                    {formData.businessCertificate && (
-                      <p className="mt-2 text-sm text-green-600">File selected: {formData.businessCertificate.name}</p>
-                    )}
+                    <ErrorMessage error={errors.businessCertificate} />
                   </div>
                   
                   <div>
@@ -377,8 +475,8 @@ export default function VendorApplicationForm() {
                               name="workSamples" 
                               type="file" 
                               multiple
+                              {...register('workSamples')}
                               className="sr-only"
-                              onChange={handleInputChange}
                             />
                           </label>
                           <p className="pl-1">or drag and drop</p>
@@ -386,9 +484,7 @@ export default function VendorApplicationForm() {
                         <p className="text-xs text-gray-500">Multiple PNG, JPG files up to 10MB each</p>
                       </div>
                     </div>
-                    {formData.workSamples.length > 0 && (
-                      <p className="mt-2 text-sm text-green-600">{formData.workSamples.length} file(s) selected</p>
-                    )}
+                    <ErrorMessage error={errors.workSamples} />
                   </div>
                 </div>
               </motion.div>
@@ -407,12 +503,12 @@ export default function VendorApplicationForm() {
                     <label className="block text-sm font-medium text-gray-700 mb-1">Why do you want to partner with MarriageVendors.com? <span className="text-red-500">*</span></label>
                     <textarea
                       name="whyPartner"
-                      value={formData.whyPartner}
-                      onChange={handleInputChange}
+                      {...register('whyPartner', registerOptions.whyPartner)}
                       rows="4"
                       required
                       className="w-full px-3 py-2 border border-yellow-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
                     ></textarea>
+                    <ErrorMessage error={errors.whyPartner} />
                   </div>
                   
                   <div>
@@ -423,15 +519,15 @@ export default function VendorApplicationForm() {
                           <input
                             type="radio"
                             name="workingModel"
+                            {...register('workingModel', registerOptions.workingModel)}
                             value={option}
-                            checked={formData.workingModel === option}
-                            onChange={handleInputChange}
                             className="mr-2 text-pink-500 focus:ring-pink-400"
                           />
                           <span className="text-sm">{option}</span>
                         </label>
                       ))}
                     </div>
+                    <ErrorMessage error={errors.workingModel} />
                   </div>
                   
                   <div>
@@ -442,15 +538,15 @@ export default function VendorApplicationForm() {
                           <input
                             type="radio"
                             name="availability"
+                            {...register('availability', registerOptions.availability)}
                             value={option}
-                            checked={formData.availability === option}
-                            onChange={handleInputChange}
                             className="mr-2 text-pink-500 focus:ring-pink-400"
                           />
                           <span>{option}</span>
                         </label>
                       ))}
                     </div>
+                    <ErrorMessage error={errors.availability} />
                   </div>
                 </div>
               </motion.div>
@@ -471,8 +567,7 @@ export default function VendorApplicationForm() {
                         id="noLeadLeakage"
                         name="noLeadLeakage"
                         type="checkbox"
-                        checked={formData.noLeadLeakage}
-                        onChange={handleInputChange}
+                        {...register('noLeadLeakage')}
                         required
                         className="focus:ring-pink-500 h-4 w-4 text-pink-600 border-gray-300 rounded"
                       />
@@ -488,8 +583,7 @@ export default function VendorApplicationForm() {
                         id="platformDeals"
                         name="platformDeals"
                         type="checkbox"
-                        checked={formData.platformDeals}
-                        onChange={handleInputChange}
+                        {...register('platformDeals')}
                         required
                         className="focus:ring-pink-500 h-4 w-4 text-pink-600 border-gray-300 rounded"
                       />
@@ -505,8 +599,7 @@ export default function VendorApplicationForm() {
                         id="ndaAgreement"
                         name="ndaAgreement"
                         type="checkbox"
-                        checked={formData.ndaAgreement}
-                        onChange={handleInputChange}
+                        {...register('ndaAgreement')}
                         required
                         className="focus:ring-pink-500 h-4 w-4 text-pink-600 border-gray-300 rounded"
                       />
