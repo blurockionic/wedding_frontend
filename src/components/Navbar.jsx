@@ -22,7 +22,9 @@ function Navbar() {
 
   const handleNavigate = (category, subcategories) => {
     setIsMenuOpen(false);
-    navigate(`/all/${category}/${subcategories}`);
+    const categorySlug = category.toLowerCase().replace(/\s+/g, "-");
+    const subcategoriesSlug = subcategories.toLowerCase().replace(/\s+/g, "-");
+    navigate(`/all/${categorySlug}/${subcategoriesSlug}`);
   };
 
   const sidebarRef = useRef(null);

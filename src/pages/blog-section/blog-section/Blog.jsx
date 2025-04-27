@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import Footer from '../../Footer';
 // Import Quill styles to ensure proper formatting
 import 'react-quill/dist/quill.snow.css';
+import { Helmet } from 'react-helmet';
 
 const Blog = () => {
   const { urlTitle: blogUrlTitle } = useParams();
@@ -131,6 +132,7 @@ const Blog = () => {
     useGetRelatedBlogsByIdQuery(blogData?.data?.id, { skip: !blogData?.data?.id });
 
   const visiblePosts = relatedPosts?.data?.slice(carouselIndex, carouselIndex + 3) || [];
+  
 
   if (isLoading) return <div className="text-center py-10">Loading blog...</div>;
   if (error) return <div className="text-center py-10 text-red-500">Error loading blog</div>;
@@ -138,24 +140,47 @@ const Blog = () => {
 
   const { title, content, tags = [], createdAt, coverImage } = blogData.data;
 
+  const plainTextContent = content.replace(/<[^>]+>/g, ''); // Strip HTML for meta description
+  const metaDescription = plainTextContent.slice(0, 160);
+
+  console.log(metaDescription)
+
+  const fullTitle = `${title} | Marriage Vendors Blog`;
+
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <div className="container mx-auto px-4 sm:px-6 py-8">
-        {/* Breadcrumb Navigation */}
-        <div className="mb-6">
-          <nav className="flex" aria-label="Breadcrumb">
-            <ol className="inline-flex items-center space-x-1 md:space-x-3">
-              <li className="inline-flex items-center">
-                <Link to="/" className="text-gray-600 hover:text-gray-900">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <div className="flex items-center">
-                  <span className="mx-2 text-gray-400">/</span>
-                  <Link to="/blogs" className="text-gray-600 hover:text-gray-900">
-                    Blogs
+  <div className="bg-gray-50 min-h-screen">
+        {/* SEO Meta Tags */}
+        <Helmet>
+          <title>{fullTitle}</title>
+          <meta name="description" content={metaDescription} />
+          <meta property="og:title" content={fullTitle} />
+          <meta property="og:description" content={metaDescription} />
+          <meta property="og:image" content={coverImage} />
+          <meta property="og:type" content="article" />
+          <meta property="og:site_name" content="Marriage Vendors" />
+          <meta property="og:url" content={typeof window !== 'undefined' ? window.location.href : ''} />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content={fullTitle} />
+          <meta name="twitter:description" content={metaDescription} />
+          <meta name="twitter:image" content={coverImage} />
+          <link rel="canonical" href={typeof window !== 'undefined' ? window.location.href : ''} />
+        </Helmet>
+        <div className="container mx-auto px-4 sm:px-6 py-8">
+          {/* Breadcrumb Navigation */}
+          <div className="mb-6">
+            <nav className="flex" aria-label="Breadcrumb">
+              <ol className="inline-flex items-center space-x-1 md:space-x-3">
+                <li className="inline-flex items-center">
+                  <Link to="/" className="text-gray-600 hover:text-gray-900">
+                    Home
                   </Link>
+                </li>
+                <li>
+                  <div className="flex items-center">
+                    <span className="mx-2 text-gray-400">/</span>
+                    <Link to="/blogs" className="text-gray-600 hover:text-gray-900">
+                      Blogs              
+                    </Link>
                 </div>
               </li>
               <li aria-current="page">

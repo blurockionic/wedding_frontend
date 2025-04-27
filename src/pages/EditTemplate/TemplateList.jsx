@@ -2,34 +2,44 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { paymentApi } from "../../redux/payment";
 import { useDispatch, useSelector } from "react-redux";
-import { useAddOrUpdateWatchHistoryMutation, useGetTemplateWatchHistoryQuery } from "../../redux/TemplateSlice";
+import {
+  useAddOrUpdateWatchHistoryMutation,
+  useGetTemplateWatchHistoryQuery,
+} from "../../redux/TemplateSlice";
 import { FaCrown } from "react-icons/fa";
 
 export const TemplateCard = React.memo(({ template, onClick }) => (
   <div
-    className="border p-4 shadow-md cursor-pointer hover:shadow-lg transition-shadow relative group"
+    className="bg-white cursor-pointer hover:shadow-lg transition-shadow relative group rounded-lg h-[420px] w-full max-w-[325px] mx-auto overflow-hidden border border-black"
     onClick={() => onClick(template)}
   >
-    {template.categoryByAmount === "PAID" && (
-      <div className="absolute flex items-center justify-start w-[40px] h-[40px] bg-blue-500 text-white rounded-lg overflow-hidden transition-all duration-300 ease-in-out group-hover:w-[120px] px-2 -top-2 left-2 z-10">
-        <FaCrown className="text-white text-[24px] flex-shrink-0" />
-        <span className="ml-2 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          Premium
-        </span>
-      </div>
-    )}
-    <img
-      src={template.thumbnailUrl}
-      alt={template.name}
-      loading="lazy"
-      className="w-full h-40 object-cover"
-    />
-    <h3 className="font-semibold mt-2">{template.name}</h3>
-    <p className="text-gray-600">₹{template.price || "Free"}</p>
+    {/*update premium tag*/}
+    <div className="relative w-[90%] h-[325px] m-4">
+      <img
+        src={template.thumbnailUrl}
+        alt={template.name || "Template Thumbnail"}
+        loading="lazy"
+        className="w-full h-full rounded-md border border-black"
+      />
+      {template.categoryByAmount === "PAID" && (
+        <div className="absolute -top-[97%] left-2 z-10 bg-primary text-white w-[33px] h-[33px] rounded-lg flex items-center justify-start overflow-hidden px-2 transition-all duration-300 ease-in-out group-hover:w-[120px]">
+          <FaCrown className="text-white text-[20px] flex-shrink-0 -ms-[1px]" />
+          <span className="ml-2 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            Premium
+          </span>
+        </div>
+      )}
+    </div>
+    <div className="bottom-0 left-0 right-0 bg-white text-white px-4 rounded-b-lg -mt-[10px]">
+      <h3 className="font-semibold text-lg text-black">{template.name}</h3>
+      <p className={`text-md ${template.price === 0 ? "text-green-500" : "text-pink-500"}`}>
+        ₹{template.price || "Free"}
+      </p>
+    </div>
   </div>
 ));
 
-const TemplateList = ({ data ,handleWatchHitory}) => {
+const TemplateList = ({ data, handleWatchHitory }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -41,11 +51,12 @@ const TemplateList = ({ data ,handleWatchHitory}) => {
     categoryByAmount: "",
     categoryByRequirement: "",
     page: 1,
-    limit: 10,
+    limit: 50,
   });
 
-   const loggedInUser = useSelector((state) => state?.auth?.user);
-  const { data: watchHistory, refetch: refetchWatchHistory } = useGetTemplateWatchHistoryQuery();
+  const loggedInUser = useSelector((state) => state?.auth?.user);
+  const { data: watchHistory, refetch: refetchWatchHistory } =
+    useGetTemplateWatchHistoryQuery();
   const [addOrUpdateWatchHistory] = useAddOrUpdateWatchHistoryMutation();
 
   useEffect(() => {
@@ -54,14 +65,10 @@ const TemplateList = ({ data ,handleWatchHitory}) => {
 
   const handleOnNavigate = async (template) => {
     // handleWatchHitory()
-
-
     if (!loggedInUser) {
-      navigate("/login",{ state: { from: "/browse" } });
+      navigate("/login", { state: { from: "/browse" } });
       return;
-      
     }
-
 
     addOrUpdateWatchHistory(template.id);
 
@@ -92,16 +99,14 @@ const TemplateList = ({ data ,handleWatchHitory}) => {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-1">
       <h2 className="text-xl font-bold mb-4">Templates</h2>
       {data?.data?.length ? (
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-6 auto-rows-fr">
           {data.data.map((template) => (
             <TemplateCard
-
               key={template.id}
               template={template}
-              // onClick={()=>handleOnNavigate(template.id)}
               onClick={handleOnNavigate}
             />
           ))}
@@ -109,23 +114,6 @@ const TemplateList = ({ data ,handleWatchHitory}) => {
       ) : (
         <p>No templates available.</p>
       )}
-      <div className="mt-4 flex justify-between">
-        <button
-          disabled={filters.page <= 1}
-          className="bg-gray-500 text-white px-4 py-2 disabled:opacity-50"
-          onClick={() => setFilters({ ...filters, page: filters.page - 1 })}
-        >
-          Previous
-        </button>
-        <span>Page {filters.page}</span>
-        <button
-          disabled={data?.totalPages ? filters.page >= data.totalPages : true}
-          className="bg-gray-500 text-white px-4 py-2 disabled:opacity-50"
-          onClick={() => setFilters({ ...filters, page: filters.page + 1 })}
-        >
-          Next
-        </button>
-      </div>
     </div>
   );
 };

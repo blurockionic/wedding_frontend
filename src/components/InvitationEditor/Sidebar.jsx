@@ -18,10 +18,12 @@ import AdminPanel from "./AdminPanel";
 import { SiAdminer } from "react-icons/si";
 import { MdUpdate } from "react-icons/md";
 import { Loader2 } from "lucide-react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useGetTemplateWatchHistoryQuery } from "../../redux/TemplateSlice";
 import { TemplateCard } from "../../pages/EditTemplate/TemplateList";
 import { useNavigate } from "react-router-dom";
+import WatchHistoryCard from "../../pages/EditTemplate/component/WatchHistoryCard";
+import { paymentApi } from "../../redux/payment";
 
 const Sidebar = ({
   templates,
@@ -47,12 +49,13 @@ const Sidebar = ({
   const [activeSection, setActiveSection] = useState(null);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [isDownloadOpen, setIsDownloadOpen] = useState(false);
-  const userRole = useSelector((state) => state?.auth?.user);
+  const userRole = useSelector((state) => state?.auth?.user?.role);
 
   const { data: watchTemplateData, isLoading: watchLoading } =
     useGetTemplateWatchHistoryQuery();
 
   const navigate = useNavigate();
+  const dispatch =  useDispatch()
 
   const sidebarItems = [
     {
@@ -165,15 +168,12 @@ const Sidebar = ({
               ) : (
                 "Update Design"
               )}
-<<<<<<< HEAD
             </button>
             <button
               onClick={saveTemplate}
               className="p-2 bg-purple-500 text-white rounded-lg w-full hover:bg-purple-600"
             >
               Save Template
-=======
->>>>>>> 40f341c487a709d1b3d69dedde55841447c43d54
             </button>
           </div>
         );
@@ -209,15 +209,13 @@ const Sidebar = ({
             </h2>
 
             <div className="grid grid-cols-2 gap-4">
-              {watchTemplateData?.lenght > 0 ? (
+              {watchTemplateData?.length > 0 ? (
                 watchTemplateData?.watchHistory.map((item) => (
-                  <TemplateCard
+                  <WatchHistoryCard
                     key={item.id}
                     template={item.template}
                     onClick={() =>
-                      navigate("/update_editor", {
-                        state: { template: item.template },
-                      })
+                     handleOnNavigate(item.template)
                     }
                   />
                 ))
@@ -294,6 +292,35 @@ const Sidebar = ({
         return null;
     }
   };
+
+  //handle on navigate the user 
+  const handleOnNavigate = async(template)=>{
+    console.log(template)
+      if (template.categoryByAmount === "FREE") {
+          navigate("/update_editor", { state: { template } });
+          return;
+        }
+    
+        if (template.categoryByAmount === "PAID") {
+          try {
+            const paymentData = await dispatch(
+              paymentApi.endpoints.getTemplatePaymentHistory.initiate(
+                { tempId: template.id },
+                { forceRefetch: true }
+              )
+            ).unwrap();
+    
+            if (paymentData?.paymentStatus === "paid") {
+              navigate("/update_editor", { state: { template } });
+              return;
+            }
+    
+            navigate("/payment", { state: { amount: template.price, template } });
+          } catch (error) {
+            console.error("Error fetching payment data:", error);
+          }
+        }
+  }
 
   return (
     <div className="flex h-screen overflow-y-scroll">

@@ -9,7 +9,6 @@ const RecentActivityTable = ({ recentLead }) => {
     (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
   );
 
-  console.log(sortedData);
 
   const data = sortedData.map((item) => ({
     serviceName: item?.serviceDetails?.service_name || "N/A",

@@ -12,17 +12,14 @@ const BlogPreview = ({ title, content, coverImagePreview, hashtags = [], created
       <div className="mb-8">
         <h1 className="text-4xl font-bold mb-2">{title}</h1>
 
-        {/* Date and Author */}
         <div className="flex items-center text-gray-500 mb-6">
           <span className="mr-2">{displayDate}</span>
           <span className="mr-2">|</span>
           <span>by marraigevendors.com</span>
         </div>
 
-        {/* Divider */}
         <div className="border-t border-gray-200 my-4"></div>
 
-        {/* Hashtags */}
         {hashtags.length > 0 && (
           <div className="mb-6">
             <div className="flex flex-wrap gap-2">
@@ -38,7 +35,6 @@ const BlogPreview = ({ title, content, coverImagePreview, hashtags = [], created
           </div>
         )}
 
-        {/* Cover Image */}
         {coverImagePreview && (
           <div className="mb-8">
             <img

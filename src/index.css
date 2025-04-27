@@ -216,6 +216,22 @@ box-shadow:
   animation: gradient-animation 6s ease infinite;
 }
 
+.my-masonry-grid {
+  display: flex;
+  margin-left: -1rem; /* gutter size offset */
+  width: auto;
+}
+.my-masonry-grid_column {
+  padding-left: 1rem; /* gutter size */
+  background-clip: padding-box;
+}
+
+/* Fix for spacing between items */
+.my-masonry-grid_column > div {
+  margin-bottom: 1rem;
+}
+
+
 @keyframes gradient-animation {
   0% {
     background-position: 0% 50%;

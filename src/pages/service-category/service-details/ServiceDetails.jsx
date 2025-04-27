@@ -47,11 +47,9 @@ const ServiceDetails = () => {
   if (isLoading) return <div className="text-center">Loading...</div>;
 
   if (isError)
-    
-
     return (
       <div className="text-center text-red-500">
-        { isError   || "Something went wrong"}
+        {isError || "Something went wrong"}
         <button onClick={refetch} className="mt-4 text-blue-500">
           Retry
         </button>
@@ -89,75 +87,71 @@ const ServiceDetails = () => {
         ))}
       </div>
     );
-    const isUser = isLoggedIn && role?.toLowerCase() === "user";
+  const isUser = isLoggedIn && role?.toLowerCase() === "user";
 
-    const contactButtons = (
-      <>
-        {["call", "message", "whatsapp"].map((type) => {
-          let icon;
-          let text;
-          let href;
-    
-          switch (type) {
-            case "call":
-              icon = <BiPhone size={18} />;
-              text = "Call Vendor";
-              href = `tel:${vendor?.phone_number}`;
-              break;
-            case "message":
-              icon = <MdMessage size={18} />;
-              text = "Message Vendor";
-              href = `sms:${vendor?.phone_number}`;
-              break;
-            case "whatsapp":
-              icon = <FaWhatsapp size={18} />;
-              text = "WhatsApp";
-              href = `https://wa.me/${vendor?.phone_number}`;
-              break;
-            default:
-              break;
-          }
-    
-          
-    
-          return (
-            <button
-              key={type}
-              onClick={() => {
-                if (!isUser) {
-                  setShowLoginModal(true);
+  const contactButtons = (
+    <>
+      {["call", "message", "whatsapp"].map((type) => {
+        let icon;
+        let text;
+        let href;
+
+        switch (type) {
+          case "call":
+            icon = <BiPhone size={18} />;
+            text = "Call Vendor";
+            href = `tel:${vendor?.phone_number}`;
+            break;
+          case "message":
+            icon = <MdMessage size={18} />;
+            text = "Message Vendor";
+            href = `sms:${vendor?.phone_number}`;
+            break;
+          case "whatsapp":
+            icon = <FaWhatsapp size={18} />;
+            text = "WhatsApp";
+            href = `https://wa.me/${vendor?.phone_number}`;
+            break;
+          default:
+            break;
+        }
+
+        return (
+          <button
+            key={type}
+            onClick={() => {
+              if (!isUser) {
+                setShowLoginModal(true);
+              } else {
+                leadHandler();
+                if (type === "whatsapp") {
+                  window.open(href, "_blank");
                 } else {
-                  leadHandler();
-                  if (type === "whatsapp") {
-                    window.open(href, "_blank");
-                  } else {
-                    window.location.href = href;
-                  }
+                  window.location.href = href;
                 }
-              }}
-              className={`w-full flex items-center justify-center gap-2 ${
-                type === "call"
-                  ? "bg-blue-500"
-                  : type === "message"
-                  ? "bg-gray-500"
-                  : "bg-green-600"
-              } text-white py-2 px-4 rounded-lg`}
-            >
-              {icon}{" "}
-              {!isUser && showLoginModal ? (
-                <span onClick={handleLoginRedirect} className="underline">
-                  Click to login as user
-                </span>
-              ) : (
-                text
-              )}
-            </button>
-          );
-        })}
-      </>
-    );
-    
-    
+              }
+            }}
+            className={`w-full flex items-center justify-center gap-2 ${
+              type === "call"
+                ? "bg-blue-500"
+                : type === "message"
+                ? "bg-gray-500"
+                : "bg-green-600"
+            } text-white py-2 px-4 rounded-lg`}
+          >
+            {icon}{" "}
+            {!isUser && showLoginModal ? (
+              <span onClick={handleLoginRedirect} className="underline">
+                Click to login as user
+              </span>
+            ) : (
+              text
+            )}
+          </button>
+        );
+      })}
+    </>
+  );
 
   return (
     <div className="px-4 md:px-16 py-6 md:py-8">
@@ -176,7 +170,14 @@ const ServiceDetails = () => {
           </div>
           <p className="mt-2 text-gray-500 capitalize">
             By{" "}
-            <span className="hover:underline hover:text-pink-500 cursor-pointer">
+            <span
+              onClick={() =>
+                navigate("/vendorBussinessProfile", {
+                  state: data.service.vendor,
+                })
+              }
+                className="hover:underline hover:text-pink-500 cursor-pointer"
+            >
               {vendor?.business_name}
             </span>
           </p>

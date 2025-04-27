@@ -18,7 +18,7 @@ const CircularAnimation = () => {
   }, [totalImages]);
 
   return (
-    <div className="scale-125 relative flex items-center justify-center w-[min(100vw,400px)] h-[min(100vw,400px)] rounded-full border-l-[2px] border-primary ">
+    <div className="transform-gpu scale-125 relative flex items-center justify-center w-[min(100vw,400px)] h-[min(100vw,400px)] rounded-full border-l-[2px] border-primary ">
       {/* Images in Left Arc */}
       {images.map((src, index) => {
         const adjustedIndex =
