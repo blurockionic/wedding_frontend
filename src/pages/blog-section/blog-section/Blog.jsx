@@ -4,6 +4,8 @@ import { FaRegComment, FaRegHeart, FaHeart, FaShare, FaWhatsapp, FaInstagram, Fa
 import { useAddCommentMutation, useDeleteCommentMutation, useToggleLikeBlogMutation, useGetBlogByUrlTitleQuery } from "../../../redux/blogSlice";
 import { useSelector } from "react-redux";
 import Footer from '../../Footer';
+// Import Quill styles to ensure proper formatting
+import 'react-quill/dist/quill.snow.css';
 
 const Blog = () => {
   const { urlTitle: blogUrlTitle } = useParams();
@@ -270,7 +272,7 @@ const Blog = () => {
 
                 {/* Blog Content */}
                 <div className="mb-8 prose prose-slate max-w-none">
-                  <div dangerouslySetInnerHTML={{ __html: content }} />
+                  <div className="ql-editor" dangerouslySetInnerHTML={{ __html: content }} />
                 </div>
 
                 {/* Like and Comment Buttons */}
