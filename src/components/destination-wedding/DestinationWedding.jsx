@@ -1,30 +1,27 @@
 import React from "react";
-
-// Define a default state value (Change as needed)
-const state = "Goa"; 
+import { Link } from "react-router-dom";
 
 const DestinationWedding = () => {
   return (
     <div
-      className="relative w-full h-64 lg:h-96 bg-cover bg-center"
+      className="relative w-full h-[400px] lg:h-[500px] bg-cover bg-center"
       style={{
-        backgroundImage: "url('/destination_wedding/destination_wedding.jpg')", // Direct reference to `public` folder
+        backgroundImage: "url('/destination_wedding/destination_wedding.jpg')",
       }}
     >
-      {/* Overlay and Content */}
-      <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center text-center text-white px-6">
-        <h1 className="text-3xl lg:text-5xl font-bold">
-          Plan Your Dream Destination Wedding
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-black/30 flex flex-col items-center justify-center text-white px-6 text-center">
+        <h1 className="text-2xl sm:text-3xl lg:text-5xl font-semibold leading-tight max-w-4xl">
+          Deliver Seamless Weddings.
+          <br className="hidden sm:block" />
+          Earn with Every Booking.
         </h1>
-        <p className="mt-2 text-lg lg:text-xl">
-          Contact us for more detail
-        </p>
-        <a
-          href="tel:+916200932331"
-          className="mt-4 px-6 py-2 bg-white text-black font-semibold rounded-full shadow-lg hover:bg-gray-200 transition"
+        <Link
+          to="/partnership"
+          className="mt-6 bg-blue-600 hover:bg-blue-700 transition duration-300 px-6 py-3 rounded-full text-base sm:text-lg font-medium shadow-lg"
         >
-          📞 +91 6200932331
-        </a>
+          Join the MarriageVendors.com Partner Network
+        </Link>
       </div>
     </div>
   );

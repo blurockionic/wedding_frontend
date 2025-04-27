@@ -26,7 +26,6 @@ export const partnerFormApi = createApi({
       }),
       invalidatesTags: ['Partner'],
     }),
-    
     // Admin-only endpoints
     getPartners: builder.query({
       query: (filters = {}) => {
@@ -41,7 +40,6 @@ export const partnerFormApi = createApi({
       },
       providesTags: ['Partner'],
     }),
-    
     getPartnerById: builder.query({
       query: (id) => ({
         url: `/admin/partners/${id}`,
@@ -49,7 +47,6 @@ export const partnerFormApi = createApi({
       }),
       providesTags: (result, error, id) => [{ type: 'Partner', id }],
     }),
-    
     updatePartnerStatus: builder.mutation({
       query: ({ id, data }) => ({
         url: `/admin/partners/${id}/status`,

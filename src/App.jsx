@@ -11,14 +11,18 @@ const Signup = lazy(() => import("./pages/auth/Signup.jsx"));
 const Login = lazy(() => import("./pages/auth/Login.jsx"));
 const ServiceDetail = lazy(() => import("./pages/serviceDeatails.jsx"));
 
-const VendorRegistration = lazy(() =>import("./pages/auth/vendor_auth/VendorSignup.jsx"));
+const VendorRegistration = lazy(() =>
+  import("./pages/auth/vendor_auth/VendorSignup.jsx")
+);
 import VendorDashboard from "./pages/vendorDashboard/Dashboard.jsx";
 const Subscription = lazy(() => import("./pages/Subscription.jsx"));
 import { HelmetProvider } from "react-helmet-async";
 import { motionlogo } from "./static/static.js";
 import SplashScreen from "./pages/SplashScreen/SplashScreen.jsx";
 import VendorBussinessProfile from "./pages/vendorDashboard/VendorBussinessProfile.jsx";
-import PartnerForm from "./pages/PartnerForm.jsx"
+import PartnershipProgram from "./pages/PartnerShip.jsx";
+import PartnerDashboard from "./pages/partner/DashBoard.jsx";
+import VendorApplicationForm from "./pages/PartnerForm.jsx";
 
 const Billing = lazy(() => import("./pages/vendorDashboard/Billing.jsx"));
 
@@ -117,9 +121,7 @@ const View_1 = lazy(() => import("./pages/ViewTemplate/View_1.jsx"));
 const Payment = lazy(() => import("./pages/InvitationPayment/Payment.jsx"));
 const Preview = lazy(() => import("./pages/EditTemplate/Preview.jsx"));
 const Preview_1 = lazy(() => import("./pages/EditTemplate/Preview_1.jsx"));
-const canva = lazy(() =>
-  import("./pages/EditTemplate/canva.jsx")
-);
+const canva = lazy(() => import("./pages/EditTemplate/canva.jsx"));
 const Card = lazy(() => import("./pages/InvitationCard/Card.jsx"));
 const Guest = lazy(() => import("./pages/AddGuests/Guest.jsx"));
 const Modify = lazy(() => import("./pages/UpdatedTemplate/Modify.jsx"));
@@ -138,13 +140,16 @@ const AdminGive = lazy(() => import("./pages/admin/GiveAdmin.jsx"));
 const AdminRevoke = lazy(() => import("./pages/admin/RevokeAdmin.jsx"));
 const AdminGiveSuper = lazy(() => import("./pages/admin/GiveSuperAdmin.jsx"));
 
-
 function wrapWithSuspense(Component) {
   return (
-    <Suspense fallback={<div className="flex justify-center flex-col gap-2 items-center h-screen">
-            <img src={motionlogo} alt="loader" className="w-12 h-12"/>
-            <p>Loading...</p>
-          </div>}>
+    <Suspense
+      fallback={
+        <div className="flex justify-center flex-col gap-2 items-center h-screen">
+          <img src={motionlogo} alt="loader" className="w-12 h-12" />
+          <p>Loading...</p>
+        </div>
+      }
+    >
       <Component />
     </Suspense>
   );
@@ -160,7 +165,7 @@ const router = createBrowserRouter([
       { path: "/new-blog-post", element: wrapWithSuspense(NewBlogPost) },
       { path: "/blogs", element: wrapWithSuspense(BlogList) },
       { path: "/blogs/:urlTitle", element: wrapWithSuspense(Blog) },
-      {path: "/partnerform" , element: wrapWithSuspense(PartnerForm)},
+      {path: "/partnerform" , element: wrapWithSuspense(VendorApplicationForm)},
       {
         path: "/update-blog-post/:urlTitle",
         element: wrapWithSuspense(UpdateBlogPost),
@@ -298,7 +303,10 @@ const router = createBrowserRouter([
             element: wrapWithSuspense(WeddingBudgetCalculator),
           },
           { path: "weddingplan", element: wrapWithSuspense(WeddingDairy) },
-          {path:"invitationCards",element:wrapWithSuspense(InvitationTemplateInUserDashBord)}
+          {
+            path: "invitationCards",
+            element: wrapWithSuspense(InvitationTemplateInUserDashBord),
+          },
         ],
       },
 
@@ -329,9 +337,25 @@ const router = createBrowserRouter([
           },
         ],
       },
-      {path:"vendorBussinessProfile",element:wrapWithSuspense(VendorBussinessProfile)},
+      {
+        path: "vendorBussinessProfile",
+        element: wrapWithSuspense(VendorBussinessProfile),
+      },
 
       { path: "*", element: wrapWithSuspense(FullErrorPage) },
+      {
+        path: "partnership",
+        children: [
+          {
+            path: "",
+            element: wrapWithSuspense(PartnershipProgram),
+          },
+          {
+            path: "dashboard",
+            element: wrapWithSuspense(PartnerDashboard),
+          },
+        ],
+      },
     ],
   },
 ]);
@@ -348,63 +372,57 @@ function App() {
     }
   }, []);
 
-  
-function App() {
-  const [showSplash, setShowSplash] = useState(true);
+  function App() {
+    const [showSplash, setShowSplash] = useState(true);
 
-  useEffect(() => {
-    const hasVisited = localStorage.getItem("hasVisited");
-    if (hasVisited) {
-      setShowSplash(false);
-    } else {
-      localStorage.setItem("hasVisited", "true");
-    }
-  
-    const handleChunkError = (event) => {
-      window.location.reload(); 
-    };
-  
-    // Add Vite chunk error handler
-    window.addEventListener('vite:preloadError', handleChunkError);
-  
-    return () => {
-      window.removeEventListener('vite:preloadError', handleChunkError);
-    };
-  }, []);
-  
+    useEffect(() => {
+      const hasVisited = localStorage.getItem("hasVisited");
+      if (hasVisited) {
+        setShowSplash(false);
+      } else {
+        localStorage.setItem("hasVisited", "true");
+      }
 
-  return (
-    <HelmetProvider>
-      <ErrorBoundary>
-        {showSplash ? (
-          <SplashScreen onFinish={() => setShowSplash(false)} />
-        ) : (
-          <>
-            <RouterProvider router={router} />
-            <ToastContainer />
-          </>
-        )}
-      </ErrorBoundary>
-    </HelmetProvider>
-  );
-}
+      const handleChunkError = (event) => {
+        window.location.reload();
+      };
 
+      // Add Vite chunk error handler
+      window.addEventListener("vite:preloadError", handleChunkError);
 
+      return () => {
+        window.removeEventListener("vite:preloadError", handleChunkError);
+      };
+    }, []);
 
-
+    return (
+      <HelmetProvider>
+        <ErrorBoundary>
+          {showSplash ? (
+            <SplashScreen onFinish={() => setShowSplash(false)} />
+          ) : (
+            <>
+              <RouterProvider router={router} />
+              <ToastContainer />
+            </>
+          )}
+        </ErrorBoundary>
+      </HelmetProvider>
+    );
+  }
 
   return (
     <>
       <HelmetProvider>
         <ErrorBoundary>
-        {showSplash ? (
-        <SplashScreen onFinish={() => setShowSplash(false)} />
-      ) : (
-        <>
-          <RouterProvider router={router} />
-          <ToastContainer />
-        </>
-      )}
+          {showSplash ? (
+            <SplashScreen onFinish={() => setShowSplash(false)} />
+          ) : (
+            <>
+              <RouterProvider router={router} />
+              <ToastContainer />
+            </>
+          )}
         </ErrorBoundary>
       </HelmetProvider>
     </>

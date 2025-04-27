@@ -21,9 +21,9 @@ export default function Payments() {
           <thead>
             <tr className="bg-white">
               <th className="py-2 px-4 border bg-white">#</th>
-              <th className="py-2 px-4 border bg-white">Date (₹)</th>
+              <th className="py-2 px-4 border bg-white">Date</th>
             
-              <th className="py-2 px-4 border bg-white">Amount</th>
+              <th className="py-2 px-4 border bg-white">Amount(₹)</th>
               <th className="py-2 px-4 border bg-white">Status</th>
               <th className="py-2 px-4 border bg-white">Payment Method</th>
             </tr>

@@ -29,8 +29,6 @@ const loginSchema = z.object({
 export default function Login() {
   useProtectAfterLogin(["user"], "/");
 
-
-
   const dispatch = useDispatch();
   const [loginMutation, { isLoading: loading }] = useLoginMutation();
   const [getCartMutation] = useGetCartMutation();
@@ -43,8 +41,6 @@ export default function Login() {
   const [googleUserData, setGoogleUserData] = useState(null);
   const [googleToken, setGoogleToken] = useState(null);
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
- 
- 
 
   const {
     register,
@@ -71,11 +67,18 @@ export default function Login() {
         toast.success(message);
 
         const from = location.state?.from || "/";
+        console.log(user?.role);
+        
         if (user.role == "ADMIN" || user.role == "SUPER_ADMIN") {
           navigate("/admin");
+        } else if (user.role.toLowerCase() === "user") {
+          
+          sessionStorage.setItem("justLoggedIn", true);
+          navigate(from);
         } else {
           navigate(from);
         }
+       
       }
     } catch (error) {
       const errorMessage =
@@ -90,7 +93,11 @@ export default function Login() {
     }
   };
 
-  const proceedWithGoogleLogin = async (userInfo, token, extraData = addData) => {
+  const proceedWithGoogleLogin = async (
+    userInfo,
+    token,
+    extraData = addData
+  ) => {
     const data = {
       googleUid: userInfo.uid,
       email: userInfo.email,
@@ -101,44 +108,42 @@ export default function Login() {
       phone_number: extraData?.phone_number,
     };
 
-    
-
     try {
-      const { success, user, message } = await googleLoginMutation(data).unwrap();
-  
-      
+      const { success, user, message } = await googleLoginMutation(
+        data
+      ).unwrap();
 
       if (success) {
         dispatch(login(user));
         toast.success(message);
-        navigate(location.state?.from || "/", { replace: true }); 
+        sessionStorage.setItem("justLoggedIn", true);
+        navigate(location.state?.from || "/", { replace: true });
       }
     } catch (err) {
       toast.error("Google Login failed");
     }
   };
-  
+
   const handleGoogleLogin = async () => {
     const { googleUser } = await signInWithGoogle();
     if (!googleUser) return;
-  
+
     const token = await googleUser.getIdToken();
     setGoogleUserData(googleUser);
     setGoogleToken(token);
 
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/v1/users/check-for-phone?email=${
+        googleUser.email
+      }`
+    );
+    const result = await response.json();
 
-    
-
-  const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/users/check-for-phone?email=${googleUser.email}`);
-  const result = await response.json();
-
-
-  if (!result?.phone_number || !result?.wedding_location) {
-    setIsSignInModalOpen(true);
-  } else {
-    proceedWithGoogleLogin(googleUser, token, result);
-  }
-
+    if (!result?.phone_number || !result?.wedding_location) {
+      setIsSignInModalOpen(true);
+    } else {
+      proceedWithGoogleLogin(googleUser, token, result);
+    }
   };
 
   const structuredData = {
@@ -274,14 +279,14 @@ export default function Login() {
         </div>
       </div>
       {isSignInModalOpen && (
-  <SignInModal
-    setAddData={setAddData}
-    setIsSignInModalOpen={setIsSignInModalOpen}
-    googleUserData={googleUserData}
-    googleToken={googleToken}
-    proceedWithGoogleLogin={proceedWithGoogleLogin}
-  />
-)}
+        <SignInModal
+          setAddData={setAddData}
+          setIsSignInModalOpen={setIsSignInModalOpen}
+          googleUserData={googleUserData}
+          googleToken={googleToken}
+          proceedWithGoogleLogin={proceedWithGoogleLogin}
+        />
+      )}
     </>
   );
 }

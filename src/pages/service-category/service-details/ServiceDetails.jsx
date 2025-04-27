@@ -176,7 +176,7 @@ const ServiceDetails = () => {
                   state: data.service.vendor,
                 })
               }
-              className="hover:underline hover:text-pink-500 cursor-pointer"
+                className="hover:underline hover:text-pink-500 cursor-pointer"
             >
               {vendor?.business_name}
             </span>
