@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FaRegComment, FaRegHeart, FaHeart, FaShare, FaWhatsapp, FaInstagram, FaFacebook, FaLink, FaLock, FaUser, FaArrowLeft, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import { useAddCommentMutation, useDeleteCommentMutation, useToggleLikeBlogMutation, useGetBlogByUrlTitleQuery } from "../../../redux/blogSlice";
+import 
+{ useAddCommentMutation, 
+  useDeleteCommentMutation, 
+  useToggleLikeBlogMutation, 
+  useGetBlogByUrlTitleQuery,
+  useGetRelatedBlogsByIdQuery,
+} from "../../../redux/blogSlice";
 import { useSelector } from "react-redux";
 import Footer from '../../Footer';
 // Import Quill styles to ensure proper formatting
@@ -21,7 +27,6 @@ const Blog = () => {
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState(0);
   const [comments, setComments] = useState([]);
-  const [relatedPosts, setRelatedPosts] = useState([]);
   const [carouselIndex, setCarouselIndex] = useState(0);
 
   const currentUser = useSelector((state) => state.auth.user);
@@ -31,63 +36,6 @@ const Blog = () => {
     setLikes(blogData?.data.likes || 0);
     setComments(blogData?.data.comments || []);
 
-    // Sample related posts data - extended with more posts
-    setRelatedPosts([
-      {
-        id: 1,
-        title: 'Top 10 Wedding Venues for a Summer Wedding',
-        urlTitle: 'top-10-wedding-venues-summer',
-        coverImage: 'https://images.unsplash.com/photo-1532712938310-34cb3982ef74?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60',
-        date: '2025-03-15T12:00:00Z',
-        readTime: '5 min read',
-        excerpt: 'Discover the most breathtaking summer wedding venues that will make your special day unforgettable.'
-      },
-      {
-        id: 2,
-        title: 'Wedding Dress Trends for 2025',
-        urlTitle: 'wedding-dress-trends-2025',
-        coverImage: 'https://images.unsplash.com/photo-1535185384036-28bbc8035f28?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60',
-        date: '2025-03-10T10:30:00Z',
-        readTime: '4 min read',
-        excerpt: 'Stay ahead of the curve with these stunning wedding dress trends that are taking 2025 by storm.'
-      },
-      {
-        id: 3,
-        title: 'How to Plan a Budget-Friendly Wedding',
-        urlTitle: 'budget-friendly-wedding-planning',
-        coverImage: 'https://images.unsplash.com/photo-1511795409834-432f7b1648ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60',
-        date: '2025-02-28T15:45:00Z',
-        readTime: '7 min read',
-        excerpt: "Your dream wedding doesn't have to break the bank. Learn how to create a magical day on a budget."
-      },
-      {
-        id: 4,
-        title: 'Choosing the Perfect Wedding Flowers',
-        urlTitle: 'perfect-wedding-flowers',
-        coverImage: 'https://images.unsplash.com/photo-1519657337289-077653f724ed?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60',
-        date: '2025-02-15T09:20:00Z',
-        readTime: '6 min read',
-        excerpt: 'A comprehensive guide to selecting seasonal blooms that complement your wedding theme and personality.'
-      },
-      {
-        id: 5,
-        title: 'Wedding Photography: Capturing Your Perfect Day',
-        urlTitle: 'wedding-photography-tips',
-        coverImage: 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60',
-        date: '2025-01-28T14:10:00Z',
-        readTime: '8 min read',
-        excerpt: 'Professional tips for ensuring your wedding photos tell the perfect story of your special day.'
-      },
-      {
-        id: 6,
-        title: 'Destination Weddings: What You Need to Know',
-        urlTitle: 'destination-weddings-guide',
-        coverImage: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60',
-        date: '2025-01-15T11:05:00Z',
-        readTime: '9 min read',
-        excerpt: "Planning a wedding abroad? Here's everything you need to know about destination weddings."
-      }
-    ]);
   }, [blogData]);
 
   useEffect(() => {
@@ -178,7 +126,11 @@ const Blog = () => {
     }
   };
 
-  const visiblePosts = relatedPosts.slice(carouselIndex, carouselIndex + 3);
+  // Only fetch related posts when a valid blog ID exists.
+  const { data: relatedPosts = [], isLoading: relatedIsLoading, error: relatedError } = 
+    useGetRelatedBlogsByIdQuery(blogData?.data?.id, { skip: !blogData?.data?.id });
+
+  const visiblePosts = relatedPosts?.data?.slice(carouselIndex, carouselIndex + 3) || [];
 
   if (isLoading) return <div className="text-center py-10">Loading blog...</div>;
   if (error) return <div className="text-center py-10 text-red-500">Error loading blog</div>;
@@ -245,7 +197,14 @@ const Blog = () => {
                     <span className="mr-2">|</span>
                     <span>{formatDate(createdAt)}</span>
                   </div>
-                  <div className="ml-auto flex items-center">
+                  <div className="ml-auto flex items-center" 
+                  onClick={() => {
+                    const likeCommentSection = document.querySelector('#back-to-blogs');
+                    if (likeCommentSection) {
+                      const offset = likeCommentSection.getBoundingClientRect().top - window.innerHeight + likeCommentSection.offsetHeight + 20;
+                      window.scrollBy({ top: offset, behavior: 'smooth' });
+                    }
+                    }}>
                     <FaRegHeart className="mr-1 text-gray-500" />
                     <span className="mr-3">{likes || 0}</span>
                     <FaRegComment className="mr-1 text-gray-500" />
@@ -526,7 +485,7 @@ const Blog = () => {
                   </div>
                   <div className="p-4">
                     <div className="text-xs text-gray-500 mb-2">
-                      {formatDate(post.date)} • {post.readTime}
+                      {formatDate(post.updatedAt)} • {`${Math.ceil(post.content.replace(/<[^>]*>|&nbsp;|\u00A0/g, ' ').replace(/\s{2,}/g, ' ').trim().replace(/\s+\S*$/, '') + '...'?.length / 500) || 3} min read`}
                     </div>
                     <h3 className="font-medium text-lg mb-2 group-hover:text-gray-600 transition-colors line-clamp-2">
                       {post.title}
@@ -540,7 +499,7 @@ const Blog = () => {
         </div>
 
         {/* Back to blogs button */}
-        <div className="mt-8 text-center">
+        <div className="mt-8 text-center" id='back-to-blogs'>
           <Link 
             to="/blogs" 
             className="inline-flex items-center px-4 py-2 border border-gray-300 rounded bg-white text-gray-700 hover:bg-gray-50"
