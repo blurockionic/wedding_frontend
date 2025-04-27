@@ -475,7 +475,7 @@ const Blog = () => {
                 <Link to={`/blogs/${post.urlTitle}`}>
                   <div className="relative h-48 overflow-hidden">
                     <img 
-                      src={post.coverImage} 
+                      src={post.coverImage || 'https://placehold.co/600x300?text=CoverImage'} 
                       alt={post.title}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       onError={(e) => {

@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useGetBlogsQuery } from "../../../redux/blogSlice.js";
+import { Link, useLocation } from 'react-router-dom';
+import { useGetBlogsQuery, useGetBlogsByTagQuery } from "../../../redux/blogSlice.js";
 import { motion } from 'framer-motion';
 import Footer from '../../Footer.jsx';
 
 const BlogList = () => {
+  const useQuery = () => {
+    return new URLSearchParams(useLocation().search);
+  };
+
+  const query = useQuery();
+  const blogTagName = query.get('tag');
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [blogsPerPage] = useState(8); // Number of blogs per page
 
-  const { data, error, isLoading } = useGetBlogsQuery();
+  console.log("Blog Tag Name:", blogTagName);
+  const { data, error, isLoading } = blogTagName ? useGetBlogsByTagQuery( blogTagName ) : useGetBlogsQuery();
+  console.log("Blogs Data:", data);
   const [blogs, setBlogs] = useState([]);
   const [activeCategory, setActiveCategory] = useState('All');
 
@@ -20,7 +28,7 @@ const BlogList = () => {
         id: blog.id,
         title: blog.title,
         urlTitle: blog.urlTitle,
-        coverImage: blog.coverImage || 'https://via.placehold.co/600x300',
+        coverImage: blog.coverImage || 'https://placehold.co/600x300?text=CoverImage',
         date: blog.createdAt,
         hashtags: blog.tags,
         excerpt: blog.excerpt || blog.content
@@ -53,6 +61,7 @@ const BlogList = () => {
   const indexOfLastBlog = currentPage * blogsPerPage;
   const indexOfFirstBlog = indexOfLastBlog - blogsPerPage;
   const currentBlogs = sortedBlogs.slice(indexOfFirstBlog, indexOfLastBlog);
+  console.log("Current Blogs: ",currentBlogs);
 
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -112,12 +121,42 @@ const BlogList = () => {
             transition={{ duration: 0.7 }}
             className="text-center"
           >
+            { blogTagName ? 
+            <div className="mb-6">
+              <nav className="flex" aria-label="Breadcrumb">
+                <ol className="inline-flex items-center space-x-0 md:space-x-0">
+                  <li className="inline-flex items-center">
+                    <Link to="/" className="text-gray-600 hover:text-gray-900">
+                      Home
+                    </Link>
+                  </li>
+                  <li>
+                    <div className="flex items-center">
+                      <span className="mx-2 text-gray-400">/</span>
+                      <Link to="/blogs" className="text-gray-600 hover:text-gray-900">
+                        Blogs
+                      </Link>
+                    </div>
+                  </li>
+                  { blogTagName ? <li>
+                    <div className="flex items-center">
+                      <span className="mx-2 text-gray-400">/</span>
+                      <Link to={`/blogs?tag=${blogTagName}`} className="text-gray-600 hover:text-gray-900">
+                        {blogTagName}
+                      </Link>
+                    </div>
+                  </li> : <></>}
+                </ol>
+              </nav>
+            </div> : <></> }
+            { !blogTagName ? <>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-red-500 leading-tight tracking-tight mb-6">
             <span className="text-yellow-500">Marriage </span>Insights & <span className="text-yellow-500">Inspiration</span>
             </h1>
             <p className="text-2xl text-pink-600 max-w-4xl mx-auto">
             Planning a wedding is more complex than it used to be! We want to inspire you with great ideas for a perfect wedding day. Take a look around the site and see everything we offer.
-            </p>
+            </p></> : <></>}
+            { blogTagName ? <h2 className="text-left text-3xl font-bold text-gray-800 mb-4">Blogs tagged with <span className="text-[#f20574]">{blogTagName}</span></h2> : <></>}
           </motion.div>
         </div>
 
@@ -264,12 +303,14 @@ const BlogList = () => {
                 <div className="mt-auto">
                   <div className="flex flex-wrap gap-2 mb-4">
                     {blog.hashtags.slice(0, 2).map(tag => (
-                      <span
-                        key={tag.id}
-                        className="text-xs bg-pink-50 text-[#f20574] px-3 py-1 rounded-full hover:bg-pink-100 transition duration-300"
-                      >
-                        #{tag.tagName}
-                      </span>
+                      <Link to={`/blogs?tag=${tag.tagName}`}>
+                        <span
+                          key={tag.id}
+                          className="text-xs bg-pink-50 text-[#f20574] px-3 py-1 rounded-full hover:bg-pink-100 transition duration-300"
+                        >
+                          #{tag.tagName}
+                        </span>
+                      </Link>
                     ))}
                   </div>
 
