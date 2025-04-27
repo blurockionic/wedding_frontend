@@ -116,13 +116,18 @@ const Blog = () => {
   };
 
   const moveCarousel = (direction) => {
+    // Calculate the max index (total posts minus visible posts)
+    const maxIndex = Math.max(0, (relatedPosts?.data?.length || 0) - 3);
+    
     if (direction === 'next') {
       setCarouselIndex((prevIndex) => 
-        prevIndex + 3 >= relatedPosts.length ? 0 : prevIndex + 3
+        // Don't go beyond the max index
+        Math.min(prevIndex + 1, maxIndex)
       );
     } else {
       setCarouselIndex((prevIndex) => 
-        prevIndex - 3 < 0 ? Math.max(0, relatedPosts.length - 3) : prevIndex - 3
+        // Don't go below 0
+        Math.max(prevIndex - 1, 0)
       );
     }
   };
@@ -131,8 +136,8 @@ const Blog = () => {
   const { data: relatedPosts = [], isLoading: relatedIsLoading, error: relatedError } = 
     useGetRelatedBlogsByIdQuery(blogData?.data?.id, { skip: !blogData?.data?.id });
 
+  // Always show exactly 3 visible posts at a time in the carousel
   const visiblePosts = relatedPosts?.data?.slice(carouselIndex, carouselIndex + 3) || [];
-  
 
   if (isLoading) return <div className="text-center py-10">Loading blog...</div>;
   if (error) return <div className="text-center py-10 text-red-500">Error loading blog</div>;
@@ -481,6 +486,7 @@ const Blog = () => {
                 onClick={() => moveCarousel('prev')}
                 className="bg-gray-200 p-2 rounded-full hover:bg-gray-300 transition-colors"
                 aria-label="Previous posts"
+                disabled={relatedIsLoading || relatedPosts?.data?.length <= 3}
               >
                 <FaChevronLeft size={16} />
               </button>
@@ -488,39 +494,57 @@ const Blog = () => {
                 onClick={() => moveCarousel('next')}
                 className="bg-gray-200 p-2 rounded-full hover:bg-gray-300 transition-colors"
                 aria-label="Next posts"
+                disabled={relatedIsLoading || relatedPosts?.data?.length <= 3}
               >
                 <FaChevronRight size={16} />
               </button>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {visiblePosts.map(post => (
-              <div key={post.id} className="bg-white shadow-sm rounded-lg overflow-hidden group">
-                <Link to={`/blogs/${post.urlTitle}`}>
-                  <div className="relative h-48 overflow-hidden">
-                    <img 
-                      src={post.coverImage || 'https://placehold.co/600x300?text=CoverImage'} 
-                      alt={post.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      onError={(e) => {
-                        e.target.src = 'https://via.placeholder.com/600x300';
-                      }}
-                    />
-                  </div>
-                  <div className="p-4">
-                    <div className="text-xs text-gray-500 mb-2">
-                      {formatDate(post.updatedAt)} • {`${Math.ceil(post.content.replace(/<[^>]*>|&nbsp;|\u00A0/g, ' ').replace(/\s{2,}/g, ' ').trim().replace(/\s+\S*$/, '') + '...'?.length / 500) || 3} min read`}
-                    </div>
-                    <h3 className="font-medium text-lg mb-2 group-hover:text-gray-600 transition-colors line-clamp-2">
-                      {post.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm line-clamp-3">{post.excerpt}</p>
-                  </div>
-                </Link>
+          {relatedIsLoading ? (
+            <div className="flex justify-center items-center py-20 bg-white rounded-lg shadow-sm">
+              <div className="animate-pulse flex flex-col items-center">
+                <div className="w-10 h-10 border-t-4 border-b-4 border-[#f20574] rounded-full animate-spin"></div>
+                <p className="mt-4 text-gray-600">Loading related articles...</p>
               </div>
-            ))}
-          </div>
+            </div>
+          ) : relatedError ? (
+            <div className="text-center py-10 bg-white rounded-lg shadow-sm">
+              <p className="text-red-500">Failed to load related articles</p>
+            </div>
+          ) : !relatedPosts?.data?.length ? (
+            <div className="text-center py-10 bg-white rounded-lg shadow-sm">
+              <p className="text-gray-500">No related articles found</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {visiblePosts.map(post => (
+                <div key={post.id} className="bg-white shadow-sm rounded-lg overflow-hidden group">
+                  <Link to={`/blogs/${post.urlTitle}`}>
+                    <div className="relative h-48 overflow-hidden">
+                      <img 
+                        src={post.coverImage || 'https://placehold.co/600x300?text=CoverImage'} 
+                        alt={post.title}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        onError={(e) => {
+                          e.target.src = 'https://via.placeholder.com/600x300';
+                        }}
+                      />
+                    </div>
+                    <div className="p-4">
+                      <div className="text-xs text-gray-500 mb-2">
+                        {formatDate(post.updatedAt)} • {`${Math.ceil(post.content.replace(/<[^>]*>|&nbsp;|\u00A0/g, ' ').replace(/\s{2,}/g, ' ').trim().replace(/\s+\S*$/, '') + '...'?.length / 500) || 3} min read`}
+                      </div>
+                      <h3 className="font-medium text-lg mb-2 group-hover:text-gray-600 transition-colors line-clamp-2">
+                        {post.title}
+                      </h3>
+                      <p className="text-gray-600 text-sm line-clamp-3">{post.content.replace(/<[^>]*>|&nbsp;|\u00A0/g, ' ').replace(/\s{2,}/g, ' ').trim().substring(0, 100) + '...'}</p>
+                    </div>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Back to blogs button */}
