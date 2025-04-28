@@ -143,12 +143,13 @@ const Blog = () => {
   if (error) return <div className="text-center py-10 text-red-500">Error loading blog</div>;
   if (!blogData) return <div className="text-center py-10">Blog not found</div>;
 
-  const { title, content, tags = [], createdAt, coverImage } = blogData.data;
+  const { title, content, tags = [], createdAt, coverImage, viewCount } = blogData.data;
 
   const plainTextContent = content.replace(/<[^>]+>/g, ''); // Strip HTML for meta description
   const metaDescription = plainTextContent.slice(0, 160);
 
   console.log(metaDescription)
+
 
   const fullTitle = `${title} | Marriage Vendors Blog`;
 
@@ -223,9 +224,13 @@ const Blog = () => {
                     <FaUser className="mr-2 text-gray-500" />
                     <span>marraigevendors.com</span>
                   </div>
-                  <div className="flex items-center">
+                  <div className="flex items-center mr-4">
                     <span className="mr-2">|</span>
                     <span>{formatDate(createdAt)}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <span className="mr-2">|</span>
+                    <span>{viewCount} Views</span>
                   </div>
                   <div className="ml-auto flex items-center" 
                   onClick={() => {
@@ -533,7 +538,7 @@ const Blog = () => {
                     </div>
                     <div className="p-4">
                       <div className="text-xs text-gray-500 mb-2">
-                        {formatDate(post.updatedAt)} • {`${Math.ceil(post.content.replace(/<[^>]*>|&nbsp;|\u00A0/g, ' ').replace(/\s{2,}/g, ' ').trim().replace(/\s+\S*$/, '') + '...'?.length / 500) || 3} min read`}
+                        {formatDate(post.updatedAt)} • {`${Math.ceil(post.content.replace(/<[^>]*>|&nbsp;|\u00A0/g, ' ').replace(/\s{2,}/g, ' ').trim().replace(/\s+\S*$/, '') + '...'?.length / 500) || 3} min read`} • {post.viewCount || 0} views
                       </div>
                       <h3 className="font-medium text-lg mb-2 group-hover:text-gray-600 transition-colors line-clamp-2">
                         {post.title}

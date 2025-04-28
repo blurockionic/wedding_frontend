@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useGetBlogsQuery, useGetBlogsByTagQuery } from "../../../redux/blogSlice.js";
 import { motion } from 'framer-motion';
+import { IoEyeOutline } from "react-icons/io5";
 import Footer from '../../Footer.jsx';
 
 const BlogList = () => {
@@ -31,6 +32,7 @@ const BlogList = () => {
         coverImage: blog.coverImage || 'https://placehold.co/600x300?text=CoverImage',
         date: blog.createdAt,
         hashtags: blog.tags,
+        viewCount: blog.viewCount,
         excerpt: blog.excerpt || blog.content
         .replace(/<[^>]*>|&nbsp;|\u00A0/g, ' ') // Remove all HTML tags and non-breaking spaces
         .replace(/\s{2,}/g, ' ')                // Replace multiple spaces with single space
@@ -223,6 +225,11 @@ const BlogList = () => {
             </svg>
             {currentBlogs[0].readTime}
           </span>
+          <span className="text-gray-200 text-xs sm:text-sm bg-black bg-opacity-30 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full flex items-center">
+            < IoEyeOutline className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+            {currentBlogs[0].viewCount || 0} views
+          </span>
+
         </div>
 
         <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-2 sm:mb-3 md:mb-4 lg:mb-6 leading-tight drop-shadow-lg">
@@ -287,6 +294,11 @@ const BlogList = () => {
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.414-1.414L11 9.586V6z" clipRule="evenodd" />
                     </svg>
                     {blog.readTime}
+                  </span>
+                  <span className="mx-2 text-gray-300">•</span>
+                  <span className="text-sm text-gray-500 flex items-center">
+                    <IoEyeOutline className="h-3.5 w-3.5 mr-1" />
+                    {blog.viewCount || 0} views
                   </span>
                 </div>
 
