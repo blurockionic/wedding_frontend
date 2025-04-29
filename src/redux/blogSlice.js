@@ -49,6 +49,7 @@ export const blogApiSlice = createApi({
     getAllTags: builder.query({ query: () => `/tags` }),
     getTagByName: builder.query({ query: (tagName) => `/tags/${tagName}` }),
     getBlogsByTag: builder.query({ query: (tagName) => `/tag/${tagName}` }),    
+    getRelatedBlogsById: builder.query({ query: (id) => `/related/${id}` }),
 
     // 🔐 ADMIN
     addBlog: builder.mutation({ query: (body) => ({ url: `/`, method: "POST", body }) }),
@@ -74,6 +75,7 @@ export const {
   useGetAllTagsQuery,
   useGetTagByNameQuery,
   useGetBlogsByTagQuery,
+  useGetRelatedBlogsByIdQuery,
   useGetBlogCountQuery,
   useGetTotalViewCountQuery,
 
