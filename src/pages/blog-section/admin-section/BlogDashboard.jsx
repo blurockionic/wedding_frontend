@@ -158,6 +158,11 @@ function BlogDashboard() {
     alert('Blog URL copied to clipboard!');
   };
 
+  const handleViewBlog = (post) => {
+
+    window.open(`/blogs/${post.urlTitle}`, '_blank'); // Navigate to the blog post
+  };
+
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
     setCurrentPage(1); // Reset to first page on search
@@ -425,7 +430,12 @@ function BlogDashboard() {
                     blogPosts.slice(0, 5).map(post => (
                       <div key={post.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                         <div>
-                          <h4 className="text-lg font-medium text-gray-800">{post.title}</h4>
+                          <h4 
+                            onClick={() => handleViewBlog(post)} 
+                            className="text-lg font-medium text-indigo-600 hover:text-indigo-800 cursor-pointer hover:underline"
+                          >
+                            {post.title}
+                          </h4>
                           <p className="text-sm text-gray-600">{post.status}</p>
                         </div>
                         <div className="flex items-center space-x-4">
@@ -536,7 +546,12 @@ function BlogDashboard() {
                     {blogPosts.map(post => (
                       <div key={post.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                         <div>
-                          <h4 className="text-lg font-medium text-gray-800">{post.title}</h4>
+                          <h4 
+                            onClick={() => handleViewBlog(post)}
+                            className="text-lg font-medium text-indigo-600 hover:text-indigo-800 cursor-pointer hover:underline"
+                          >
+                            {post.title}
+                          </h4>
                           <p className="text-sm text-gray-600">{post.status}</p>
                           <p className="text-sm text-gray-600">Views: {post.views} • Comments: {post.comments || 0}</p>
                         </div>
