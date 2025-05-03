@@ -10,11 +10,11 @@ import { FaCrown } from "react-icons/fa";
 
 export const TemplateCard = React.memo(({ template, onClick }) => (
   <div
-    className="bg-white cursor-pointer hover:shadow-lg transition-shadow relative group rounded-lg h-[344px] w-full max-w-[305px] mx-auto overflow-hidden border border-black"
+    className="bg-white cursor-pointer hover:shadow-lg transition-shadow relative group rounded-lg h-[344px] w-full max-w-fit mx-auto overflow-hidden border border-black"
     onClick={() => onClick(template)}
   >
     {/*update premium tag*/}
-    <div className="relative w-[286px] h-[325px] m-2">
+    <div className="relative w-fit h-[325px] m-2">
       <img
         src={template.thumbnailUrl}
         alt={template.name || "Template Thumbnail"}
