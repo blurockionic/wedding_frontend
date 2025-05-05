@@ -23,6 +23,8 @@ import VendorBussinessProfile from "./pages/vendorDashboard/VendorBussinessProfi
 import PartnershipProgram from "./pages/PartnerShip.jsx";
 import PartnerDashboard from "./pages/partner/DashBoard.jsx";
 import VendorApplicationForm from "./pages/PartnerForm.jsx";
+import PartnerAdminDashboard from "./pages/admin/Partner.jsx";
+import Partnerdetail from "./pages/admin/Partnerdetail.jsx";
 
 const Billing = lazy(() => import("./pages/vendorDashboard/Billing.jsx"));
 
@@ -165,7 +167,7 @@ const router = createBrowserRouter([
       { path: "/new-blog-post", element: wrapWithSuspense(NewBlogPost) },
       { path: "/blogs", element: wrapWithSuspense(BlogList) },
       { path: "/blogs/:urlTitle", element: wrapWithSuspense(Blog) },
-      {path: "/partnerform" , element: wrapWithSuspense(VendorApplicationForm)},
+
       {
         path: "/update-blog-post/:urlTitle",
         element: wrapWithSuspense(UpdateBlogPost),
@@ -207,6 +209,13 @@ const router = createBrowserRouter([
           // { path: "favoriteList", element: wrapWithSuspense(FavoriteListPage) },
           // { path: "checklist", element: wrapWithSuspense(Checklist) },
           // { path: "weddingbudget", element: wrapWithSuspense(WeddingBudgetCalculator)}
+          {
+            path: "partnerAdminDashboard",
+            element: wrapWithSuspense(PartnerAdminDashboard),
+            
+          },
+          { path: "partnerDetail", element: wrapWithSuspense(Partnerdetail) },
+          
         ],
       },
       { path: "/signup", element: wrapWithSuspense(Signup) },
@@ -354,6 +363,7 @@ const router = createBrowserRouter([
             path: "dashboard",
             element: wrapWithSuspense(PartnerDashboard),
           },
+          { path: "form", element: wrapWithSuspense(VendorApplicationForm) },
         ],
       },
     ],
@@ -371,45 +381,6 @@ function App() {
       localStorage.setItem("hasVisited", "true");
     }
   }, []);
-
-  function App() {
-    const [showSplash, setShowSplash] = useState(true);
-
-    useEffect(() => {
-      const hasVisited = localStorage.getItem("hasVisited");
-      if (hasVisited) {
-        setShowSplash(false);
-      } else {
-        localStorage.setItem("hasVisited", "true");
-      }
-
-      const handleChunkError = (event) => {
-        window.location.reload();
-      };
-
-      // Add Vite chunk error handler
-      window.addEventListener("vite:preloadError", handleChunkError);
-
-      return () => {
-        window.removeEventListener("vite:preloadError", handleChunkError);
-      };
-    }, []);
-
-    return (
-      <HelmetProvider>
-        <ErrorBoundary>
-          {showSplash ? (
-            <SplashScreen onFinish={() => setShowSplash(false)} />
-          ) : (
-            <>
-              <RouterProvider router={router} />
-              <ToastContainer />
-            </>
-          )}
-        </ErrorBoundary>
-      </HelmetProvider>
-    );
-  }
 
   return (
     <>

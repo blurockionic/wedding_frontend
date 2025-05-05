@@ -1,19 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import baseQueryWithReauth from './baseQueryWithReauth';
 
 export const partnerFormApi = createApi({
   reducerPath: 'partnerFormApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.VITE_API_URL}/api/v1`,
-    prepareHeaders: (headers, { getState }) => {
-      // Get the token from state if available
-      const token = getState()?.auth?.token;
-      // If we have a token, include it in requests
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithReauth,
   tagTypes: ['Partner'],
   endpoints: (builder) => ({
     // Public access endpoint for submitting partner form
@@ -34,6 +24,8 @@ export const partnerFormApi = createApi({
         Object.entries(filters).forEach(([key, value]) => {
           if (value) params.append(key, value);
         });
+
+          
         return {
           url: `/admin/partners?${params.toString()}`,
           method: 'GET',
@@ -52,12 +44,16 @@ export const partnerFormApi = createApi({
 
     updatePartnerStatus: builder.mutation({
       query: ({ id, data }) => ({
-        url: `/admin/partners/${id}/status`,
+        url: `/admin/partners/${id}`,
         method: 'PATCH',
         body: data,
       }),
       invalidatesTags: (result, error, { id }) => [{ type: 'Partner', id }, 'Partner'],
     }),
+
+
+
+
   }),
 });
 
