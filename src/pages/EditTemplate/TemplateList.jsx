@@ -45,7 +45,7 @@ const TemplateList = ({ data, handleWatchHitory }) => {
     categoryByAmount: "",
     categoryByRequirement: "",
     page: 1,
-    limit: 10,
+    limit: 50,
   });
 
   const loggedInUser = useSelector((state) => state?.auth?.user);
