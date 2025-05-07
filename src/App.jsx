@@ -25,7 +25,6 @@ import PartnershipProgram from "./pages/PartnerShip.jsx";
 import VendorApplicationForm from "./pages/PartnerForm.jsx";
 import PartnerAdminDashboard from "./pages/admin/Partner.jsx";
 import Partnerdetail from "./pages/admin/Partnerdetail.jsx";
-import { partnerDashBoard } from "./pages/partner/partnerDashboard/partnerDashboard.jsx";
 import LeadListInPartnerDashBoard from "./pages/partner/LeadListInPartnerDashBoard.jsx";
 
 const Billing = lazy(() => import("./pages/vendorDashboard/Billing.jsx"));
