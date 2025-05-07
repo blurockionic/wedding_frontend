@@ -4,10 +4,19 @@ import { useGetMyLeadQuery } from "../../redux/serviceSlice";
 import { FaSortUp, FaSortDown } from "react-icons/fa";
 import { ArrowDownWideNarrow, ArrowUpWideNarrow } from "lucide-react";
 import { dateFormats as formatDate } from "../../static/helper"; // Rename imported function
+import { useSelector } from "react-redux";
 
 export default function LeadListInPartnerDashBoard() {
-  const [city, setCity] = useState("ranchi");
-  const { data: myLeads, isLoading, isError, error } = useGetMyLeadQuery(city);
+  const city = useSelector((state) => state?.auth?.user?.wedding_location);
+
+  const {
+    data: myLeads,
+    isLoading,
+    isError,
+    error,
+  } = useGetMyLeadQuery(city, {
+    skip: city === "",
+  });
 
   const [myLead, setMyLead] = useState([]);
   const [sortBy, setSortBy] = useState("wedding_date");
@@ -34,10 +43,11 @@ export default function LeadListInPartnerDashBoard() {
   };
 
   const filterLeads = (data, query) => {
-    return data.filter((lead) =>
-      lead.user_name.toLowerCase().includes(query.toLowerCase()) ||
-      lead.wedding_location.toLowerCase().includes(query.toLowerCase()) ||
-      lead.email.toLowerCase().includes(query.toLowerCase())
+    return data.filter(
+      (lead) =>
+        lead.user_name.toLowerCase().includes(query.toLowerCase()) ||
+        lead.wedding_location.toLowerCase().includes(query.toLowerCase()) ||
+        lead.email.toLowerCase().includes(query.toLowerCase())
     );
   };
 
@@ -55,7 +65,12 @@ export default function LeadListInPartnerDashBoard() {
   };
 
   if (isLoading) return <div className="text-center py-6">Loading...</div>;
-  if (isError) return <div className="text-center text-red-600 py-6">Error: {error.message}</div>;
+  if (isError)
+    return (
+      <div className="text-center text-red-600 py-6">
+        Error: {error.message}
+      </div>
+    );
 
   return (
     <div className="mx-auto py-6">
@@ -73,15 +88,34 @@ export default function LeadListInPartnerDashBoard() {
         <table className="w-full text-sm text-center border capitalize border-collapse">
           <thead>
             <tr className="bg-white">
-              <th className="py-2 px-4 border bg-white cursor-pointer" onClick={() => handleSort("user_name")}>
-                Name {sortBy === "user_name" && (sortOrder === "asc" ? <FaSortDown /> : <FaSortUp />)}
+              <th
+                className="py-2 px-4 border bg-white cursor-pointer"
+                onClick={() => handleSort("user_name")}
+              >
+                Name{" "}
+                {sortBy === "user_name" &&
+                  (sortOrder === "asc" ? <FaSortDown /> : <FaSortUp />)}
               </th>
-              <th className="py-2 px-4 border bg-white cursor-pointer flex gap-2 justify-center" onClick={() => handleSort("wedding_date")}>
-                Date {sortBy === "wedding_date" && (sortOrder === "asc" ? <ArrowDownWideNarrow /> : <ArrowUpWideNarrow />)}
+              <th
+                className="py-2 px-4 border bg-white cursor-pointer flex gap-2 justify-center"
+                onClick={() => handleSort("wedding_date")}
+              >
+                Date{" "}
+                {sortBy === "wedding_date" &&
+                  (sortOrder === "asc" ? (
+                    <ArrowDownWideNarrow />
+                  ) : (
+                    <ArrowUpWideNarrow />
+                  ))}
               </th>
               <th className="py-2 px-4 border bg-white">Email</th>
-              <th className="py-2 px-4 border bg-white cursor-pointer" onClick={() => handleSort("wedding_location")}>
-                Location {sortBy === "wedding_location" && (sortOrder === "asc" ? <FaSortDown /> : <FaSortUp />)}
+              <th
+                className="py-2 px-4 border bg-white cursor-pointer"
+                onClick={() => handleSort("wedding_location")}
+              >
+                Location{" "}
+                {sortBy === "wedding_location" &&
+                  (sortOrder === "asc" ? <FaSortDown /> : <FaSortUp />)}
               </th>
               <th className="py-2 px-4 border bg-white">Phone Number</th>
             </tr>
@@ -90,16 +124,26 @@ export default function LeadListInPartnerDashBoard() {
             {myLead.length > 0 ? (
               myLead.map((lead) => (
                 <tr key={lead.id} className="border bg-white">
-                  <td className="py-2 px-4 border bg-white">{lead.user_name}</td>
-                  <td className="py-2 px-4 border bg-white text-gray-600">{formatDate(lead.wedding_date)}</td>
+                  <td className="py-2 px-4 border bg-white">
+                    {lead.user_name}
+                  </td>
+                  <td className="py-2 px-4 border bg-white text-gray-600">
+                    {formatDate(lead.wedding_date)}
+                  </td>
                   <td className="py-2 px-4 border bg-white">{lead.email}</td>
-                  <td className="py-2 px-4 border bg-white">{lead.wedding_location || "N/A"}</td>
-                  <td className="py-2 px-4 border bg-white">{lead.phone_number || "N/A"}</td>
+                  <td className="py-2 px-4 border bg-white">
+                    {lead.wedding_location || "N/A"}
+                  </td>
+                  <td className="py-2 px-4 border bg-white">
+                    {lead.phone_number || "N/A"}
+                  </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="5" className="text-center py-4 border bg-white">No Lead Available</td>
+                <td colSpan="5" className="text-center py-4 border bg-white">
+                  No Lead Available
+                </td>
               </tr>
             )}
           </tbody>
