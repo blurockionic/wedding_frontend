@@ -18,7 +18,6 @@ import { weddingPlanForEventApi } from "./weddingPlanSlice";
 import { invitationTemplateForAdminSlice } from "./invitationTemplateForAdminSlice";
 import { partnerFormApi } from "./partnerFormSlice";
 import { cloudinaryApi } from "./cloudinaryApiSlice";
-import { partnerFormApi } from "./partnerFormSlice";
 
 
 
