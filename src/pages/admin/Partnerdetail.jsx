@@ -7,13 +7,15 @@ import {
   ThumbsUp,
   ThumbsDown,
 } from "lucide-react";
-import { useUpdatePartnerStatusMutation } from "../../redux/partnerFormSlice";
+import { useGetPartnersQuery, useUpdatePartnerStatusMutation } from "../../redux/partnerFormSlice";
+
 
 export default function Partnerdetail() {
   const location = useLocation();
   const navigate = useNavigate();
   const partner = location.state?.partnerDetail;
-  const [partnerupdate] = useUpdatePartnerStatusMutation();
+  const [partnerupdate,{ isLoading, error, isSuccess }] = useUpdatePartnerStatusMutation();
+  const { refetch } = useGetPartnersQuery();
 
   // API call to fetch partner details
 
@@ -27,6 +29,7 @@ export default function Partnerdetail() {
         console.error("Error fetching partner details:", response.error);
       } else {
         console.log("Partner details fetched successfully:", response.data);
+        refetch()
       }
     } catch (error) {
       console.error("Error fetching partner details:", error);

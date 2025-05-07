@@ -21,10 +21,12 @@ import { motionlogo } from "./static/static.js";
 import SplashScreen from "./pages/SplashScreen/SplashScreen.jsx";
 import VendorBussinessProfile from "./pages/vendorDashboard/VendorBussinessProfile.jsx";
 import PartnershipProgram from "./pages/PartnerShip.jsx";
-import PartnerDashboard from "./pages/partner/DashBoard.jsx";
+
 import VendorApplicationForm from "./pages/PartnerForm.jsx";
 import PartnerAdminDashboard from "./pages/admin/Partner.jsx";
 import Partnerdetail from "./pages/admin/Partnerdetail.jsx";
+import { partnerDashBoard } from "./pages/partner/partnerDashboard/partnerDashboard.jsx";
+import LeadListInPartnerDashBoard from "./pages/partner/LeadListInPartnerDashBoard.jsx";
 
 const Billing = lazy(() => import("./pages/vendorDashboard/Billing.jsx"));
 
@@ -175,6 +177,8 @@ const router = createBrowserRouter([
       // { path: "/", element: wrapWithSuspense(Blog)},
 
       { path: "/", element: wrapWithSuspense(LandingPage) },
+
+     
       {
         path: "/admin",
         element: (
@@ -212,10 +216,8 @@ const router = createBrowserRouter([
           {
             path: "partnerAdminDashboard",
             element: wrapWithSuspense(PartnerAdminDashboard),
-            
           },
           { path: "partnerDetail", element: wrapWithSuspense(Partnerdetail) },
-          
         ],
       },
       { path: "/signup", element: wrapWithSuspense(Signup) },
@@ -352,6 +354,7 @@ const router = createBrowserRouter([
       },
 
       { path: "*", element: wrapWithSuspense(FullErrorPage) },
+
       {
         path: "partnership",
         children: [
@@ -359,10 +362,8 @@ const router = createBrowserRouter([
             path: "",
             element: wrapWithSuspense(PartnershipProgram),
           },
-          {
-            path: "dashboard",
-            element: wrapWithSuspense(PartnerDashboard),
-          },
+          {path: "dashboard", index: true, element: wrapWithSuspense(LeadListInPartnerDashBoard)},
+          
           { path: "form", element: wrapWithSuspense(VendorApplicationForm) },
         ],
       },

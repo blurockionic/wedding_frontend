@@ -5,7 +5,6 @@ import { ArrowDownWideNarrow, ArrowUpWideNarrow } from "lucide-react"; // You ca
 import { useNavigate } from "react-router-dom"; // Assuming you're using react-router for navigation
 
 export default function PartnerAdminDashboard() {
-  const [city, setCity] = useState("ranchi");
   const {
     data: partnersData,
     isLoading,
