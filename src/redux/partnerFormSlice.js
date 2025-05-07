@@ -1,30 +1,20 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import baseQueryWithReauth from "./baseQueryWithReauth";
 
 export const partnerFormApi = createApi({
-  reducerPath: 'partnerFormApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.VITE_API_URL}/api/v1`,
-    prepareHeaders: (headers, { getState }) => {
-      // Get the token from state if available
-      const token = getState()?.auth?.token;
-      // If we have a token, include it in requests
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
-  tagTypes: ['Partner'],
+  reducerPath: "partnerFormApi",
+  baseQuery: baseQueryWithReauth,
+  tagTypes: ["Partner"],
   endpoints: (builder) => ({
     // Public access endpoint for submitting partner form
     submitPartnerForm: builder.mutation({
       query: (formData) => ({
-        url: '/partners/public', // Updated to match your backend route
-        method: 'POST',
+        url: "/partners/public", // Updated to match your backend route
+        method: "POST",
         body: formData,
         formData: true,
       }),
-      invalidatesTags: ['Partner'],
+      invalidatesTags: ["Partner"],
     }),
     // Admin-only endpoints
     getPartners: builder.query({
@@ -33,27 +23,34 @@ export const partnerFormApi = createApi({
         Object.entries(filters).forEach(([key, value]) => {
           if (value) params.append(key, value);
         });
+
+        console.log(params.toString());
+        
+
         return {
-          url: `/admin/partners?${params.toString()}`,
-          method: 'GET',
+          url: `/partners/admin?${params.toString()}`,
+          method: "GET",
         };
       },
-      providesTags: ['Partner'],
+      providesTags: ["Partner"],
     }),
     getPartnerById: builder.query({
       query: (id) => ({
-        url: `/admin/partners/${id}`,
-        method: 'GET',
+        url: `/partners/admin${id}`,
+        method: "GET",
       }),
-      providesTags: (result, error, id) => [{ type: 'Partner', id }],
+      providesTags: (result, error, id) => [{ type: "Partner", id }],
     }),
     updatePartnerStatus: builder.mutation({
       query: ({ id, data }) => ({
-        url: `/admin/partners/${id}/status`,
-        method: 'PATCH',
+        url: `/partners/admin/${id}`,
+        method: "PATCH",
         body: data,
       }),
-      invalidatesTags: (result, error, { id }) => [{ type: 'Partner', id }, 'Partner'],
+      invalidatesTags: (result, error, { id }) => [
+        { type: "Partner", id },
+        "Partner",
+      ],
     }),
   }),
 });

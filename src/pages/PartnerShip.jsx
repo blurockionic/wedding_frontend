@@ -1,5 +1,6 @@
 import React from "react";
 import { Handshake, TrendingUp, Briefcase, Megaphone, BarChart3 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const benefits = [
   {
@@ -75,9 +76,9 @@ const CityManagerProgram = () => {
 
       {/* Call to Action */}
       <div className="text-center">
-        <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-3 rounded-xl shadow">
+        <Link to={"form"} className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-3 rounded-xl shadow">
           Apply to Become a City Manager
-        </button>
+        </Link>
       </div>
 
       {/* How It Works Section */}
