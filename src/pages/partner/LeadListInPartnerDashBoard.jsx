@@ -14,7 +14,7 @@ export default function LeadListInPartnerDashBoard() {
     isLoading,
     isError,
     error,
-  } = useGetMyLeadQuery("jamshedpur", {
+  } = useGetMyLeadQuery(city, {
     skip: city === "",
   });
 
