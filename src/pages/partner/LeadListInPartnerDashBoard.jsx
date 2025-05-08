@@ -14,7 +14,7 @@ export default function LeadListInPartnerDashBoard() {
     isLoading,
     isError,
     error,
-  } = useGetMyLeadQuery(city, {
+  } = useGetMyLeadQuery("jamshedpur", {
     skip: city === "",
   });
 
@@ -23,36 +23,44 @@ export default function LeadListInPartnerDashBoard() {
   const [sortOrder, setSortOrder] = useState("desc");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const sortLeads = (data, sortBy, sortOrder) => {
+  const sortLeads =  (data, sortBy, sortOrder) => {
     return [...data].sort((a, b) => {
+      const aUser = a.user || {};
+      const bUser = b.user || {};
+  
       if (sortBy === "wedding_date") {
-        return sortOrder === "asc"
-          ? new Date(a.wedding_date) - new Date(b.wedding_date)
-          : new Date(b.wedding_date) - new Date(a.wedding_date);
+        const dateA = new Date(aUser.wedding_date || 0);
+        const dateB = new Date(bUser.wedding_date || 0);
+        return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
       } else if (sortBy === "user_name") {
         return sortOrder === "asc"
-          ? a.user_name.localeCompare(b.user_name)
-          : b.user_name.localeCompare(a.user_name);
+          ? (aUser.user_name || "").localeCompare(bUser.user_name || "")
+          : (bUser.user_name || "").localeCompare(aUser.user_name || "");
       } else if (sortBy === "wedding_location") {
         return sortOrder === "asc"
-          ? a.wedding_location.localeCompare(b.wedding_location)
-          : b.wedding_location.localeCompare(a.wedding_location);
+          ? (aUser.wedding_location || "").localeCompare(bUser.wedding_location || "")
+          : (bUser.wedding_location || "").localeCompare(aUser.wedding_location || "");
       }
       return 0;
     });
   };
+  
 
   const filterLeads = (data, query) => {
-    return data.filter(
-      (lead) =>
-        lead.user_name.toLowerCase().includes(query.toLowerCase()) ||
-        lead.wedding_location.toLowerCase().includes(query.toLowerCase()) ||
-        lead.email.toLowerCase().includes(query.toLowerCase())
-    );
+    return data.filter((lead) => {
+      const user = lead.user || {};
+      return (
+        user.user_name?.toLowerCase().includes(query.toLowerCase()) ||
+        user.wedding_location?.toLowerCase().includes(query.toLowerCase()) ||
+        user.email?.toLowerCase().includes(query.toLowerCase())
+      );
+    });
   };
 
   useEffect(() => {
     const leads = myLeads?.data || [];
+    console.log(leads);
+    
     const sorted = sortLeads(leads, sortBy, sortOrder);
     const filtered = filterLeads(sorted, searchQuery);
     setMyLead(filtered);
@@ -125,17 +133,17 @@ export default function LeadListInPartnerDashBoard() {
               myLead.map((lead) => (
                 <tr key={lead.id} className="border bg-white">
                   <td className="py-2 px-4 border bg-white">
-                    {lead.user_name}
+                    {lead.user.user_name}
                   </td>
                   <td className="py-2 px-4 border bg-white text-gray-600">
-                    {formatDate(lead.wedding_date)}
+                    {formatDate(lead.user.wedding_date)}
                   </td>
-                  <td className="py-2 px-4 border bg-white">{lead.email}</td>
+                  <td className="py-2 px-4 border bg-white">{lead.user.email}</td>
                   <td className="py-2 px-4 border bg-white">
-                    {lead.wedding_location || "N/A"}
+                    {lead.user.wedding_location || "N/A"}
                   </td>
                   <td className="py-2 px-4 border bg-white">
-                    {lead.phone_number || "N/A"}
+                    {lead.user.phone_number || "N/A"}
                   </td>
                 </tr>
               ))
