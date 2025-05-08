@@ -23,11 +23,11 @@ export default function LeadListInPartnerDashBoard() {
   const [sortOrder, setSortOrder] = useState("desc");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const sortLeads =  (data, sortBy, sortOrder) => {
+  const sortLeads = (data, sortBy, sortOrder) => {
     return [...data].sort((a, b) => {
       const aUser = a.user || {};
       const bUser = b.user || {};
-  
+
       if (sortBy === "wedding_date") {
         const dateA = new Date(aUser.wedding_date || 0);
         const dateB = new Date(bUser.wedding_date || 0);
@@ -38,13 +38,16 @@ export default function LeadListInPartnerDashBoard() {
           : (bUser.user_name || "").localeCompare(aUser.user_name || "");
       } else if (sortBy === "wedding_location") {
         return sortOrder === "asc"
-          ? (aUser.wedding_location || "").localeCompare(bUser.wedding_location || "")
-          : (bUser.wedding_location || "").localeCompare(aUser.wedding_location || "");
+          ? (aUser.wedding_location || "").localeCompare(
+              bUser.wedding_location || ""
+            )
+          : (bUser.wedding_location || "").localeCompare(
+              aUser.wedding_location || ""
+            );
       }
       return 0;
     });
   };
-  
 
   const filterLeads = (data, query) => {
     return data.filter((lead) => {
@@ -59,8 +62,7 @@ export default function LeadListInPartnerDashBoard() {
 
   useEffect(() => {
     const leads = myLeads?.data || [];
-    console.log(leads);
-    
+
     const sorted = sortLeads(leads, sortBy, sortOrder);
     const filtered = filterLeads(sorted, searchQuery);
     setMyLead(filtered);
@@ -82,7 +84,13 @@ export default function LeadListInPartnerDashBoard() {
 
   return (
     <div className="mx-auto py-6">
-      <div className="mb-4 max-w-md mx-auto">
+     <blockquote className="flex place-content-center text-4xl capitalize font-bold py-2 
+  bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 
+  bg-[length:200%_200%] bg-clip-text text-transparent 
+  animate-gradient-move">
+  Hello {city}
+</blockquote>
+      <div className="flex  mb-4 max-w-md mx-auto">
         <input
           type="text"
           placeholder="Search by name, location, or email"
@@ -117,14 +125,7 @@ export default function LeadListInPartnerDashBoard() {
                   ))}
               </th>
               <th className="py-2 px-4 border bg-white">Email</th>
-              <th
-                className="py-2 px-4 border bg-white cursor-pointer"
-                onClick={() => handleSort("wedding_location")}
-              >
-                Location{" "}
-                {sortBy === "wedding_location" &&
-                  (sortOrder === "asc" ? <FaSortDown /> : <FaSortUp />)}
-              </th>
+
               <th className="py-2 px-4 border bg-white">Phone Number</th>
             </tr>
           </thead>
@@ -138,10 +139,10 @@ export default function LeadListInPartnerDashBoard() {
                   <td className="py-2 px-4 border bg-white text-gray-600">
                     {formatDate(lead.user.wedding_date)}
                   </td>
-                  <td className="py-2 px-4 border bg-white">{lead.user.email}</td>
                   <td className="py-2 px-4 border bg-white">
-                    {lead.user.wedding_location || "N/A"}
+                    {lead.user.email}
                   </td>
+
                   <td className="py-2 px-4 border bg-white">
                     {lead.user.phone_number || "N/A"}
                   </td>
