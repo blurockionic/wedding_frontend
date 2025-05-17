@@ -85,6 +85,9 @@ const FavoriteListPage = lazy(() =>
 const InvitationTemplateInUserDashBord = lazy(() =>
   import("./pages/userDashboard/InvitationTemplateInUserDashBord.jsx")
 );
+const CityManagerPage = lazy(() =>
+  import("./pages/userDashboard/CityManagerPage.jsx")
+);
 const VendorProfile = lazy(() =>
   import("./pages/vendorDashboard/VendorProfile.jsx")
 );
@@ -316,6 +319,10 @@ const router = createBrowserRouter([
           {
             path: "invitationCards",
             element: wrapWithSuspense(InvitationTemplateInUserDashBord),
+          },
+          {
+            path: "cityManager",
+            element: wrapWithSuspense(CityManagerPage),
           },
         ],
       },

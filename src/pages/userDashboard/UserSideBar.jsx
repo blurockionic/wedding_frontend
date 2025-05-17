@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { custom } from "zod";
 import { MdEmail, MdOutlineVerified } from "react-icons/md";
 import { FcInvite } from "react-icons/fc";
+import { FaUserFriends } from "react-icons/fa"; // Icon for Events Planner
 
 const navItems = [
   { name: "Profile", path: "/profile", icon: <User size={20} /> },
@@ -32,6 +33,11 @@ const navItems = [
     name: "Invitaion Cards",
     path: "/profile/invitationCards",
     icon: <MdEmail size={20} />,
+  },
+  { 
+    name: "Events Planner Near You",
+    path: "/profile/cityManager",
+    icon: <FaUserFriends size={20} /> 
   },
 ];
 

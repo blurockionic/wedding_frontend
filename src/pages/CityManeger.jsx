@@ -57,7 +57,7 @@ const CityManagerPopup = ({ show, onClose, manager }) => {
               </div>
             </div>
               <div className="flex items-center space-x-1 mt-6 bg-gray-100 h-8 w-[137px] ps-2 rounded">
-                <p className="text-xs text-gray-600">4.5/5</p>
+                <p className="text-xs text-gray-600">4/5</p>
                 <div className="flex space-x-0.5">
                   <FaStar className='w-4 h-4 text-yellow-300'/>
                   <FaStar className='w-4 h-4 text-yellow-300'/>
