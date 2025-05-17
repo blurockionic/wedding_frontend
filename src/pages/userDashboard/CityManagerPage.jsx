@@ -74,7 +74,7 @@ const CityManagerPage = () => {
           </div>
         </div>
       </div>
-      <div className=' h-[160px] flex justify-center items-end'>
+      <div className=' h-[120px] flex justify-center items-end'>
         <button
           className="bg-[#F20574] text-white px-4 py-1 rounded-lg"
           style={{ width: '160px', height: '35px' }}
