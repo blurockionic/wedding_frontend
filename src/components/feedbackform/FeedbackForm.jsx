@@ -3,11 +3,13 @@ import { useForm } from "react-hook-form";
 import { useCreateFeedbackMutation } from "../../redux/serviceSlice";
 import { toast } from "react-toastify";
 import { Loader2 } from "lucide-react";
+import { useSelector } from "react-redux";
 
 const FeedbackForm = ({ serviceId }) => {
   const [createFeedback, { isLoading }] = useCreateFeedbackMutation();
   const [rating, setRating] = useState(0);
   const [shake, setShake] = useState(false); // New state for shake animation
+  const userData = useSelector((state) => state.auth.user);
 
   const {
     register,
@@ -17,6 +19,11 @@ const FeedbackForm = ({ serviceId }) => {
   } = useForm();
 
   const onSubmit = async (data) => {
+    if (!userData) {
+      toast.error("Please login to submit feedback");
+      return;
+    }
+
     if (!rating) {
       toast.error("Please select a rating");
       setShake(true);
@@ -43,6 +50,7 @@ const FeedbackForm = ({ serviceId }) => {
   const handleRating = (value) => {
     setRating(value);
   };
+
 
   return (
     <div className="w-full md:w-1/2 p-4 rounded-lg shadow-md mt-5 border border-ring">
