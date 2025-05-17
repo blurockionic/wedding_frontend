@@ -19,15 +19,16 @@ const FeedbackForm = ({ serviceId }) => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    if (!userData) {
-      toast.error("Please login to submit feedback");
-      return;
-    }
+   
 
     if (!rating) {
       toast.error("Please select a rating");
       setShake(true);
       setTimeout(() => setShake(false), 500); // remove shake class after animation
+      return;
+    }
+     if (!userData) {
+      toast.error("Please login to submit feedback");
       return;
     }
 
