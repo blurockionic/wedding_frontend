@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useSubmitPartnerFormMutation } from "../redux/partnerFormSlice";
 import { useForm } from "react-hook-form";
+import { TfiEmail } from "react-icons/tfi";
+import { IoPerson } from "react-icons/io5";
+import { FaPhone } from "react-icons/fa6";
 
 
 import { toast } from "react-toastify";
@@ -241,27 +244,41 @@ export default function VendorApplicationForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-pink-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Partner Application - MarriageVendors.com
-          </h1>
-          <div className="mt-4 flex justify-center items-center space-x-2">
-            {[1, 2, 3, 4, 5].map((step) => (
-              <motion.div
-                key={step}
-                className={`h-2 w-16 rounded-full ${
-                  currentStep >= step ? "bg-pink-400" : "bg-yellow-200"
-                }`}
-                initial={{ scale: 0.8 }}
-                animate={{ scale: currentStep === step ? 1.1 : 1 }}
-                transition={{ duration: 0.3 }}
-              />
-            ))}
-          </div>
-          <p className="mt-2 text-sm text-gray-600">Step {currentStep} of 5</p>
+    <div className="relative min-h-screen">
+      {/* Top Background Div */}
+      <div className="absolute top-0 left-0 w-full h-[40vh] bg-gray-300 z-0"
+      style={{
+          backgroundImage: `url('../../public/partner_bg_image.png')`, // Replace with your top image path
+          backgroundSize: "cover",
+          backgroundPosition: "top",
+        }}c
+      />
+
+      {/* Bottom Background Div */}
+      <div className="absolute bottom-0 left-0 w-full h-[80vh] bg-yellow-50 z-0" 
+        style={{
+          backgroundImage: `url('../../public/form_background.png')`, // Replace with your top image path
+          backgroundSize: "cover",
+          backgroundPosition: "bottom",
+        }}
+      />
+
+      {/* Logo and Marriage Vendors Text */}
+      <div className="relative z-10 flex flex-col items-center pt-6">
+        {/* Logo Div */}
+        <div className="w-[120px] h-[120px] rounded-lg flex items-center justify-center mb-2"
+          style={{
+          backgroundImage: `url('../../public/main_logo.png')`, // Replace with your top image path
+          backgroundSize: "cover",
+          backgroundPosition: "bottom",
+        }}
+        >
         </div>
+        {/* Marriage Vendors Text */}
+        <h1 className="text-3xl font-semibold text-white">Marriage Vendors</h1>
+      </div>
+      <div className="relative z-10 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto">
 
         <motion.div
           className="bg-white shadow-xl rounded-lg p-6 mb-8"
@@ -278,110 +295,170 @@ export default function VendorApplicationForm() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
-                <h2 className="text-xl font-semibold mb-6 text-pink-600 border-b border-yellow-200 pb-2">
-                  👤 Basic Information
+                <div className="mb-8">
+                  <h1 className="text-3xl font-semibold text-gray-900 mb-6">
+                    Partner Application
+                  </h1>
+                  <div className="flex items-center">
+                    {[1, 2, 3, 4, 5].map((step) => (
+                      <div key={step} className="flex items-center w-[130px]">
+                        {/* Circle for each step */}
+                        <motion.div
+                          className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-[8px]  ${
+                            currentStep >= step ? "bg-[#F20574]" : "bg-gray-300"
+                          }`}
+                          initial={{ scale: 0.8 }}
+                          animate={{ scale: currentStep === step ? 1.1 : 1 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          {step}
+                        </motion.div>
+                        {/* Line connecting circles, no line after the last step */}
+                        {step < 6 && (
+                          <div
+                            className={`h-1 w-[120px] rounded ${
+                              currentStep >= step ? "bg-pink-500" : "bg-gray-300"
+                            }`}
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <h2 className="text-[26px] font-semibold mb-6 text-gray-900">
+                  Basic Information
                 </h2>
 
-                <div className="space-y-4">
+                <div className="space-y-5">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Full Name <span className="text-red-500">*</span>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Full Name 
                     </label>
-                    <input
-                      type="text"
-                      name="fullName"
-                      {...register("fullName", registerOptions.fullName)}
-                      required
-                      className="w-full px-3 py-2 border border-yellow-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
-                    />
+                    <div className="relative">
+                      <input
+                        type="text"
+                        name="fullName"
+                        {...register("fullName", registerOptions.fullName)}
+                        required
+                        placeholder="Enter your Name"
+                        className="w-full px-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-gray-500 placeholder-gray-400"
+                      />
+                      <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+                        <IoPerson className="text-pink-500 text-lg"/>
+                      </span>
+                    </div>
                     <ErrorMessage error={errors.fullName} />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Email Address <span className="text-red-500">*</span>
-                    </label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Email 
+                  </label>
+                  <div className="relative">
                     <input
                       type="email"
                       name="email"
                       {...register("email", registerOptions.email)}
                       required
-                      className="w-full px-3 py-2 border border-yellow-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
+                      placeholder="Enter your email"
+                      className="w-full px-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-gray-500 placeholder-gray-400"
                     />
-                    <ErrorMessage error={errors.email} />
+                    <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+                      <TfiEmail className="text-pink-500 text-lg"/>
+                    </span>
+                  </div>
+                  <ErrorMessage error={errors.email} />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Phone Number (WhatsApp preferred){" "}
-                      <span className="text-red-500">*</span>
-                    </label>
-                    <input
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Mobile Number
+                  </label>
+                  <div className="relative">
+                      <input
                       type="tel"
                       name="phoneNumber"
                       {...register("phoneNumber", registerOptions.phoneNumber)}
                       required
-                      className="w-full px-3 py-2 border border-yellow-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
+                      placeholder="Enter your Mobile No."
+                      className="w-full px-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-gray-500 placeholder-gray-400"
                     />
-                    <ErrorMessage error={errors.phoneNumber} />
+                    <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+                      <FaPhone className="text-pink-500 text-lg"/>
+                    </span>
                   </div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Location <span className="text-red-500">*</span>
-                  </label>
-                  <div className="  w-full px-3  border border-yellow-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300">
-                    <LocationSelector
-                      selectedStateCode={selectedStateCode}
-                      selectedCity={selectedCity}
-                      setValue={setValue}
-                      errors={errors}
-                    />
+                  <ErrorMessage error={errors.phoneNumber} />
+                  </div>
+                  <div className="flex space-x-4">
+                  <div className="w-1/2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      State
+                    </label>
+                    <select
+                      name="state"
+                      {...register("state")}
+                      required
+                      className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-gray-500"
+                    >
+                      <option value="">Select your State</option>
+                    </select>
+                  </div>
+
+                  <div className="w-1/2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      City
+                    </label>
+                    <select
+                    name="city"
+                      {...register("city")}
+                      required
+                      className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-gray-500"
+                    >
+                      <option value="">Select your city</option>
+                    </select>
+                  </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Your Role <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                      name="role"
-                      {...register("role", registerOptions.role)}
-                      required
-                      className="w-full px-3 py-2 border border-yellow-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
-                    >
-                      <option value="">Select your role</option>
-                      <option value="Event Planner">Event Planner</option>
-                      <option value="Vendor – Photographer">
-                        Vendor – Photographer
-                      </option>
-                      <option value="Vendor – Decorator">
-                        Vendor – Decorator
-                      </option>
-                      <option value="Vendor – Caterer">Vendor – Caterer</option>
-                      <option value="Vendor – Makeup Artist">
-                        Vendor – Makeup Artist
-                      </option>
-                      <option value="Other">Other</option>
-                    </select>
-                    <ErrorMessage error={errors.role} />
-                  </div>
-
-                  {selectedRole === "Other" && (
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Specify Role <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        name="otherRole"
-                        {...register("otherRole", registerOptions.otherRole)}
-                        required
-                        className="w-full px-3 py-2 border border-yellow-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
-                      />
-                      <ErrorMessage error={errors.otherRole} />
-                    </div>
-                  )}
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Your Role
+                  </label>
+                  <select
+                    name="role"
+                    {...register("role", registerOptions.role)}
+                    required
+                    className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-gray-500"
+                  >
+                    <option value="">Select your role</option>
+                    <option value="Event Planner">Event Planner</option>
+                    <option value="Vendor – Photographer">Vendor – Photographer</option>
+                    <option value="Vendor – Decorator">Vendor – Decorator</option>
+                    <option value="Vendor – Caterer">Vendor – Caterer</option>
+                    <option value="Vendor – Makeup Artist">Vendor – Makeup Artist</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <ErrorMessage error={errors.role} />
                 </div>
-              </motion.div>
-            )}
+
+                {selectedRole === "Other" && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Specify Role
+                    </label>
+                    <input
+                      type="text"
+                      name="otherRole"
+                      {...register("otherRole", registerOptions.otherRole)}
+                      required
+                      placeholder="Specify your role"
+                      className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 text-gray-500 placeholder-gray-400"
+                    />
+                    <ErrorMessage error={errors.otherRole} />
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
 
             {currentStep === 2 && (
               <motion.div
@@ -833,7 +910,7 @@ export default function VendorApplicationForm() {
                   onClick={nextStep}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="ml-auto px-4 py-2 bg-gradient-to-r from-pink-500 to-yellow-500 text-white rounded-md hover:from-pink-600 hover:to-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
+                  className="ml-auto px-4 py-2 bg-[#F20574] text-white rounded w-[140px] font-semibold h-[40px]"
                 >
                   Next
                 </motion.button>
@@ -851,6 +928,7 @@ export default function VendorApplicationForm() {
           </form>
         </motion.div>
       </div>
+    </div>
     </div>
   );
 }
