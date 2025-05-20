@@ -6,7 +6,9 @@ import { TfiEmail } from "react-icons/tfi";
 import { IoPerson } from "react-icons/io5";
 import { FaPhone } from "react-icons/fa6";
 
-
+import partnerBgImage from "../../public/partner_bg_image.png";
+import formBackground from "../../public/form_background.png";
+import mainLogo from "../../public/main_logo.png";
 import { toast } from "react-toastify";
 import LocationSelector from "./vendorDashboard/component/LocationSelector";
 
@@ -246,20 +248,20 @@ export default function VendorApplicationForm() {
   return (
     <div className="relative min-h-screen">
       {/* Top Background Div */}
-      <div className="absolute top-0 left-0 w-full h-[40vh] bg-gray-300 z-0"
+      <div className="absolute top-0 left-0 w-full h-[40vh] bg-gray-300 z-10"
       style={{
-          backgroundImage: `url('../../public/partner_bg_image.png')`, // Replace with your top image path
+          backgroundImage: `url(${partnerBgImage})`, // Replace with your top image path
           backgroundSize: "cover",
           backgroundPosition: "top",
-        }}c
+        }}
       />
 
       {/* Bottom Background Div */}
-      <div className="absolute bottom-0 left-0 w-full h-[80vh] bg-yellow-50 z-0" 
+      <div className="absolute bottom-0 left-0 w-full h-[90vh] bg-yellow-50 z-0" 
         style={{
-          backgroundImage: `url('../../public/form_background.png')`, // Replace with your top image path
+          backgroundImage: `url(${formBackground})`, // Replace with your top image path
           backgroundSize: "cover",
-          backgroundPosition: "bottom",
+          backgroundPosition: "top",
         }}
       />
 
@@ -268,7 +270,7 @@ export default function VendorApplicationForm() {
         {/* Logo Div */}
         <div className="w-[120px] h-[120px] rounded-lg flex items-center justify-center mb-2"
           style={{
-          backgroundImage: `url('../../public/main_logo.png')`, // Replace with your top image path
+          backgroundImage: `url(${mainLogo})`, // Replace with your top image path
           backgroundSize: "cover",
           backgroundPosition: "bottom",
         }}
@@ -466,22 +468,50 @@ export default function VendorApplicationForm() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
-                <h2 className="text-xl font-semibold mb-6 text-pink-600 border-b border-yellow-200 pb-2">
-                  🧳 Experience & Background
+              <div className="mb-8">
+                <h1 className="text-3xl font-semibold text-gray-900 mb-6">
+                  Partner Application
+                </h1>
+                <div className="flex items-center">
+                  {[1, 2, 3, 4, 5].map((step) => (
+                    <div key={step} className="flex items-center w-[130px]">
+                      <motion.div
+                        className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-[8px] ${
+                          currentStep >= step ? "bg-[#F20574]" : "bg-gray-300"
+                        }`}
+                        initial={{ scale: 0.8 }}
+                        animate={{ scale: currentStep === step ? 1.1 : 1 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        {step}
+                      </motion.div>
+                      {step < 6 && (
+                        <div
+                          className={`h-1 w-[120px] rounded ${
+                            currentStep >= step ? "bg-pink-500" : "bg-gray-300"
+                          }`}
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+                <h2 className="text-[26px] font-semibold mb-6 text-gray-900">
+                  Experience & Background
                 </h2>
 
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-3">
+                    <label className="block text-md font-semibold text-gray-700 mb-3">
                       How many years of experience do you have?{" "}
-                      <span className="text-red-500">*</span>
+                      <span className="text-gray-700">*</span>
                     </label>
                     <div className="grid grid-cols-2 gap-4">
                       {["0–1 year", "1–3 years", "3–5 years", "5+ years"].map(
                         (option) => (
                           <label
                             key={option}
-                            className="flex items-center p-3 border border-yellow-200 rounded-md cursor-pointer hover:bg-yellow-50"
+                            className="flex items-center p-3 border border-gray-300 rounded-md cursor-pointer"
                           >
                             <input
                               type="radio"
@@ -493,7 +523,7 @@ export default function VendorApplicationForm() {
                               value={option}
                               className="mr-2 text-pink-500 focus:ring-pink-400"
                             />
-                            <span>{option}</span>
+                            <span className="text-gray-700">{option}</span>
                           </label>
                         )
                       )}
@@ -502,15 +532,15 @@ export default function VendorApplicationForm() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-3">
+                    <label className="block text-md font-semibold text-gray-700 mb-3">
                       Have you worked on weddings before?{" "}
-                      <span className="text-red-500">*</span>
+                      <span className="text-gray-700">*</span>
                     </label>
                     <div className="grid grid-cols-2 gap-4">
                       {["Yes", "No"].map((option) => (
                         <label
                           key={option}
-                          className="flex items-center p-3 border border-yellow-200 rounded-md cursor-pointer hover:bg-yellow-50"
+                          className="flex items-center p-3 border border-gray-300 rounded-md cursor-pointer"
                         >
                           <input
                             type="radio"
@@ -522,7 +552,7 @@ export default function VendorApplicationForm() {
                             value={option}
                             className="mr-2 text-pink-500 focus:ring-pink-400"
                           />
-                          <span>{option}</span>
+                          <span className="text-gray-700">{option}</span>
                         </label>
                       ))}
                     </div>
@@ -530,7 +560,7 @@ export default function VendorApplicationForm() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-md font-semibold text-gray-700 mb-1">
                       Share your portfolio or website (if any)
                     </label>
                     <input
@@ -538,7 +568,7 @@ export default function VendorApplicationForm() {
                       name="portfolio"
                       {...register("portfolio", registerOptions.portfolio)}
                       placeholder="https://"
-                      className="w-full px-3 py-2 border border-yellow-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
+                      className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300 text-gray-500 placeholder-gray-400"
                     />
                     <ErrorMessage error={errors.portfolio} />
                   </div>
@@ -552,17 +582,45 @@ export default function VendorApplicationForm() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
-                <h2 className="text-xl font-semibold mb-6 text-pink-600 border-b border-yellow-200 pb-2">
-                  📸 Upload Documents
+                <div className="mb-8">
+                <h1 className="text-3xl font-semibold text-gray-900 mb-6">
+                  Partner Application
+                </h1>
+                <div className="flex items-center">
+                  {[1, 2, 3, 4, 5].map((step) => (
+                    <div key={step} className="flex items-center w-[130px]">
+                      <motion.div
+                        className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-[8px] ${
+                          currentStep >= step ? "bg-[#F20574]" : "bg-gray-300"
+                        }`}
+                        initial={{ scale: 0.8 }}
+                        animate={{ scale: currentStep === step ? 1.1 : 1 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        {step}
+                      </motion.div>
+                      {step < 6 && (
+                        <div
+                          className={`h-1 w-[120px] rounded ${
+                            currentStep >= step ? "bg-pink-500" : "bg-gray-300"
+                          }`}
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+                <h2 className="text-[26px] font-semibold mb-6 text-gray-900 pb-2">
+                  Upload Documents
                 </h2>
 
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-md font-semibold text-gray-700 mb-1">
                       Upload your Government ID (Aadhar, PAN, etc.){" "}
-                      <span className="text-red-500">*</span>
+                      <span className="text-gray-700">*</span>
                     </label>
-                    <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed border-yellow-300 rounded-md">
+                    <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed border-pink-500 rounded-md">
                       <div className="space-y-1 text-center">
                         <svg
                           className="mx-auto h-12 w-12 text-gray-400"
@@ -593,7 +651,7 @@ export default function VendorApplicationForm() {
                               required
                             />
                           </label>
-                          <p className="pl-1">or drag and drop</p>
+                          <p className="pl-1 text-gray-900">or drag and drop</p>
                         </div>
                         <p className="text-xs text-gray-500">
                           PNG, JPG, PDF up to 10MB
@@ -604,10 +662,10 @@ export default function VendorApplicationForm() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-md font-semibold text-gray-700 mb-1">
                       Upload Business Certificate / GST (if available)
                     </label>
-                    <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed border-yellow-300 rounded-md">
+                    <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed border-pink-500 rounded-md">
                       <div className="space-y-1 text-center">
                         <svg
                           className="mx-auto h-12 w-12 text-gray-400"
@@ -634,7 +692,7 @@ export default function VendorApplicationForm() {
                               className="sr-only"
                             />
                           </label>
-                          <p className="pl-1">or drag and drop</p>
+                          <p className="pl-1 text-gray-900">or drag and drop</p>
                         </div>
                         <p className="text-xs text-gray-500">
                           PNG, JPG, PDF up to 10MB
@@ -645,10 +703,10 @@ export default function VendorApplicationForm() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-md font-semibold text-gray-700 mb-1">
                       Upload any past work photos / sample projects
                     </label>
-                    <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed border-yellow-300 rounded-md">
+                    <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed border-pink-500 rounded-md">
                       <div className="space-y-1 text-center">
                         <svg
                           className="mx-auto h-12 w-12 text-gray-400"
@@ -676,7 +734,7 @@ export default function VendorApplicationForm() {
                               className="sr-only"
                             />
                           </label>
-                          <p className="pl-1">or drag and drop</p>
+                          <p className="pl-1 text-gray-900">or drag and drop</p>
                         </div>
                         <p className="text-xs text-gray-500">
                           Multiple PNG, JPG files up to 10MB each
@@ -695,30 +753,58 @@ export default function VendorApplicationForm() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
-                <h2 className="text-xl font-semibold mb-6 text-pink-600 border-b border-yellow-200 pb-2">
+                <div className="mb-8">
+                <h1 className="text-3xl font-semibold text-gray-900 mb-6">
+                  Partner Application
+                </h1>
+                <div className="flex items-center">
+                  {[1, 2, 3, 4, 5].map((step) => (
+                    <div key={step} className="flex items-center w-[130px]">
+                      <motion.div
+                        className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-[8px] ${
+                          currentStep >= step ? "bg-[#F20574]" : "bg-gray-300"
+                        }`}
+                        initial={{ scale: 0.8 }}
+                        animate={{ scale: currentStep === step ? 1.1 : 1 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        {step}
+                      </motion.div>
+                      {step < 6 && (
+                        <div
+                          className={`h-1 w-[120px] rounded ${
+                            currentStep >= step ? "bg-pink-500" : "bg-gray-300"
+                          }`}
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+                <h2 className="text-[26px] font-semibold mb-6 text-gray-900 pb-2">
                   💬 Additional Info
                 </h2>
 
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-md font-semibold text-gray-700 mb-1">
                       Why do you want to partner with MarriageVendors.com?{" "}
-                      <span className="text-red-500">*</span>
+                      <span className="text-gray-700">*</span>
                     </label>
                     <textarea
                       name="whyPartner"
                       {...register("whyPartner", registerOptions.whyPartner)}
                       rows="4"
                       required
-                      className="w-full px-3 py-2 border border-yellow-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
+                      className="w-full px-3 py-2 border-2 border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
                     ></textarea>
                     <ErrorMessage error={errors.whyPartner} />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-3">
+                    <label className="block text-md font-semibold text-gray-700 mb-3">
                       Preferred working model{" "}
-                      <span className="text-red-500">*</span>
+                      <span className="text-gray-700">*</span>
                     </label>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       {[
@@ -728,7 +814,7 @@ export default function VendorApplicationForm() {
                       ].map((option) => (
                         <label
                           key={option}
-                          className="flex items-center p-3 border border-yellow-200 rounded-md cursor-pointer hover:bg-yellow-50"
+                          className="flex items-center p-3 border-2 border-gray-200 rounded-md cursor-pointer hover:bg-yellow-50 h-[55px] w-[210px]"
                         >
                           <input
                             type="radio"
@@ -738,7 +824,7 @@ export default function VendorApplicationForm() {
                               registerOptions.workingModel
                             )}
                             value={option}
-                            className="mr-2 text-pink-500 focus:ring-pink-400"
+                            className="mr-2 text-pink-500 focus:ring-pink-400 bg-gray-200 w-3 h-3"
                           />
                           <span className="text-sm">{option}</span>
                         </label>
@@ -748,15 +834,15 @@ export default function VendorApplicationForm() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-3">
-                      Availability <span className="text-red-500">*</span>
+                    <label className="block text-md font-semibold text-gray-700 mb-3">
+                      Availability <span className="text-gray-700">*</span>
                     </label>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       {["Full Time", "Part Time", "Project Based"].map(
                         (option) => (
                           <label
                             key={option}
-                            className="flex items-center p-3 border border-yellow-200 rounded-md cursor-pointer hover:bg-yellow-50"
+                            className="flex items-center p-3 border-2 border-gray-200 rounded-md cursor-pointer hover:bg-yellow-50 w-[210px]"
                           >
                             <input
                               type="radio"
@@ -766,9 +852,9 @@ export default function VendorApplicationForm() {
                                 registerOptions.availability
                               )}
                               value={option}
-                              className="mr-2 text-pink-500 focus:ring-pink-400"
+                              className="mr-2 text-pink-500 focus:ring-pink-400 bg-gray-200 w-3 h-3"
                             />
-                            <span>{option}</span>
+                            <span className="text-sm">{option}</span>
                           </label>
                         )
                       )}
@@ -891,16 +977,16 @@ export default function VendorApplicationForm() {
               </motion.div>
             )}
 
-            <div className="mt-8 flex justify-between">
+            <div className="mt-8 flex">
               {currentStep > 1 && (
                 <motion.button
                   type="button"
                   onClick={prevStep}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-4 py-2 border border-pink-300 text-pink-600 rounded-md hover:bg-pink-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
+                  className="px-11 py-1 border bg-gray-200 rounded font-semibold text-gray-500 ms-[55%]"
                 >
-                  Previous
+                  Back
                 </motion.button>
               )}
 
