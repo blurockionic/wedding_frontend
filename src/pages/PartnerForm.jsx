@@ -753,7 +753,7 @@ export default function VendorApplicationForm() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
-                <div className="mb-8">
+              <div className="mb-8">
                 <h1 className="text-3xl font-semibold text-gray-900 mb-6">
                   Partner Application
                 </h1>
@@ -871,7 +871,35 @@ export default function VendorApplicationForm() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
-                <h2 className="text-xl font-semibold mb-6 text-pink-600 border-b border-yellow-200 pb-2">
+              <div className="mb-8">
+                <h1 className="text-3xl font-semibold text-gray-900 mb-6">
+                  Partner Application
+                </h1>
+                <div className="flex items-center">
+                  {[1, 2, 3, 4, 5].map((step) => (
+                    <div key={step} className="flex items-center w-[130px]">
+                      <motion.div
+                        className={`w-4 h-4 rounded-full flex items-center justify-center text-white text-[8px] ${
+                          currentStep >= step ? "bg-[#F20574]" : "bg-gray-300"
+                        }`}
+                        initial={{ scale: 0.8 }}
+                        animate={{ scale: currentStep === step ? 1.1 : 1 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        {step}
+                      </motion.div>
+                      {step < 6 && (
+                        <div
+                          className={`h-1 w-[120px] rounded ${
+                            currentStep >= step ? "bg-pink-500" : "bg-gray-300"
+                          }`}
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+                <h2 className="text-[26px] font-semibold mb-6 text-gray-900 pb-2">
                   ✅ Declarations & Agreement
                 </h2>
 
@@ -884,7 +912,7 @@ export default function VendorApplicationForm() {
                         type="checkbox"
                         {...register("noLeadLeakage")}
                         required
-                        className="focus:ring-pink-500 h-4 w-4 text-pink-600 border-gray-300 rounded"
+                        className="focus:ring-pink-500 h-4 w-4 text-pink-600 border-gray-300 rounded-sm bg-gray-200"
                       />
                     </div>
                     <div className="ml-3 text-sm">
@@ -906,7 +934,7 @@ export default function VendorApplicationForm() {
                         type="checkbox"
                         {...register("platformDeals")}
                         required
-                        className="focus:ring-pink-500 h-4 w-4 text-pink-600 border-gray-300 rounded"
+                        className="focus:ring-pink-500 h-4 w-4 text-pink-600 border-gray-300 rounded-sm bg-gray-200"
                       />
                     </div>
                     <div className="ml-3 text-sm">
@@ -928,7 +956,7 @@ export default function VendorApplicationForm() {
                         type="checkbox"
                         {...register("ndaAgreement")}
                         required
-                        className="focus:ring-pink-500 h-4 w-4 text-pink-600 border-gray-300 rounded"
+                        className="focus:ring-pink-500 h-4 w-4 text-pink-600 border-gray-300 rounded-sm bg-gray-200"
                       />
                     </div>
                     <div className="ml-3 text-sm">
@@ -940,8 +968,8 @@ export default function VendorApplicationForm() {
                       </label>
                     </div>
                   </div>
-
-                  <div className="mt-6 bg-yellow-50 p-4 rounded-md">
+                  <div className="w-full h-full flex justify-center items-center">
+                    <div className="mt-6 bg-[#FAE5CA] p-4 rounded-md w-10/12">
                     <div className="flex">
                       <div className="flex-shrink-0">
                         <svg
@@ -959,10 +987,10 @@ export default function VendorApplicationForm() {
                         </svg>
                       </div>
                       <div className="ml-3">
-                        <h3 className="text-sm font-medium text-yellow-800">
+                        <h3 className="text-md font-semibold text-yellow-800">
                           Important Notice
                         </h3>
-                        <div className="mt-2 text-sm text-yellow-700">
+                        <div className="mt-2 text-xs text-yellow-700">
                           <p>
                             By submitting this application, you confirm that all
                             information provided is accurate and complete. Our
@@ -971,6 +999,7 @@ export default function VendorApplicationForm() {
                           </p>
                         </div>
                       </div>
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -984,7 +1013,7 @@ export default function VendorApplicationForm() {
                   onClick={prevStep}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-11 py-1 border bg-gray-200 rounded font-semibold text-gray-500 ms-[55%]"
+                  className="px-8 h-9 border bg-gray-200 rounded font-semibold text-gray-500 ms-[55%]"
                 >
                   Back
                 </motion.button>
@@ -1005,7 +1034,7 @@ export default function VendorApplicationForm() {
                   type="submit"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="ml-auto px-6 py-2 bg-gradient-to-r from-pink-500 to-yellow-500 text-white font-medium rounded-md hover:from-pink-600 hover:to-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
+                  className="ml-auto px-4 h-9 bg-[#F20574] text-white font-medium rounded-md hover:from-pink-600 hover:to-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
                 >
                   Submit Application
                 </motion.button>
