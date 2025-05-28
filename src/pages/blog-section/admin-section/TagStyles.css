@@ -1,0 +1,145 @@
+/* TagStyles.css */
+.tag-badge {
+  transition: all 0.3s ease;
+}
+
+.tag-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tag-list-enter {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.tag-list-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.tag-list-exit {
+  opacity: 1;
+}
+
+.tag-list-exit-active {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.tag-usage-bar {
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+  width: 100%;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.tag-usage-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #f291c7 0%, #f20574 100%);
+  border-radius: 4px;
+  transition: width 0.5s ease-out;
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.tag-filter-active {
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(242, 5, 116, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(242, 5, 116, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(242, 5, 116, 0);
+  }
+}
+
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 10px;
+}
+
+.tag-cloud-tag {
+  margin: 8px;
+  padding: 6px 12px;
+  background-color: #f3f4f6;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.tag-cloud-tag:hover {
+  background-color: #e0e7ff;
+  transform: scale(1.05);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .tag-cloud {
+    padding: 5px;
+  }
+  
+  .tag-cloud-tag {
+    margin: 4px;
+    padding: 4px 8px;
+    font-size: 0.8rem !important;
+  }
+  
+  .tag-usage-bar {
+    height: 6px;
+    max-width: 100px;
+  }
+  
+  .tag-badge {
+    font-size: 0.65rem;
+    padding: 0.1rem 0.5rem;
+  }
+}
+
+/* Small mobile responsiveness */
+@media (max-width: 480px) {
+  .tag-cloud {
+    padding: 3px;
+  }
+  
+  .tag-cloud-tag {
+    margin: 3px;
+    padding: 3px 6px;
+    font-size: 0.7rem !important;
+  }
+  
+  .tag-usage-bar {
+    height: 5px;
+    max-width: 80px;
+  }
+  
+  .tag-badge {
+    font-size: 0.6rem;
+    padding: 0.05rem 0.4rem;
+  }
+}

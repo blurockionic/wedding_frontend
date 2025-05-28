@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Footer from "../../Footer";
 import { FiPlus, FiTrash2, FiEdit, FiSearch, FiBarChart, FiUsers, FiSettings, FiHome, FiFolder, FiCalendar, FiEye, FiShare2, FiChevronLeft, FiChevronRight, FiTag, FiFilter } from 'react-icons/fi';
-import { useGetTotalViewCountQuery, useGetBlogCountQuery, useGetBlogsQuery, useDeleteBlogMutation } from '../../../redux/blogSlice';
+import { useGetTotalViewCountQuery, useGetBlogCountQuery, useGetBlogsQuery, useDeleteBlogMutation, useGetAllTagsQuery } from '../../../redux/blogSlice';
+import EnhancedTagsManager from './EnhancedTagsManager';
 
 function BlogDashboard() {
   const navigate = useNavigate();
@@ -58,7 +59,6 @@ function BlogDashboard() {
 
   // Sample blog post data
   const [blogPosts, setBlogPosts] = useState([]);
-
   // Update total items count when data changes
   useEffect(() => {
     if (allBlogsData && allBlogsData.success) {
@@ -73,7 +73,8 @@ function BlogDashboard() {
         views: blog.viewCount || 0,
         comments: blog._count?.comments || 0,
         likes: blog._count?.likedBy || 0,
-        author: 'admin' // Replace with actual user
+        author: 'admin', // Replace with actual user
+        tags: blog.tags || [] // Include tags
       })));
       
       // Extract and deduplicate tags
@@ -268,56 +269,89 @@ function BlogDashboard() {
       </div>
     );
   };
-
   const TagsSection = () => {
+    const { data: tagsData, isLoading: tagsLoading } = useGetAllTagsQuery();
+    
     return (
-      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 mb-8">
+      <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mb-8">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-xl font-semibold text-gray-800">Tags</h3>
+          <h3 className="text-xl font-semibold text-gray-800">Filter by Tags</h3>
           <button 
             onClick={() => setShowTagsSection(!showTagsSection)}
-            className="text-sm text-indigo-600 hover:text-indigo-800"
+            className="text-sm text-indigo-600 hover:text-indigo-800 flex items-center"
           >
             {showTagsSection ? 'Hide Tags' : 'Show Tags'}
+            <span className="ml-1">{showTagsSection ? '▲' : '▼'}</span>
           </button>
         </div>
         
         {showTagsSection && (
           <div className="mt-2">
-            <div className="flex flex-wrap gap-2 mb-4">
-              {tagsList.map(tag => (
-                <button
-                  key={tag.id}
-                  onClick={() => handleTagClick(tag.tagName)}
-                  className={`inline-flex items-center px-3 py-1 rounded-full text-sm transition-colors ${
-                    selectedTag === tag.tagName
-                      ? 'bg-indigo-600 text-white'
-                      : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100'
-                  }`}
-                >
-                  <FiTag className="mr-1" />
-                  {tag.tagName}
-                </button>
-              ))}
-              
-              {tagsList.length === 0 && (
+            {tagsLoading ? (
+              <div className="py-4 flex justify-center">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-600"></div>
+              </div>
+            ) : tagsList.length > 0 ? (
+              <>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {tagsList.map(tag => (
+                    <button
+                      key={tag.id}
+                      onClick={() => handleTagClick(tag.tagName)}
+                      className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm transition-colors ${
+                        selectedTag === tag.tagName
+                          ? 'bg-indigo-600 text-white shadow-md'
+                          : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100'
+                      }`}
+                    >
+                      <FiTag className="mr-1" />
+                      {tag.tagName}
+                      {selectedTag === tag.tagName && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedTag('');
+                          }}
+                          className="ml-2 hover:text-gray-100"
+                        >
+                          ×
+                        </button>
+                      )}
+                    </button>
+                  ))}
+                </div>
+                
+                {selectedTag && (
+                  <div className="flex items-center mt-2 p-2 bg-gray-50 rounded-md">
+                    <span className="text-sm text-gray-600 mr-2">Active filter:</span>
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-indigo-600 text-white">
+                      <FiTag className="mr-1" />
+                      {selectedTag}
+                      <button
+                        onClick={() => setSelectedTag('')}
+                        className="ml-1 hover:text-gray-100"
+                      >
+                        ×
+                      </button>
+                    </span>
+                    {/* Show count of filtered posts */}
+                    {!allBlogsLoading && (
+                      <span className="ml-2 text-sm text-gray-600">
+                        ({blogPosts.length} {blogPosts.length === 1 ? 'post' : 'posts'})
+                      </span>
+                    )}
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="text-center py-4">
                 <p className="text-gray-500 text-sm">No tags found</p>
-              )}
-            </div>
-            
-            {selectedTag && (
-              <div className="flex items-center mt-2">
-                <span className="text-sm text-gray-600 mr-2">Active filter:</span>
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-indigo-600 text-white">
-                  <FiTag className="mr-1" />
-                  {selectedTag}
-                  <button
-                    onClick={() => setSelectedTag('')}
-                    className="ml-1 hover:text-gray-100"
-                  >
-                    ×
-                  </button>
-                </span>
+                <button
+                  onClick={() => setActiveTab('tags')}
+                  className="mt-2 text-indigo-600 hover:text-indigo-800 text-sm"
+                >
+                  Create your first tag
+                </button>
               </div>
             )}
           </div>
@@ -473,12 +507,11 @@ function BlogDashboard() {
               <TagsSection />
               
               {/* Filters, Sorting, and Search Bar */}
-              <div className="flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0">
-                <div className="flex items-center space-x-4">
+              <div className="flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0">                <div className="flex items-center space-x-4">
                   <select
                     value={statusFilter}
                     onChange={handleStatusFilterChange}
-                    className="p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                    className="p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
                   >
                     <option value="All">All Statuses</option>
                     <option value="PUBLISHED">Published</option>
@@ -488,11 +521,24 @@ function BlogDashboard() {
                   {(selectedTag || statusFilter !== 'All' || searchTerm) && (
                     <button
                       onClick={handleResetFilters}
-                      className="px-3 py-1.5 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 flex items-center"
+                      className="px-3 py-1.5 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 flex items-center transition-colors duration-200"
                     >
                       <FiFilter className="mr-1" />
                       Reset Filters
                     </button>
+                  )}
+                  
+                  {selectedTag && (
+                    <div className="tag-filter-active inline-flex items-center px-3 py-1 rounded-md text-sm bg-indigo-50 text-indigo-700 border border-indigo-200">
+                      <FiTag className="mr-1" />
+                      Filtered by: <span className="font-medium ml-1">{selectedTag}</span>
+                      <button
+                        onClick={() => setSelectedTag('')}
+                        className="ml-2 hover:text-indigo-900"
+                      >
+                        ×
+                      </button>
+                    </div>
                   )}
                 </div>
                 <div className="flex items-center space-x-4">
@@ -543,8 +589,7 @@ function BlogDashboard() {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {blogPosts.map(post => (
-                      <div key={post.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                    {blogPosts.map(post => (                      <div key={post.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200">
                         <div>
                           <h4 
                             onClick={() => handleViewBlog(post)}
@@ -552,25 +597,50 @@ function BlogDashboard() {
                           >
                             {post.title}
                           </h4>
-                          <p className="text-sm text-gray-600">{post.status}</p>
-                          <p className="text-sm text-gray-600">Views: {post.views} • Comments: {post.comments || 0}</p>
+                          <div className="flex items-center space-x-2 mb-1">
+                            <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
+                              post.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'
+                            }`}>
+                              {post.status}
+                            </span>
+                            <span className="text-sm text-gray-600">Views: {post.views} • Comments: {post.comments || 0}</span>
+                          </div>
+                          
+                          {/* Show tags if available */}
+                          {post.tags && post.tags.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mt-1">
+                              {post.tags.map(tag => (
+                                <span 
+                                  key={tag.id}
+                                  onClick={() => handleTagClick(tag.tagName)}
+                                  className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 cursor-pointer hover:bg-indigo-100 tag-badge"
+                                >
+                                  <FiTag className="mr-1" size={10} />
+                                  {tag.tagName}
+                                </span>
+                              ))}
+                            </div>
+                          )}
                         </div>
                         <div className="flex items-center space-x-4">
                           <button
                             onClick={() => handleEditClick(post)}
-                            className="text-indigo-600 hover:text-indigo-800"
+                            className="text-indigo-600 hover:text-indigo-800 transition-colors duration-200"
+                            title="Edit post"
                           >
                             <FiEdit className="h-5 w-5" />
                           </button>
                           <button
                             onClick={() => handleDeleteClick(post.id)}
-                            className="text-red-600 hover:text-red-800"
+                            className="text-red-600 hover:text-red-800 transition-colors duration-200"
+                            title="Delete post"
                           >
                             <FiTrash2 className="h-5 w-5" />
                           </button>
                           <button
                             onClick={() => handleShareClick(post)}
-                            className="text-blue-600 hover:text-blue-800"
+                            className="text-blue-600 hover:text-blue-800 transition-colors duration-200"
+                            title="Share post"
                           >
                             <FiShare2 className="h-5 w-5" />
                           </button>
@@ -585,106 +655,9 @@ function BlogDashboard() {
               {!allBlogsLoading && blogPosts.length > 0 && (
                 <EnhancedPagination />
               )}
-            </div>
-          )}
-          
-          {activeTab === 'tags' && (
-            <div className="space-y-8">
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                <h2 className="text-2xl font-semibold text-gray-800 mb-6">Manage Tags</h2>
-                
-                <div className="mb-6">
-                  <h3 className="font-medium text-gray-700 mb-2">All Tags</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {tagsList.length > 0 ? (
-                      tagsList.map(tag => (
-                        <div 
-                          key={tag.id} 
-                          className="inline-flex items-center px-3 py-2 bg-gray-100 rounded-md text-sm"
-                        >
-                          <FiTag className="mr-2 text-indigo-500" />
-                          <span>{tag.tagName}</span>
-                          <button 
-                            onClick={() => handleTagClick(tag.tagName)}
-                            className="ml-2 hover:text-indigo-600"
-                          >
-                            View Posts
-                          </button>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-gray-500">No tags found. Tags will appear when you add them to blog posts.</p>
-                    )}
-                  </div>
-                </div>
-                
-                <div>
-                  <h3 className="font-medium text-gray-700 mb-2">Tag Usage</h3>
-                  <div className="max-h-96 overflow-y-auto border rounded-md">
-                    <table className="min-w-full divide-y divide-gray-200">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Tag
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Usage Count
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Actions
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
-                        {tagsList.map(tag => {
-                          // Count how many blogs use this tag
-                          const usageCount = allBlogsData?.data?.filter(blog => 
-                            blog.tags.some(t => t.id === tag.id)
-                          ).length || 0;
-                          
-                          return (
-                            <tr key={tag.id}>
-                              <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="flex items-center">
-                                  <FiTag className="mr-2 text-indigo-500" />
-                                  <div className="text-sm font-medium text-gray-900">
-                                    {tag.tagName}
-                                  </div>
-                                </div>
-                              </td>
-                              <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="text-sm text-gray-500">
-                                  {usageCount} {usageCount === 1 ? 'post' : 'posts'}
-                                </div>
-                              </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                <button
-                                  onClick={() => {
-                                    setSelectedTag(tag.tagName);
-                                    setActiveTab('posts');
-                                  }}
-                                  className="text-indigo-600 hover:text-indigo-900 mr-3"
-                                >
-                                  View Posts
-                                </button>
-                              </td>
-                            </tr>
-                          );
-                        })}
-                        
-                        {tagsList.length === 0 && (
-                          <tr>
-                            <td colSpan="3" className="px-6 py-4 text-center text-sm text-gray-500">
-                              No tags available
-                            </td>
-                          </tr>
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
+            </div>          )}
+            {activeTab === 'tags' && (
+            <EnhancedTagsManager />
           )}
         </main>
       </div>
