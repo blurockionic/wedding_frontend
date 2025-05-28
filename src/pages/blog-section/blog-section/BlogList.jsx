@@ -14,13 +14,18 @@ const BlogList = () => {
   const blogTagName = query.get('tag');
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const [blogsPerPage] = useState(8); // Number of blogs per page
+  const [blogsPerPage, setBlogsPerPage] = useState(10); // Number of blogs per page
 
   console.log("Blog Tag Name:", blogTagName);
-  const { data, error, isLoading } = blogTagName ? useGetBlogsByTagQuery( blogTagName ) : useGetBlogsQuery();
+  const { data, error, isLoading, refetch } = blogTagName ? useGetBlogsByTagQuery( blogTagName ) : useGetBlogsQuery({s:(currentPage - 1)*8, t:blogsPerPage});
   console.log("Blogs Data:", data);
   const [blogs, setBlogs] = useState([]);
   const [activeCategory, setActiveCategory] = useState('All');
+
+  // Refetch blogs on page change (pagination)
+  useEffect(() => {
+    refetch();
+  }, [currentPage, refetch]);
 
   useEffect(() => {
     if (data && data.success) {
@@ -60,10 +65,7 @@ const BlogList = () => {
   const sortedBlogs = filteredBlogs.sort((a, b) => new Date(b.date) - new Date(a.date));
   
   // Get current blogs for pagination
-  const indexOfLastBlog = currentPage * blogsPerPage;
-  const indexOfFirstBlog = indexOfLastBlog - blogsPerPage;
-  const currentBlogs = sortedBlogs.slice(indexOfFirstBlog, indexOfLastBlog);
-  console.log("Current Blogs: ",currentBlogs);
+  const currentBlogs = sortedBlogs.slice();
 
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -354,7 +356,7 @@ const BlogList = () => {
               Previous
             </button>
             
-            {Array.from({ length: Math.ceil(sortedBlogs.length / blogsPerPage) }).map((_, index) => (
+            {Array.from({ length: Math.ceil(data.totalCount / blogsPerPage) }).map((_, index) => (
               <button
                 key={index}
                 onClick={() => paginate(index + 1)}
@@ -369,10 +371,10 @@ const BlogList = () => {
             ))}
             
             <button
-              onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(sortedBlogs.length / blogsPerPage)))}
-              disabled={currentPage === Math.ceil(sortedBlogs.length / blogsPerPage)}
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(data.totalCount / blogsPerPage)))}
+              disabled={currentPage === Math.ceil(data.totalCount / blogsPerPage)}
               className={`relative inline-flex items-center px-4 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium ${
-                currentPage === Math.ceil(sortedBlogs.length / blogsPerPage) 
+                currentPage === Math.ceil(data.totalCount / blogsPerPage) 
                   ? 'text-gray-300 cursor-not-allowed' 
                   : 'text-gray-700 hover:bg-gray-50'
               }`}
