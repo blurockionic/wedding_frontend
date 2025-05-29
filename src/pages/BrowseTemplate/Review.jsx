@@ -53,7 +53,7 @@ function Review() {
     categoryByAmount: "",
     categoryByRequirement: "",
     page: 1,
-    limit: 50,
+    limit: 100,
   });
 
   const { data, error, isLoading } = useGetAllTemplatesQuery(filters);
