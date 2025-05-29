@@ -56,6 +56,14 @@ const BlogList = () => {
     }
   }, [data]);
 
+  // Smooth scroll to top on page change
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'auto'
+    });
+  }, [currentPage]);
+
   const filteredBlogs = activeCategory === 'All'
     ? blogs
     : blogs.filter(blog =>
