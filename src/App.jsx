@@ -21,8 +21,11 @@ import { motionlogo } from "./static/static.js";
 import SplashScreen from "./pages/SplashScreen/SplashScreen.jsx";
 import VendorBussinessProfile from "./pages/vendorDashboard/VendorBussinessProfile.jsx";
 import PartnershipProgram from "./pages/PartnerShip.jsx";
-import PartnerDashboard from "./pages/partner/DashBoard.jsx";
+
 import VendorApplicationForm from "./pages/PartnerForm.jsx";
+import PartnerAdminDashboard from "./pages/admin/Partner.jsx";
+import Partnerdetail from "./pages/admin/Partnerdetail.jsx";
+import LeadListInPartnerDashBoard from "./pages/partner/LeadListInPartnerDashBoard.jsx";
 
 const Billing = lazy(() => import("./pages/vendorDashboard/Billing.jsx"));
 
@@ -81,6 +84,9 @@ const FavoriteListPage = lazy(() =>
 );
 const InvitationTemplateInUserDashBord = lazy(() =>
   import("./pages/userDashboard/InvitationTemplateInUserDashBord.jsx")
+);
+const CityManagerPage = lazy(() =>
+  import("./pages/userDashboard/CityManagerPage.jsx")
 );
 const VendorProfile = lazy(() =>
   import("./pages/vendorDashboard/VendorProfile.jsx")
@@ -165,7 +171,7 @@ const router = createBrowserRouter([
       { path: "/new-blog-post", element: wrapWithSuspense(NewBlogPost) },
       { path: "/blogs", element: wrapWithSuspense(BlogList) },
       { path: "/blogs/:urlTitle", element: wrapWithSuspense(Blog) },
-      {path: "/partnerform" , element: wrapWithSuspense(VendorApplicationForm)},
+
       {
         path: "/update-blog-post/:urlTitle",
         element: wrapWithSuspense(UpdateBlogPost),
@@ -173,6 +179,8 @@ const router = createBrowserRouter([
       // { path: "/", element: wrapWithSuspense(Blog)},
 
       { path: "/", element: wrapWithSuspense(LandingPage) },
+
+     
       {
         path: "/admin",
         element: (
@@ -207,6 +215,11 @@ const router = createBrowserRouter([
           // { path: "favoriteList", element: wrapWithSuspense(FavoriteListPage) },
           // { path: "checklist", element: wrapWithSuspense(Checklist) },
           // { path: "weddingbudget", element: wrapWithSuspense(WeddingBudgetCalculator)}
+          {
+            path: "partnerAdminDashboard",
+            element: wrapWithSuspense(PartnerAdminDashboard),
+          },
+          { path: "partnerDetail", element: wrapWithSuspense(Partnerdetail) },
         ],
       },
       { path: "/signup", element: wrapWithSuspense(Signup) },
@@ -307,6 +320,10 @@ const router = createBrowserRouter([
             path: "invitationCards",
             element: wrapWithSuspense(InvitationTemplateInUserDashBord),
           },
+          {
+            path: "cityManager",
+            element: wrapWithSuspense(CityManagerPage),
+          },
         ],
       },
 
@@ -343,6 +360,7 @@ const router = createBrowserRouter([
       },
 
       { path: "*", element: wrapWithSuspense(FullErrorPage) },
+
       {
         path: "partnership",
         children: [
@@ -350,10 +368,9 @@ const router = createBrowserRouter([
             path: "",
             element: wrapWithSuspense(PartnershipProgram),
           },
-          {
-            path: "dashboard",
-            element: wrapWithSuspense(PartnerDashboard),
-          },
+          {path: "dashboard", index: true, element: wrapWithSuspense(LeadListInPartnerDashBoard)},
+          
+          { path: "form", element: wrapWithSuspense(VendorApplicationForm) },
         ],
       },
     ],
@@ -371,45 +388,6 @@ function App() {
       localStorage.setItem("hasVisited", "true");
     }
   }, []);
-
-  function App() {
-    const [showSplash, setShowSplash] = useState(true);
-
-    useEffect(() => {
-      const hasVisited = localStorage.getItem("hasVisited");
-      if (hasVisited) {
-        setShowSplash(false);
-      } else {
-        localStorage.setItem("hasVisited", "true");
-      }
-
-      const handleChunkError = (event) => {
-        window.location.reload();
-      };
-
-      // Add Vite chunk error handler
-      window.addEventListener("vite:preloadError", handleChunkError);
-
-      return () => {
-        window.removeEventListener("vite:preloadError", handleChunkError);
-      };
-    }, []);
-
-    return (
-      <HelmetProvider>
-        <ErrorBoundary>
-          {showSplash ? (
-            <SplashScreen onFinish={() => setShowSplash(false)} />
-          ) : (
-            <>
-              <RouterProvider router={router} />
-              <ToastContainer />
-            </>
-          )}
-        </ErrorBoundary>
-      </HelmetProvider>
-    );
-  }
 
   return (
     <>

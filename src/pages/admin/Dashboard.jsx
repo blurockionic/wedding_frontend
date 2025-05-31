@@ -5,6 +5,7 @@ import { userlogout } from "../../redux/authSlice";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 
+
 const AdminDashBoard = () => {
   const navigate = useNavigate();
   const [logout] = useLogoutMutation();
@@ -21,6 +22,7 @@ const AdminDashBoard = () => {
     { name: "Bill & transactions", path: "transactions" },
     { name: "Reports", path: "" },
     { name: "Blog", path: "../blog_dashboard" },
+    {name: "Partners", path: "partnerAdminDashboard" },
   ];
 
   if (userRole === "super_admin") {
@@ -48,46 +50,41 @@ const AdminDashBoard = () => {
   };
 
   return (
-    <div className=" h-screen ">
-    <div className=" mx-auto flex flex-col lg:flex-row gap-8 px-4  py-6">
-      {/* Sidebar */}
-      <div className="w-full lg:w-1/6 shadow-lg rounded-lg p-6 border border-pink-200 bg-white">
-        <h2 className="text-[2vw] text-pink-600 mb-6 text-center lg:text-left">
-          Admin Dashboard
-        </h2>
-        <ul className="space-y-4">
-          {navItems.map((item, index) => (
-            <li key={index}>
-              <NavLink
-                to={item.path}
-                className={({ isActive }) =>
-                  // Ensure active styling matches only for the exact path
-                  isActive && location.pathname === item.path
-                    ? "text-pink-500 font-semibold block rounded-md py-2 px-4 bg-pink-100"
-                    : "text-pink-700 font-semibold block rounded-md py-2 px-4 hover:text-pink-500 hover:bg-pink-50"
-                }
-                end // Ensure exact match for root path "/"
-              >
-                {item.name}
-              </NavLink>
-            </li>
-          ))}
-        </ul>
-        <button
-          onClick={() => handleLogout()}
-          className="w-full mt-4 px-4 py-3 text-muted text-sm bg-primary rounded-md hover:bg-pink-600 focus:outline-none z-50"
-        >
-          Logout
-        </button>
-        </div>
-
-        {/* Outlet for rendering child components */}
-        <div className="w-full lg:w-5/6 shadow-lg rounded-lg p-8 bg-white border border-pink-200">
-          <Outlet />
-        </div>
-      </div>
-      </div>
-  );
+    <div className="flex h-screen overflow-hidden">
+    {/* Sidebar */}
+    <div className="w-1/5 bg-white border-r border-pink-200 p-6 overflow-y-auto sticky top-0 h-screen">
+      <h2 className="text-[1.5vw] text-pink-600 mb-6">Admin Dashboard</h2>
+      <ul className="space-y-4">
+        {navItems.map((item, index) => (
+          <li key={index}>
+            <NavLink
+              to={item.path}
+              className={({ isActive }) =>
+                isActive && location.pathname === item.path
+                  ? "text-pink-500 font-semibold block rounded-md py-2 px-4 bg-pink-100"
+                  : "text-pink-700 font-semibold block rounded-md py-2 px-4 hover:text-pink-500 hover:bg-pink-50"
+              }
+              end
+            >
+              {item.name}
+            </NavLink>
+          </li>
+        ))}
+      </ul>
+      <button
+        onClick={handleLogout}
+        className="w-full mt-6 px-4 py-3 text-white bg-pink-500 rounded-md hover:bg-pink-600"
+      >
+        Logout
+      </button>
+    </div>
+  
+    {/* Content */}
+    <div className="w-4/5 overflow-y-auto p-8">
+      <Outlet />
+    </div>
+  </div>
+  );  
    
 }
 

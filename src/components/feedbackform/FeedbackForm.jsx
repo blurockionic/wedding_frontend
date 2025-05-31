@@ -3,10 +3,13 @@ import { useForm } from "react-hook-form";
 import { useCreateFeedbackMutation } from "../../redux/serviceSlice";
 import { toast } from "react-toastify";
 import { Loader2 } from "lucide-react";
+import { useSelector } from "react-redux";
 
 const FeedbackForm = ({ serviceId }) => {
   const [createFeedback, { isLoading }] = useCreateFeedbackMutation();
   const [rating, setRating] = useState(0);
+  const [shake, setShake] = useState(false); // New state for shake animation
+  const userData = useSelector((state) => state.auth.user);
 
   const {
     register,
@@ -16,8 +19,16 @@ const FeedbackForm = ({ serviceId }) => {
   } = useForm();
 
   const onSubmit = async (data) => {
+   
+
     if (!rating) {
       toast.error("Please select a rating");
+      setShake(true);
+      setTimeout(() => setShake(false), 500); // remove shake class after animation
+      return;
+    }
+     if (!userData) {
+      toast.error("Please login to submit feedback");
       return;
     }
 
@@ -41,6 +52,7 @@ const FeedbackForm = ({ serviceId }) => {
     setRating(value);
   };
 
+
   return (
     <div className="w-full md:w-1/2 p-4 rounded-lg shadow-md mt-5 border border-ring">
       <h2 className="text-2xl font-bold mb-4 text-center">Feedback</h2>
@@ -48,7 +60,11 @@ const FeedbackForm = ({ serviceId }) => {
         {/* Star Rating */}
         <div>
           <label className="block text-sm font-medium mb-1">Rating</label>
-          <div className="flex space-x-1">
+          <div
+            className={`flex space-x-1 p-1 rounded-md transition-all ${
+              !rating && shake ? "border border-red-500 shake" : ""
+            }`}
+          >
             {[1, 2, 3, 4, 5].map((star) => (
               <svg
                 key={star}
@@ -68,7 +84,9 @@ const FeedbackForm = ({ serviceId }) => {
               </svg>
             ))}
           </div>
-          {!rating && <p className="text-red-500 text-sm mt-1">Please select a rating</p>}
+          {!rating && (
+            <p className="text-red-500 text-sm mt-1">Please select a rating</p>
+          )}
         </div>
 
         {/* Feedback Field */}
@@ -82,7 +100,9 @@ const FeedbackForm = ({ serviceId }) => {
             rows="4"
             className="w-full px-3 py-2 border border-input rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-pink-200"
           ></textarea>
-          {errors.comment && <p className="text-red-500 text-sm mt-1">{errors.comment.message}</p>}
+          {errors.comment && (
+            <p className="text-red-500 text-sm mt-1">{errors.comment.message}</p>
+          )}
         </div>
 
         {/* Submit Button */}
@@ -90,9 +110,9 @@ const FeedbackForm = ({ serviceId }) => {
           <button
             type="submit"
             className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-pink-600 focus:outline-none focus:ring focus:ring-blue-200"
-            disabled={isLoading || !rating}
+            disabled={isLoading}
           >
-            {isLoading ? <Loader2 className="animate-spin"/> : "Submit Feedback"}
+            {isLoading ? <Loader2 className="animate-spin" /> : "Submit Feedback"}
           </button>
         </div>
       </form>
