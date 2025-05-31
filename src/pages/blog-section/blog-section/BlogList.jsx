@@ -35,7 +35,7 @@ const BlogList = () => {
     }
     else {
       setBlogsPerPage(blogsPerPageNormal);
-      setSkipBlogs(currentPage == 2 ? blogsPerPageFeatured : blogsPerPageFeatured + (currentPage - 2) * blogsPerPage);
+      setSkipBlogs(currentPage == 2 ? blogsPerPageFeatured : blogsPerPageFeatured + (currentPage - 2) * blogsPerPageNormal);
     }
     refetch();
   }, [currentPage, refetch]);
@@ -411,10 +411,10 @@ const BlogList = () => {
             ))}
             
             <button
-              onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(data.totalCount / blogsPerPage)))}
-              disabled={currentPage === Math.ceil(data.totalCount / blogsPerPage)}
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
               className={`relative inline-flex items-center px-4 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium ${
-                currentPage === Math.ceil(data.totalCount / blogsPerPage) 
+                currentPage === totalPages 
                   ? 'text-gray-300 cursor-not-allowed' 
                   : 'text-gray-700 hover:bg-gray-50'
               }`}
