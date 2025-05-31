@@ -17,7 +17,7 @@ const BlogList = () => {
   const [blogsPerPage, setBlogsPerPage] = useState(10); // Number of blogs per page
 
   console.log("Blog Tag Name:", blogTagName);
-  const { data, error, isLoading, refetch } = blogTagName ? useGetBlogsByTagQuery( blogTagName ) : useGetBlogsQuery({s:(currentPage - 1)*8, t:blogsPerPage});
+  const { data, error, isLoading, isFetching, refetch } = blogTagName ? useGetBlogsByTagQuery( blogTagName ) : useGetBlogsQuery({s:(currentPage - 1)*8, t:blogsPerPage});
   console.log("Blogs Data:", data);
   const [blogs, setBlogs] = useState([]);
   const [activeCategory, setActiveCategory] = useState('All');
@@ -88,7 +88,7 @@ const BlogList = () => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  if (isLoading) {
+  if (isLoading || isFetching) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-pulse flex flex-col items-center">
