@@ -211,6 +211,9 @@ const BlogList = () => {
     transition={{ duration: 0.8 }}
     className="mb-8 sm:mb-12 md:mb-16 lg:mb-20"
   >
+    <Link
+      to={`/blogs/${currentBlogs[0].urlTitle}`}
+    >
     <div className="relative rounded-xl sm:rounded-2xl md:rounded-3xl overflow-hidden shadow-lg sm:shadow-xl md:shadow-2xl group">
       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent opacity-90 z-10"></div>
       <img
@@ -261,6 +264,7 @@ const BlogList = () => {
         </Link>
       </div>
     </div>
+    </Link>
   </motion.div>
 )}
 
@@ -283,8 +287,11 @@ const BlogList = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="group flex flex-col h-full"
-              >
+              ><Link
+                    to={`/blogs/${blog.urlTitle}`}
+                  >
                 <div className="relative overflow-hidden rounded-xl h-52 mb-4 group-hover:shadow-xl transition-all">
+                  
                   <img
                     src={blog.coverImage}
                     alt={blog.title}
@@ -293,6 +300,7 @@ const BlogList = () => {
                       e.target.src = 'https://via.placehold.co/600x300';
                     }}
                   />
+                  
                   <div className="absolute inset-0 bg-black bg-opacity-10 group-hover:bg-opacity-30 transition-all"></div>
                 </div>
 
@@ -346,6 +354,7 @@ const BlogList = () => {
                     </svg>
                   </Link>
                 </div>
+                </Link>
               </motion.div>
             ))}
           </div>
