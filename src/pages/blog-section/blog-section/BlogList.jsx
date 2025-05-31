@@ -14,21 +14,44 @@ const BlogList = () => {
   const blogTagName = query.get('tag');
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
+  const [blogsPerPageFeatured, setBlogsPerPageFeatured] = useState(10); // Number of blogs per page on first page
+  const [blogsPerPageNormal, setBlogsPerPageNormal] = useState(12); // Number of blogs per page on subsequent pages
   const [blogsPerPage, setBlogsPerPage] = useState(10); // Number of blogs per page
+  const [skipBlogs, setSkipBlogs] = useState(0); // Skip blogs for pagination
+  const [totalPages, setTotalPages] = useState(1); // Total pages for pagination
+
 
   console.log("Blog Tag Name:", blogTagName);
-  const { data, error, isLoading, isFetching, refetch } = blogTagName ? useGetBlogsByTagQuery( blogTagName ) : useGetBlogsQuery({s:(currentPage - 1)*8, t:blogsPerPage});
+  const { data, error, isLoading, isFetching, refetch } = blogTagName ? useGetBlogsByTagQuery( blogTagName ) : useGetBlogsQuery({s:skipBlogs, t:blogsPerPage});
   console.log("Blogs Data:", data);
   const [blogs, setBlogs] = useState([]);
   const [activeCategory, setActiveCategory] = useState('All');
 
   // Refetch blogs on page change (pagination)
   useEffect(() => {
+    if (currentPage <= 1) {
+      setBlogsPerPage(blogsPerPageFeatured);
+      setSkipBlogs(0);
+    }
+    else {
+      setBlogsPerPage(blogsPerPageNormal);
+      setSkipBlogs(currentPage == 2 ? blogsPerPageFeatured : blogsPerPageFeatured + (currentPage - 2) * blogsPerPage);
+    }
     refetch();
   }, [currentPage, refetch]);
 
   useEffect(() => {
     if (data && data.success) {
+
+      if (data.totalCount <= blogsPerPageFeatured) {
+        setTotalPages(1);
+      }
+      else if (data.totalCount <= blogsPerPageFeatured + blogsPerPageNormal) {
+        setTotalPages(2);
+      }
+      else {
+        setTotalPages(1 + Math.ceil((data.totalCount - blogsPerPageFeatured) / blogsPerPageNormal));
+      }
       
       const transformedBlogs = data.data.map(blog => ({
         id: blog.id,
@@ -373,7 +396,7 @@ const BlogList = () => {
               Previous
             </button>
             
-            {Array.from({ length: Math.ceil(data.totalCount / blogsPerPage) }).map((_, index) => (
+            {Array.from({ length: totalPages }).map((_, index) => (
               <button
                 key={index}
                 onClick={() => paginate(index + 1)}
