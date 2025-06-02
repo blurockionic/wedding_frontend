@@ -60,19 +60,19 @@ export default function Admin() {
                 title="Total Users"
                 count={analytics.data.totalUsers}
                 increment={15}
-                bgColor="#f5efec"
+                backgroundColor="#f5efec"
               />
               <AnalyticsCard
                 title="Total Vendors"
                 count={analytics.data.totalVendors}
                 increment={15}
-                bgColor="#f0f5ec"
+                backgroundColor="#f0f5ec"
               />
               <AnalyticsCard
                 title="Total Services"
                 count={analytics.data.totalServices}
                 increment={15}
-                bgColor="#e3e6e6"
+                backgroundColor="#e3e6e6"
               />
             </div>
             <h2 className="text-[26px] font-semibold text-[#f20574] mt-[60px] mb-6">Services Analytics</h2>
@@ -81,13 +81,13 @@ export default function Admin() {
                 title="Total Views"
                 count={analytics.data.ServicesData._sum.viewCount}
                 increment={15}
-                bgColor="#dceeee"
+                backgroundColor="#dceeee"
               />
               <ServicesCard
                 title="Total Leads"
                 count={analytics.data.ServicesData._count.lead}
                 increment={15}
-                bgColor="#eedce8"
+                backgroundColor="#eedce8"
               />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-1 gap-10 w-full px-5 md:px-0 mt-4">
@@ -138,13 +138,13 @@ export default function Admin() {
                 title="Total Subscribers"
                 count={analytics.data.TotalRevenue[0].totalSubscribers}
                 increment={15}
-                bgColor="#ebeedc"
+                backgroundColor="#ebeedc"
               />
               <ServicesCard
                 title="Total Revenue"
                 count={analytics.data.TotalRevenue[0].totalRevenue}
                 increment={15}
-                bgColor="#e4d8d8"
+                backgroundColor="#e4d8d8"
               />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-1 gap-10 w-full px-5 md:px-0 mt-4">

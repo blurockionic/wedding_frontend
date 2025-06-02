@@ -1,6 +1,6 @@
-const ServicesCard = ({ title, count, increment , bgColor = "#f5efec" }) => {
+const ServicesCard = ({ title, count, increment , backgroundColor }) => {
   return (
-    <div className={`bg-[${bgColor}] rounded-xl shadow-md p-4 flex justify-between w-[360px] h-[156px]`}>
+    <div className="bg-[${bgColor}] rounded-xl shadow-md p-4 flex justify-between w-[360px] h-[156px]" style={{ backgroundColor: backgroundColor }}>
       <div>
         <p className="text-xl text-gray-700 font-medium ml-4 mt-2">{title}</p>
         <p className="text-[50px] font-medium text-gray-800 ml-4 mt-2 flex">
