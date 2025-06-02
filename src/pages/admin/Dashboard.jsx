@@ -4,6 +4,9 @@ import { useDispatch } from "react-redux";
 import { userlogout } from "../../redux/authSlice";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import { IoIosMenu } from "react-icons/io";
+import { IoSearchOutline } from "react-icons/io5";
+import { IoPersonOutline } from "react-icons/io5";
 
 
 const AdminDashBoard = () => {
@@ -52,8 +55,8 @@ const AdminDashBoard = () => {
   return (
     <div className="flex h-screen overflow-hidden">
     {/* Sidebar */}
-    <div className="w-1/5 bg-white border-r border-pink-200 p-6 overflow-y-auto sticky top-0 h-screen">
-      <h2 className="text-[1.5vw] text-pink-600 mb-6">Admin Dashboard</h2>
+    <div className="w-1/6 bg-[#ffd7f7] border-r border-t border-[#F72AAFB3] p-6 overflow-y-auto sticky top-0 h-screen">
+      <h2 className="text-xl mb-8 font-semibold mt-8">Admin Dashboard</h2>
       <ul className="space-y-4">
         {navItems.map((item, index) => (
           <li key={index}>
@@ -61,11 +64,21 @@ const AdminDashBoard = () => {
               to={item.path}
               className={({ isActive }) =>
                 isActive && location.pathname === item.path
-                  ? "text-pink-500 font-semibold block rounded-md py-2 px-4 bg-pink-100"
-                  : "text-pink-700 font-semibold block rounded-md py-2 px-4 hover:text-pink-500 hover:bg-pink-50"
+                  ? "flex items-center text-pink-600 font-medium py-2 px-4 rounded-md bg-pink-100"
+                  : "flex items-center text-gray-600 font-medium py-2 px-4 rounded-md hover:text-pink-600 hover:bg-pink-100"
               }
               end
             >
+              <span className="mr-3">
+                  {/* Adding icons similar to the image */}
+                  {item.name === "General Analytics" && <IoIosMenu className="text-[26px]"/>}
+                  {item.name.includes("Search") && <IoSearchOutline className="text-[20px]"/>}
+                  {item.name === "Bill & transactions" && <IoIosMenu className="text-[26px]"/>}
+                  {item.name === "Reports" && <IoPersonOutline className="text-[20px]"/>}
+                  {item.name === "Blog" && <IoPersonOutline className="text-[20px]"/>}
+                  {item.name === "Partners" &&  <IoPersonOutline className="text-[20px]"/>}
+                  {(item.name === "Give Admin" || item.name === "Revoke Admin" || item.name === "Give Super Admin") && <IoPersonOutline className="text-[20px]"/>}
+                </span>
               {item.name}
             </NavLink>
           </li>
@@ -73,10 +86,11 @@ const AdminDashBoard = () => {
       </ul>
       <button
         onClick={handleLogout}
-        className="w-full mt-6 px-4 py-3 text-white bg-pink-500 rounded-md hover:bg-pink-600"
+        className="w-full mt-8 px-4 py-3 text-white bg-[#f20574] rounded-md hover:bg-pink-600"
       >
         Logout
       </button>
+      <p className="text-gray-700 text-center text-sm mt-8">©2024 Marriage Vendors</p>
     </div>
   
     {/* Content */}
@@ -85,7 +99,7 @@ const AdminDashBoard = () => {
     </div>
   </div>
   );  
-   
+  
 }
 
 export default AdminDashBoard;
