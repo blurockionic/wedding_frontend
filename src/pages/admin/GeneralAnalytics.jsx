@@ -19,11 +19,30 @@ export default function Admin() {
 
   useEffect(() => {
     if (analytics) {
+      const serviceTypeColors = {
+        "wedding entertainment": "#1f93ff",//blue
+        "caterers": "#8c63da", //purple
+        "wedding lawns farmhouse": "#ff928a", //red
+        "hotel": "#2bb7dc", // skyblue
+        "banquet halls": "#6fd195",//green
+        "wedding gift":"#ffae4c",//orange
+        "wedding decoration":"#1f93ff",//blue
+        "wedding halls" : "#8c63da"//purple
+      };
+
+      const planColors = {
+        "Professional Plan": "#8c63da", // Purple
+        "Starter": "#ff928a", // red
+        "trail Plan": "#1f93ff", // blue
+        "Business Plan": "#ffae4c",// Orange
+        "Starter Plan": "#6fd195" //green
+      };
       // TotalServicesbyType
       const pieChartDataTotalServicesbyType = analytics.data.TotalServicesbyType.map((item, index) => ({
         id: index,
         value: item._count.service_type,
         label: item.service_type,
+        color: serviceTypeColors[item.service_type] || "#cccccc"
       }));
       setPieChartTotalServicesbyType(pieChartDataTotalServicesbyType);
 
@@ -32,6 +51,7 @@ export default function Admin() {
         id: index,
         value: item.totalViewCount,
         label: item.service_type,
+        color: serviceTypeColors[item.service_type] || "#cccccc"
       }));
       setPieChartTotalServicesbyViews(pieChartDataTotalServicesbyViews);
 
@@ -40,6 +60,7 @@ export default function Admin() {
         id: index,
         value: item.totalRevenue,
         label: item.plan,
+        color: planColors[item.plan] || "#cccccc"
       }));
       setPieChartPlansbyRevenue(pieChartDataPlansbyRevenue);
     }
@@ -47,6 +68,7 @@ export default function Admin() {
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
+  
 
   console.log(analytics);
   return (
@@ -90,48 +112,6 @@ export default function Admin() {
                 backgroundColor="#eedce8"
               />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-1 gap-10 w-full px-5 md:px-0 mt-4">
-              <div>
-                <p className="text-xl font-semibold text-pink-600 mb-3 break-words whitespace-normal w-full">
-                  Total Services by Type
-                </p>
-                <PieChart
-                  series={[
-                    {
-                      data: pieChartTotalServicesbyType,
-                      innerRadius: 30,
-                      outerRadius: 100,
-                      paddingAngle: 5,
-                      cornerRadius: 5,
-                      cx: 100,
-                      cy: 100,
-                    },
-                  ]}
-                  width={800}
-                  height={225}
-                />
-              </div>
-              <div>
-                <p className="text-xl font-semibold text-pink-600 mb-3 break-words whitespace-normal w-full">
-                  Total Views by Service Type
-                </p>
-                <PieChart
-                  series={[
-                    {
-                      data: pieChartTotalServicesbyViews,
-                      innerRadius: 30,
-                      outerRadius: 100,
-                      paddingAngle: 5,
-                      cornerRadius: 5,
-                      cx: 100,
-                      cy: 100,
-                    },
-                  ]}
-                  width={800}
-                  height={225}
-                />
-              </div>
-            </div>
             <h2 className="text-[26px] font-semibold text-[#f20574] mt-[60px] mb-6">Revenue Analytics</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-[67%]">
               <ServicesCard
@@ -147,26 +127,102 @@ export default function Admin() {
                 backgroundColor="#e4d8d8"
               />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-1 gap-10 w-full px-5 md:px-0 mt-4">
+            <h2 className="text-[26px] font-semibold text-[#f20574] mt-[60px] mb-6">Distribution Chart</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10 w-full px-5 md:px-0 mt-4">
               <div>
-                <p className="text-xl font-semibold text-pink-600 mb-3 break-words whitespace-normal w-full">
-                  Revenue per Plan
+                <p className="text-md font-semibold mb-3 break-words whitespace-normal w-full">
+                  Total Services by Type
                 </p>
                 <PieChart
                   series={[
                     {
-                      data: pieChartPlansbyRevenue,
-                      innerRadius: 30,
+                      data: pieChartTotalServicesbyType,
+                      innerRadius: 50,
                       outerRadius: 100,
-                      paddingAngle: 5,
-                      cornerRadius: 5,
+                      paddingAngle: 0,
+                      cornerRadius: 0,
                       cx: 100,
                       cy: 100,
                     },
                   ]}
-                  width={800}
-                  height={225}
+                  slotProps={{
+                    legend: {
+                      direction: 'column',
+                      position: { vertical: 'bottom', horizontal: 'middle' },
+                      padding: 20,
+                      labelStyle: {
+                        fontSize: 14,
+                        fill: '#333',
+                      },
+                    },
+                  }}
+                  width={300}
+                  height={500}
                 />
+              </div>
+              <div>
+                <p className="text-md font-semibold mb-3 break-words whitespace-normal w-full">
+                  Total Views by Service Type
+                </p>
+                <PieChart
+                  series={[
+                    {
+                      data: pieChartTotalServicesbyViews,
+                      innerRadius: 50,
+                      outerRadius: 100,
+                      paddingAngle: 0,
+                      cornerRadius: 0,
+                      cx: 100,
+                      cy: 100,
+                    },
+                  ]}
+                  slotProps={{
+                    legend: {
+                      direction: 'column',
+                      position: { vertical: 'bottom', horizontal: 'middle' },
+                      padding: 20,
+                      labelStyle: {
+                        fontSize: 14,
+                        fill: '#333',
+                      },
+                    },
+                  }}
+                  width={300}
+                  height={500}
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-1 gap-10 w-full px-5 md:px-0 mt-4">
+                <div>
+                  <p className="text-md font-semibold mb-3 break-words whitespace-normal w-full -mt-4">
+                    Revenue per Plan
+                  </p>
+                  <PieChart
+                    series={[
+                      {
+                        data: pieChartPlansbyRevenue,
+                        innerRadius: 50,
+                        outerRadius: 100,
+                        paddingAngle: 0,
+                        cornerRadius: 0,
+                        cx: 100,
+                        cy: 100,
+                      },
+                    ]}
+                    slotProps={{
+                    legend: {
+                      direction: 'column',
+                      position: { vertical: 'bottom', horizontal: 'middle' },
+                      padding: 10,
+                      labelStyle: {
+                        fontSize: 14,
+                        fill: '#333',
+                      },
+                    },
+                  }}
+                    width={300}
+                    height={500}
+                  />
+                </div>
               </div>
             </div>
           </div>
