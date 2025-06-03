@@ -20,22 +20,22 @@ export default function Admin() {
   useEffect(() => {
     if (analytics) {
       const serviceTypeColors = {
-        "wedding entertainment": "#1f93ff",//blue
-        "caterers": "#8c63da", //purple
-        "wedding lawns farmhouse": "#ff928a", //red
-        "hotel": "#2bb7dc", // skyblue
-        "banquet halls": "#6fd195",//green
-        "wedding gift":"#ffae4c",//orange
-        "wedding decoration":"#1f93ff",//blue
-        "wedding halls" : "#8c63da"//purple
+        "wedding decor": "#1f93ff",//blue
+        "wedding videographers": "#8c63da", //purple
+        "wedding dj": "#ff928a", //red
+        "makeup salon": "#2bb7dc", // skyblue
+        "caterers": "#6fd195",//green
+        "wedding entertainment":"#8c63da",//purple
+        "mehndi artist":"#2bb7dc",// skyblue
+        "wedding photographers" : "#ff928a",//red
+        "tent house" : "#1f93ff"
       };
 
       const planColors = {
-        "Professional Plan": "#8c63da", // Purple
-        "Starter": "#ff928a", // red
-        "trail Plan": "#1f93ff", // blue
-        "Business Plan": "#ffae4c",// Orange
-        "Starter Plan": "#6fd195" //green
+        "Business": "#ffae4c", // orange
+        "Free": "#ff928a", // red
+        "Professional": "#8c63da", // purple
+        "Starter": "#2bb7dc",// skyblue
       };
       // TotalServicesbyType
       const pieChartDataTotalServicesbyType = analytics.data.TotalServicesbyType.map((item, index) => ({
@@ -149,7 +149,7 @@ export default function Admin() {
                     legend: {
                       direction: 'column',
                       position: { vertical: 'bottom', horizontal: 'middle' },
-                      padding: 20,
+                      padding: 0,
                       labelStyle: {
                         fontSize: 14,
                         fill: '#333',
@@ -180,7 +180,7 @@ export default function Admin() {
                     legend: {
                       direction: 'column',
                       position: { vertical: 'bottom', horizontal: 'middle' },
-                      padding: 20,
+                      padding: 0,
                       labelStyle: {
                         fontSize: 14,
                         fill: '#333',
@@ -212,7 +212,7 @@ export default function Admin() {
                     legend: {
                       direction: 'column',
                       position: { vertical: 'bottom', horizontal: 'middle' },
-                      padding: 10,
+                      padding: 50,
                       labelStyle: {
                         fontSize: 14,
                         fill: '#333',
