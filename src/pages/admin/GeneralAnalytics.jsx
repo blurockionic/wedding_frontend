@@ -188,7 +188,7 @@ export default function Admin() {
                     },
                   }}
                   width={300}
-                  height={600}
+                  height={550}
                 />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-1 gap-10 w-full px-5 md:px-0 mt-4">
@@ -219,7 +219,7 @@ export default function Admin() {
                       },
                     },
                   }}
-                    width={300}
+                    width={250}
                     height={500}
                   />
                 </div>
