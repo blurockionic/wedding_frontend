@@ -188,7 +188,7 @@ export default function Admin() {
                     },
                   }}
                   width={300}
-                  height={500}
+                  height={600}
                 />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-1 gap-10 w-full px-5 md:px-0 mt-4">
@@ -212,7 +212,7 @@ export default function Admin() {
                     legend: {
                       direction: 'column',
                       position: { vertical: 'bottom', horizontal: 'middle' },
-                      padding: 50,
+                      padding: 100,
                       labelStyle: {
                         fontSize: 14,
                         fill: '#333',
