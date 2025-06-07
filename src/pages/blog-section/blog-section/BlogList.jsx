@@ -14,16 +14,44 @@ const BlogList = () => {
   const blogTagName = query.get('tag');
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const [blogsPerPage] = useState(8); // Number of blogs per page
+  const [blogsPerPageFeatured, setBlogsPerPageFeatured] = useState(10); // Number of blogs per page on first page
+  const [blogsPerPageNormal, setBlogsPerPageNormal] = useState(12); // Number of blogs per page on subsequent pages
+  const [blogsPerPage, setBlogsPerPage] = useState(10); // Number of blogs per page
+  const [skipBlogs, setSkipBlogs] = useState(0); // Skip blogs for pagination
+  const [totalPages, setTotalPages] = useState(1); // Total pages for pagination
+
 
   console.log("Blog Tag Name:", blogTagName);
-  const { data, error, isLoading } = blogTagName ? useGetBlogsByTagQuery( blogTagName ) : useGetBlogsQuery();
+  const { data, error, isLoading, isFetching, refetch } = blogTagName ? useGetBlogsByTagQuery( blogTagName ) : useGetBlogsQuery({s:skipBlogs, t:blogsPerPage});
   console.log("Blogs Data:", data);
   const [blogs, setBlogs] = useState([]);
   const [activeCategory, setActiveCategory] = useState('All');
 
+  // Refetch blogs on page change (pagination)
+  useEffect(() => {
+    if (currentPage <= 1) {
+      setBlogsPerPage(blogsPerPageFeatured);
+      setSkipBlogs(0);
+    }
+    else {
+      setBlogsPerPage(blogsPerPageNormal);
+      setSkipBlogs(currentPage == 2 ? blogsPerPageFeatured : blogsPerPageFeatured + (currentPage - 2) * blogsPerPageNormal);
+    }
+    refetch();
+  }, [currentPage, refetch]);
+
   useEffect(() => {
     if (data && data.success) {
+
+      if (data.totalCount <= blogsPerPageFeatured) {
+        setTotalPages(1);
+      }
+      else if (data.totalCount <= blogsPerPageFeatured + blogsPerPageNormal) {
+        setTotalPages(2);
+      }
+      else {
+        setTotalPages(1 + Math.ceil((data.totalCount - blogsPerPageFeatured) / blogsPerPageNormal));
+      }
       
       const transformedBlogs = data.data.map(blog => ({
         id: blog.id,
@@ -51,6 +79,14 @@ const BlogList = () => {
     }
   }, [data]);
 
+  // Smooth scroll to top on page change
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'auto'
+    });
+  }, [currentPage]);
+
   const filteredBlogs = activeCategory === 'All'
     ? blogs
     : blogs.filter(blog =>
@@ -60,10 +96,7 @@ const BlogList = () => {
   const sortedBlogs = filteredBlogs.sort((a, b) => new Date(b.date) - new Date(a.date));
   
   // Get current blogs for pagination
-  const indexOfLastBlog = currentPage * blogsPerPage;
-  const indexOfFirstBlog = indexOfLastBlog - blogsPerPage;
-  const currentBlogs = sortedBlogs.slice(indexOfFirstBlog, indexOfLastBlog);
-  console.log("Current Blogs: ",currentBlogs);
+  const currentBlogs = sortedBlogs.slice();
 
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -78,7 +111,7 @@ const BlogList = () => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  if (isLoading) {
+  if (isLoading || isFetching) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-pulse flex flex-col items-center">
@@ -201,6 +234,9 @@ const BlogList = () => {
     transition={{ duration: 0.8 }}
     className="mb-8 sm:mb-12 md:mb-16 lg:mb-20"
   >
+    <Link
+      to={`/blogs/${currentBlogs[0].urlTitle}`}
+    >
     <div className="relative rounded-xl sm:rounded-2xl md:rounded-3xl overflow-hidden shadow-lg sm:shadow-xl md:shadow-2xl group">
       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent opacity-90 z-10"></div>
       <img
@@ -251,6 +287,7 @@ const BlogList = () => {
         </Link>
       </div>
     </div>
+    </Link>
   </motion.div>
 )}
 
@@ -273,8 +310,11 @@ const BlogList = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="group flex flex-col h-full"
-              >
+              ><Link
+                    to={`/blogs/${blog.urlTitle}`}
+                  >
                 <div className="relative overflow-hidden rounded-xl h-52 mb-4 group-hover:shadow-xl transition-all">
+                  
                   <img
                     src={blog.coverImage}
                     alt={blog.title}
@@ -283,6 +323,7 @@ const BlogList = () => {
                       e.target.src = 'https://via.placehold.co/600x300';
                     }}
                   />
+                  
                   <div className="absolute inset-0 bg-black bg-opacity-10 group-hover:bg-opacity-30 transition-all"></div>
                 </div>
 
@@ -336,6 +377,7 @@ const BlogList = () => {
                     </svg>
                   </Link>
                 </div>
+                </Link>
               </motion.div>
             ))}
           </div>
@@ -354,7 +396,7 @@ const BlogList = () => {
               Previous
             </button>
             
-            {Array.from({ length: Math.ceil(sortedBlogs.length / blogsPerPage) }).map((_, index) => (
+            {Array.from({ length: totalPages }).map((_, index) => (
               <button
                 key={index}
                 onClick={() => paginate(index + 1)}
@@ -369,10 +411,10 @@ const BlogList = () => {
             ))}
             
             <button
-              onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(sortedBlogs.length / blogsPerPage)))}
-              disabled={currentPage === Math.ceil(sortedBlogs.length / blogsPerPage)}
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
               className={`relative inline-flex items-center px-4 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium ${
-                currentPage === Math.ceil(sortedBlogs.length / blogsPerPage) 
+                currentPage === totalPages 
                   ? 'text-gray-300 cursor-not-allowed' 
                   : 'text-gray-700 hover:bg-gray-50'
               }`}

@@ -54,10 +54,9 @@ export const blogApiSlice = createApi({
     // 🔐 ADMIN
     addBlog: builder.mutation({ query: (body) => ({ url: `/`, method: "POST", body }) }),
     updateBlog: builder.mutation({ query: ({ id, blogData }) => ({ url: `/${id}`, method: "PATCH", body: blogData }) }),
-    deleteBlog: builder.mutation({ query: (id) => ({ url: `/${id}`, method: "DELETE" }) }),
-    addTag: builder.mutation({ query: (body) => ({ url: `/tags`, method: "POST", body }) }),
+    deleteBlog: builder.mutation({ query: (id) => ({ url: `/${id}`, method: "DELETE" }) }),    addTag: builder.mutation({ query: (body) => ({ url: `/tags`, method: "POST", body }) }),
     updateTag: builder.mutation({ query: ({ id, body }) => ({ url: `/tags/${id}`, method: "PUT", body }) }),
-    deleteTag: builder.mutation({ query: () => ({ url: `/tags`, method: "DELETE" }) }),
+    deleteTag: builder.mutation({ query: (body) => ({ url: `/tags`, method: "DELETE", body }) }),
     getTotalViewCount: builder.query({ query: () => `/viewCount` }),
     getBlogCount: builder.query({ query: () => `blog-count/` }),
 
