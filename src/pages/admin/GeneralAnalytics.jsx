@@ -9,7 +9,10 @@ import { PiArrowUpRightBold } from "react-icons/pi";
 import ChartBar from "../../components/admin-chart/ChartBar.jsx";
 import AnalyticsCard from "../../components/admin-chart/AnalyticsCard.jsx";
 import ServicesCard from "../../components/admin-chart/ServicesCard.jsx";
-
+import general_image_icon_1 from "../../../public/general_image_icon_1.svg";
+import general_image_icon_2 from "../../../public/general_image_icon_2.svg";
+import icon_general_image_3 from "../../../public/icon_general_image_3.svg";
+import query_image_icon_4 from "../../../public/query_image_icon_4.svg";
 
 export default function Admin() {
   const { data: analytics, isLoading, error } = useGetGeneralAnalyticsQuery();
@@ -98,33 +101,37 @@ export default function Admin() {
               />
             </div>
             <h2 className="text-[26px] font-semibold text-[#f20574] mt-[60px] mb-6">Services Analytics</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-[67%]">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-[100%]">
               <ServicesCard
                 title="Total Views"
                 count={analytics.data.ServicesData._sum.viewCount}
                 increment={15}
                 backgroundColor="#dceeee"
+                image={general_image_icon_1}
               />
               <ServicesCard
                 title="Total Leads"
                 count={analytics.data.ServicesData._count.lead}
                 increment={15}
                 backgroundColor="#eedce8"
+                image={general_image_icon_2}
               />
             </div>
             <h2 className="text-[26px] font-semibold text-[#f20574] mt-[60px] mb-6">Revenue Analytics</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-[67%]">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-[100%]">
               <ServicesCard
                 title="Total Subscribers"
                 count={analytics.data.TotalRevenue[0].totalSubscribers}
                 increment={15}
                 backgroundColor="#ebeedc"
+                image={icon_general_image_3}
               />
               <ServicesCard
                 title="Total Revenue"
                 count={analytics.data.TotalRevenue[0].totalRevenue}
                 increment={15}
                 backgroundColor="#e4d8d8"
+                image={query_image_icon_4}
               />
             </div>
             <h2 className="text-[26px] font-semibold text-[#f20574] mt-[60px] mb-6">Distribution Chart</h2>
