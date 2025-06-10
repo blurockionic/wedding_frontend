@@ -1,20 +1,36 @@
 import { useState } from "react";
 import { useSearchServicesMutation } from "../../redux/adminApiSlice";
+import SearchComponent from "../../components/admin-chart/SearchComponent.jsx";
+
 
 export default function ServiceSearch() {
-  const [serviceName, setName] = useState("");
-  const [serviceType, setServiceType] = useState("");
-  const [vendorId, setVendorId] = useState("");
-  const [location, setLocation] = useState("");
-  const [sortBy, setsortBy] = useState("views");
   const [results, setResults] = useState([]);
   const [searchServices, { isLoading, error }] = useSearchServicesMutation();
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
+  const fields = [
+    { label: "Name", placeholder: "Name", key: "serviceName" },
+    { label: "Vendor ID", placeholder: "Vendor ID", key: "vendorId" },
+    { label: "Service Type", placeholder: "Service Type", key: "serviceType" },
+    { label: "Location", placeholder: "Location", key: "location" },
+  ];
 
+  const tableHeaders = [
+    { label: "Name", key: "service_name" },
+    { label: "Vendor ID", key: ["vendorId", "$oid"] },
+    { label: "Service Type", key: "service_type" },
+    { label: "Location", key: "location" },
+    { label: "Total Views", key: "totalViews" },
+    { label: "Average Rating", key: "averageRating" },
+  ];
+
+  const sortOptions = [
+    { label: "Views", value: "views" },
+    { label: "Average Rating", value: "rating" },
+  ];
+
+  const handleSearch = async (formData) => {
     try {
-      const response = await searchServices({ serviceName, serviceType, vendorId,location, sortBy }).unwrap();
+      const response = await searchServices(formData).unwrap();
       setResults(response.data);
     } catch (err) {
       console.error("Failed to fetch services:", err);
@@ -22,82 +38,16 @@ export default function ServiceSearch() {
   };
 
   return (
-    <div>
-      <h2 className="text-2xl font-semibold text-pink-600 mb-3 break-words whitespace-normal w-full">Service Search</h2>
-      <form onSubmit={handleSearch} className="mb-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <input
-            type="text"
-            placeholder="Name"
-            value={serviceName}
-            onChange={(e) => setName(e.target.value)}
-            className="p-2 border border-gray-300 rounded"
-          />
-          <input
-            type="text"
-            placeholder="Service Type"
-            value={serviceType}
-            onChange={(e) => setServiceType(e.target.value)}
-            className="p-2 border border-gray-300 rounded"
-          />
-          <input
-            type="text"
-            placeholder="Vendor Id"
-            value={vendorId}
-            onChange={(e) => setVendorId(e.target.value)}
-            className="p-2 border border-gray-300 rounded"
-          />
-          <input
-            type="text"
-            placeholder="Location"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            className="p-2 border border-gray-300 rounded"
-          />
-          <label>
-            Sort By: 
-            <select name="Sort By" value={sortBy} onChange={(e) => setsortBy(e.target.value)} className="m-2 border border-gray-300 rounded">
-              <option value="views">Views</option>
-              <option value="rating">Average Rating</option>
-            </select>
-          </label>
-        </div>
-        <button type="submit" className="mt-4 p-2 bg-pink-600 text-white rounded">
-          Search
-        </button>
-      </form>
-
-      {isLoading && <p>Loading...</p>}
-      {error && <p>Error: {error.data.message}</p>}
-
-      {results.length > 0 && (
-        <table className="min-w-full bg-white">
-          <thead>
-            <tr>
-              <th className="py-2 px-4 border-b">Name</th>
-              <th className="py-2 px-4 border-b">Service Type</th>
-              <th className="py-2 px-4 border-b">Vendor Id</th>
-              <th className="py-2 px-4 border-b">Location</th>
-              <th className="py-2 px-4 border-b">Total Views</th>
-              <th className="py-2 px-4 border-b">Average Rating</th>
-            </tr>
-          </thead>
-          <tbody>
-            {results.map((service) => (
-              <tr key={service._id.$oid}>
-                <td className="py-2 px-4 border-b">{service.service_name || "Not Available"}</td>
-                <td className="py-2 px-4 border-b">{service.service_type || "Not Available"}</td>
-                <td className="py-2 px-4 border-b">{service.vendorId.$oid || "Not Available"}</td>
-                <td className="py-2 px-4 border-b">
-                  {service.city + ", " + service.state + ", " + service.country || "Not Available"}
-                </td>
-                <td className="py-2 px-4 border-b">{service.totalViews || "0"}</td>
-                <td className="py-2 px-4 border-b">{service.averageRating || "0"}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </div>
+    <SearchComponent
+      title="Service Search"
+      fields={fields}
+      tableHeaders={tableHeaders}
+      onSearch={handleSearch}
+      results={results}
+      isLoading={isLoading}
+      error={error}
+      sortOptions={sortOptions}
+      locationFormat="object" 
+    />
   );
 }
