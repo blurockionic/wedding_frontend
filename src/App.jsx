@@ -142,6 +142,7 @@ const AdminServiceSearch = lazy(() =>
 );
 const AdminUserSearch = lazy(() => import("./pages/admin/UserSearch.jsx"));
 const AdminTransactions = lazy(() => import("./pages/admin/Transactions.jsx"));
+const AdminBlogDashboard =  lazy(() => import("./pages/blog-section/admin-section/BlogDashboard.jsx"));
 const AdminGive = lazy(() => import("./pages/admin/GiveAdmin.jsx"));
 const AdminRevoke = lazy(() => import("./pages/admin/RevokeAdmin.jsx"));
 const AdminGiveSuper = lazy(() => import("./pages/admin/GiveSuperAdmin.jsx"));
@@ -208,6 +209,10 @@ const router = createBrowserRouter([
           {
             path: "transactions",
             element: wrapWithSuspense(AdminTransactions),
+          },
+          {
+            path: "blog_dashboard",
+            element: wrapWithSuspense(AdminBlogDashboard),
           },
           { path: "giveAdmin", element: wrapWithSuspense(AdminGive) },
           { path: "revokeAdmin", element: wrapWithSuspense(AdminRevoke) },

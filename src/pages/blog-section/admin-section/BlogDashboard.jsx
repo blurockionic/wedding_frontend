@@ -411,43 +411,43 @@ function BlogDashboard() {
             <div className="space-y-8">
               {/* Stats */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                  <h3 className="text-sm uppercase text-gray-500 font-medium">Total Posts</h3>
-                  <p className="text-3xl font-bold text-gray-800 mt-2">
+                <div className="bg-[#dceeee] p-6 rounded-lg shadow-sm border border-gray-200">
+                  <h3 className="text-md uppercase text-gray-500 font-semibold">Total Posts</h3>
+                  <p className="text-3xl font-semibold text-gray-800 mt-2">
                     {blogCountLoading ? 'Loading...' : totalPosts}
                   </p>
                   <div className="flex items-center mt-4">
                     <FiFolder className="text-indigo-500" />
-                    <span className="text-sm text-gray-600 ml-2">All blog posts</span>
+                    <span className="text-sm text-gray-800 ml-2 font-semibold">All blog posts</span>
                   </div>
                 </div>
 
-                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                  <h3 className="text-sm uppercase text-gray-500 font-medium">Published</h3>
-                  <p className="text-3xl font-bold text-green-600 mt-2">{publishedPosts}</p>
+                <div className="bg-[#eedce8] p-6 rounded-lg shadow-sm border border-gray-200">
+                  <h3 className="text-md uppercase text-gray-500 font-semibold">Published</h3>
+                  <p className="text-3xl font-semibold text-gray-800 mt-2">{publishedPosts}</p>
                   <div className="flex items-center mt-4">
                     <FiCalendar className="text-green-500" />
-                    <span className="text-sm text-gray-600 ml-2">Live posts</span>
+                    <span className="text-sm text-gray-800 ml-2 font-semibold">Live posts</span>
                   </div>
                 </div>
 
-                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                  <h3 className="text-sm uppercase text-gray-500 font-medium">Drafts</h3>
-                  <p className="text-3xl font-bold text-amber-600 mt-2">{draftPosts}</p>
+                <div className="bg-[#ebeedc] p-6 rounded-lg shadow-sm border border-gray-200">
+                  <h3 className="text-md uppercase text-gray-500 font-semibold">Drafts</h3>
+                  <p className="text-3xl font-semibold text-gray-800 mt-2">{draftPosts}</p>
                   <div className="flex items-center mt-4">
                     <FiEdit className="text-amber-500" />
-                    <span className="text-sm text-gray-600 ml-2">Unpublished posts</span>
+                    <span className="text-sm text-gray-800 ml-2 font-semibold">Unpublished posts</span>
                   </div>
                 </div>
 
-                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                  <h3 className="text-sm uppercase text-gray-500 font-medium">Total Views</h3>
-                  <p className="text-3xl font-bold text-indigo-600 mt-2">
+                <div className="bg-[#e4d8d8] p-6 rounded-lg shadow-sm border border-gray-200">
+                  <h3 className="text-md uppercase text-gray-500 font-semibold">Total Views</h3>
+                  <p className="text-3xl font-semibold text-gray-800 mt-2">
                     {viewCountLoading ? 'Loading...' : totalViews}
                   </p>
                   <div className="flex items-center mt-4">
                     <FiEye className="text-indigo-500" />
-                    <span className="text-sm text-gray-600 ml-2">Total views across all posts</span>
+                    <span className="text-sm text-gray-800 ml-2 font-semibold">Total views across all posts</span>
                   </div>
                 </div>
               </div>

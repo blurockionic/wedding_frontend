@@ -31,7 +31,7 @@ const AdminDashBoard = () => {
     },
     { name: "Bill & transactions", path: "transactions" },
     { name: "Reports", path: "" },
-    { name: "Blog", path: "../blog_dashboard" },
+    { name: "Blog", path: "blog_dashboard" },
     { name: "Partners", path: "partnerAdminDashboard" },
   ];
 
