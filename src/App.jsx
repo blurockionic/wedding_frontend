@@ -121,6 +121,7 @@ const VendorSetting = lazy(() =>
   import("./pages/vendorDashboard/VendorsSetting.jsx")
 );
 const Template = lazy(() => import("./pages/InvitationTemplates/Template.jsx"));
+const Query = lazy(() => import("./pages/Query/QueryForm.jsx"));
 const Review = lazy(() => import("./pages/BrowseTemplate/Review.jsx"));
 const View = lazy(() => import("./pages/ViewTemplate/View.jsx"));
 const View_1 = lazy(() => import("./pages/ViewTemplate/View_1.jsx"));
@@ -230,6 +231,7 @@ const router = createBrowserRouter([
       { path: "/signup", element: wrapWithSuspense(Signup) },
       { path: "/templates", element: wrapWithSuspense(Template) },
       { path: "/browse", element: wrapWithSuspense(Review) },
+      { path: "/query", element: wrapWithSuspense(Query) },
       { path: "/card", element: wrapWithSuspense(Card) },
       { path: "/guests", element: wrapWithSuspense(Guest) },
 
