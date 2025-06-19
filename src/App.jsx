@@ -26,6 +26,7 @@ import VendorApplicationForm from "./pages/PartnerForm.jsx";
 import PartnerAdminDashboard from "./pages/admin/Partner.jsx";
 import Partnerdetail from "./pages/admin/Partnerdetail.jsx";
 import LeadListInPartnerDashBoard from "./pages/partner/LeadListInPartnerDashBoard.jsx";
+import AIAssistant from "./components/Ai-assistant/AiAssistant.jsx";
 
 const Billing = lazy(() => import("./pages/vendorDashboard/Billing.jsx"));
 
@@ -406,6 +407,7 @@ function App() {
             <>
               <RouterProvider router={router} />
               <ToastContainer />
+              <AIAssistant />
             </>
           )}
         </ErrorBoundary>
