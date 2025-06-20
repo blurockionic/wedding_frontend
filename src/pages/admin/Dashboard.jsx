@@ -33,7 +33,7 @@ const AdminDashBoard = () => {
     { name: "Reports", path: "" },
     { name: "Blog", path: "blog_dashboard" },
     { name: "Partners", path: "partnerAdminDashboard" },
-    { name: "UserQuery", path: "query-list" }
+    { name: "UserQuery", path: "query-list" }  //add UserQuery
   ];
 
   // Add admin-specific items for super_admin role

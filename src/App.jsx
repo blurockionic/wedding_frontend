@@ -26,6 +26,7 @@ import VendorApplicationForm from "./pages/PartnerForm.jsx";
 import PartnerAdminDashboard from "./pages/admin/Partner.jsx";
 import Partnerdetail from "./pages/admin/Partnerdetail.jsx";
 import LeadListInPartnerDashBoard from "./pages/partner/LeadListInPartnerDashBoard.jsx";
+import AIAssistant from "./components/Ai-assistant/AiAssistant.jsx";
 
 const Billing = lazy(() => import("./pages/vendorDashboard/Billing.jsx"));
 
@@ -218,7 +219,7 @@ const router = createBrowserRouter([
           },
           {
             path: "query-list",
-            element: wrapWithSuspense(AdminUserQuery),
+            element: wrapWithSuspense(AdminUserQuery),  //add query list
           },
           { path: "giveAdmin", element: wrapWithSuspense(AdminGive) },
           { path: "revokeAdmin", element: wrapWithSuspense(AdminRevoke) },
@@ -411,6 +412,7 @@ function App() {
             <>
               <RouterProvider router={router} />
               <ToastContainer />
+              <AIAssistant />
             </>
           )}
         </ErrorBoundary>

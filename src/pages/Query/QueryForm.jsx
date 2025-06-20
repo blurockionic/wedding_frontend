@@ -16,7 +16,7 @@ const QueryForm = () => {
     setQuery(e.target.value);
     setCharCount(e.target.value.length);
   };
-
+  {/* QueryForm */}
   return (
     <div className="min-h-[40vh] bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-8 px-4 sm:px-6 lg:px-8 w-full flex flex-col justify-center items-center">
       <div className="text-center mb-6 transform transition-all duration-700">
