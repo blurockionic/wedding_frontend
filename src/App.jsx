@@ -149,6 +149,7 @@ const AdminBlogDashboard =  lazy(() => import("./pages/blog-section/admin-sectio
 const AdminGive = lazy(() => import("./pages/admin/GiveAdmin.jsx"));
 const AdminRevoke = lazy(() => import("./pages/admin/RevokeAdmin.jsx"));
 const AdminGiveSuper = lazy(() => import("./pages/admin/GiveSuperAdmin.jsx"));
+const AgentDashboard = lazy(() => import("./pages/AgentDashboard.jsx"));
 
 function wrapWithSuspense(Component) {
   return (
@@ -383,6 +384,7 @@ const router = createBrowserRouter([
           { path: "form", element: wrapWithSuspense(VendorApplicationForm) },
         ],
       },
+      { path: "/agent", element: wrapWithSuspense(AgentDashboard) },
     ],
   },
 ]);
