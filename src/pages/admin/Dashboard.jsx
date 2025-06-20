@@ -33,6 +33,7 @@ const AdminDashBoard = () => {
     { name: "Reports", path: "" },
     { name: "Blog", path: "blog_dashboard" },
     { name: "Partners", path: "partnerAdminDashboard" },
+    { name: "UserQuery", path: "query-list" }
   ];
 
   // Add admin-specific items for super_admin role
@@ -120,6 +121,7 @@ const AdminDashBoard = () => {
                     {item.name === "Reports" && <IoPersonOutline className="text-[20px]" />}
                     {item.name === "Blog" && <IoPersonOutline className="text-[20px]" />}
                     {item.name === "Partners" && <IoPersonOutline className="text-[20px]" />}
+                    {item.name === "UserQuery" && <IoPersonOutline className="text-[20px]" />}
                     {(item.name === "Give Admin" ||
                       item.name === "Revoke Admin" ||
                       item.name === "Give Super Admin") && (
