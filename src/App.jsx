@@ -123,7 +123,6 @@ const VendorSetting = lazy(() =>
 );
 const Template = lazy(() => import("./pages/InvitationTemplates/Template.jsx"));
 const QueryForm = lazy(() => import("./pages/Query/QueryForm.jsx"));
-const QueryList = lazy(() => import("./pages/Query/QueryList.jsx"));
 const Review = lazy(() => import("./pages/BrowseTemplate/Review.jsx"));
 const View = lazy(() => import("./pages/ViewTemplate/View.jsx"));
 const View_1 = lazy(() => import("./pages/ViewTemplate/View_1.jsx"));
@@ -146,6 +145,7 @@ const AdminServiceSearch = lazy(() =>
 const AdminUserSearch = lazy(() => import("./pages/admin/UserSearch.jsx"));
 const AdminTransactions = lazy(() => import("./pages/admin/Transactions.jsx"));
 const AdminBlogDashboard =  lazy(() => import("./pages/blog-section/admin-section/BlogDashboard.jsx"));
+const AdminUserQuery =  lazy(() => import("./pages/Query/QueryList.jsx"));
 const AdminGive = lazy(() => import("./pages/admin/GiveAdmin.jsx"));
 const AdminRevoke = lazy(() => import("./pages/admin/RevokeAdmin.jsx"));
 const AdminGiveSuper = lazy(() => import("./pages/admin/GiveSuperAdmin.jsx"));
@@ -218,6 +218,10 @@ const router = createBrowserRouter([
             path: "blog_dashboard",
             element: wrapWithSuspense(AdminBlogDashboard),
           },
+          {
+            path: "query-list",
+            element: wrapWithSuspense(AdminUserQuery),  //add query list
+          },
           { path: "giveAdmin", element: wrapWithSuspense(AdminGive) },
           { path: "revokeAdmin", element: wrapWithSuspense(AdminRevoke) },
           { path: "giveSuperAdmin", element: wrapWithSuspense(AdminGiveSuper) },
@@ -235,7 +239,6 @@ const router = createBrowserRouter([
       { path: "/templates", element: wrapWithSuspense(Template) },
       { path: "/browse", element: wrapWithSuspense(Review) },
       { path: "/query-form", element: wrapWithSuspense(QueryForm) },
-      { path: "/query-list", element: wrapWithSuspense(QueryList) },
       { path: "/card", element: wrapWithSuspense(Card) },
       { path: "/guests", element: wrapWithSuspense(Guest) },
 
