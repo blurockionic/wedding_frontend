@@ -95,7 +95,7 @@ function VendorBussinessProfile() {
     services?.flatMap(
       (service) =>
         service?.media?.flatMap((m) =>
-          m?.image_urls?.map((img) => img?.path).filter(Boolean)
+          Array.isArray(m?.image_urls) ? m.image_urls.map((img) => img?.path) : []
         ) || []
     ) || [];
 

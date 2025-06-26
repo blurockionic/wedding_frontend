@@ -1,7 +1,9 @@
 import { useState } from "react";
 
 const ImageGallery = ({ images }) => {
-  const [selectedImage, setSelectedImage] = useState(images[0]?.path || "");
+  // Ensure images is always an array
+  const safeImages = Array.isArray(images) ? images : [];
+  const [selectedImage, setSelectedImage] = useState(safeImages[0]?.path || "");
 
   return (
     <div className="w-full md:w-3/4  flex flex-col items-center">
@@ -20,7 +22,7 @@ const ImageGallery = ({ images }) => {
 
       {/* Thumbnail Scrollable List */}
       <div className="mt-4 w-full overflow-x-auto flex gap-2">
-        {images.map((image, index) => (
+        {safeImages.map((image, index) => (
           <div
             key={index}
             className={`h-24 w-24 flex-shrink-0 bg-gray-200 rounded-md overflow-hidden cursor-pointer border-2 ${

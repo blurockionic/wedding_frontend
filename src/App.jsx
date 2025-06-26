@@ -150,6 +150,7 @@ const AdminGive = lazy(() => import("./pages/admin/GiveAdmin.jsx"));
 const AdminRevoke = lazy(() => import("./pages/admin/RevokeAdmin.jsx"));
 const AdminGiveSuper = lazy(() => import("./pages/admin/GiveSuperAdmin.jsx"));
 const AgentDashboard = lazy(() => import("./pages/AgentDashboard.jsx"));
+const AdminGiveAgent = lazy(() => import("./pages/admin/GiveAgent.jsx"));
 
 function wrapWithSuspense(Component) {
   return (
@@ -225,6 +226,7 @@ const router = createBrowserRouter([
           { path: "giveAdmin", element: wrapWithSuspense(AdminGive) },
           { path: "revokeAdmin", element: wrapWithSuspense(AdminRevoke) },
           { path: "giveSuperAdmin", element: wrapWithSuspense(AdminGiveSuper) },
+          { path: "giveAgent", element: wrapWithSuspense(AdminGiveAgent) },
           // { path: "favoriteList", element: wrapWithSuspense(FavoriteListPage) },
           // { path: "checklist", element: wrapWithSuspense(Checklist) },
           // { path: "weddingbudget", element: wrapWithSuspense(WeddingBudgetCalculator)}
@@ -374,6 +376,7 @@ const router = createBrowserRouter([
       },
 
       { path: "*", element: wrapWithSuspense(FullErrorPage) },
+  
 
       {
         path: "partnership",
@@ -387,7 +390,12 @@ const router = createBrowserRouter([
           { path: "form", element: wrapWithSuspense(VendorApplicationForm) },
         ],
       },
-      { path: "/agent", element: wrapWithSuspense(AgentDashboard) },
+      { path: "/agent", element: (
+        <ProtectedRoute
+          component={() => wrapWithSuspense(AgentDashboard)}
+          allowedRoles={["agent"]}
+        />
+      ) },
     ],
   },
 ]);
@@ -413,8 +421,8 @@ function App() {
           ) : (
             <>
               <RouterProvider router={router} />
+              
               <ToastContainer />
-              <AIAssistant />
             </>
           )}
         </ErrorBoundary>

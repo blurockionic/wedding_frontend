@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-
+import { useSelector } from "react-redux";
 const WEBSOCKET_URL =
   window.location.hostname === "localhost"
-    ? "ws://localhost:8080"
+    ? "ws://localhost:4000"
     : "wss://marriage-vendors-nka3z.ondigitalocean.app/ws";
 
 function shortenId(id) {
@@ -12,9 +12,8 @@ function shortenId(id) {
 }
 
 export default function AgentDashboard() {
-  // Separate input for login and actual agentId used for connection
-  const [loginInput, setLoginInput] = useState("");
-  const [agentId, setAgentId] = useState(() => localStorage.getItem("agentId") || "");
+  const user = useSelector((state) => state.auth.user);
+  const [agentId, setAgentId] = useState("");
   const [connected, setConnected] = useState(false);
   const [reconnecting, setReconnecting] = useState(false);
   const [contacts, setContacts] = useState([]); // [{userId, lastMessage}]
@@ -23,6 +22,35 @@ export default function AgentDashboard() {
   const [input, setInput] = useState("");
   const wsRef = useRef(null);
   const reconnectTimeout = useRef(null);
+
+  // Always construct agentId from Redux user on mount/change
+  useEffect(() => {
+    if (user && user.role && user.role.toLowerCase() === "agent" && user.email) {
+      let base = user.email.slice(0, 4);
+      // Ensure no double 'agent_' prefix
+      if (base.toLowerCase().startsWith('agent')) {
+        base = base.replace(/^agent/i, '');
+      }
+      const constructedId = `agent_${base}`;
+      setAgentId(constructedId);
+      localStorage.setItem("agentId", constructedId);
+    } else {
+      setAgentId("");
+      localStorage.removeItem("agentId");
+    }
+  }, [user]);
+
+  // Connect only after agentId is set from Redux user
+  useEffect(() => {
+    if (agentId && !connected) {
+      connect();
+    }
+    return () => {
+      if (wsRef.current) wsRef.current.close();
+      if (reconnectTimeout.current) clearTimeout(reconnectTimeout.current);
+    };
+    // eslint-disable-next-line
+  }, [agentId]);
 
   // --- WebSocket connect/disconnect/reconnect logic ---
   const connect = () => {
@@ -68,22 +96,9 @@ export default function AgentDashboard() {
     };
   };
 
-  // On mount, auto-connect if agentId is present
-  useEffect(() => {
-    if (agentId && !connected) {
-      connect();
-    }
-    return () => {
-      if (wsRef.current) wsRef.current.close();
-      if (reconnectTimeout.current) clearTimeout(reconnectTimeout.current);
-    };
-    // eslint-disable-next-line
-  }, [agentId]);
-
   // Logout logic
   const logout = () => {
     setAgentId("");
-    setLoginInput("");
     localStorage.removeItem("agentId");
     setConnected(false);
     setReconnecting(false);
@@ -92,13 +107,6 @@ export default function AgentDashboard() {
     setMessages({});
     setInput("");
     if (wsRef.current) wsRef.current.close();
-  };
-
-  // Login logic
-  const handleLogin = () => {
-    if (!loginInput.trim()) return;
-    localStorage.setItem("agentId", loginInput.trim());
-    setAgentId(loginInput.trim());
   };
 
   // Send message to selected user
@@ -164,24 +172,8 @@ export default function AgentDashboard() {
           )}
           <div className={`text-xs mt-1 font-semibold ${statusColor}`}>{statusText}</div>
         </div>
-        {/* Login or Contacts */}
-        {!agentId ? (
-          <div className="flex flex-col gap-2 p-6 mt-10">
-            <input
-              type="text"
-              placeholder="Enter agent ID"
-              value={loginInput}
-              onChange={(e) => setLoginInput(e.target.value)}
-              className="w-full p-2 border border-rose-200 rounded focus:ring-2 focus:ring-primary focus:outline-none"
-            />
-            <button
-              onClick={handleLogin}
-              className="w-full bg-gradient-to-r from-primary to-rose-500 text-white py-2 rounded font-semibold shadow hover:from-rose-500 hover:to-primary transition"
-            >
-              Connect
-            </button>
-          </div>
-        ) : (
+        {/* Contacts */}
+        {agentId ? (
           <>
             <div className="font-bold text-rose-700 mt-6 mb-2 px-6">Contacts</div>
             <div className="flex-1 overflow-y-auto px-2 pb-4">
@@ -202,6 +194,10 @@ export default function AgentDashboard() {
               ))}
             </div>
           </>
+        ) : (
+          <div className="flex flex-col gap-2 p-6 mt-10">
+            <div className="text-gray-400 px-4 py-8 text-center">No agent ID assigned. Please login as agent.</div>
+          </div>
         )}
       </div>
       {/* Chat Panel */}

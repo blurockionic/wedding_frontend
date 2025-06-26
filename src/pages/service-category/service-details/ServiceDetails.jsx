@@ -56,7 +56,7 @@ const ServiceDetails = () => {
       </div>
     );
 
-  const { service } = data;
+  const service= data?.service;
 
   const {
     service_name,
@@ -77,10 +77,10 @@ const ServiceDetails = () => {
       <ImageGallery images={media[0]?.image_urls} />
     ) : (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {[1, 2].map((i) => (
+        {Array.isArray(media) && media.map(img => (
           <img
-            key={i}
-            src="https://dummyjson.com/image/500x300"
+            key={img.id || img}
+            src={img.url || img}
             alt="Service"
             className="w-full h-auto object-cover rounded-lg shadow-md"
           />

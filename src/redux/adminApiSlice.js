@@ -56,6 +56,12 @@ export const adminApiSlice = createApi({
         method: "PATCH",
       }),
     }),
+    giveAgent: builder.mutation({
+      query: (email) => ({
+        url: `/admin/give-agent/${email}`,
+        method: "PATCH",
+      }),
+    }),
 
     getHeroSectionAnalytics: builder.query({
       query: ()=>"/analytics/heroSectionAnalytics",
@@ -72,5 +78,6 @@ export const {
   useGiveAdminMutation, 
   useRevokeAdminMutation, 
   useGiveSuperAdminMutation, 
+  useGiveAgentMutation, 
   useGetHeroSectionAnalyticsQuery
 } = adminApiSlice;

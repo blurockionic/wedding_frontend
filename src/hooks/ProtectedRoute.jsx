@@ -27,6 +27,7 @@ const rolePermissions = {
   ],
   admin: ["admin", "/adminPanel", "/analytics", "/profile"],
   super_admin: ["admin", "/adminPanel", "/analytics", "/profile"],
+  agent:["/agent"]
 };
 
 const ProtectedRoute = ({ allowedRoles, component: Component }) => {

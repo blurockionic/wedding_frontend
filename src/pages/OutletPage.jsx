@@ -1,6 +1,7 @@
 import { Outlet, useLocation, useNavigationType } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useEffect } from "react";
+import AIAssistant from "../components/Ai-assistant/AiAssistant";
 
 export default function OutletPage() {
   const location = useLocation();
@@ -36,6 +37,7 @@ export default function OutletPage() {
 
       <div className="z-30">
         <ScrollToTop />
+        <AIAssistant />
         <Outlet />
       </div>
     </>

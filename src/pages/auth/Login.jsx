@@ -28,6 +28,7 @@ const loginSchema = z.object({
 
 export default function Login() {
   useProtectAfterLogin(["user"], "/");
+  useProtectAfterLogin(["agent"], "/agent");
 
   const dispatch = useDispatch();
   const [loginMutation, { isLoading: loading }] = useLoginMutation();
@@ -69,10 +70,11 @@ export default function Login() {
         const from = location.state?.from || "/";
         console.log(user?.role);
         
-        if (user.role == "ADMIN" || user.role == "SUPER_ADMIN") {
+        if (user.role === "ADMIN" || user.role === "SUPER_ADMIN") {
           navigate("/admin");
+        } else if (user.role.toLowerCase() === "agent") {
+          navigate("/agent");
         } else if (user.role.toLowerCase() === "user") {
-          
           sessionStorage.setItem("justLoggedIn", true);
           navigate(from);
         } else {
@@ -266,7 +268,7 @@ export default function Login() {
             </form>
             <div className="mt-6 text-center">
               <CustomText variant="paragraph" className="text-sm">
-                Don’t have an account?{" "}
+                Don't have an account?{" "}
                 <Link
                   to="/signup"
                   className="font-bold text-primary hover:underline"

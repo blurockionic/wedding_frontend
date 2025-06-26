@@ -13,7 +13,6 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import { ChatMessage } from "./ChatMessage";
 
-
 const suggestions = [
   "How can find vendors?",
   "I want to speak with agent",
@@ -21,7 +20,9 @@ const suggestions = [
   "Help with payment issue",
 ];
 
-const AIAssistant  = () => {
+import ServiceList from "../serviceList/ServiceList";
+
+const AIAssistant = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
@@ -32,11 +33,13 @@ const AIAssistant  = () => {
   const userIdRef = useRef("");
   const lastSupportMessageRef = useRef("");
   const inputRef = useRef(null);
+  const [databaseJsonRes, setDatabaseJsonRes] = useState([]);
 
   const formatAgentName = (name) =>
     name.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 
-  useEffect(() => {
+  // Initialization function to replace useEffect
+  const initializeChatUser = () => {
     const storedId = localStorage.getItem("chatUserId");
     if (storedId) {
       userIdRef.current = storedId;
@@ -50,7 +53,13 @@ const AIAssistant  = () => {
     if (storedAgentName) {
       setAgentName(storedAgentName);
     }
-  }, []);
+  };
+
+  // Call the initialization function once when the component mounts
+  useState(() => {
+    initializeChatUser();
+    return undefined;
+  });
 
   useEffect(() => {
     if (agentName) {
@@ -66,12 +75,12 @@ const AIAssistant  = () => {
 
   useEffect(() => {
     if (isOpen && !wsRef.current) {
-      const wsUrl =
-      window.location.hostname === "localhost"
-        ? "ws://localhost:8080"
-        : "wss://marriage-vendors-nka3z.ondigitalocean.app/ws";
-    
-    const ws = new WebSocket(wsUrl);
+      const wsUrl = "ws://localhost:4000";
+      // window.location.hostname === "localhost"
+      //   ?
+      //   : "wss://marriage-vendors-nka3z.ondigitalocean.app/ws";
+
+      const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
 
       ws.onopen = () => {
@@ -86,7 +95,7 @@ const AIAssistant  = () => {
       };
 
       ws.onmessage = (event) => {
-        const data = JSON.parse(event.data)
+        const data = JSON.parse(event.data);
 
         switch (data.type) {
           case "welcome":
@@ -94,6 +103,32 @@ const AIAssistant  = () => {
 
           case "private_message":
             if (data.message) {
+              console.log(data);
+
+              if (data.senderRole === "Database") {
+                try {
+                  const jsonStartIndex = data.message.indexOf("[");
+                  const rawJson = data.message.slice(jsonStartIndex);
+                  const parsedData = JSON.parse(rawJson);
+
+                  
+
+                  setDatabaseJsonRes(parsedData);
+                } catch (err) {
+                  console.error(
+                    "Failed to parse service data from message:",
+                    err
+                  );
+                  showDatabaseMessage({
+                    title: "⚠️ Error",
+                    content: "Unable to parse database response.",
+                  });
+                }
+
+                return;
+              }
+
+              // Handle agent intro message only if it's new
               if (
                 data.senderRole === "agent" &&
                 data.senderName &&
@@ -113,6 +148,7 @@ const AIAssistant  = () => {
                 ]);
               }
 
+              // Append regular message to chat
               setMessages((prev) => [
                 ...prev,
                 {
@@ -255,6 +291,76 @@ const AIAssistant  = () => {
     }
   }, [isOpen]);
 
+  // Load messages from localStorage on mount
+  useEffect(() => {
+    const stored = localStorage.getItem("chatMessages");
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        const lastActive = parsed.lastActive;
+        const now = Date.now();
+        // 1 hour = 3600000 ms
+        if (!lastActive || now - lastActive > 3600000) {
+          // Inactive for over 1 hour, clear messages and show greeting
+          setMessages([
+            {
+              id: generateMessageId(),
+              text: "Namaste! How can I help you?",
+              sender: "assistant",
+              timestamp: new Date(),
+            },
+          ]);
+          localStorage.removeItem("chatMessages");
+        } else {
+          // Convert timestamp strings back to Date objects
+          setMessages(
+            parsed.messages.map((msg) => ({
+              ...msg,
+              timestamp: new Date(msg.timestamp),
+            }))
+          );
+        }
+      } catch {
+        // If error, show greeting
+        setMessages([
+          {
+            id: generateMessageId(),
+            text: "Namaste! How can I help you?",
+            sender: "assistant",
+            timestamp: new Date(),
+          },
+        ]);
+        localStorage.removeItem("chatMessages");
+      }
+    } else {
+      // Only add greeting if no previous messages
+      setMessages([
+        {
+          id: generateMessageId(),
+          text: "Namaste! How can I help you?",
+          sender: "assistant",
+          timestamp: new Date(),
+        },
+      ]);
+    }
+  }, []);
+
+  // Save last 20 messages and last activity timestamp to localStorage whenever messages change
+  useEffect(() => {
+    if (messages.length > 0) {
+      const last20 = messages.slice(-20);
+      localStorage.setItem(
+        "chatMessages",
+        JSON.stringify({
+          messages: last20,
+          lastActive: Date.now(),
+        })
+      );
+    } else {
+      localStorage.removeItem("chatMessages");
+    }
+  }, [messages]);
+
   return (
     <>
       <motion.div
@@ -323,6 +429,11 @@ const AIAssistant  = () => {
                     <ChatMessage key={message.id} message={message} />
                   ))}
                   <div ref={messagesEndRef} />
+                  {databaseJsonRes && databaseJsonRes.length > 0 && (
+                    <div className="mt-4">
+                      <ServiceList services={databaseJsonRes} />
+                    </div>
+                  )}
                 </div>
 
                 <div
@@ -338,7 +449,7 @@ const AIAssistant  = () => {
                         key={index}
                         variant="outline"
                         size="sm"
-                        className="text-xs bg-white border-rose-200 text-rose-700 hover:bg-rose-100"
+                        className="text-xs bg-rose-200 border-rose-200 text-rose-700 hover:bg-rose-200"
                         onClick={() => {
                           setInputMessage(suggestion);
                           if (wsRef.current?.readyState === WebSocket.OPEN) {
@@ -360,7 +471,7 @@ const AIAssistant  = () => {
                                 message: suggestion,
                               })
                             );
-                            
+
                             setInputMessage("");
                           }
                         }}

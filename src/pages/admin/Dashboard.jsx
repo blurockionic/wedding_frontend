@@ -41,6 +41,7 @@ const AdminDashBoard = () => {
     navItems.push({ name: "Give Admin", path: "giveAdmin" });
     navItems.push({ name: "Revoke Admin", path: "revokeAdmin" });
     navItems.push({ name: "Give Super Admin", path: "giveSuperAdmin" });
+    navItems.push({ name: "Give Agent", path: "giveAgent" });
   }
 
   const handleLogout = async () => {
@@ -124,7 +125,8 @@ const AdminDashBoard = () => {
                     {item.name === "UserQuery" && <IoPersonOutline className="text-[20px]" />}
                     {(item.name === "Give Admin" ||
                       item.name === "Revoke Admin" ||
-                      item.name === "Give Super Admin") && (
+                      item.name === "Give Super Admin" ||
+                      item.name === "Give Agent") && (
                       <IoPersonOutline className="text-[20px]" />
                     )}
                   </span>
