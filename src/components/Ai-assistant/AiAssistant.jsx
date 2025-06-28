@@ -73,6 +73,13 @@ const AIAssistant = () => {
     return `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   }, []);
 
+  // Enhanced scroll to bottom function
+  const scrollToBottom = useCallback((behavior = "smooth") => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior });
+    }
+  }, []);
+
   useEffect(() => {
     if (isOpen && !wsRef.current) {
       const wsUrl = "ws://localhost:4000";
@@ -111,18 +118,34 @@ const AIAssistant = () => {
                   const rawJson = data.message.slice(jsonStartIndex);
                   const parsedData = JSON.parse(rawJson);
 
-                  
-
                   setDatabaseJsonRes(parsedData);
+                  
+                  // Add services as a special message type
+                  setMessages((prev) => [
+                    ...prev,
+                    {
+                      id: generateMessageId(),
+                      type: "services",
+                      services: parsedData,
+                      sender: "assistant",
+                      timestamp: new Date(),
+                    },
+                  ]);
                 } catch (err) {
                   console.error(
                     "Failed to parse service data from message:",
                     err
                   );
-                  showDatabaseMessage({
-                    title: "⚠️ Error",
-                    content: "Unable to parse database response.",
-                  });
+                  // If parsing fails, treat it as a regular message
+                  setMessages((prev) => [
+                    ...prev,
+                    {
+                      id: generateMessageId(),
+                      text: data.message,
+                      sender: "assistant",
+                      timestamp: new Date(),
+                    },
+                  ]);
                 }
 
                 return;
@@ -233,6 +256,9 @@ const AIAssistant = () => {
       },
     ]);
 
+    // Clear services data when user sends a new message
+    setDatabaseJsonRes([]);
+
     wsRef.current.send(
       JSON.stringify({
         type: "private_message",
@@ -270,11 +296,12 @@ const AIAssistant = () => {
     [handleSendMessage]
   );
 
+  // Enhanced auto-scroll effect
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [messages]);
+    // Use immediate scroll for user messages, smooth for assistant messages
+    const isUserMessage = messages.length > 0 && messages[messages.length - 1]?.sender === "user";
+    scrollToBottom(isUserMessage ? "auto" : "smooth");
+  }, [messages, scrollToBottom]);
 
   const filteredSuggestions =
     inputMessage.trim().length > 0
@@ -426,14 +453,34 @@ const AIAssistant = () => {
               <CardContent>
                 <div className="h-[300px] overflow-y-auto p-4 space-y-4">
                   {messages.map((message) => (
-                    <ChatMessage key={message.id} message={message} />
+                    <div key={message.id}>
+                      {message.type === "services" ? (
+                        // Render services as a special message
+                        <div className="flex justify-start">
+                          <div className="max-w-[90%] p-3 rounded-2xl bg-rose-500 text-white rounded-tl-none">
+                            <div className="mb-2">
+                              <p className="text-sm font-medium">Here are some services that might help you:</p>
+                            </div>
+                            <div className="bg-white/10   rounded-lg p-2">
+                              <div className="w-full overflow-x-auto">
+                                <div className="flex gap-3" style={{ minWidth: 'max-content' }}>
+                                  <div className="transform  scale-100 origin-left h-fit overflow-hidden">
+                                    <ServiceList services={message.services} />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="text-xs mt-2 text-rose-100">
+                              {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <ChatMessage message={message} />
+                      )}
+                    </div>
                   ))}
                   <div ref={messagesEndRef} />
-                  {databaseJsonRes && databaseJsonRes.length > 0 && (
-                    <div className="mt-4">
-                      <ServiceList services={databaseJsonRes} />
-                    </div>
-                  )}
                 </div>
 
                 <div
@@ -462,6 +509,9 @@ const AIAssistant = () => {
                                 timestamp: new Date(),
                               },
                             ]);
+
+                            // Clear services data when user selects a suggestion
+                            setDatabaseJsonRes([]);
 
                             wsRef.current.send(
                               JSON.stringify({
