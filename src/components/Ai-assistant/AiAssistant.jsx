@@ -11,7 +11,7 @@ import {
 import { Input } from "../ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 
-import { ChatMessage } from "./ChatMessage";
+import ChatFlexibleMessage from "./ChatFlexibleMessage";
 
 const suggestions = [
   "How can find vendors?",
@@ -34,6 +34,8 @@ const AIAssistant = () => {
   const lastSupportMessageRef = useRef("");
   const inputRef = useRef(null);
   const [databaseJsonRes, setDatabaseJsonRes] = useState([]);
+  const [showAgentSuggestion, setShowAgentSuggestion] = useState(false);
+  const inactivityTimerRef = useRef(null);
 
   const formatAgentName = (name) =>
     name.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
@@ -103,54 +105,12 @@ const AIAssistant = () => {
 
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
-
         switch (data.type) {
           case "welcome":
             break;
 
           case "private_message":
             if (data.message) {
-              console.log(data);
-
-              if (data.senderRole === "Database") {
-                try {
-                  const jsonStartIndex = data.message.indexOf("[");
-                  const rawJson = data.message.slice(jsonStartIndex);
-                  const parsedData = JSON.parse(rawJson);
-
-                  setDatabaseJsonRes(parsedData);
-                  
-                  // Add services as a special message type
-                  setMessages((prev) => [
-                    ...prev,
-                    {
-                      id: generateMessageId(),
-                      type: "services",
-                      services: parsedData,
-                      sender: "assistant",
-                      timestamp: new Date(),
-                    },
-                  ]);
-                } catch (err) {
-                  console.error(
-                    "Failed to parse service data from message:",
-                    err
-                  );
-                  // If parsing fails, treat it as a regular message
-                  setMessages((prev) => [
-                    ...prev,
-                    {
-                      id: generateMessageId(),
-                      text: data.message,
-                      sender: "assistant",
-                      timestamp: new Date(),
-                    },
-                  ]);
-                }
-
-                return;
-              }
-
               // Handle agent intro message only if it's new
               if (
                 data.senderRole === "agent" &&
@@ -210,6 +170,58 @@ const AIAssistant = () => {
           case "error":
             console.error("Server error:", data.message);
             break;
+
+          case "options":
+            setMessages((prev) => [
+              ...prev,
+              {
+                id: generateMessageId(),
+                type: "options",
+                text: data.message,
+                options: data.options,
+                sender: "assistant",
+                timestamp: new Date(),
+              },
+            ]);
+            break;
+
+          case "text":
+            setMessages((prev) => [
+              ...prev,
+              {
+                id: generateMessageId(),
+                type: "text",
+                text: data.text,
+                sender: "assistant",
+                timestamp: new Date(),
+              },
+            ]);
+            break;
+
+          case "services":
+            let servicesData = data.services;
+            
+            // Parse services if it's a string
+            if (typeof servicesData === 'string') {
+              try {
+                servicesData = JSON.parse(servicesData);
+              } catch (parseError) {
+                console.error("Failed to parse services string:", parseError);
+                servicesData = [];
+              }
+            }
+            
+            setMessages((prev) => [
+              ...prev,
+              {
+                id: generateMessageId(),
+                type: "services",
+                services: servicesData,
+                sender: "assistant",
+                timestamp: new Date(),
+              },
+            ]);
+            break;
         }
       };
 
@@ -236,7 +248,44 @@ const AIAssistant = () => {
     setIsOpen((prev) => !prev);
   }, []);
 
+  // Helper to reset inactivity timer
+  const resetInactivityTimer = useCallback(() => {
+    if (inactivityTimerRef.current) {
+      clearTimeout(inactivityTimerRef.current);
+    }
+    // Remove any previous suggestion message
+    setMessages((prev) => prev.filter((msg) => msg.type !== 'agent_suggestion'));
+    inactivityTimerRef.current = setTimeout(() => {
+      // Add a suggestion message as a chat bubble from assistant
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: generateMessageId(),
+          type: 'agent_suggestion',
+          sender: 'assistant',
+          timestamp: new Date(),
+        },
+      ]);
+    }, 60000); // 1 minute
+  }, [generateMessageId]);
+
+  // Reset timer on input change
+  useEffect(() => {
+    if (isOpen) {
+      resetInactivityTimer();
+    }
+    // Clean up on unmount
+    return () => {
+      if (inactivityTimerRef.current) {
+        clearTimeout(inactivityTimerRef.current);
+      }
+    };
+  }, [inputMessage, isOpen, resetInactivityTimer]);
+
   const handleSendMessage = useCallback(() => {
+    if (!inputMessage.trim()) return;
+    // Remove suggestion message if present
+    setMessages((prev) => prev.filter((msg) => msg.type !== 'agent_suggestion'));
     if (
       !inputMessage.trim() ||
       !wsRef.current ||
@@ -388,6 +437,16 @@ const AIAssistant = () => {
     }
   }, [messages]);
 
+  // Handler for 'Talk to Agent' button
+  const handleTalkToAgent = () => {
+    setInputMessage('I want to speak with agent');
+    // Optionally, auto-send or focus input for user to send
+    // handleSendMessage(); // Uncomment to auto-send
+    if (inputRef.current) inputRef.current.focus();
+    // Remove suggestion message
+    setMessages((prev) => prev.filter((msg) => msg.type !== 'agent_suggestion'));
+  };
+
   return (
     <>
       <motion.div
@@ -452,33 +511,34 @@ const AIAssistant = () => {
 
               <CardContent>
                 <div className="h-[300px] overflow-y-auto p-4 space-y-4">
-                  {messages.map((message) => (
-                    <div key={message.id}>
-                      {message.type === "services" ? (
-                        // Render services as a special message
-                        <div className="flex justify-start">
-                          <div className="max-w-[90%] p-3 rounded-2xl bg-rose-500 text-white rounded-tl-none">
-                            <div className="mb-2">
-                              <p className="text-sm font-medium">Here are some services that might help you:</p>
-                            </div>
-                            <div className="bg-white/10   rounded-lg p-2">
-                              <div className="w-full overflow-x-auto">
-                                <div className="flex gap-3" style={{ minWidth: 'max-content' }}>
-                                  <div className="transform  scale-100 origin-left h-fit overflow-hidden">
-                                    <ServiceList services={message.services} />
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="text-xs mt-2 text-rose-100">
-                              {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-                            </div>
-                          </div>
-                        </div>
-                      ) : (
-                        <ChatMessage message={message} />
-                      )}
-                    </div>
+                  {messages.map((msg) => (
+                    <ChatFlexibleMessage
+                      key={msg.id}
+                      message={msg}
+                      onOptionClick={(btn) => {
+                        // Handle option button click
+                        if (wsRef.current?.readyState === WebSocket.OPEN) {
+                          setMessages((prev) => [
+                            ...prev,
+                            {
+                              id: generateMessageId(),
+                              text: btn.label,
+                              sender: "user",
+                              timestamp: new Date(),
+                            },
+                          ]);
+                          wsRef.current.send(
+                            JSON.stringify({
+                              type: "private_message",
+                              senderId: userIdRef.current,
+                              recipientId: agentName ? "agent" : "bot",
+                              message: btn.value,
+                            })
+                          );
+                        }
+                      }}
+                      onTalkToAgent={handleTalkToAgent}
+                    />
                   ))}
                   <div ref={messagesEndRef} />
                 </div>
@@ -574,6 +634,8 @@ const AIAssistant = () => {
                 <ChevronUp className="h-3 w-3 mr-1" /> Minimize chat
               </button>
             </div>
+
+            
           </motion.div>
         )}
       </AnimatePresence>
