@@ -4,10 +4,21 @@ import Footer from "../../Footer";
 import { FiPlus, FiTrash2, FiEdit, FiSearch, FiBarChart, FiUsers, FiSettings, FiHome, FiFolder, FiCalendar, FiEye, FiShare2, FiChevronLeft, FiChevronRight, FiTag, FiFilter } from 'react-icons/fi';
 import { useGetTotalViewCountQuery, useGetBlogCountQuery, useGetBlogsQuery, useDeleteBlogMutation, useGetAllTagsQuery } from '../../../redux/blogSlice';
 import EnhancedTagsManager from './EnhancedTagsManager';
+import { useSearchParams } from 'react-router-dom';
 
 function BlogDashboard() {
   const navigate = useNavigate();
   const [currentDateTime, setCurrentDateTime] = useState(new Date().toISOString());
+  const [searchParams] = useSearchParams();
+  const tabParam = searchParams.get('tab');
+  
+
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab) {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -102,7 +113,7 @@ function BlogDashboard() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [editingPost, setEditingPost] = useState(null);
   const [deletingPostId, setDeletingPostId] = useState(null);
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState(tabParam || 'dashboard');
 
   const [newPost, setNewPost] = useState({
     title: '',
@@ -361,49 +372,22 @@ function BlogDashboard() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-      <div className="flex flex-1">
-        {/* Sidebar */}
-        <aside className="w-64 bg-white border-r border-gray-200 hidden md:block">
-          <div className="h-full flex flex-col pt-5 pb-4 overflow-y-auto">
-            <div className="px-4">
-              <button
-                onClick={handleAddBlog}
-                className="w-full flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                <FiPlus className="mr-2" />
-                New Post
-              </button>
-              <hr className="my-4" />
-            </div>
-            <nav className="mt-5 px-4 flex-1 space-y-1">
-              <div
-                onClick={() => setActiveTab('dashboard')}
-                className={`flex items-center px-2 py-2 text-sm font-medium rounded-md cursor-pointer ${activeTab === 'dashboard' ? 'bg-indigo-100 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}
-              >
-                <FiHome className="mr-3 h-5 w-5" />
-                Dashboard
-              </div>
-              <div
-                onClick={() => setActiveTab('posts')}
-                className={`flex items-center px-2 py-2 text-sm font-medium rounded-md cursor-pointer ${activeTab === 'posts' ? 'bg-indigo-100 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}
-              >
-                <FiFolder className="mr-3 h-5 w-5" />
-                Posts
-              </div>
-              <div
-                onClick={() => {
-                  setActiveTab('tags');
-                  setShowTagsSection(true);
-                }}
-                className={`flex items-center px-2 py-2 text-sm font-medium rounded-md cursor-pointer ${activeTab === 'tags' ? 'bg-indigo-100 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}
-              >
-                <FiTag className="mr-3 h-5 w-5" />
-                Tags
-              </div>
-            </nav>
-          </div>
-        </aside>
+    <div className="min-h-screen flex flex-col bg-gray-50 p-8">
+
+      <div className="flex justify-between items-center mb-8 w-[95%] ms-8">
+        <div>
+          <h2 className="text-2xl font-semibold text-[#f20574]">Blog Dashboard</h2>
+          <p className='text-gray-500'>Overview of your blog content and performance</p>
+        </div>
+        <button
+          onClick={handleAddBlog}
+          className="flex items-center justify-center py-2 px-6 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#f20574] hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
+        >
+          <FiPlus className="mr-2" />
+          New Post
+        </button>
+      </div>
+
 
         {/* Main Content */}
         <main className="flex-1 p-8 h-[90vh]">
@@ -423,7 +407,7 @@ function BlogDashboard() {
                 </div>
 
                 <div className="bg-[#eedce8] p-6 rounded-lg shadow-sm border border-gray-200">
-                  <h3 className="text-md uppercase text-gray-500 font-semibold">Published</h3>
+                  <h3 className="text-md uppercase text-gray-500 font-semibold">Engagement Rate</h3>
                   <p className="text-3xl font-semibold text-gray-800 mt-2">{publishedPosts}</p>
                   <div className="flex items-center mt-4">
                     <FiCalendar className="text-green-500" />
@@ -432,7 +416,7 @@ function BlogDashboard() {
                 </div>
 
                 <div className="bg-[#ebeedc] p-6 rounded-lg shadow-sm border border-gray-200">
-                  <h3 className="text-md uppercase text-gray-500 font-semibold">Drafts</h3>
+                  <h3 className="text-md uppercase text-gray-500 font-semibold">Total Tags</h3>
                   <p className="text-3xl font-semibold text-gray-800 mt-2">{draftPosts}</p>
                   <div className="flex items-center mt-4">
                     <FiEdit className="text-amber-500" />
@@ -453,7 +437,8 @@ function BlogDashboard() {
               </div>
 
               {/* Recent Posts */}
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+              <div className='flex w-full h-[574px] justify-between'>
+                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-400 h-[474px] w-[703px]">
                 <h3 className="text-xl font-semibold text-gray-800 mb-4">Recent Posts</h3>
                 <div className="space-y-4">
                   {allBlogsLoading ? (
@@ -498,6 +483,8 @@ function BlogDashboard() {
                   )}
                 </div>
               </div>
+              <div className='bg-white p-6 rounded-lg shadow-sm border border-gray-400 h-[245px] w-[620px]'></div>
+            </div>
             </div>
           )}
 
@@ -660,7 +647,6 @@ function BlogDashboard() {
             <EnhancedTagsManager />
           )}
         </main>
-      </div>
       
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (

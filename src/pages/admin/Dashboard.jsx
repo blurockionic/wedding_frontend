@@ -8,6 +8,7 @@ import { IoIosMenu } from "react-icons/io";
 import { IoSearchOutline } from "react-icons/io5";
 import { IoPersonOutline } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
+import { FiHome, FiFolder, FiTag } from "react-icons/fi";
 
 const AdminDashBoard = () => {
   const navigate = useNavigate();
@@ -15,7 +16,8 @@ const AdminDashBoard = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const userRole = user?.role?.toLowerCase();
-  const [isSearchOpen, setIsSearchOpen] = useState(false); // State for dropdown
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isBlogOpen, setIsBlogOpen] = useState(false); // New state for blog dropdown
 
   // Array of main navigation items
   const navItems = [
@@ -31,9 +33,17 @@ const AdminDashBoard = () => {
     },
     { name: "Bill & transactions", path: "transactions" },
     { name: "Reports", path: "" },
-    { name: "Blog", path: "blog_dashboard" },
+    {
+      name: "Blog",
+      icon: <IoPersonOutline className="text-[20px]" />,
+      subItems: [
+        { name: "Dashboard", path: "blog_dashboard?tab=dashboard" },
+        { name: "Posts", path: "blog_dashboard?tab=posts" },
+        { name: "Tags", path: "blog_dashboard?tab=tags" },
+      ],
+    },
     { name: "Partners", path: "partnerAdminDashboard" },
-    { name: "UserQuery", path: "query-list" }  //add UserQuery
+    { name: "UserQuery", path: "query-list" }
   ];
 
   // Add admin-specific items for super_admin role
@@ -71,21 +81,31 @@ const AdminDashBoard = () => {
           {navItems.map((item, index) => (
             <li key={index}>
               {item.subItems ? (
-                // Search item with dropdown
+                // Item with dropdown (either Search or Blog)
                 <div>
                   <button
-                    onClick={() => setIsSearchOpen(!isSearchOpen)}
+                    onClick={() => {
+                      if (item.name === "Search") {
+                        setIsSearchOpen(!isSearchOpen);
+                        setIsBlogOpen(false);
+                      } else if (item.name === "Blog") {
+                        setIsBlogOpen(!isBlogOpen);
+                        setIsSearchOpen(false);
+                      }
+                    }}
                     className="flex items-center w-full text-gray-600 font-medium py-2 px-4 rounded-md hover:text-pink-600 hover:bg-pink-100"
                   >
                     <span className="mr-3">{item.icon}</span>
                     {item.name}
                     <IoIosArrowDown
                       className={`ml-auto transition-transform ${
-                        isSearchOpen ? "rotate-180" : ""
+                        (item.name === "Search" && isSearchOpen) || 
+                        (item.name === "Blog" && isBlogOpen) ? "rotate-180" : ""
                       }`}
                     />
                   </button>
-                  {isSearchOpen && (
+                  {(item.name === "Search" && isSearchOpen) || 
+                    (item.name === "Blog" && isBlogOpen) ? (
                     <ul className="pl-8 mt-2 space-y-2">
                       {item.subItems.map((subItem, subIndex) => (
                         <li key={subIndex}>
@@ -93,17 +113,24 @@ const AdminDashBoard = () => {
                             to={subItem.path}
                             className={({ isActive }) =>
                               isActive
-                                ? "flex items-center text-pink-600 font-medium py-2 px-4 rounded-md bg-pink-100"
+                                ? "flex items-center hover:text-pink-600 font-medium py-2 px-4 rounded-md hover:bg-pink-100 text-gray-600"
                                 : "flex items-center text-gray-600 font-medium py-2 px-4 rounded-md hover:text-pink-600 hover:bg-pink-100"
                             }
                             end
                           >
+                            {item.name === "Blog" && (
+                              <span className="mr-3">
+                                {subItem.name === "Dashboard" && <FiHome className="text-[16px]" />}
+                                {subItem.name === "Posts" && <FiFolder className="text-[16px]" />}
+                                {subItem.name === "Tags" && <FiTag className="text-[16px]" />}
+                              </span>
+                            )}
                             {subItem.name}
                           </NavLink>
                         </li>
                       ))}
                     </ul>
-                  )}
+                  ) : null}
                 </div>
               ) : (
                 // Regular navigation item
@@ -120,7 +147,6 @@ const AdminDashBoard = () => {
                     {item.name === "General Analytics" && <IoIosMenu className="text-[26px]" />}
                     {item.name === "Bill & transactions" && <IoIosMenu className="text-[26px]" />}
                     {item.name === "Reports" && <IoPersonOutline className="text-[20px]" />}
-                    {item.name === "Blog" && <IoPersonOutline className="text-[20px]" />}
                     {item.name === "Partners" && <IoPersonOutline className="text-[20px]" />}
                     {item.name === "UserQuery" && <IoPersonOutline className="text-[20px]" />}
                     {(item.name === "Give Admin" ||
