@@ -372,7 +372,7 @@ function BlogDashboard() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 p-8">
+    <div className="min-h-screen flex flex-col bg-white p-8">
         {/* Main Content */}
             <main className="flex-1 p-8 h-[90vh]">
               {activeTab === 'dashboard' && (
@@ -507,176 +507,197 @@ function BlogDashboard() {
             </div>
           )}
 
-          {activeTab === 'posts' && (
-            <div className="space-y-8">
-              <div className="space-y-8 -mt-11">
-                <div className="flex justify-between items-center mb-8">
-                <div>
-                  <h2 className="text-2xl font-semibold text-[#f20574]">Blog Posts</h2>
-                  <p className='text-gray-500'>Manage all your blog content in one place</p>
-                </div>
-                <button
-                  onClick={handleAddBlog}
-                  className="flex items-center justify-center py-2 px-6 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#f20574] hover:bg-pink-600      focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
-                >
-                  <FiPlus className="mr-2" />
-                  New Post
-                </button>
-              </div>
-            </div>
-              {/* Tags filter section */}
-              <TagsSection />
-              
-              {/* Filters, Sorting, and Search Bar */}
-              <div className="flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0">                <div className="flex items-center space-x-4">
-                  <select
-                    value={statusFilter}
-                    onChange={handleStatusFilterChange}
-                    className="p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
-                  >
-                    <option value="All">All Statuses</option>
-                    <option value="PUBLISHED">Published</option>
-                    <option value="DRAFT">Draft</option>
-                  </select>
-                  
-                  {(selectedTag || statusFilter !== 'All' || searchTerm) && (
-                    <button
-                      onClick={handleResetFilters}
-                      className="px-3 py-1.5 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 flex items-center transition-colors duration-200"
-                    >
-                      <FiFilter className="mr-1" />
-                      Reset Filters
-                    </button>
-                  )}
-                  
-                  {selectedTag && (
-                    <div className="tag-filter-active inline-flex items-center px-3 py-1 rounded-md text-sm bg-indigo-50 text-indigo-700 border border-indigo-200">
-                      <FiTag className="mr-1" />
-                      Filtered by: <span className="font-medium ml-1">{selectedTag}</span>
-                      <button
-                        onClick={() => setSelectedTag('')}
-                        className="ml-2 hover:text-indigo-900"
-                      >
-                        ×
-                      </button>
-                    </div>
-                  )}
-                </div>
-                <div className="flex items-center space-x-4">
-                  {/* Search Bar */}
-                  <div className="relative">
-                    <input
-                      type="text"
-                      placeholder="Search posts..."
-                      value={searchTerm}
-                      onChange={handleSearchChange}
-                      className="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                    />
-                    <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                  </div>
-                  <button
-                    onClick={() => handleSort('date')}
-                    className="flex items-center text-sm text-gray-600 hover:text-gray-800"
-                  >
-                    <FiCalendar className="mr-1" />
-                    Sort by Date
-                  </button>
-                  <button
-                    onClick={() => handleSort('views')}
-                    className="flex items-center text-sm text-gray-600 hover:text-gray-800"
-                  >
-                    <FiEye className="mr-1" />
-                    Sort by Views
-                  </button>
-                </div>
-              </div>
+{activeTab === 'posts' && (
+  <div className="space-y-8">
+    <div className="space-y-8 -mt-11">
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="text-2xl font-semibold text-[#f20574]">Blog Posts</h1>
+          <p className="text-gray-500">Manage all your blog content in one place</p>
+        </div>
+        <button
+          onClick={handleAddBlog}
+          className="flex items-center justify-center py-2 px-6 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#f20574] hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
+        >
+          <FiPlus className="mr-2" />
+          New Post
+        </button>
+      </div>
+    </div>
 
-              {/* Posts Table */}
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                {allBlogsLoading ? (
-                  <div className="py-10 text-center">
-                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
-                    <p className="mt-2 text-gray-500">Loading posts...</p>
-                  </div>
-                ) : blogPosts.length === 0 ? (
-                  <div className="py-10 text-center">
-                    <p className="text-lg text-gray-500">No posts found</p>
-                    <button
-                      onClick={handleAddBlog}
-                      className="mt-4 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
-                    >
-                      Create Your First Post
-                    </button>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {blogPosts.map(post => (                      <div key={post.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200">
-                        <div>
-                          <h4 
-                            onClick={() => handleViewBlog(post)}
-                            className="text-lg font-medium text-indigo-600 hover:text-indigo-800 cursor-pointer hover:underline"
-                          >
-                            {post.title}
-                          </h4>
-                          <div className="flex items-center space-x-2 mb-1">
-                            <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
-                              post.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'
-                            }`}>
-                              {post.status}
-                            </span>
-                            <span className="text-sm text-gray-600">Views: {post.views} • Comments: {post.comments || 0}</span>
-                          </div>
-                          
-                          {/* Show tags if available */}
-                          {post.tags && post.tags.length > 0 && (
-                            <div className="flex flex-wrap gap-1 mt-1">
-                              {post.tags.map(tag => (
-                                <span 
-                                  key={tag.id}
-                                  onClick={() => handleTagClick(tag.tagName)}
-                                  className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 cursor-pointer hover:bg-indigo-100 tag-badge"
-                                >
-                                  <FiTag className="mr-1" size={10} />
-                                  {tag.tagName}
-                                </span>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                        <div className="flex items-center space-x-4">
-                          <button
-                            onClick={() => handleEditClick(post)}
-                            className="text-indigo-600 hover:text-indigo-800 transition-colors duration-200"
-                            title="Edit post"
-                          >
-                            <FiEdit className="h-5 w-5" />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteClick(post.id)}
-                            className="text-red-600 hover:text-red-800 transition-colors duration-200"
-                            title="Delete post"
-                          >
-                            <FiTrash2 className="h-5 w-5" />
-                          </button>
-                          <button
-                            onClick={() => handleShareClick(post)}
-                            className="text-blue-600 hover:text-blue-800 transition-colors duration-200"
-                            title="Share post"
-                          >
-                            <FiShare2 className="h-5 w-5" />
-                          </button>
-                        </div>
-                      </div>
+    {/* Filters Section - Updated to match screenshot */}
+    <div className="bg-white">
+      <h2 className="text-lg font-semibold mb-4 text-[#F20574]">Filters</h2>
+      
+      <div className="flex justify-between items-center">
+        {/* Search Post */}
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <FiSearch className="text-[#F20574]" />
+          </div>
+          <input
+            type="text"
+            placeholder="Search Post"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className="pl-10 w-full p-2 border border-[#F20574] rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-[#F20574]"
+          />
+        </div>
+
+        {/* Sort */}
+        <select
+          value={sortBy}
+          onChange={(e) => handleSort(e.target.value)}
+          className="p-2 border border-[#399268] rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-[#399268] w-[160px]"
+        >
+          <option value="date">Sort</option>
+          <option value="views">Sort by Views</option>
+          <option value="title">Sort by Title</option>
+        </select>
+
+        {/* All Tags */}
+        <select
+          value={selectedTag}
+          onChange={(e) => handleTagClick(e.target.value)}
+          className="p-2 border border-[#A79A2B] rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-[#A79A2B] w-[160px]"
+        >
+          <option value="">All Tags</option>
+          {tagsList.map(tag => (
+            <option key={tag.id} value={tag.tagName}>{tag.tagName}</option>
+          ))}
+        </select>
+
+        {/* All Status */}
+        <select
+          value={statusFilter}
+          onChange={handleStatusFilterChange}
+          className="p-2 border border-[#3379BB] rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-[#3379BB] w-[160px]"
+        >
+          <option value="All">All Status</option>
+          <option value="PUBLISHED">Published</option>
+          <option value="DRAFT">Draft</option>
+        </select>
+
+        {/* Apply and Reset Buttons */}
+        <div className="flex justify-end space-x-4">
+          <button
+            onClick={() => refetchBlogs()}
+            className="px-11 py-2 bg-[#f20574] text-white rounded-md hover:bg-pink-600"
+          >
+            Apply
+          </button>
+          <button
+            onClick={handleResetFilters}
+            className="px-8 py-2 bg-white text-[#757575] rounded-md hover:bg-gray-300 border border-[#757575]"
+          >
+            Reset
+          </button>
+          <div className="flex items-center ms-11">
+            <span className="mr-6 text-[#3379BB]">View:</span>
+            <select 
+              value={itemsPerPage}
+              onChange={(e) => {
+                setItemsPerPage(Number(e.target.value));
+                setCurrentPage(1);
+              }}
+              className="p-2 border border-[#3379BB] rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-[#3379BB]"
+            >
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={50}>50</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* Posts Table */}
+    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+      {allBlogsLoading ? (
+        <div className="py-10 text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+          <p className="mt-2 text-gray-500">Loading posts...</p>
+        </div>
+      ) : blogPosts.length === 0 ? (
+        <div className="py-10 text-center">
+          <p className="text-lg text-gray-500">No posts found</p>
+          <button
+            onClick={handleAddBlog}
+            className="mt-4 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
+          >
+            Create Your First Post
+          </button>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {blogPosts.map(post => (
+            <div key={post.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+              <div>
+                <h4 
+                  onClick={() => handleViewBlog(post)}
+                  className="text-lg font-medium text-indigo-600 hover:text-indigo-800 cursor-pointer hover:underline"
+                >
+                  {post.title}
+                </h4>
+                <div className="flex items-center space-x-2 mb-1">
+                  <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
+                    post.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'
+                  }`}>
+                    {post.status}
+                  </span>
+                  <span className="text-sm text-gray-600">Views: {post.views} • Comments: {post.comments || 0}</span>
+                </div>
+                
+                {post.tags && post.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {post.tags.map(tag => (
+                      <span 
+                        key={tag.id}
+                        onClick={() => handleTagClick(tag.tagName)}
+                        className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 cursor-pointer hover:bg-indigo-100 tag-badge"
+                      >
+                        <FiTag className="mr-1" size={10} />
+                        {tag.tagName}
+                      </span>
                     ))}
                   </div>
                 )}
               </div>
+              <div className="flex items-center space-x-4">
+                <button
+                  onClick={() => handleEditClick(post)}
+                  className="text-indigo-600 hover:text-indigo-800 transition-colors duration-200"
+                  title="Edit post"
+                >
+                  <FiEdit className="h-5 w-5" />
+                </button>
+                <button
+                  onClick={() => handleDeleteClick(post.id)}
+                  className="text-red-600 hover:text-red-800 transition-colors duration-200"
+                  title="Delete post"
+                >
+                  <FiTrash2 className="h-5 w-5" />
+                </button>
+                <button
+                  onClick={() => handleShareClick(post)}
+                  className="text-blue-600 hover:text-blue-800 transition-colors duration-200"
+                  title="Share post"
+                >
+                  <FiShare2 className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
 
-              {/* Enhanced Pagination */}
-              {!allBlogsLoading && blogPosts.length > 0 && (
-                <EnhancedPagination />
-              )}
-            </div>          )}
+    {!allBlogsLoading && blogPosts.length > 0 && (
+      <EnhancedPagination />
+    )}
+  </div>
+)}
             {activeTab === 'tags' && (
             <EnhancedTagsManager />
           )}
