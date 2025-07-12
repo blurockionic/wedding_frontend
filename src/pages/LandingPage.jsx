@@ -82,9 +82,6 @@ export default function LandingPage() {
 
       {userCity && (
         <div>
-          <h1 className="text-3xl font-bold p-4">
-            Welcome to the Event Platform
-          </h1>
           <CityManagerPopup
             show={showPopup}
             onClose={() => setShowPopup(false)}
