@@ -136,95 +136,98 @@ export default function Admin() {
             </div>
             <h2 className="text-[26px] font-semibold text-[#f20574] mt-[60px] mb-6">Distribution Chart</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10 w-full mt-4">
-              {/* Total Services by Type */}
-              <div className="flex flex-col items-center">
-                <p className="text-md font-semibold mb-3 w-full text-center">
-                Total Services by Type
+              <div>
+                <p className="text-md font-semibold mb-3 break-words whitespace-normal w-full">
+                  Total Services by Type
                 </p>
-                <div className="relative w-full h-[300px]">
-                  <PieChart
-                    series={[
-                      {
+                <PieChart
+                  series={[
+                    {
                       data: pieChartTotalServicesbyType,
-                        innerRadius: 40,
-                        outerRadius: 80,
-                        cx: 150,
-                        cy: 150,
+                      innerRadius: 50,
+                      outerRadius: 100,
+                      paddingAngle: 0,
+                      cornerRadius: 0,
+                      cx: 100,
+                      cy: 100,
+                    },
+                  ]}
+                  slotProps={{
+                    legend: {
+                      direction: 'column',
+                      position: { vertical: 'bottom', horizontal: 'middle' },
+                      padding: 0,
+                      labelStyle: {
+                        fontSize: 14,
+                        fill: '#333',
                       },
-                    ]}
-                    slotProps={{
-                      legend: {
-                        direction: 'column',
-                        position: { vertical: 'bottom', horizontal: 'middle' },
-                        padding: { top: 20 },
-                        labelStyle: { fontSize: 12 },
-                      },
-                    }}
-                    width={300}
-                    height={300}
-                    margin={{ bottom: 100 }}
-                  />
-                </div>
+                    },
+                  }}
+                  width={300}
+                  height={500}
+                />
               </div>
-
-              {/* Total Views by Service Type */}
-              <div className="flex flex-col items-center">
-                <p className="text-md font-semibold mb-3 w-full text-center">
+              <div>
+                <p className="text-md font-semibold mb-3 break-words whitespace-normal w-full">
                   Total Views by Service Type
                 </p>
-                <div className="relative w-full h-[300px]">
+                <PieChart
+                  series={[
+                    {
+                      data: pieChartTotalServicesbyViews,
+                      innerRadius: 50,
+                      outerRadius: 100,
+                      paddingAngle: 0,
+                      cornerRadius: 0,
+                      cx: 100,
+                      cy: 100,
+                    },
+                  ]}
+                  slotProps={{
+                    legend: {
+                      direction: 'column',
+                      position: { vertical: 'bottom', horizontal: 'middle' },
+                      padding: 0,
+                      labelStyle: {
+                        fontSize: 14,
+                        fill: '#333',
+                      },
+                    },
+                  }}
+                  width={300}
+                  height={550}
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-1 gap-10 w-full px-5 md:px-0 mt-4">
+                <div>
+                  <p className="text-md font-semibold mb-3 break-words whitespace-normal w-full -mt-4">
+                    Revenue per Plan
+                  </p>
                   <PieChart
                     series={[
                       {
-                        data: pieChartTotalServicesbyViews,
-                        innerRadius: 40,
-                        outerRadius: 80,
-                        cx: 150,
-                        cy: 150,
-                      },
-                    ]}
-                    slotProps={{
-                      legend: {
-                        direction: 'column',
-                        position: { vertical: 'bottom', horizontal: 'middle' },
-                        padding: { top: 20 },
-                        labelStyle: { fontSize: 12 },
-                      },
-                    }}
-                    width={300}
-                    height={300}
-                    margin={{ bottom: 100 }}
-                  />
-                </div>
-              </div>
-
-              {/* Revenue per Plan */}
-              <div className="flex flex-col items-center">
-                <p className="text-md font-semibold mb-3 w-full text-center">
-                  Revenue per Plan
-                </p>
-                <div className="relative w-full h-[300px]">
-                  <PieChart
-                  series={[
-                      {
                         data: pieChartPlansbyRevenue,
-                        innerRadius: 40,
-                        outerRadius: 80,
-                        cx: 150,
-                        cy: 150,
+                        innerRadius: 50,
+                        outerRadius: 100,
+                        paddingAngle: 0,
+                        cornerRadius: 0,
+                        cx: 100,
+                        cy: 100,
                       },
                     ]}
                     slotProps={{
-                      legend: {
-                        direction: 'column',
-                        position: { vertical: 'bottom', horizontal: 'middle' },
-                        padding: { top: 20 },
-                        labelStyle: { fontSize: 12 },
+                    legend: {
+                      direction: 'column',
+                      position: { vertical: 'bottom', horizontal: 'middle' },
+                      padding: 100,
+                      labelStyle: {
+                        fontSize: 14,
+                        fill: '#333',
                       },
-                    }}
-                    width={300}
-                    height={300}
-                    margin={{ bottom: 100 }}
+                    },
+                  }}
+                    width={250}
+                    height={500}
                   />
                 </div>
               </div>
