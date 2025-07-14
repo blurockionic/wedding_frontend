@@ -436,48 +436,48 @@ function BlogDashboard() {
               {/* Recent Posts */}
               <div className='flex w-full h-[574px] justify-between'>
                 <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-400 h-[554px] w-[703px]">
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">Recent Posts</h3>
-                <div className="space-y-4">
-                  {allBlogsLoading ? (
-                    <p className="text-center py-4">Loading posts...</p>
-                  ) : blogPosts.length === 0 ? (
-                    <p className="text-center py-4 text-gray-500">No posts found</p>
-                  ) : (
-                    blogPosts.slice(0, 5).map(post => (
-                      <div key={post.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-                        <div>
-                          <h4 
-                            onClick={() => handleViewBlog(post)} 
-                            className="text-lg font-medium text-indigo-600 hover:text-indigo-800 cursor-pointer hover:underline"
-                          >
-                            {post.title}
-                          </h4>
-                          <p className="text-sm text-gray-600">{post.status}</p>
+                  <h3 className="text-xl font-semibold text-gray-800 mb-4">Recent Posts</h3>
+                  <div className="space-y-4 overflow-y-auto h-[480px]">
+                    {allBlogsLoading ? (
+                      <p className="text-center py-4">Loading posts...</p>
+                    ) : blogPosts.length === 0 ? (
+                      <p className="text-center py-4 text-gray-500">No posts found</p>
+                    ) : (
+                      blogPosts.slice(0, 5).map(post => (
+                        <div key={post.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                          <div>
+                            <h4 
+                              onClick={() => handleViewBlog(post)} 
+                              className="text-lg font-medium text-indigo-600 hover:text-indigo-800 cursor-pointer hover:underline"
+                            >
+                              {post.title}
+                            </h4>
+                            <p className="text-sm text-gray-600">{post.status}</p>
+                          </div>
+                          <div className="flex items-center space-x-4">
+                            <button
+                              onClick={() => handleEditClick(post)}
+                              className="text-indigo-600 hover:text-indigo-800"
+                            >
+                              <FiEdit className="h-5 w-5" />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteClick(post.id)}
+                              className="text-red-600 hover:text-red-800"
+                            >
+                              <FiTrash2 className="h-5 w-5" />
+                            </button>
+                            {/* Share Button */}
+                            <button
+                              onClick={() => handleShareClick(post)}
+                              className="text-blue-600 hover:text-blue-800"
+                            >
+                              <FiShare2 className="h-5 w-5" />
+                            </button>
+                          </div>
                         </div>
-                        <div className="flex items-center space-x-4">
-                          <button
-                            onClick={() => handleEditClick(post)}
-                            className="text-indigo-600 hover:text-indigo-800"
-                          >
-                            <FiEdit className="h-5 w-5" />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteClick(post.id)}
-                            className="text-red-600 hover:text-red-800"
-                          >
-                            <FiTrash2 className="h-5 w-5" />
-                          </button>
-                          {/* Share Button */}
-                          <button
-                            onClick={() => handleShareClick(post)}
-                            className="text-blue-600 hover:text-blue-800"
-                          >
-                            <FiShare2 className="h-5 w-5" />
-                          </button>
-                        </div>
-                      </div>
-                    ))
-                  )}
+                      ))
+                    )}
                 </div>
               </div>
               <div className='bg-white h-[554px] w-[620px]'>
