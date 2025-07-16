@@ -135,7 +135,7 @@ export default function Admin() {
               />
             </div>
             <h2 className="text-[26px] font-semibold text-[#f20574] mt-[60px] mb-6">Distribution Chart</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-10 w-full px-5 md:px-0 mt-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10 w-full mt-4">
               <div>
                 <p className="text-md font-semibold mb-3 break-words whitespace-normal w-full">
                   Total Services by Type
