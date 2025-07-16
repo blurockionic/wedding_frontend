@@ -1,9 +1,11 @@
 export const ChatMessage = ({ message }) => {
-  const formatTime = (date) => {
-    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  };
 
-  const isUser = message.sender === "user";
+
+  
+
+ 
+
+  const isUser = message?.sender === "user";
 
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
@@ -14,15 +16,22 @@ export const ChatMessage = ({ message }) => {
             : "bg-rose-500 text-white rounded-tl-none"
         }`}
       >
-        {message.text}
+        {message?.text}
         <div
           className={`text-xs mt-1 ${
             isUser ? "text-gray-500" : "text-rose-100"
           }`}
         >
-          {formatTime(message.timestamp)}
+          {message.timestamp ? formatTime(message.timestamp) : ""}
         </div>
       </div>
     </div>
   );
+};
+
+const formatTime = (date) => {
+  if (!date) return "";
+  const d = date instanceof Date ? date : new Date(date);
+  if (isNaN(d)) return "";
+  return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 };

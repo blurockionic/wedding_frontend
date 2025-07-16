@@ -26,7 +26,7 @@ const weddingCategories = [
   { name: "Entertainment & DJs", icon: <Music size={24} />, link: "/all/Wedding vendor/Wedding Entertainment" },
   { name: "Gifts & Favors", icon: <Gift size={24} /> ,link: "/all/Wedding vendor/Wedding Gift" },
   { name: "Wedding Invitations", icon: <ScrollText size={24} />,link: "/all/Wedding vendor/Wedding Invitation" },
-  { name: "Transportation Services", icon: <Car size={24} /> ,link: "/all/Wedding vendor/Wedding Entertainment" },
+  { name: "Transportation Services", icon: <Car size={24} /> ,link: "/all/Wedding Vendor/Wedding Transportation" },
   { name: "Wedding Planners", icon: <PartyPopper size={24} /> ,link: "/all/Wedding vendor/Wedding planner"},
   { name: "Mehendi Artists", icon: <Hand size={24} />,link: "/all/bride/Mehndi Artist" },
 ];

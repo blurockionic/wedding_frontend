@@ -189,57 +189,28 @@ function Navbar() {
                 <li className="cursor-pointer">
                   <NavLink to="/blogs">Blog</NavLink>
                 </li>
-                <li className="cursor-pointer border px-2 py-2 lg:px-2 lg:py-1 rounded-md hover:bg-pink-50 ">
-                  <NavLink to="/vendorLogin" className="">
-                    Vendor Login
-                  </NavLink>
-                </li>
-
-                {user?.role !== "ADMIN" && user?.role !== "SUPER_ADMIN" ? (
-                  <></>
-                ) : (
-                  <>
-                    <li className="lg:inline-block">
-                      <NavLink
-                        to="/admin"
-                        onClick={() => setIsMenuOpen(false)}
-                        className={({ isActive }) =>
-                          isActive
-                            ? "text-primary px-3 py-1 border border-primary  rounded-md"
-                            : "px-3 py-1 text-primary border border-primary rounded-md"
-                        }
-                      >
-                        ADMIN
-                      </NavLink>
-                    </li>
-                  </>
+                {/* Vendor Login button: only show if not logged in as vendor */}
+                {(!user || user.role?.toLowerCase() !== 'vendor') && (
+                  <li className="cursor-pointer border px-2 py-2 lg:px-2 lg:py-1 rounded-md hover:bg-pink-50 ">
+                    <NavLink to="/vendorLogin" className="">
+                      Vendor Login
+                    </NavLink>
+                  </li>
                 )}
 
-                {user?.role !== "USER" &&
-                user?.role !== "ADMIN" &&
-                user?.role !== "SUPER_ADMIN" ? (
-                  <>
-                    <li className="text-primary lg:inline-block cursor-pointer border border-primary px-2 py-2 lg:px-2 lg:py-1 rounded-md hover:bg-pink-50">
-                      <NavLink
-                        to="/login"
-                        onClick={() => setIsMenuOpen(false)}
-                       
-                      >
-                        Login
-                      </NavLink>
-                    </li>
-                    <li 
-                    className="hidden xl:block cursor-pointer whitespace-nowrap bg-primary border border-primary px-2 py-2 lg:px-2 lg:py-1 rounded-md hover:bg-pink-50 hover:text-primary text-white"
-                    >
-                      <NavLink
-                        to="/signup"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        Sign up
-                      </NavLink>
-                    </li>
-                  </>
-                ) : (
+               
+
+                {user?.role !== "USER" && user?.role !== "ADMIN" && user?.role !== "SUPER_ADMIN" && (
+                  <li className="text-primary lg:inline-block cursor-pointer border border-primary px-2 py-2 lg:px-2 lg:py-1 rounded-md hover:bg-pink-50">
+                    <NavLink to="/login">Login</NavLink>
+                  </li>
+                )}
+                {user?.role !== "USER" && user?.role !== "ADMIN" && user?.role !== "SUPER_ADMIN" && (
+                  <li className="hidden xl:block cursor-pointer whitespace-nowrap bg-primary border border-primary px-2 py-2 lg:px-2 lg:py-1 rounded-md hover:bg-pink-50 hover:text-primary text-white">
+                    <NavLink to="/signup">Sign up</NavLink>
+                  </li>
+                )}
+                {(user?.role === "USER" || user?.role === "ADMIN" || user?.role === "SUPER_ADMIN") && (
                   <li className="lg:inline-block border px-2 py-2 rounded-md lg:border-none lg:p-0 w-full lg:w-auto">
                     <div
                       onClick={handleOnProfile}

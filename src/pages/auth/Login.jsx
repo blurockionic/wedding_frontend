@@ -42,6 +42,7 @@ export default function Login() {
   const [googleUserData, setGoogleUserData] = useState(null);
   const [googleToken, setGoogleToken] = useState(null);
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
+  const [loginError, setLoginError] = useState(null);
 
   const {
     register,
@@ -56,6 +57,7 @@ export default function Login() {
     try {
       const { success, user, message } = await loginMutation(data).unwrap();
       if (success) {
+        setLoginError(null);
         dispatch(login(user));
 
         const cart = await getCartMutation();
@@ -83,10 +85,22 @@ export default function Login() {
        
       }
     } catch (error) {
-      const errorMessage =
+      let errorMessage =
         error?.data?.message ||
         error.message ||
         "An unexpected error occurred.";
+      let errorCode = error?.data?.code;
+      if (
+        error?.status === 401 ||
+        errorMessage.toLowerCase().includes("invalid email") ||
+        errorMessage.toLowerCase().includes("invalid password")
+      ) {
+        errorMessage = "Invalid email or password";
+      }
+      if (errorCode === "P2022") {
+        errorMessage = "We're updating our login system. Please try again soon or contact support if this persists.";
+      }
+      setLoginError(errorMessage);
       toast.error(errorMessage, {
         position: "botom-right",
         autoClose: 5000,
@@ -210,6 +224,13 @@ export default function Login() {
             <CustomText variant="paragraph" className="text-sm text-gray-600 ">
               Enter your credentials to access your account
             </CustomText>
+
+            {loginError && (
+              <div className="max-w-md mx-auto mt-6 mb-2 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 flex items-center justify-between">
+                <span>{loginError}</span>
+                <button onClick={() => setLoginError(null)} className="ml-4 text-red-500 hover:text-red-700 font-bold">&times;</button>
+              </div>
+            )}
 
             <form onSubmit={handleSubmit(handleLogin)} className="space-y-4 ">
               <InputField

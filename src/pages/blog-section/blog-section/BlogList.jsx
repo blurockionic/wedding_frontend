@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useGetBlogsQuery, useGetBlogsByTagQuery } from "../../../redux/blogSlice.js";
 import { motion } from 'framer-motion';
@@ -6,11 +6,8 @@ import { IoEyeOutline } from "react-icons/io5";
 import Footer from '../../Footer.jsx';
 
 const BlogList = () => {
-  const useQuery = () => {
-    return new URLSearchParams(useLocation().search);
-  };
-
-  const query = useQuery();
+  const location = useLocation();
+  const query = useMemo(() => new URLSearchParams(location.search), [location.search]);
   const blogTagName = query.get('tag');
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -61,18 +58,18 @@ const BlogList = () => {
         date: blog.createdAt,
         hashtags: blog.tags,
         viewCount: blog.viewCount,
-        excerpt: blog.excerpt || blog.content
-        .replace(/<[^>]*>|&nbsp;|\u00A0/g, ' ') // Remove all HTML tags and non-breaking spaces
-        .replace(/\s{2,}/g, ' ')                // Replace multiple spaces with single space
-        .trim()                                 // Trim leading/trailing spaces
-        .substring(0, 150)                      // Take first 150 characters
-        .replace(/\s+\S*$/, '') + '...',        // Cleanly cut at last word boundary
+        excerpt: blog.excerpt || (blog.content ? blog.content
+          .replace(/<[^>]*>|&nbsp;|\u00A0/g, ' ')
+          .replace(/\s{2,}/g, ' ')
+          .trim()
+          .substring(0, 150)
+          .replace(/\s+\S*$/, '') + '...' : ''),
 
-        readTime: `${Math.ceil(blog.content
-          .replace(/<[^>]*>|&nbsp;|\u00A0/g, ' ') // Remove all HTML tags and non-breaking spaces
-          .replace(/\s{2,}/g, ' ')                // Replace multiple spaces with single space
-          .trim()                                 // Trim leading/trailing spaces                      // Take first 150 characters
-          .replace(/\s+\S*$/, '') + '...'?.length / 500) || 3} min read`,
+        readTime: `${Math.ceil((blog.content ? blog.content
+          .replace(/<[^>]*>|&nbsp;|\u00A0/g, ' ')
+          .replace(/\s{2,}/g, ' ')
+          .trim()
+          .replace(/\s+\S*$/, '') + '...' : '').length / 500) || 3} min read`,
         content: blog.content
       }));
       setBlogs(transformedBlogs);
@@ -123,6 +120,13 @@ const BlogList = () => {
   }
 
   if (error) {
+    // Try to extract backend error code/message
+    const errorCode = error?.data?.code;
+    const errorMessage = error?.data?.message || error.message || "Something went wrong.";
+    let userMessage = errorMessage;
+    if (errorCode === "P2022") {
+      userMessage = "We're updating our blog system. Please check back soon or contact support if this persists.";
+    }
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center p-8 bg-white rounded-xl shadow-lg max-w-md">
@@ -132,7 +136,7 @@ const BlogList = () => {
             </svg>
           </div>
           <h3 className="text-xl font-bold text-gray-800 mb-2">Oops! Something went wrong</h3>
-          <p className="text-gray-600 mb-6">Error loading blogs: {error.message}</p>
+          <p className="text-gray-600 mb-6">{userMessage}</p>
           <button
             onClick={() => window.location.reload()}
             className="px-4 py-2 bg-[#f20574] hover:bg-[#d30062] text-white rounded-lg font-medium transition-all transform hover:scale-105"
@@ -234,10 +238,14 @@ const BlogList = () => {
     transition={{ duration: 0.8 }}
     className="mb-8 sm:mb-12 md:mb-16 lg:mb-20"
   >
-    <Link
-      to={`/blogs/${currentBlogs[0].urlTitle}`}
-    >
     <div className="relative rounded-xl sm:rounded-2xl md:rounded-3xl overflow-hidden shadow-lg sm:shadow-xl md:shadow-2xl group">
+      <Link
+        to={`/blogs/${currentBlogs[0].urlTitle}`}
+        className="absolute inset-0 z-30"
+        tabIndex={-1}
+        aria-label={currentBlogs[0].title}
+        style={{ display: "block" }}
+      />
       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent opacity-90 z-10"></div>
       <img
         src={currentBlogs[0].coverImage}
@@ -262,10 +270,9 @@ const BlogList = () => {
             {currentBlogs[0].readTime}
           </span>
           <span className="text-gray-200 text-xs sm:text-sm bg-black bg-opacity-30 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full flex items-center">
-            < IoEyeOutline className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+            <IoEyeOutline className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
             {currentBlogs[0].viewCount || 0} views
           </span>
-
         </div>
 
         <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-2 sm:mb-3 md:mb-4 lg:mb-6 leading-tight drop-shadow-lg">
@@ -287,7 +294,6 @@ const BlogList = () => {
         </Link>
       </div>
     </div>
-    </Link>
   </motion.div>
 )}
 
@@ -309,12 +315,13 @@ const BlogList = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group flex flex-col h-full"
-              ><Link
-                    to={`/blogs/${blog.urlTitle}`}
-                  >
+                className="group flex flex-col h-full cursor-pointer"
+                onClick={() => window.location.href = `/blogs/${blog.urlTitle}`}
+                role="button"
+                tabIndex={0}
+                onKeyPress={e => { if (e.key === 'Enter') window.location.href = `/blogs/${blog.urlTitle}`; }}
+              >
                 <div className="relative overflow-hidden rounded-xl h-52 mb-4 group-hover:shadow-xl transition-all">
-                  
                   <img
                     src={blog.coverImage}
                     alt={blog.title}
@@ -323,7 +330,6 @@ const BlogList = () => {
                       e.target.src = 'https://via.placehold.co/600x300';
                     }}
                   />
-                  
                   <div className="absolute inset-0 bg-black bg-opacity-10 group-hover:bg-opacity-30 transition-all"></div>
                 </div>
 
@@ -344,9 +350,7 @@ const BlogList = () => {
                 </div>
 
                 <h3 className="text-xl font-bold text-gray-800 mb-3 group-hover:text-[#f20574] transition duration-300">
-                  <Link to={`/blogs/${blog.urlTitle}`}>
-                    {blog.title}
-                  </Link>
+                  <Link to={`/blogs/${blog.urlTitle}`} onClick={e => e.stopPropagation()}>{blog.title}</Link>
                 </h3>
 
                 <p className="text-gray-600 mb-4 line-clamp-2">
@@ -356,9 +360,8 @@ const BlogList = () => {
                 <div className="mt-auto">
                   <div className="flex flex-wrap gap-2 mb-4">
                     {blog.hashtags.slice(0, 2).map(tag => (
-                      <Link to={`/blogs?tag=${tag.tagName}`}>
+                      <Link key={tag.id} to={`/blogs?tag=${tag.tagName}`} onClick={e => e.stopPropagation()}>
                         <span
-                          key={tag.id}
                           className="text-xs bg-pink-50 text-[#f20574] px-3 py-1 rounded-full hover:bg-pink-100 transition duration-300"
                         >
                           #{tag.tagName}
@@ -369,7 +372,8 @@ const BlogList = () => {
 
                   <Link
                     to={`/blogs/${blog.urlTitle}`}
-                    className="text-[#f20574] font-semibold inline-flex items-center group-hover:underline"
+                    className="text-[#f20574] font-semibold inline-flex items-center group-hover:underline cursor-pointer"
+                    onClick={e => e.stopPropagation()}
                   >
                     Read Article
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1 transform group-hover:translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor">
@@ -377,7 +381,6 @@ const BlogList = () => {
                     </svg>
                   </Link>
                 </div>
-                </Link>
               </motion.div>
             ))}
           </div>
@@ -460,7 +463,7 @@ const BlogList = () => {
       </div>
 
       {/* CSS for Hiding Scrollbar */}
-      <style jsx>{`
+      <style>{`
         .hide-scrollbar::-webkit-scrollbar {
           display: none;
         }

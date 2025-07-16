@@ -128,6 +128,7 @@ export default function VendorLogin() {
   const [loading, setLoading] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [vendorLoginMutation] = useVendorLoginMutation();
+  const [loginError, setLoginError] = useState(null);
 
   const {
     register,
@@ -143,13 +144,27 @@ export default function VendorLogin() {
       const result = await vendorLoginMutation({ email, password }).unwrap();
 
       if (result.vendor) {
+        setLoginError(null);
         dispatch(login(result.vendor));
         reset();
         toast.success("Vendor login successful!");
         navigate("/vendorDashboard", { replace: true });
       }
     } catch (error) {
-      toast.error(error.data?.message || "An unexpected error occurred.", {
+      let errorMessage = error.data?.message || "An unexpected error occurred.";
+      let errorCode = error?.data?.code;
+      if (
+        error?.status === 401 ||
+        errorMessage.toLowerCase().includes("invalid email") ||
+        errorMessage.toLowerCase().includes("invalid password")
+      ) {
+        errorMessage = "Invalid email or password";
+      }
+      if (errorCode === "P2022") {
+        errorMessage = "We're updating our login system. Please try again soon or contact support if this persists.";
+      }
+      setLoginError(errorMessage);
+      toast.error(errorMessage, {
         position: "top-right",
         autoClose: 5000,
         theme: "light",
@@ -206,6 +221,13 @@ export default function VendorLogin() {
           })}
         </script>
       </Helmet>
+
+      {loginError && (
+        <div className="max-w-md mx-auto mt-6 mb-2 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 flex items-center justify-between">
+          <span>{loginError}</span>
+          <button onClick={() => setLoginError(null)} className="ml-4 text-red-500 hover:text-red-700 font-bold">&times;</button>
+        </div>
+      )}
 
       <div className=" bg-gradient-to-b from-yellow-100 p-[3vw] md:p-[7vw] py-10  to-pink-100">
         <div className="flex justify-center items-center cusrsor-pointer  "></div>

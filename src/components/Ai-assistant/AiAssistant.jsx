@@ -84,10 +84,8 @@ const AIAssistant = () => {
 
   useEffect(() => {
     if (isOpen && !wsRef.current) {
-      const wsUrl = "ws://localhost:4000";
-      // window.location.hostname === "localhost"
-      //   ?
-      //   : "wss://marriage-vendors-nka3z.ondigitalocean.app/ws";
+      const wsUrl = "wss://marriagevendors-bot.onrender.com";
+    
 
       const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
@@ -105,12 +103,13 @@ const AIAssistant = () => {
 
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
+      
         switch (data.type) {
           case "welcome":
             break;
 
           case "private_message":
-            if (data.message) {
+            if (data.text) {
               // Handle agent intro message only if it's new
               if (
                 data.senderRole === "agent" &&
@@ -131,12 +130,16 @@ const AIAssistant = () => {
                 ]);
               }
 
-              // Append regular message to chat
+              // Use 'text' field if present, otherwise fallback to 'message' field
+              let messageText = data.text;
+              if (typeof messageText === "object") {
+                messageText = JSON.stringify(messageText, null, 2);
+              }
               setMessages((prev) => [
                 ...prev,
                 {
                   id: generateMessageId(),
-                  text: data.message,
+                  text: messageText,
                   sender: "assistant",
                   timestamp: new Date(),
                 },
@@ -151,10 +154,10 @@ const AIAssistant = () => {
             }
 
             if (
-              data.message &&
-              data.message !== lastSupportMessageRef.current
+              data.text &&
+              data.text !== lastSupportMessageRef.current
             ) {
-              lastSupportMessageRef.current = data.message;
+              lastSupportMessageRef.current = data.text;
               setMessages((prev) => [
                 ...prev,
                 {
@@ -177,7 +180,7 @@ const AIAssistant = () => {
               {
                 id: generateMessageId(),
                 type: "options",
-                text: data.message,
+                text: data.text,
                 options: data.options,
                 sender: "assistant",
                 timestamp: new Date(),
@@ -199,8 +202,7 @@ const AIAssistant = () => {
             break;
 
           case "services":
-            let servicesData = data.services;
-            
+            let servicesData = data.services || data.text;
             // Parse services if it's a string
             if (typeof servicesData === 'string') {
               try {
@@ -210,7 +212,10 @@ const AIAssistant = () => {
                 servicesData = [];
               }
             }
-            
+            if (!Array.isArray(servicesData)) {
+              console.warn("AiAssistant: servicesData is not an array after parsing:", servicesData);
+              servicesData = [];
+            }
             setMessages((prev) => [
               ...prev,
               {
@@ -369,6 +374,12 @@ const AIAssistant = () => {
 
   // Load messages from localStorage on mount
   useEffect(() => {
+    const greetingMessage = [{
+      id: generateMessageId(),
+      text: "Namaste! How can I help you?",
+      sender: "assistant",
+      timestamp: new Date(),
+    }];
     const stored = localStorage.getItem("chatMessages");
     if (stored) {
       try {
@@ -377,15 +388,7 @@ const AIAssistant = () => {
         const now = Date.now();
         // 1 hour = 3600000 ms
         if (!lastActive || now - lastActive > 3600000) {
-          // Inactive for over 1 hour, clear messages and show greeting
-          setMessages([
-            {
-              id: generateMessageId(),
-              text: "Namaste! How can I help you?",
-              sender: "assistant",
-              timestamp: new Date(),
-            },
-          ]);
+          setMessages(greetingMessage);
           localStorage.removeItem("chatMessages");
         } else {
           // Convert timestamp strings back to Date objects
@@ -397,27 +400,11 @@ const AIAssistant = () => {
           );
         }
       } catch {
-        // If error, show greeting
-        setMessages([
-          {
-            id: generateMessageId(),
-            text: "Namaste! How can I help you?",
-            sender: "assistant",
-            timestamp: new Date(),
-          },
-        ]);
+        setMessages(greetingMessage);
         localStorage.removeItem("chatMessages");
       }
     } else {
-      // Only add greeting if no previous messages
-      setMessages([
-        {
-          id: generateMessageId(),
-          text: "Namaste! How can I help you?",
-          sender: "assistant",
-          timestamp: new Date(),
-        },
-      ]);
+      setMessages(greetingMessage);
     }
   }, []);
 
