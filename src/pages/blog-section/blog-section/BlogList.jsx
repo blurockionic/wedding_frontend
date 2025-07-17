@@ -4,6 +4,7 @@ import { useGetBlogsQuery, useGetBlogsByTagQuery } from "../../../redux/blogSlic
 import { motion } from 'framer-motion';
 import { IoEyeOutline } from "react-icons/io5";
 import Footer from '../../Footer.jsx';
+import BlogListSkeleton from './skeletons/BlogListSkeleton';
 
 const BlogList = () => {
   const location = useLocation();
@@ -109,14 +110,7 @@ const BlogList = () => {
   };
 
   if (isLoading || isFetching) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse flex flex-col items-center">
-          <div className="w-16 h-16 border-t-4 border-b-4 border-[#f20574] rounded-full animate-spin"></div>
-          <p className="mt-4 text-gray-600 font-medium">Loading amazing content...</p>
-        </div>
-      </div>
-    );
+    return <BlogListSkeleton />;
   }
 
   if (error) {

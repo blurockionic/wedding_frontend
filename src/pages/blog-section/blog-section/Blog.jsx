@@ -13,6 +13,8 @@ import Footer from '../../Footer';
 // Import Quill styles to ensure proper formatting
 import 'react-quill/dist/quill.snow.css';
 import { Helmet } from 'react-helmet';
+import BlogListSkeleton from './skeletons/BlogListSkeleton';
+import BlogSkeleton from './skeletons/BlogSkeleton';
 
 const Blog = () => {
   const { urlTitle: blogUrlTitle } = useParams();
@@ -139,7 +141,7 @@ const Blog = () => {
   // Always show exactly 3 visible posts at a time in the carousel
   const visiblePosts = relatedPosts?.data?.slice(carouselIndex, carouselIndex + 3) || [];
 
-  if (isLoading) return <div className="text-center py-10">Loading blog...</div>;
+  if (isLoading) return <BlogSkeleton/>;
   if (error) return <div className="text-center py-10 text-red-500">Error loading blog</div>;
   if (!blogData) return <div className="text-center py-10">Blog not found</div>;
 
@@ -148,7 +150,7 @@ const Blog = () => {
   const plainTextContent = content.replace(/<[^>]+>/g, ''); // Strip HTML for meta description
   const metaDescription = plainTextContent.slice(0, 160);
 
-  console.log(metaDescription)
+
 
 
   const fullTitle = `${title} | Marriage Vendors Blog`;
