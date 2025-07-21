@@ -2,9 +2,10 @@ import { useState } from "react";
 import { useSearchServicesMutation } from "../../redux/adminApiSlice";
 import SearchComponent from "../../components/admin-chart/SearchComponent.jsx";
 
-
 export default function ServiceSearch() {
   const [results, setResults] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   const [searchServices, { isLoading, error }] = useSearchServicesMutation();
 
   const fields = [
@@ -32,10 +33,16 @@ export default function ServiceSearch() {
     try {
       const response = await searchServices(formData).unwrap();
       setResults(response.data);
+      setCurrentPage(1); 
     } catch (err) {
       console.error("Failed to fetch services:", err);
     }
   };
+
+  const totalPages = Math.ceil(results.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentResults = results.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
     <SearchComponent
@@ -43,11 +50,15 @@ export default function ServiceSearch() {
       fields={fields}
       tableHeaders={tableHeaders}
       onSearch={handleSearch}
-      results={results}
+      results={currentResults}
       isLoading={isLoading}
       error={error}
       sortOptions={sortOptions}
-      locationFormat="object" 
+      locationFormat="object"
+      currentPage={currentPage}
+      totalPages={totalPages}
+      onPageChange={setCurrentPage}
+      totalItems={results.length}
     />
   );
 }

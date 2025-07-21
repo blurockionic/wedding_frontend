@@ -1,8 +1,22 @@
 import { useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
-import { IoIosArrowDown } from "react-icons/io";
+import { IoIosArrowDown, IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
-const SearchComponent = ({ title, fields, tableHeaders, onSearch, results, isLoading, error, sortOptions, locationFormat = "string" }) => {
+const SearchComponent = ({ 
+  title, 
+  fields, 
+  tableHeaders, 
+  onSearch, 
+  results, 
+  isLoading, 
+  error, 
+  sortOptions, 
+  locationFormat = "string",
+  currentPage,
+  totalPages,
+  onPageChange,
+  totalItems
+}) => {
   const [formData, setFormData] = useState(
     fields.reduce((acc, field) => ({ ...acc, [field.key]: "" }), {})
   );
@@ -23,6 +37,48 @@ const SearchComponent = ({ title, fields, tableHeaders, onSearch, results, isLoa
       return obj[keyPath] !== undefined && obj[keyPath] !== null ? obj[keyPath] : fallback;
     }
     return keyPath.reduce((current, key) => (current && current[key] ? current[key] : fallback), obj);
+  };
+
+  const handlePageClick = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      onPageChange(page);
+    }
+  };
+
+  const renderPageNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 5;
+    
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      let startPage = Math.max(1, currentPage - 2);
+      let endPage = Math.min(totalPages, currentPage + 2);
+      
+      if (currentPage <= 3) {
+        endPage = maxVisiblePages;
+      } else if (currentPage >= totalPages - 2) {
+        startPage = totalPages - maxVisiblePages + 1;
+      }
+      
+      for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
+      }
+      
+      if (startPage > 1) {
+        pages.unshift('...');
+        pages.unshift(1);
+      }
+      
+      if (endPage < totalPages) {
+        pages.push('...');
+        pages.push(totalPages);
+      }
+    }
+    
+    return pages;
   };
 
   return (
@@ -95,8 +151,10 @@ const SearchComponent = ({ title, fields, tableHeaders, onSearch, results, isLoa
             </thead>
             <tbody>
               {results.map((item, index) => (
-                <tr key={item._id.$oid} className="border-b last:border-b-0 hover:bg-gray-50">
-                  <td className="py-3 px-4 text-sm text-gray-700">{index + 1}.</td>
+                <tr key={item._id?.$oid || index} className="border-b last:border-b-0 hover:bg-gray-50">
+                  <td className="py-3 px-4 text-sm text-gray-700">
+                    {(currentPage - 1) * 10 + index + 1}.
+                  </td>
                   {tableHeaders.map((header) => (
                     <td
                       key={header.label}
@@ -128,6 +186,53 @@ const SearchComponent = ({ title, fields, tableHeaders, onSearch, results, isLoa
               ))}
             </tbody>
           </table>
+          
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex flex-col sm:flex-row justify-between items-center p-4 border-t">
+              <div className="text-sm text-gray-600 mb-2 sm:mb-0">
+                Showing {Math.min((currentPage - 1) * 10 + 1, totalItems)} to{" "}
+                {Math.min(currentPage * 10, totalItems)} of {totalItems} entries
+              </div>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => handlePageClick(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className={`p-2 rounded-md ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'}`}
+                >
+                  <IoIosArrowBack className="text-gray-600" />
+                </button>
+                
+                {renderPageNumbers().map((page, index) => (
+                  typeof page === 'number' ? (
+                    <button
+                      key={page}
+                      onClick={() => handlePageClick(page)}
+                      className={`w-8 h-8 rounded-md text-sm ${
+                        currentPage === page
+                          ? 'bg-[#f20574] text-white'
+                          : 'text-gray-600 hover:bg-gray-100'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ) : (
+                    <span key={`ellipsis-${index}`} className="px-2 text-gray-400">
+                      {page}
+                    </span>
+                  )
+                ))}
+                
+                <button
+                  onClick={() => handlePageClick(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className={`p-2 rounded-md ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'}`}
+                >
+                  <IoIosArrowForward className="text-gray-600" />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
