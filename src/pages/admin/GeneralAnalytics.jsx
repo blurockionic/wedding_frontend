@@ -23,46 +23,47 @@ export default function Admin() {
   useEffect(() => {
     if (analytics) {
       const serviceTypeColors = {
-        "wedding decor": "#1f93ff",//blue
-        "wedding videographers": "#8c63da", //purple
-        "wedding dj": "#ff928a", //red
-        "makeup salon": "#2bb7dc", // skyblue
-        "caterers": "#6fd195",//green
-        "wedding entertainment":"#8c63da",//purple
-        "mehndi artist":"#2bb7dc",// skyblue
-        "wedding photographers" : "#ff928a",//red
+        "wedding decor": "#1f93ff",
+        "wedding videographers": "#8c63da",
+        "wedding dj": "#ff928a",
+        "makeup salon": "#2bb7dc",
+        "caterers": "#6fd195",
+        "wedding entertainment":"#8c63da",
+        "mehndi artist":"#2bb7dc",
+        "wedding photographers" : "#ff928a",
         "tent house" : "#1f93ff"
       };
 
       const planColors = {
-        "Business": "#ffae4c", // orange
-        "Free": "#ff928a", // red
-        "Professional": "#8c63da", // purple
-        "Starter": "#2bb7dc",// skyblue
+        "Business": "#ffae4c",
+        "Free": "#ff928a",
+        "Professional": "#8c63da",
+        "Starter": "#2bb7dc",
       };
-      // TotalServicesbyType
+      
+      // TotalServicesbyType with counts in labels
       const pieChartDataTotalServicesbyType = analytics.data.TotalServicesbyType.map((item, index) => ({
         id: index,
         value: item._count.service_type,
-        label: item.service_type,
+        label: `${item.service_type} (${item._count.service_type})`, // Add count to label
         color: serviceTypeColors[item.service_type] || "#cccccc"
       }));
       setPieChartTotalServicesbyType(pieChartDataTotalServicesbyType);
 
-      // TotalServicesbyViews
+      // TotalServicesbyViews with counts in labels
       const pieChartDataTotalServicesbyViews = analytics.data.MostViewedServicesData.map((item, index) => ({
         id: index,
         value: item.totalViewCount,
-        label: item.service_type,
+        label: `${item.service_type} (${item.totalViewCount})`, // Add count to label
         color: serviceTypeColors[item.service_type] || "#cccccc"
       }));
       setPieChartTotalServicesbyViews(pieChartDataTotalServicesbyViews);
 
-      // TotalRevenueByType
+      // TotalRevenueByType with counts in labels
       const pieChartDataPlansbyRevenue = analytics.data.RevenuebyPlans.map((item, index) => ({
         id: index,
         value: item.totalRevenue,
-        label: item.plan,
+        label: `${item.plan} (${item.totalRevenue})`, // Add count to label
         color: planColors[item.plan] || "#cccccc"
       }));
       setPieChartPlansbyRevenue(pieChartDataPlansbyRevenue);
@@ -73,7 +74,6 @@ export default function Admin() {
   if (error) return <p>Error: {error.message}</p>;
   
 
-  console.log(analytics);
   return (
     <div>
       {analytics ? (
@@ -164,7 +164,7 @@ export default function Admin() {
                     },
                   }}
                   width={300}
-                  height={500}
+                  height={800}
                 />
               </div>
               <div>
@@ -195,7 +195,7 @@ export default function Admin() {
                     },
                   }}
                   width={300}
-                  height={550}
+                  height={840}
                 />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-1 gap-10 w-full px-5 md:px-0 mt-4">
@@ -227,13 +227,12 @@ export default function Admin() {
                     },
                   }}
                     width={250}
-                    height={500}
+                    height={460}
                   />
                 </div>
               </div>
             </div>
           </div>
-          {/* <pre>{JSON.stringify(analytics, null, 2)}</pre> */}
         </div>
       ) : (
         <p>No data available</p>
