@@ -25,6 +25,7 @@ export const weddingVenues = [
   "Marriage Garden",
   "Wedding Halls",
   "Wedding Resorts",
+  "Destination Wedding"
 ];
 
 export const weddingVendors = [
@@ -75,6 +76,7 @@ export const servicesUnit = {
   "Marriage Garden": ["Per Day", "Per Event"],
   "Wedding Halls": ["Per Day", "Per Booking"],
   "Wedding Resorts": ["Per Day", "Per Room", "Per Package"],
+    "Destination Wedding": ["Per Package", "Per Guest", "Per Day"],
 
   "Caterers": ["Per Plate", "Per Guest", "Package Pricing"],
   "Wedding Invitation": ["Per Design", "Per Order"],
