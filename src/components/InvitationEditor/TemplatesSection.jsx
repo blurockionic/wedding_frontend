@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useGetAllTemplatesQuery } from "../../redux/invitationTemplateForAdminSlice";
-import { useAddOrUpdateWatchHistoryMutation } from "../../redux/TemplateSlice"; // Corrected import
+import { useAddOrUpdateWatchHistoryMutation } from "../../redux/TemplateSlice";
 import { paymentApi } from "../../redux/payment";
 import { motionlogo } from "../../static/static";
 import { FaCrown } from "react-icons/fa";
@@ -16,7 +16,7 @@ const TemplatesSection = ({ templates, onTemplateClick, selectedTemplate }) => {
     categoryByAmount: "",
     categoryByRequirement: "",
     page: 1,
-    limit: 10,
+    limit: 100, // Updated to 100
   });
 
   const { data, error, isLoading } = useGetAllTemplatesQuery(filters);
@@ -110,23 +110,22 @@ const TemplatesSection = ({ templates, onTemplateClick, selectedTemplate }) => {
                 }`}
                 onClick={() => handleOnNavigate(template)}
               >
-                {/*update premium tag*/}
-              <div className="relative w-[90%] h-[215px] m-4">
-                      <img
-                        src={template.thumbnailUrl}
-                        alt={template.name || "Template Thumbnail"}
-                        loading="lazy"
-                        className="w-[99%] h-[93%] rounded-md border border-black -ms-2"
-                      />
-                      {template.categoryByAmount === "PAID" && (
-                        <div className="absolute -top-[89%] left-0 z-10 bg-primary text-white w-[30px] h-[30px] rounded-lg flex items-center justify-start overflow-hidden px-2 transition-all duration-300 ease-in-out group-hover:w-[110px]">
-                          <FaCrown className="text-white text-[18px] flex-shrink-0 -ms-[1px]" />
-                          <span className="ml-2 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            Premium
-                          </span>
-                        </div>
-                      )}
+                <div className="relative w-[90%] h-[215px] m-4">
+                  <img
+                    src={template.thumbnailUrl}
+                    alt={template.name || "Template Thumbnail"}
+                    loading="lazy"
+                    className="w-[99%] h-[93%] rounded-md border border-black -ms-2"
+                  />
+                  {template.categoryByAmount === "PAID" && (
+                    <div className="absolute -top-[89%] left-0 z-10 bg-primary text-white w-[30px] h-[30px] rounded-lg flex items-center justify-start overflow-hidden px-2 transition-all duration-300 ease-in-out group-hover:w-[110px]">
+                      <FaCrown className="text-white text-[18px] flex-shrink-0 -ms-[1px]" />
+                      <span className="ml-2 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        Premium
+                      </span>
                     </div>
+                  )}
+                </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent p-2 flex flex-col justify-end">
                   <span className="text-xs font-medium text-white">
                     {template.name}
