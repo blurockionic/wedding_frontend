@@ -50,7 +50,7 @@ const TemplateList = ({ data, handleWatchHitory }) => {
 
   const loggedInUser = useSelector((state) => state?.auth?.user);
   const { data: watchHistory, refetch: refetchWatchHistory } =
-    useGetTemplateWatchHistoryQuery();
+    useGetTemplateWatchHistoryQuery({ limit: 100 });
   const [addOrUpdateWatchHistory] = useAddOrUpdateWatchHistoryMutation();
 
   useEffect(() => {
